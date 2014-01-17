@@ -1,0 +1,9 @@
+# CodeIgniter
+application/cache
+application/logs
+
+# OS Thumbnails
+Thumbs.db
+.DS_Store
+*.bak
+*.orig
