@@ -1,6 +1,7 @@
 # CodeIgniter
 application/cache
 application/logs
+application/config/database.php
 
 # OS Thumbnails
 Thumbs.db
