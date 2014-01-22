@@ -5,4 +5,15 @@ class MY_Controller extends CI_Controller
    {
       parent::__construct();
    }
+
+   /**
+   * Load the specified View, automatically wrapping it between the site's
+   * header and footer.
+   */
+  public function view_wrapper($template, $data = array()) {
+    $this->load->view('include/header', $data);
+    $this->load->view('include/navigation', $data);
+    $this->load->view($template, $data);
+    $this->load->view('include/footer');
+  }
 }

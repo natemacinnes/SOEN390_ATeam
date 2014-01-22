@@ -38,8 +38,20 @@
 |
 */
 
-$route['default_controller'] = "frontpage";
+// These two MUST come first
+// Default route when no URI is specified
+$route['default_controller'] = "pages";
+// 404 controller class, default=application/errors/error_404.php
 $route['404_override'] = '';
+
+/**
+ * CodeIgniter mapping defaults to URL format controller/method/param1/param2.
+ * Therefore, if your method arguments are in sequential order (e.g. $1/$2/$3)
+ * we don't need to add anything here to make it work. Magic!
+ *
+ * Only define routes for paths where the arguments are out of order or the URL path doesn't match the controller/method names.
+ */
+$route['narratives/(:num)'] = "player/index/$1";
 
 
 /* End of file routes.php */
