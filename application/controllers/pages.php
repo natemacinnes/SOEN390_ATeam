@@ -28,6 +28,10 @@ class Pages extends MY_Controller {
   }
 
   public function contact() {
+    // Demo the system messages
+    $this->system_message_model->set_message("This is a normal (notice) message");
+    $this->system_message_model->set_message("This is a warning message", MESSAGE_WARNING);
+    $this->system_message_model->set_message("This is an error message", MESSAGE_ERROR);
     // Map the $ip_address variable in the view to the value provided here.
     $data = array('ip_address' => $this->input->ip_address());
     // Render the views/pages/contact.php file using including the header/footer
