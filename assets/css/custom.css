@@ -17,7 +17,7 @@ body {
 
 #bubble-container { border: 1px solid #ccc; border-radius: 6px; padding: 1px; margin-bottom: 30px; line-height: 2.1428571435; color: inherit; background-color: #eeeeee; }
 
-.help-container { position: fixed; bottom: 0; right: 0; width: 250px; }
+.help-container { position: fixed; bottom: 0; right: 20px; }
 .btn-help { border-bottom-right-radius:0; border-bottom-left-radius:0; }
 .btn-feedback { border-bottom-right-radius:0; border-bottom-left-radius:0; }
 
