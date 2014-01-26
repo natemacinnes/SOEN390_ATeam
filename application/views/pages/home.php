@@ -29,16 +29,7 @@
 </div>
 </div>
 
-
-
-
-   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-   <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/1.3.1/lodash.min.js"></script>
-   <script src="http://soen390.vm.diffingo.com/assets/js/bootstrap.min.js"></script>
-   <script src="http://soen390.vm.diffingo.com/assets/js/custom.js"></script>
-   <script src="http://d3js.org/d3.v3.min.js"></script>
-   
+<script src="//d3js.org/d3.v3.min.js"></script>
 <script>
 	
 	function bubbleMouseIn(bubble) {
