@@ -1,13 +1,40 @@
 /**
  * All your custom CSS should go into this file
  */
-
 body {
    padding-top: 15px;
+   background: #fcfcfc;
+   /*overflow: hidden;*/
 }
 
 /* home page */
 
-.home{height: 100%; width: 100%; overflow: hidden;}
 
-.btn-feedback { position: absolute; bottom: -5px; right: 18%;}
+.container{ position: relative; background: #eee;}
+
+.home{ position: relative; height: 100%; width: 100%; overflow: hidden;}
+
+
+#bubble-container { border: 1px solid #ccc; border-radius: 6px; padding: 1px; margin-bottom: 30px; line-height: 2.1428571435; color: inherit; background-color: #eeeeee; }
+
+.help-container { position: fixed; bottom: 0; right: 0; width: 250px; }
+.btn-help { border-bottom-right-radius:0; border-bottom-left-radius:0; }
+.btn-feedback { border-bottom-right-radius:0; border-bottom-left-radius:0; }
+
+.node:hover{background: #000;}
+
+
+
+/* circle thing */
+circle:hover {
+	opacity: 0.8;
+
+}
+
+/* helper classes */
+
+.top-margin{margin-top: 5px;}
+
+.float-left{ float: left; }
+.float-right { float: right; }
+.clear{ clear: both; }
