@@ -7,8 +7,6 @@ jQuery(document).ready(function() {
 		console.log('Mouse out: ' + this);
 	}
 
-
-
 	var diameter = (document.getElementById("bubble-container").offsetWidth)/2
 		format = d3.format(",d"),
 		color = d3.scale.category20c();
@@ -23,7 +21,7 @@ jQuery(document).ready(function() {
 		.attr("height", diameter)
 		.attr("class", "bubble");
 
-	d3.json("/assets/js/flare.json", function(error, root) {
+	d3.json("assets/js/flare.json", function(error, root) {
 	  var node = svg.selectAll(".node")
 		  .data(bubble.nodes(classes(root))
 		  .filter(function(d) { return !d.children; }))
@@ -42,6 +40,8 @@ jQuery(document).ready(function() {
 		  .attr("dy", ".3em")
 		  .style("text-anchor", "middle")
 		  .text(function(d) { return d.className.substring(0, d.r / 3); });*/
+
+		jQuery('svg.bubble .node').hover(bubbleMouseIn, bubbleMouseOut);
 	});
 
 	// Returns a flattened hierarchy containing all leaf nodes under the root.
@@ -58,9 +58,4 @@ jQuery(document).ready(function() {
 	}
 
 	d3.select(self.frameElement).style("height", diameter + "px");
-
-	console.log(jQuery('svg.bubble'));
-	//jQuery(document).ready(function() {
-		jQuery('svg.bubble g.node').hover(bubbleMouseIn, bubbleMouseOut);
-	//});
 });
