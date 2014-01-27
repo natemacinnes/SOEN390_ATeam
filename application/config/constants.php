@@ -36,6 +36,20 @@ define('FOPEN_READ_WRITE_CREATE',				'a+b');
 define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
+/*
+|--------------------------------------------------------------------------
+| Metrics event types
+|--------------------------------------------------------------------------
+|
+| These constants are used in the database to prevent storage of redundant text
+|
+*/
+define('METRIC_EVENT_LISTEN_START', 1);
+define('METRIC_EVENT_LISTEN_END', 2);
+define('METRIC_EVENT_BOOKMARK', 3);
+define('METRIC_EVENT_SHARE', 4);
+define('METRIC_EVENT_LIKE', 5);
+define('METRIC_EVENT_DISLIKE', 6);
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

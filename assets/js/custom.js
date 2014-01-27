@@ -1,4 +1,7 @@
 jQuery(document).ready(function() {
+	// Toggle buttons for navigation links
+	jQuery('.btn-group a').click(function() { jQuery(this).toggleClass('active'); });
+
 	function bubbleMouseIn(bubble) {
 		console.log('Mouse in: ' + this);
 	}
