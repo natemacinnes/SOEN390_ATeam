@@ -8,10 +8,10 @@
 			<div class="sort-container float-left">
 				<div class="btn-group">
 					<a href="#" class="btn btn-default disabled" role="button">Sort by: </a>
-					<a href="#" title="New narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-certificate"></span> New</a>
-					<a href="#" title="Popular narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-fire"></span> Popular</a>
-					<a href="#" title="Agreed narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up"></span> Agreed</a>
-					<a href="#" title="Disagreed narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down"></span> Disagreed</a>
+					<a href="#" title="New narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span></a>
+					<a href="#" title="Popular narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-fire"></span></a>
+					<a href="#" title="Agreed narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+					<a href="#" title="Disagreed narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down"></span></a>
 				</div>
 			</div>
 			<div class="filter-container float-right">
@@ -39,7 +39,7 @@
 
 	</div>
 <div class="help-container">
-	<a href="#" title="Need help?" class="btn btn-info btn-lg btn-help">Help?</a>
-	<a href="#" title="Give us your feedback" class="btn btn-warning btn-lg btn-feedback">Feedback</a>
+	<a href="#" title="Need help?" class="btn btn-info btn-lg btn-help"><span class="glyphicon glyphicon-question-sign"></span></a>
+	<a href="#" title="Give us your feedback" class="btn btn-warning btn-lg btn-feedback"><span class="glyphicon glyphicon-bullhorn"></span></a>
 </div>
 </div>
