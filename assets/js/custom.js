@@ -1,87 +1,66 @@
-/**
- * Light Javascript "class" frameworking for you
- * to organize your code a little bit better.
- *
- * If you want more complex things, I'd suggest
- * importing something like Backbone.js as it
- * has much better abilities to handle a MVC
- * like framework including persistant stores (+1)
- *
- * @author  sjlu (Steven Lu)
- */
-var Frontpage = function()
-{
-	/**
-	 * The exports variable is responsible for
-	 * storing and returning public functions
-	 * in the instantized class.
-	 */
-	var exports = {};
-
-	/**
-	 * Write your public functions like this.
-	 * Make sure you include it into the exports
-	 * variable.
-	 */
-	function public_function() 
-	{
-		/**
-		 * Note that we can still call
-		 * private functions within the scope
-		 * of the "class".
-		 */
-		private_function();
+jQuery(document).ready(function() {
+	function bubbleMouseIn(bubble) {
+		console.log('Mouse in: ' + this);
 	}
-	exports.public_function = public_function;
 
-	/**
-	 * Private functions are very similar, they
-	 * just are not included in the exports 
-	 * function.
-	 */
-	 function private_function()
-	 {
+	function bubbleMouseOut(bubble) {
+		console.log('Mouse out: ' + this);
+	}
 
-	 }
 
-	 /**
-	  * You may wanna have a init() function
-	  * to do all your bindings for the class.
-	  */
-	 function init()
-	 {
 
-	 }
-	 exports.init = init;
+	var diameter = (document.getElementById("bubble-container").offsetWidth)/2
+		format = d3.format(",d"),
+		color = d3.scale.category20c();
 
-	 /**
-	  * Last but not least, we have to return
-	  * the exports object.
-	  */
-	 return exports;
-}
+	var bubble = d3.layout.pack()
+		.sort(null)
+		.size([diameter, diameter])
+		.padding(1.5);
 
-/**
- * To initialize our Frontpage class, we need
- * to define it into a Javascript variable like
- * so.
- */
-var frontpage = new Frontpage();
+	var svg = d3.select(".test").append("svg")
+		.attr("width", diameter)
+		.attr("height", diameter)
+		.attr("class", "bubble");
 
-/**
- * We can then call the functions as like any
- * other object, just the ones included in the 
- * exports object that was returned from Frontpage()
- */
-frontpage.public_function();
+	d3.json("/assets/js/flare.json", function(error, root) {
+	  var node = svg.selectAll(".node")
+		  .data(bubble.nodes(classes(root))
+		  .filter(function(d) { return !d.children; }))
+		.enter().append("g")
+		  .attr("class", "node")
+		  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
-/**
- * Write all your event listeners in the 
- * document.ready function or else they
- * may not bind correctly. As a side note, I like
- * to just call a public function in a class
- * to handle all your bindings here.
- */
-$(document).ready(function() {
-	frontpage.init();
+	  node.append("title")
+		  .text(function(d) { return d.className + ": " + format(d.value); });
+
+	  node.append("circle")
+		  .attr("r", function(d) { return d.r; })
+		  .style("fill", function(d) { return color(d.packageName); });
+
+	  /*node.append("text")
+		  .attr("dy", ".3em")
+		  .style("text-anchor", "middle")
+		  .text(function(d) { return d.className.substring(0, d.r / 3); });*/
+	});
+
+	// Returns a flattened hierarchy containing all leaf nodes under the root.
+	function classes(root) {
+	  var classes = [];
+
+	  function recurse(name, node) {
+		if (node.children) node.children.forEach(function(child) { recurse(node.name, child); });
+		else classes.push({packageName: name, className: node.name, value: node.size});
+	  }
+
+	  recurse(null, root);
+	  return {children: classes};
+	}
+
+	d3.select(self.frameElement).style("height", diameter + "px");
+
+	console.log(jQuery('svg.bubble'));
+	//jQuery(document).ready(function() {
+		jQuery('svg.bubble g.node').hover(bubbleMouseIn, bubbleMouseOut);
+	//});
 });
