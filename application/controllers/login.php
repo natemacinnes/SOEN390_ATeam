@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Upload extends MY_Controller {
+class Login extends MY_Controller {
   /**
    * Constructor: initialize required libraries.
    */
@@ -24,7 +24,7 @@ class Upload extends MY_Controller {
    * @see http://codeigniter.com/user_guide/general/urls.html
    */
   public function index() {
-    $this->view_wrapper('pages/upload');
+    $this->view_wrapper('pages/login');
   }
 
 }
