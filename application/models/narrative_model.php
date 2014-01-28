@@ -7,12 +7,20 @@ class narrative_model extends CI_Model {
   }
 
   /**
-   * Retrieve a narrative object by ID, or FALSE upon failure.
+   * Retrieve a narrative data structure by ID, or FALSE upon failure.
    */
   public function get($narrative_id) {
-    return FALSE;
-    $query = $this->db->get_where('narratives', array('id' => $narrative_id));
-    $narrative = $query->row_object();
+    $query = $this->db->get_where('narratives', array('narrative_id' => $narrative_id));
+    $narrative = $query->row_array();
     return $narrative;
+  }
+
+  /**
+   * Retrieve a narrative data structure by ID, or FALSE upon failure.
+   */
+  public function get_all() {
+    $query = $this->db->get('narratives');
+    $narratives = $query->result_array();
+    return $narratives;
   }
 }
