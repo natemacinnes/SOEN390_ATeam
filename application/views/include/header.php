@@ -13,5 +13,12 @@
    <link href="<?php echo base_url('assets/css/font-awesome.css') ?>" rel="stylesheet">
    <link href="<?php echo base_url('assets/css/custom.css') ?>" rel="stylesheet">
    <link href="<?php echo base_url('assets/css/general.css') ?>" rel="stylesheet">
+
+   <script type="text/javascript">
+     var yd_settings = {
+       base_url: "<?php echo base_url(); ?>",
+       site_url: "<?php echo site_url(); ?>"
+     };
+  </script>
 </head>
 <body>
