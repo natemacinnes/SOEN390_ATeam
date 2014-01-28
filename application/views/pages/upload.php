@@ -20,7 +20,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Narratives <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="#">View All</a></li>
-            <li><a href="#">Update</a></li>
+            <li><a href="#">Upload</a></li>
           </ul>
         </li>
       </ul>
@@ -42,7 +42,7 @@
 
 <div class="container fixed-margin">
   <div class="page-header">
-    <h1>Narratives</h1>
+    <h1>Narratives <small>View All</small></h1>
   </div>
 
   <ul class="pagination float-right">
