@@ -51,7 +51,9 @@ $route['404_override'] = '';
  *
  * Only define routes for paths where the arguments are out of order or the URL path doesn't match the controller/method names.
  */
+$route['home'] = "pages/index";
 $route['narratives/(:num)'] = "player/index/$1";
+
 
 
 /* End of file routes.php */
