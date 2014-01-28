@@ -2,7 +2,6 @@
  * All your custom CSS should go into this file
  */
 body {
-   padding-top: 15px;
    background: #fcfcfc;
    /*overflow: hidden;*/
 }
@@ -10,7 +9,7 @@ body {
 /* home page */
 
 
-.container{ position: relative; background: #eee;}
+.container{ }
 
 .home{ position: relative; height: 100%; width: 100%; overflow: hidden;}
 
@@ -34,6 +33,7 @@ circle:hover {
 /* helper classes */
 
 .top-margin{margin-top: 5px;}
+.fixed-margin{margin-top: 50px;}
 
 .float-left{ float: left; }
 .float-right { float: right; }
