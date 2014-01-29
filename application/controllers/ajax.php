@@ -9,7 +9,7 @@ class Ajax extends MY_Controller {
     $this->load->model('narrative_model');
   }
 
-  public function bubbles() {
+  public function bubbles($sortby = 'age') {
     $data = array();
     $data['name'] = 'flare';
 
@@ -20,7 +20,7 @@ class Ajax extends MY_Controller {
     $nodes = array();
 
     // Load nodes into the active clusder
-    $result = $this->narrative_model->get_all();
+    $result = $this->narrative_model->get_all($sortby);
     foreach ($result as $narrative) {
       $nodes[] = array(
         'name' => $narrative['narrative_id'],
