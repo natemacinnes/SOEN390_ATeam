@@ -24,7 +24,11 @@ class Viewnarratives extends MY_Controller {
    * @see http://codeigniter.com/user_guide/general/urls.html
    */
   public function index() {
-    $this->view_wrapper('pages/viewnarratives');
+    $this->load->model('narrative_model');
+    $narratives = $this->narrative_model->get_all();
+
+    $data = array('narratives' => $narratives);
+    $this->view_wrapper('pages/viewnarratives', $data);
   }
 
 }

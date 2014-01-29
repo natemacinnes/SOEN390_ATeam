@@ -69,64 +69,29 @@
 
   <table class="table table-hover">
     <thead>
-      <tr> 
+      <tr>
         <th>ID</th>
         <th>Length</th>
         <th>Language</th>
-        <th>Manage</th>
-        <th>Delete</th>
+        <th>Created</th>
+        <th>Uploaded</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>5:20</td>
-        <td>EN</td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button">Edit</a></td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a></td>
-      </tr>
-      <tr> 
-        <td>2</td>
-        <td>3:23</td>
-        <td>EN</td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button">Edit</a></td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a></td>
-      </tr>
-      <tr> 
-        <td>3</td>
-        <td>2:53</td>
-        <td>FR</td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button">Edit</a></td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a></td>
-      </tr>
-      <tr> 
-        <td>4</td>
-        <td>4:12</td>
-        <td>EN</td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button">Edit</a></td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a></td>
-      </tr>
-      <tr> 
-        <td>5</td>
-        <td>5:37</td>
-        <td>FR</td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button">Edit</a></td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a></td>
-      </tr>
-      <tr> 
-        <td>6</td>
-        <td>3:45</td>
-        <td>EN</td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button">Edit</a></td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a></td>
-      </tr>
-      <tr> 
-        <td>7</td>
-        <td>4:52</td>
-        <td>EN</td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button">Edit</a></td>
-        <td><a href="#" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a></td>
-      </tr>
+      <?php foreach ($narratives as $narrative): ?>
+        <tr>
+          <td><?php print $narrative['narrative_id']; ?></td>
+          <td><?php print intval($narrative['audio_length'] / 60); ?>:<?php print $narrative['audio_length'] % 60; ?></td>
+          <td><?php print $narrative['language']; ?></td>
+          <td><?php print $narrative['created']; ?></td>
+          <td><?php print $narrative['uploaded']; ?></td>
+          <td>
+            <a href="#" title="Edit" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-pencil"></a></a>
+            <a href="#" title="Delete" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a>
+          </td>
+        </tr>
+      <?php endforeach; ?>
     </tbody>
   </table>
 
