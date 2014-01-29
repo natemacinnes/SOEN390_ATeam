@@ -14,6 +14,7 @@
    <link href="<?php echo base_url('assets/css/custom.css') ?>" rel="stylesheet">
    <link href="<?php echo base_url('assets/css/general.css') ?>" rel="stylesheet">
    <link href="<?php echo base_url('assets/mediaelement/mediaelementplayer.min.css') ?>" rel="stylesheet">
+   <link href="<?php echo base_url('assets/colorbox/example1/colorbox.css') ?>" rel="stylesheet">
 
    <script type="text/javascript">
      var yd_settings = {
