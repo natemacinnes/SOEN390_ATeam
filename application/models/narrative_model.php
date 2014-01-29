@@ -40,7 +40,6 @@ class narrative_model extends CI_Model {
     $narratives = $query->result_array();
     return $narratives;
   }
-<<<<<<< HEAD
   
   public function process_narrative($narrative_path)
   {
@@ -166,8 +165,7 @@ class narrative_model extends CI_Model {
 	$command_concatenation = "C:/wamp/bin/ffmpeg-20140123-git-e6d1c66-win64-static/bin/ffmpeg.exe -f concat -i C:/wamp/www/audio_container.txt -c copy narrative1.mp3 2>&1";
 	$temp2 = shell_exec($command_concatenation);
 	//echo "returned: " . $temp2 . "</br>";
-  
-=======
+  }
 
   /**
    * Inserts a narrative structure into the database.
@@ -184,6 +182,5 @@ class narrative_model extends CI_Model {
    */
   public function delete($conditions) {
     $this->db->delete($this->table, $conditions);
->>>>>>> ddce7130d114f7e7f914f6dc660173195c825bac
   }
 }
