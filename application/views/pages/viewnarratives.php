@@ -19,19 +19,8 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Narratives <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="#">View All</a></li>
-            <li><a href="#">Upload</a></li>
-          </ul>
-        </li>
-      </ul>
-
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Sign In</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">User Name <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Profile</a></li>
-            <li><a href="#">Sign Out</a></li>
+            <li><?php echo anchor('viewnarratives', 'View All'); ?></li>
+            <li><?php echo anchor('admin/upload', 'Upload'); ?></li>
           </ul>
         </li>
       </ul>
