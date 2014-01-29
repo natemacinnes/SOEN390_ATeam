@@ -15,7 +15,7 @@ class Player extends MY_Controller {
   public function index($narrative_id) {
     $narrative = $this->narrative_model->get($narrative_id);
     $data = array('narrative_id' => $narrative_id, 'narrative' => $narrative);
-    $this->view_wrapper('player/index', $data);
+    $this->load->view('player/index', $data);
   }
 }
 

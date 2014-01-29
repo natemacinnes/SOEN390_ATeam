@@ -14,3 +14,8 @@ if (file_exists($path)):
 <?php else: ?>
 Video does not exist.
 <?php endif; ?>
+<script type="text/javascript">
+  jQuery(document).ready(function() {
+    loadMediaElement();
+  });
+</script>

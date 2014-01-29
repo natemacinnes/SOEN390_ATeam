@@ -1,6 +1,5 @@
 jQuery(document).ready(function() {
   loadBubbles('views');
-  loadMediaElement();
 });
 
 function loadBubbles(sortBy) {
@@ -62,6 +61,7 @@ function loadBubbles(sortBy) {
 
     $(".node-base").click(function() {
       jQuery.colorbox({href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id});
+      loadMediaElement();
     });
 
     updateVis('views');
