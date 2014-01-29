@@ -11,7 +11,7 @@ function loadBubbles(sortBy) {
     url += '/' + sortBy;
   }
 
-  if (!jQuery('.bubble-container').length) {
+  if (!jQuery('#bubble-container').length) {
     return false;
   }
   var diameter = (document.getElementById("bubble-container").offsetWidth)/2
