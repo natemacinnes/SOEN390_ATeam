@@ -83,11 +83,11 @@ class narrative_model extends CI_Model {
 	  if($file_extension == "xml")
 	  {
 		//read uploaded xml here and hash unique id
-		$xml = simplexml_load_file($dir . "/" . $filecheck);
-		$narrative_name = $xml->narrative[0]->narrativeName;
-		$narrative_language = $xml->narrative[0]->language;
-		$narrative_submit_date = $xml->narrative[0]->submitDate;
-		$narrative_submit_time = $xml->narrative[0]->time;
+		$xml_reader = simplexml_load_file($dir . "/" . $filecheck);
+		$narrative_name = $xml_reader->narrativeName;
+		$narrative_language = $xml_reader->language;
+		$narrative_submit_date = $xml_reader->submitDate;
+		$narrative_submit_time = $xml_reader->time;
 		str_replace("-", ":", $narrative_submit_time);
 	
 		$unique_id = hash("md5", $narrative_name . " " . $narrative_language . " " . $narrative_submit_date . " " . $narrative_submit_time);
@@ -144,8 +144,6 @@ class narrative_model extends CI_Model {
 			  rename($dir . "/" . $file_name . ".jpg", $uploads_direc . "/" . $file_name . ".jpg");
             }
 			
-			if(file_exists($uploads
-
             //Get the time that the narrative end in the concatenated narrative
             $endTimes = $endTimes + floatval($duration);
 
@@ -191,7 +189,7 @@ class narrative_model extends CI_Model {
       closedir($dh);
     }
 	//change path of xml
-	$xmlpath = "narratives/". $unique_id . "/AudioTimes.xml";
+	$xmlpath = "./uploads/". $unique_id . "/AudioTimes.xml";
     $xml->save($xmlpath) or die("Error");
     fclose($file_concat);
     $command_concatenation = "ffmpeg -f concat -i " . $upload_direc . "/audio_container.txt -c copy " . $upload_direc . "/" . $unique_id .  ".mp3 2>&1";
