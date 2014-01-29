@@ -30,31 +30,42 @@ class admin extends MY_Controller {
     $this->view_wrapper('admin/upload');
   }
 
-  public function unpack() {
-    $config['upload_path'] = './uploads/';
+  public function processUpload() {
+	//Creating unique folder name
+	$folder_name = time();
+	$path = './uploads/tmp/'.$folder_name.'/';
+	if(!is_dir($path))
+	{
+		mkdir($path, 0775, TRUE);
+	}
+	
+	//Setting constraints on the file uploaded
+    $config['upload_path'] = './uploads/tmp/'.$folder_name.'/';
     $config['allowed_types'] = 'zip';
     $config['overwrite'] = FALSE;
-
     $this->load->library('upload', $config);
 
-    $upload_error = FALSE;
+    //Executing upload, display errors if any
     if (!$this->upload->do_upload()) {
-      $upload_error = $this->upload->display_errors();
+      $error['error'] = $this->upload->display_errors();
+	  $this->view_wrapper('admin/upload', $error);
     }
-    $upload_data = $this->upload->data();
-    // Filename of uploaded file is available at $upload_data['file_name']
-
-    // Save the file to the database using a model
-    //redirect("redirect/path", 'location');
-
-    $this->load->model('narrative_model');
-    $path = $config['upload_path'] . $upload_data['file_name'];
-
+	else
+	{
+		// Getting data from upload, filename of uploaded file is available at $upload_data['file_name']
+		$upload_data = $this->upload->data();
+		$zipFileName = $upload_data['file_name'];
+		
+		// Calling preprocessing method to unzip and handover folder
+		$data = $this->upload_model->preprocessing($path, $folder_name, $zipFileName);
+		$this->view_wrapper('admin/upload-success', $data);
+	}	
+	
     //$narrative = $this->narrative_model->unpack($path);
     //$this->narrative_model->insert($narrative);
 
-    $data = array("upload_data" => $upload_data, 'error' => $upload_error);
-    $this->view_wrapper('admin/upload-success', $data);
+    //$data = array("upload_data" => $upload_data, 'error' => $upload_error);
+    //$this->view_wrapper('admin/upload-success', $data);
   }
 }
 

@@ -42,8 +42,9 @@
         <span class='label label-info' id="upload-file-info"></span>
   </div>-->
 
-  <?php echo form_open_multipart("admin/unpack", array('class' => 'form-horizontal')); ?>
+  <?php echo form_open_multipart("admin/processUpload", array('class' => 'form-horizontal')); ?>
     <div class="form-group">
+	  <?php if(isset($error)) echo $error; ?>
       <?php echo form_label('Select zip to upload:', 'userfile', array('class' => 'col-sm-2 control-label')); ?>
       <div class='col-sm-10'><?php echo form_upload(array('name' => 'userfile', 'class' => 'form-control')); ?></div>
     </div>
