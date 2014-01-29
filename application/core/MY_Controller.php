@@ -9,10 +9,10 @@ class MY_Controller extends CI_Controller {
     $this->load->helper('url');
     $this->load->helper('form');
 
-    // Session-based messaging
-    $this->load->model('system_message_model');
-    $this->load->helper('form');
-  }
+      // Session-based messaging
+      $this->load->model('system_message_model');
+	  $this->load->helper('form');
+   }
 
   /**
    * Load the specified View, automatically wrapping it between the site's
