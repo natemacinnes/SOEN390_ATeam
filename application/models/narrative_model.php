@@ -55,25 +55,55 @@ class narrative_model extends CI_Model {
   $endTimes = 0.000;
   $image_count = 0;
   $audio_jpg = "";
-
+  $unique_id = "";
+  $narrative_language = "";
+  $narrative_submit_date = "";
+  $narrative_submit_time = "";
+  
   $xml = new DOMDocument();
   $xml->formatOutput = true;
   $root = $xml->createElement("data");
   $xml->appendChild($root);
-
+	
+   
 
   //check the directory
   if (is_dir($dir))
   {
     //Scan the folder to determine the amount of pictures in a narrative
     $file_scan = scandir($dir);
-    foreach($file_scan as $filecheck) {
+    foreach($file_scan as $filecheck)
+	{
       $file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
-      if($file_extension == "jpg") {
+      if($file_extension == "jpg") 
+	  {
         $image_count++;
         $audio_jpg = $dir . "/" . $filecheck;
       }
+	  if($file_extension == "xml")
+	  {
+		//read uploaded xml here and hash unique id
+		$xml = simplexml_load_file($dir . "/" . $filecheck);
+		$narrative_name = $xml->narrative[0]->narrativeName;
+		$narrative_language = $xml->narrative[0]->language;
+		$narrative_submit_date = $xml->narrative[0]->submitDate;
+		$narrative_submit_time = $xml->narrative[0]->time;
+		str_replace("-", ":", $narrative_submit_time);
+	
+		$unique_id = hash("md5", $narrative_name . " " . $narrative_language . " " . $narrative_submit_date . " " . $narrative_submit_time);
+	  }
     }
+	//creating the directory on the server
+	$uploads_direc = "./uploads/".$unique_id;
+	mkdir($uploads_direc, 0777);
+	
+	 //This is the txt file that will combine all the txt files with ffmpeg
+	$file_concat = fopen($uploads_direc . "/" . "audio_container.txt", "w+");
+	
+	if($image_count == 1)
+	{
+		rename($dir . "/" . $audio_jpg, $uploads_direc . "/" . $audio_jpg);
+	}
 
     if ($dh = opendir($dir))
     {
@@ -81,9 +111,7 @@ class narrative_model extends CI_Model {
       {
         //get the file name plus it's extension
         $file_name = pathinfo($file, PATHINFO_FILENAME);
-        //$audio_jpg = $dir . "/generic.jpg";
-             // echo "filename: " . $file_name . pathinfo($file, PATHINFO_EXTENSION) . "</br>";
-
+        
         //Check if the file is an mp3
         if(pathinfo($file, PATHINFO_EXTENSION) == "mp3")
         {
@@ -93,7 +121,7 @@ class narrative_model extends CI_Model {
             //Get the name of the audio file to combine
             $file_input = "file " . "'" . $dir . "/" .$file ."'\r\n";
             fwrite($file_concat, $file_input);
-            $command = "C:/wamp/bin/ffmpeg-20140123-git-e6d1c66-win64-static/bin/ffmpeg.exe -i C:/wamp/www/". $dir . '/' .$file . " 2>&1";
+            $command = "ffmpeg -i ". $dir . '/' .$file . " 2>&1";
             $temp = shell_exec($command);
 
             preg_match("/Duration: (.*?), start:/", $temp, $matches);
@@ -113,7 +141,10 @@ class narrative_model extends CI_Model {
             if(file_exists($dir . "/" . $file_name . ".jpg"))
             {
               $audio_jpg = $dir . "/" . $file_name . ".jpg";
+			  rename($dir . "/" . $file_name . ".jpg", $uploads_direc . "/" . $file_name . ".jpg");
             }
+			
+			if(file_exists($uploads
 
             //Get the time that the narrative end in the concatenated narrative
             $endTimes = $endTimes + floatval($duration);
@@ -159,11 +190,36 @@ class narrative_model extends CI_Model {
       }
       closedir($dh);
     }
-    $xml->save("AudioTimes.xml") or die("Error");
+	//change path of xml
+	$xmlpath = "narratives/". $unique_id . "/AudioTimes.xml";
+    $xml->save($xmlpath) or die("Error");
     fclose($file_concat);
-    $command_concatenation = "C:/wamp/bin/ffmpeg-20140123-git-e6d1c66-win64-static/bin/ffmpeg.exe -f concat -i C:/wamp/www/audio_container.txt -c copy narrative1.mp3 2>&1";
+    $command_concatenation = "ffmpeg -f concat -i " . $upload_direc . "/audio_container.txt -c copy " . $upload_direc . "/" . $unique_id .  ".mp3 2>&1";
     $temp2 = shell_exec($command_concatenation);
     //echo "returned: " . $temp2 . "</br>";
+	
+
+    $database_data = array
+         (
+            'narrative_id' => $unique_id,
+            'xml_path' => $xmlpath,
+            'created' => $narrative_submit_date . " " . $narrative_submit_time,
+			'uploaded' => "",
+			'uploaded_by' => "default",
+			'language' => $narrative_language,
+			'views' => 0,
+			'agrees' => 0,
+			'disagrees' => 0,
+			'shares' => 0,
+			'flags' => 0
+         );
+
+       $this->db->insert('narratives', $database_data);
+	   
+	 //  $this->view_wrapper('admin/upload', $error);
+  
+	//INSERT INTO narratives(narrative_id, xml_path, created, uploaded, uploaded_by, language, views, agrees, disagrees, shares, flags)
+	//VALUES ($unique_id, $xmlpath, $narrative_submit_date . " " . $narrative_submit_time, "", "default", $narrative_language, 0, 0, 0, 0, 0) 
     }
   }
 
