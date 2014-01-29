@@ -48,7 +48,7 @@ class admin extends MY_Controller {
     //redirect("redirect/path", 'location');
 
     $this->load->model('narrative_model');
-    $path = $config['upload_path'] . $upload_Data['file_name'];
+    $path = $config['upload_path'] . $upload_data['file_name'];
 
     //$narrative = $this->narrative_model->unpack($path);
     //$this->narrative_model->insert($narrative);
