@@ -147,7 +147,9 @@ function loadMediaElement() {
       // TODO make this jQuery using jQuery.get()
       // TODO make this a real controller method
       var narrative_id = jQuery('.player-wrapper').attr('id').substring(10)
+      console.log(narrative_id);
       xmlhttp.open("GET",yd_settings.site_url + "ajax/audioImage/" + narrative_id + "/" + myaudio.currentTime, true);
+      myaudio.play();
       xmlhttp.send();
     }, false);
   }
