@@ -3,6 +3,7 @@ jQuery(document).ready(function() {
 
   // Toggle buttons for navigation links
   jQuery('.btn-group a').click(function() {
+    jQuery('.btn-group a').removeClass('active');
     jQuery(this).toggleClass('active');
     var sortby = jQuery(this).attr('href').substring(1);
     loadBubbles(sortby);
