@@ -11,7 +11,7 @@ function loadBubbles(sortBy) {
     url += '/' + sortBy;
   }
 
-  if (!jQuery('#bubble-container').length) {
+  if (!jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
     return false;
   }
   var diameter = (document.getElementById("bubble-container").offsetWidth)/2
@@ -41,16 +41,15 @@ function loadBubbles(sortBy) {
     var titles = vis.append('title')
       .attr("x", function(d) { return d.x; })
       .attr("y", function(d) { return d.y; })
-      .text(function(d) { return d.narrative_id +
-        (d.children ? "" : ": " + format(d.value)); });
+      .text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
 
     var circles = vis.append("circle")
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
       .attr("r", function(d) { return d.r; })
-      .attr("id", function(d) { return 'narrative-' + d.narrative_id; })
+      .attr("id", function(d) { return 'narrative-' + d['narrative_id']; })
       .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
-      .style("fill", function(d) { console.log(d); return !d.children ? color(d.parent.name) : "#eeeeee"; })
+      .style("fill", function(d) { return !d.children ? color(d.parent.name) : "#eeeeee"; })
 
     var nodes = vis.append("text")
       .attr("dx", function(d) { return d.x; })
@@ -74,8 +73,7 @@ function loadBubbles(sortBy) {
       var data1 = pack.nodes(data);
       titles.attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
-        .text(function(d) { return d.name +
-            (d.children ? "" : ": " + format(d.value)); });
+        .text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
 
       circles.transition()
           .duration(2000)
@@ -123,7 +121,7 @@ bubbles_label_text = {
 }
 
 function loadMediaElement() {
-  if (jQuery('audio,video').length) {
+  if (jQuery('audio,video').not('player-processed').addClass('player-processed').length) {
     jQuery('audio,video').mediaelementplayer({
       // the order of controls you want on the control bar (and other plugins below)
       features: ['playpause','current','progress','duration','tracks','volume'],
