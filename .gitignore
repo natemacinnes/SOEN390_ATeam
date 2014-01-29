@@ -10,3 +10,6 @@ Thumbs.db
 .DS_Store
 *.bak
 *.orig
+
+#html
+.htaccess

@@ -2,15 +2,8 @@ jQuery(document).ready(function() {
   loadBubbles('views');
 });
 
-function bubbleMouseIn(bubble) {
-  console.log('Mouse in: ' + this);
-}
-
-function bubbleMouseOut(bubble) {
-  console.log('Mouse out: ' + this);
-}
-
 function loadBubbles(sortBy) {
+
   // sortBy may be undefined. If so, don't call ajax/bubbles/undefined -_-
   var url = yd_settings.site_url + "ajax/bubbles";
   if (typeof(sortBy) !== 'undefined') {
@@ -52,6 +45,7 @@ function loadBubbles(sortBy) {
       .attr("cy", function(d) { return d.y; })
       .attr("r", function(d) { return d.r; })
       .attr("id", function(d) { return 'narrative-' + d.narrative_id; })
+      .attr("class", function(d) { return !d.children?'node-base':'node-parent'; })
       .style("fill", function(d) { console.log(d); return !d.children ? color(d.parent.name) : "#eeeeee"; })
 
     var nodes = vis.append("text")
@@ -60,7 +54,14 @@ function loadBubbles(sortBy) {
       .style("text-anchor", "middle")
       .text(bubbles_label_text[sortBy]);
 
-    jQuery('svg.bubble .node').hover(bubbleMouseIn, bubbleMouseOut);
+    console.log("checking for a node");
+    console.log(jQuery('.node-base'));
+
+    $(".node-base").click(function() {
+      console.log("Mouse click" + this);
+      console.log(this.__data__.narrative_id);
+      jQuery.colorbox({href: yd_settings.site_url + "/narrative/" + this.__data__.narrative_id});
+    });
 
     updateVis('views');
 
@@ -75,7 +76,7 @@ function loadBubbles(sortBy) {
             (d.children ? "" : ": " + format(d.value)); });
 
       circles.transition()
-          .duration(3000)
+          .duration(2000)
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; })
           .attr("r", function(d) { return d.r; });
@@ -83,7 +84,7 @@ function loadBubbles(sortBy) {
       nodes.text(bubbles_label_text[sortBy]);
 
       nodes.transition()
-        .duration(3000)
+        .duration(2000)
         .attr("dx", function(d) { return d.x; })
         .attr("dy", function(d) { return d.y; });
     }
