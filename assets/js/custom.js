@@ -64,7 +64,7 @@ function loadBubbles(sortBy) {
     $(".node-base").click(function() {
       console.log("Mouse click" + this);
       console.log(this.__data__.narrative_id);
-      jQuery.colorbox({href: yd_settings.site_url + "/narrative/" + this.__data__.narrative_id});
+      jQuery.colorbox({href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id});
     });
 
     updateVis('views');
@@ -125,28 +125,30 @@ bubbles_label_text = {
 }
 
 function loadMediaElement() {
-  jQuery('audio,video').mediaelementplayer({
-    // the order of controls you want on the control bar (and other plugins below)
-    features: ['playpause','current','progress','duration','tracks','volume'],
-    // show framecount in timecode (##:00:00:00)
-    showTimecodeFrameCount: true
-   });
+  if (jQuery('audio,video').length) {
+    jQuery('audio,video').mediaelementplayer({
+      // the order of controls you want on the control bar (and other plugins below)
+      features: ['playpause','current','progress','duration','tracks','volume'],
+      // show framecount in timecode (##:00:00:00)
+      showTimecodeFrameCount: true
+     });
 
-  //AJAX function that changes the picture according to the time of the
-  //the audio.
-  myaudio=document.getElementById("narrative_audio");
-  myaudio.addEventListener("timeupdate", function(e) {
-    //document.getElementById('current-time').innerHTML = myaudio.currentTime;
-    var xmlhttp=new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function() {
-      if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-        document.getElementById("audioImage").src = xmlhttp.responseText;
+    //AJAX function that changes the picture according to the time of the
+    //the audio.
+    myaudio=document.getElementById("narrative_audio");
+    myaudio.addEventListener("timeupdate", function(e) {
+      //document.getElementById('current-time').innerHTML = myaudio.currentTime;
+      var xmlhttp=new XMLHttpRequest();
+      xmlhttp.onreadystatechange=function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+          document.getElementById("audioImage").src = xmlhttp.responseText;
+        }
       }
-    }
-    // TODO make this jQuery using jQuery.get()
-    // TODO make this a real controller method
-    var narrative_id = jQuery('.player-wrapper').attr('id').substring(10)
-    xmlhttp.open("GET",yd_settings.site_url + "ajax/audioImage/" + narrative_id + "/" + myaudio.currentTime, true);
-    xmlhttp.send();
-  }, false);
+      // TODO make this jQuery using jQuery.get()
+      // TODO make this a real controller method
+      var narrative_id = jQuery('.player-wrapper').attr('id').substring(10)
+      xmlhttp.open("GET",yd_settings.site_url + "ajax/audioImage/" + narrative_id + "/" + myaudio.currentTime, true);
+      xmlhttp.send();
+    }, false);
+  }
 }
