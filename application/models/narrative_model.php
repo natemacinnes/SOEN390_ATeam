@@ -47,7 +47,7 @@ class narrative_model extends CI_Model {
   $dir = $narrative_path;
 
   //This is the txt file that will combine all the txt files with ffmpeg
-  $file_concat = fopen("audio_container.txt", "w+");
+  $file_concat = fopen("./uploads/tmp/audio_container.txt", "w+");
 
   //Variables we need to concatenate the audio file,
   //determine the type of narrative to upload, and create an XML file
@@ -59,13 +59,13 @@ class narrative_model extends CI_Model {
   $narrative_language = "";
   $narrative_submit_date = "";
   $narrative_submit_time = "";
-  
+
   $xml = new DOMDocument();
   $xml->formatOutput = true;
   $root = $xml->createElement("data");
   $xml->appendChild($root);
-	
-   
+
+
 
   //check the directory
   if (is_dir($dir))
@@ -75,7 +75,7 @@ class narrative_model extends CI_Model {
     foreach($file_scan as $filecheck)
 	{
       $file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
-      if($file_extension == "jpg") 
+      if($file_extension == "jpg")
 	  {
         $image_count++;
         $audio_jpg = $dir . "/" . $filecheck;
@@ -89,17 +89,19 @@ class narrative_model extends CI_Model {
 		$narrative_submit_date = $xml_reader->submitDate;
 		$narrative_submit_time = $xml_reader->time;
 		str_replace("-", ":", $narrative_submit_time);
-	
+
 		$unique_id = hash("md5", $narrative_name . " " . $narrative_language . " " . $narrative_submit_date . " " . $narrative_submit_time);
 	  }
     }
 	//creating the directory on the server
 	$uploads_direc = "./uploads/".$unique_id;
+  if (!file_exists($uploads_direc)) {
 	mkdir($uploads_direc, 0777);
-	
+}
+
 	 //This is the txt file that will combine all the txt files with ffmpeg
 	$file_concat = fopen($uploads_direc . "/" . "audio_container.txt", "w+");
-	
+
 	if($image_count == 1)
 	{
 		rename($dir . "/" . $audio_jpg, $uploads_direc . "/" . $audio_jpg);
@@ -111,7 +113,7 @@ class narrative_model extends CI_Model {
       {
         //get the file name plus it's extension
         $file_name = pathinfo($file, PATHINFO_FILENAME);
-        
+
         //Check if the file is an mp3
         if(pathinfo($file, PATHINFO_EXTENSION) == "mp3")
         {
@@ -143,7 +145,7 @@ class narrative_model extends CI_Model {
               $audio_jpg = $dir . "/" . $file_name . ".jpg";
 			  rename($dir . "/" . $file_name . ".jpg", $uploads_direc . "/" . $file_name . ".jpg");
             }
-			
+
             //Get the time that the narrative end in the concatenated narrative
             $endTimes = $endTimes + floatval($duration);
 
@@ -189,13 +191,14 @@ class narrative_model extends CI_Model {
       closedir($dh);
     }
 	//change path of xml
+    $upload_direc = './uploads/tmp';
 	$xmlpath = "./uploads/". $unique_id . "/AudioTimes.xml";
     $xml->save($xmlpath) or die("Error");
     fclose($file_concat);
     $command_concatenation = "ffmpeg -f concat -i " . $upload_direc . "/audio_container.txt -c copy " . $upload_direc . "/" . $unique_id .  ".mp3 2>&1";
     $temp2 = shell_exec($command_concatenation);
     //echo "returned: " . $temp2 . "</br>";
-	
+
 
     $database_data = array
          (
@@ -203,8 +206,8 @@ class narrative_model extends CI_Model {
             'xml_path' => $xmlpath,
             'created' => $narrative_submit_date . " " . $narrative_submit_time,
 			'uploaded' => "",
-			'uploaded_by' => "default",
-			'language' => $narrative_language,
+			'uploaded_by' => 1,
+			'language' => "en", // TODO hardcoded
 			'views' => 0,
 			'agrees' => 0,
 			'disagrees' => 0,
@@ -213,11 +216,11 @@ class narrative_model extends CI_Model {
          );
 
        $this->db->insert('narratives', $database_data);
-	   
+
 	 //  $this->view_wrapper('admin/upload', $error);
-  
+
 	//INSERT INTO narratives(narrative_id, xml_path, created, uploaded, uploaded_by, language, views, agrees, disagrees, shares, flags)
-	//VALUES ($unique_id, $xmlpath, $narrative_submit_date . " " . $narrative_submit_time, "", "default", $narrative_language, 0, 0, 0, 0, 0) 
+	//VALUES ($unique_id, $xmlpath, $narrative_submit_date . " " . $narrative_submit_time, "", "default", $narrative_language, 0, 0, 0, 0, 0)
     }
   }
 
