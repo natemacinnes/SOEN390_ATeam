@@ -62,8 +62,6 @@ function loadBubbles(sortBy) {
     console.log(jQuery('.node-base'));
 
     $(".node-base").click(function() {
-      console.log("Mouse click" + this);
-      console.log(this.__data__.narrative_id);
       jQuery.colorbox({href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id});
     });
 
