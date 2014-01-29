@@ -1,5 +1,6 @@
 jQuery(document).ready(function() {
   loadBubbles('views');
+  loadMediaElement();
 });
 
 function bubbleMouseIn(bubble) {
@@ -17,6 +18,9 @@ function loadBubbles(sortBy) {
     url += '/' + sortBy;
   }
 
+  if (!jQuery('.bubble-container').length) {
+    return false;
+  }
   var diameter = (document.getElementById("bubble-container").offsetWidth)/2
   format = d3.format(",d"),
   color = d3.scale.category20c();
@@ -52,6 +56,7 @@ function loadBubbles(sortBy) {
       .attr("cy", function(d) { return d.y; })
       .attr("r", function(d) { return d.r; })
       .attr("id", function(d) { return 'narrative-' + d.narrative_id; })
+      .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
       .style("fill", function(d) { console.log(d); return !d.children ? color(d.parent.name) : "#eeeeee"; })
 
     var nodes = vis.append("text")
@@ -104,7 +109,7 @@ function loadBubbles(sortBy) {
 bubbles_sorting = {
   'agrees': function(d) { return d['agrees']; },
   'disagrees': function(d) { return d['disagrees']; },
-  'views': function(d) { return d['views']; },
+  'views': function(d) { return parseInt(d['views']) + 150/30; },
   'age': function(d) { var dcreated = new Date(d['created']); return dcreated.getYear() + dcreated.getMonth()/12*900 + dcreated.getDay()/31*100; },
   // TODO
   'popular': function(d) { return d['narrative_id']; }
@@ -117,4 +122,31 @@ bubbles_label_text = {
   'age': function(d) { return !d.children ? String(d['created']).split(' ')[0] : null; },
   // TODO
   'popular': function(d) { return d['narrative_id']; }
+}
+
+function loadMediaElement() {
+  jQuery('audio,video').mediaelementplayer({
+    // the order of controls you want on the control bar (and other plugins below)
+    features: ['playpause','current','progress','duration','tracks','volume'],
+    // show framecount in timecode (##:00:00:00)
+    showTimecodeFrameCount: true
+   });
+
+  //AJAX function that changes the picture according to the time of the
+  //the audio.
+  myaudio=document.getElementById("narrative_audio");
+  myaudio.addEventListener("timeupdate", function(e) {
+    //document.getElementById('current-time').innerHTML = myaudio.currentTime;
+    var xmlhttp=new XMLHttpRequest();
+    xmlhttp.onreadystatechange=function() {
+      if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+        document.getElementById("audioImage").src = xmlhttp.responseText;
+      }
+    }
+    // TODO make this jQuery using jQuery.get()
+    // TODO make this a real controller method
+    var narrative_id = jQuery('.player-wrapper').attr('id').substring(10)
+    xmlhttp.open("GET",yd_settings.site_url + "ajax/audioImage/" + narrative_id + "/" + myaudio.currentTime, true);
+    xmlhttp.send();
+  }, false);
 }
