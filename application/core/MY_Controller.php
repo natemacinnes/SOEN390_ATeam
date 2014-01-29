@@ -2,6 +2,7 @@
 class MY_Controller extends CI_Controller {
    function __construct() {
       parent::__construct();
+<<<<<<< HEAD
       // To store persistent data across a browsing session
       session_start();
 
@@ -11,6 +12,9 @@ class MY_Controller extends CI_Controller {
 
       // Session-based messaging
       $this->load->model('system_message_model');
+=======
+	  $this->load->helper('form');
+>>>>>>> a82066656589d2533cc8b6591b99844898ee5a7b
    }
 
    /**
