@@ -45,18 +45,6 @@
     <h1>Narratives <small>Batch Upload</small></h1>
   </div>
 
-  <!--<div style="position:relative;">
-        <a class='btn btn-primary' href='javascript:;'>
-            Choose File...
-            <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="file_source" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
-        </a>
-        <span class='label label-info' id="upload-file-info"></span>
-  </div>-->
-
-  <form action="upload" method="post" enctype="multipart/form-data">
-    <label for="file" >Select Narrative zip to upload:</label>
-    <input type="file" name="file" id="file"><br>
-    <input class="btn btn-default" type="submit" name="submit" value="Submit">
-  </form>
+  <p>The narrative was uploaded successfully.</p>
 
 </div>
