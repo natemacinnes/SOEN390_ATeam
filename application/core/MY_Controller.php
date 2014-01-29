@@ -1,19 +1,20 @@
 <?php
 class MY_Controller extends CI_Controller {
-   function __construct() {
-      parent::__construct();
-      // To store persistent data across a browsing session
-      session_start();
+  function __construct() {
+    parent::__construct();
+    // To store persistent data across a browsing session
+    session_start();
 
-      // Common helpers
-      $this->load->helper('url');
-      $this->load->helper('form');
+    // Common helpers
+    $this->load->helper('url');
+    $this->load->helper('form');
 
-      // Session-based messaging
-      $this->load->model('system_message_model');
-   }
+    // Session-based messaging
+    $this->load->model('system_message_model');
+    $this->load->helper('form');
+  }
 
-   /**
+  /**
    * Load the specified View, automatically wrapping it between the site's
    * header and footer.
    */
