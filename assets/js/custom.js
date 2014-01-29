@@ -1,13 +1,5 @@
 jQuery(document).ready(function() {
-  loadBubbles('narrative_id');
-
-  // Toggle buttons for navigation links
-  jQuery('.btn-group a').click(function() {
-    jQuery('.btn-group a').removeClass('active');
-    jQuery(this).toggleClass('active');
-    var sortby = jQuery(this).attr('href').substring(1);
-    loadBubbles(sortby);
-  });
+  loadBubbles('views');
 });
 
 function bubbleMouseIn(bubble) {
@@ -32,7 +24,7 @@ function loadBubbles(sortBy) {
   var pack = d3.layout.pack()
     .sort(null)
     .size([diameter, diameter])
-    .value(function(d) { return d[sortBy]; })
+    .value(bubbles_sorting[sortBy])
     .padding(1.5);
 
   // Create the SVG bubble structure
@@ -66,7 +58,7 @@ function loadBubbles(sortBy) {
       .attr("dx", function(d) { return d.x; })
       .attr("dy", function(d) { return d.y; })
       .style("text-anchor", "middle")
-      .text(function(d) { return d[sortBy]; });
+      .text(bubbles_label_text[sortBy]);
 
     jQuery('svg.bubble .node').hover(bubbleMouseIn, bubbleMouseOut);
 
@@ -75,7 +67,7 @@ function loadBubbles(sortBy) {
     function updateVis(sortBy) {
       console.log('updating bubbles to be sorted by ' + sortBy);
 
-      pack.value(function(d) { return d[sortBy]; });
+      pack.value(bubbles_sorting[sortBy]);
       var data1 = pack.nodes(data);
       titles.attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
@@ -88,16 +80,41 @@ function loadBubbles(sortBy) {
           .attr("cy", function(d) { return d.y; })
           .attr("r", function(d) { return d.r; });
 
-      nodes.text(function(d) { return d[sortBy]; });
+      nodes.text(bubbles_label_text[sortBy]);
 
       nodes.transition()
         .duration(3000)
         .attr("dx", function(d) { return d.x; })
         .attr("dy", function(d) { return d.y; });
-
     }
+
+    // Toggle buttons for navigation links
+    jQuery('.btn-group a').click(function() {
+      jQuery('.btn-group a').removeClass('active');
+      jQuery(this).toggleClass('active');
+      var sortBy = jQuery(this).attr('href').substring(1);
+      updateVis(sortBy);
+    });
 
     d3.select(self.frameElement).style("height", diameter + "px");
 
   });
+}
+
+bubbles_sorting = {
+  'agrees': function(d) { return d['agrees']; },
+  'disagrees': function(d) { return d['disagrees']; },
+  'views': function(d) { return d['views']; },
+  'age': function(d) { var dcreated = new Date(d['created']); return dcreated.getYear() + dcreated.getMonth()/12*900 + dcreated.getDay()/31*100; },
+  // TODO
+  'popular': function(d) { return d['narrative_id']; }
+}
+
+bubbles_label_text = {
+  'agrees': function(d) { return d['agrees']; },
+  'disagrees': function(d) { return d['disagrees']; },
+  'views': function(d) { return d['views']; },
+  'age': function(d) { return !d.children ? String(d['created']).split(' ')[0] : null; },
+  // TODO
+  'popular': function(d) { return d['narrative_id']; }
 }

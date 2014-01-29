@@ -25,6 +25,7 @@ class Ajax extends MY_Controller {
     // Load nodes into the active cluster
     $result = $this->narrative_model->get_all();
     foreach ($result as $narrative) {
+      //$narrative['created'] = strtotime($narrative['created']);
       $nodes[] = $narrative;
     }
 

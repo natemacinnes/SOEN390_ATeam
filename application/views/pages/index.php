@@ -10,6 +10,7 @@
     <div class="sort-container float-left">
       <div class="btn-group">
         <a href="#" class="btn btn-default disabled" role="button">Sort by: </a>
+        <a href="#views" title="Number of listens" class="btn btn-default active" role="button"><span class="glyphicon glyphicon-headphones"></span></a>
         <a href="#age" title="New narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span></a>
         <a href="#popular" title="Popular narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-fire"></span></a>
         <a href="#agrees" title="Agreed narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up"></span></a>
