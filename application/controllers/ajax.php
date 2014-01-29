@@ -24,7 +24,7 @@ class Ajax extends MY_Controller {
     foreach ($result as $narrative) {
       $nodes[] = array(
         'name' => $narrative['narrative_id'],
-        'size' => rand(500, 7000),
+        'size' => $narrative['narrative_id'] * $narrative['agrees'],
       );
     }
 

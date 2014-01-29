@@ -63,16 +63,16 @@ function loadBubbles(sortBy) {
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
     node.append("title")
-      .text(function(d) { return d.className + ": " + format(d.value); });
+      .text(function(d) { return d.className });
 
     node.append("circle")
       .attr("r", function(d) { return d.r; })
       .style("fill", function(d) { return color(d.packageName); });
 
-    /*node.append("text")
+    node.append("text")
       .attr("dy", ".3em")
       .style("text-anchor", "middle")
-      .text(function(d) { return d.className.substring(0, d.r / 3); });*/
+      .text(function(d) { return d.className; });
 
     d3.select(self.frameElement).style("height", diameter + "px");
     jQuery('svg.bubble .node').hover(bubbleMouseIn, bubbleMouseOut);
