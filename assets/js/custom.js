@@ -57,7 +57,6 @@ function loadBubbles(sortBy) {
       .text(bubbles_label_text[sortBy]);
 
     console.log("checking for a node");
-    console.log(jQuery('.node-base'));
 
     $(".node-base").click(function() {
       jQuery.colorbox({href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id});
@@ -102,11 +101,16 @@ function loadBubbles(sortBy) {
   });
 }
 
+function dateFromString(str) {
+  var a = $.map(str.split(/[^0-9]/), function(s) { return parseInt(s, 10) });
+  return new Date(a[0], a[1]-1 || 0, a[2] || 1, a[3] || 0, a[4] || 0, a[5] || 0, a[6] || 0);
+}
+
 bubbles_sorting = {
   'agrees': function(d) { return d['agrees']; },
   'disagrees': function(d) { return d['disagrees']; },
   'views': function(d) { return parseInt(d['views']) + 150/30; },
-  'age': function(d) { var dcreated = new Date(d['created']); return dcreated.getYear() + dcreated.getMonth()/12*900 + dcreated.getDay()/31*100; },
+  'age': function(d) { var dcreated = dateFromString(d['created']); return dcreated.getYear() + dcreated.getMonth()/12*900 + dcreated.getDay()/31*100; },
   // TODO
   'popular': function(d) { return d['narrative_id']; }
 }
