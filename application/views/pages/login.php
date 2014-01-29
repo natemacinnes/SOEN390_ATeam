@@ -42,60 +42,27 @@
 
 <div class="container fixed-margin">
   <div class="page-header">
-    <h1>Narratives <small>View All</small></h1>
+    <h1>Admin <small>Login</small></h1>
   </div>
 
-  <ul class="pagination float-right">
-    <li><a href="#">&laquo;</a></li>
-    <li><a href="#">1</a></li>
-    <li><a href="#">2</a></li>
-    <li><a href="#">3</a></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li><a href="#">&raquo;</a></li>
-  </ul>
-  <div class="clear"></div>
-
-  <table class="table table-hover">
-    <thead>
-      <tr> 
-        <th>ID</th>
-        <th>test</th>
-        <th>test</th>
-        <th>test</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr> 
-        <td>ID</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-      </tr>
-      <tr> 
-        <td>ID</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-      </tr>
-      <tr> 
-        <td>ID</td>
-        <td>test</td>
-        <td>test</td>
-        <td>test</td>
-      </tr>
-    </tbody>
-  </table>
-
-  <ul class="pagination float-right">
-    <li><a href="#">&laquo;</a></li>
-    <li><a href="#">1</a></li>
-    <li><a href="#">2</a></li>
-    <li><a href="#">3</a></li>
-    <li><a href="#">4</a></li>
-    <li><a href="#">5</a></li>
-    <li><a href="#">&raquo;</a></li>
-  </ul>
-  <div class="clear"></div>
+  <form class="form-horizontal" role="form">
+    <div class="form-group">
+      <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+      <div class="col-sm-10">
+        <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+      <div class="col-sm-10">
+        <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-default">Sign in</button>
+      </div>
+    </div>
+</form>
 
 </div>

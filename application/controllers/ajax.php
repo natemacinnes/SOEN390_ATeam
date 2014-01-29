@@ -13,19 +13,20 @@ class Ajax extends MY_Controller {
     $data = array();
     $data['name'] = 'flare';
 
+    // A flare can have on or more groupings
+    $groupings = array();
+
     // A flare can have on or more clusters
     $clusters = array();
 
     // Clusters are groups of nodes
     $nodes = array();
 
-    // Load nodes into the active clusder
+    // Load nodes into the active cluster
     $result = $this->narrative_model->get_all();
     foreach ($result as $narrative) {
-      $nodes[] = array(
-        'name' => $narrative['narrative_id'],
-        'size' => rand(500, 7000),
-      );
+      //$narrative['created'] = strtotime($narrative['created']);
+      $nodes[] = $narrative;
     }
 
     $clusters[] = array(
@@ -33,7 +34,12 @@ class Ajax extends MY_Controller {
       'children' => $nodes,
     );
 
-    $data['children'] = $clusters;
+    $groupings[] = array(
+      'name' => 'grouping1',
+      'children' => $clusters,
+    );
+
+    $data['children'] = $groupings;
 
     print json_encode($data);
   }

@@ -30,9 +30,25 @@ circle:hover {
 
 }
 
+
+
+
+/* Admin */
+
+.dropdown-margin{ margin: 20px 0; }
+
+
+
+
+
+
 /* helper classes */
 
 .top-margin{margin-top: 5px;}
+.left-margin{margin-left: 5px;}
+.right-margin{margin-right: 5px;}
+.bottom-margin{margin-bottom: 5px;}
+
 .fixed-margin{margin-top: 50px;}
 
 .float-left{ float: left; }

@@ -1,64 +1,120 @@
 jQuery(document).ready(function() {
-	// Toggle buttons for navigation links
-	jQuery('.btn-group a').click(function() { jQuery(this).toggleClass('active'); });
-
-	function bubbleMouseIn(bubble) {
-		console.log('Mouse in: ' + this);
-	}
-
-	function bubbleMouseOut(bubble) {
-		console.log('Mouse out: ' + this);
-	}
-
-	var diameter = (document.getElementById("bubble-container").offsetWidth)/2
-		format = d3.format(",d"),
-		color = d3.scale.category20c();
-
-	var bubble = d3.layout.pack()
-		.sort(null)
-		.size([diameter, diameter])
-		.padding(1.5);
-
-	var svg = d3.select(".test").append("svg")
-		.attr("width", diameter)
-		.attr("height", diameter)
-		.attr("class", "bubble");
-
-	d3.json(yd_settings.site_url + "ajax/bubbles", function(error, root) {
-	  var node = svg.selectAll(".node")
-		  .data(bubble.nodes(classes(root))
-		  .filter(function(d) { return !d.children; }))
-		.enter().append("g")
-		  .attr("class", "node")
-		  .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-	  node.append("title")
-		  .text(function(d) { return d.className + ": " + format(d.value); });
-
-	  node.append("circle")
-		  .attr("r", function(d) { return d.r; })
-		  .style("fill", function(d) { return color(d.packageName); });
-
-	  /*node.append("text")
-		  .attr("dy", ".3em")
-		  .style("text-anchor", "middle")
-		  .text(function(d) { return d.className.substring(0, d.r / 3); });*/
-
-		jQuery('svg.bubble .node').hover(bubbleMouseIn, bubbleMouseOut);
-	});
-
-	// Returns a flattened hierarchy containing all leaf nodes under the root.
-	function classes(root) {
-	  var classes = [];
-
-	  function recurse(name, node) {
-		if (node.children) node.children.forEach(function(child) { recurse(node.name, child); });
-		else classes.push({packageName: name, className: node.name, value: node.size});
-	  }
-
-	  recurse(null, root);
-	  return {children: classes};
-	}
-
-	d3.select(self.frameElement).style("height", diameter + "px");
+  loadBubbles('views');
 });
+
+function bubbleMouseIn(bubble) {
+  console.log('Mouse in: ' + this);
+}
+
+function bubbleMouseOut(bubble) {
+  console.log('Mouse out: ' + this);
+}
+
+function loadBubbles(sortBy) {
+  // sortBy may be undefined. If so, don't call ajax/bubbles/undefined -_-
+  var url = yd_settings.site_url + "ajax/bubbles";
+  if (typeof(sortBy) !== 'undefined') {
+    url += '/' + sortBy;
+  }
+
+  var diameter = (document.getElementById("bubble-container").offsetWidth)/2
+  format = d3.format(",d"),
+  color = d3.scale.category20c();
+
+  var pack = d3.layout.pack()
+    .sort(null)
+    .size([diameter, diameter])
+    .value(bubbles_sorting[sortBy])
+    .padding(1.5);
+
+  // Create the SVG bubble structure
+  var svg = d3.select(".test").append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter)
+    .attr("class", "bubble");
+
+  d3.json(url, function(error, data) {
+    console.log('creating bubbles sorted by ' + sortBy);
+
+    var vis = svg.datum(data).selectAll('.node')
+      .data(pack.nodes)
+      .enter()
+        .append('g');
+
+    var titles = vis.append('title')
+      .attr("x", function(d) { return d.x; })
+      .attr("y", function(d) { return d.y; })
+      .text(function(d) { return d.narrative_id +
+        (d.children ? "" : ": " + format(d.value)); });
+
+    var circles = vis.append("circle")
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; })
+      .attr("r", function(d) { return d.r; })
+      .attr("id", function(d) { return 'narrative-' + d.narrative_id; })
+      .style("fill", function(d) { console.log(d); return !d.children ? color(d.parent.name) : "#eeeeee"; })
+
+    var nodes = vis.append("text")
+      .attr("dx", function(d) { return d.x; })
+      .attr("dy", function(d) { return d.y; })
+      .style("text-anchor", "middle")
+      .text(bubbles_label_text[sortBy]);
+
+    jQuery('svg.bubble .node').hover(bubbleMouseIn, bubbleMouseOut);
+
+    updateVis('views');
+
+    function updateVis(sortBy) {
+      console.log('updating bubbles to be sorted by ' + sortBy);
+
+      pack.value(bubbles_sorting[sortBy]);
+      var data1 = pack.nodes(data);
+      titles.attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; })
+        .text(function(d) { return d.name +
+            (d.children ? "" : ": " + format(d.value)); });
+
+      circles.transition()
+          .duration(3000)
+          .attr("cx", function(d) { return d.x; })
+          .attr("cy", function(d) { return d.y; })
+          .attr("r", function(d) { return d.r; });
+
+      nodes.text(bubbles_label_text[sortBy]);
+
+      nodes.transition()
+        .duration(3000)
+        .attr("dx", function(d) { return d.x; })
+        .attr("dy", function(d) { return d.y; });
+    }
+
+    // Toggle buttons for navigation links
+    jQuery('.btn-group a').click(function() {
+      jQuery('.btn-group a').removeClass('active');
+      jQuery(this).toggleClass('active');
+      var sortBy = jQuery(this).attr('href').substring(1);
+      updateVis(sortBy);
+    });
+
+    d3.select(self.frameElement).style("height", diameter + "px");
+
+  });
+}
+
+bubbles_sorting = {
+  'agrees': function(d) { return d['agrees']; },
+  'disagrees': function(d) { return d['disagrees']; },
+  'views': function(d) { return d['views']; },
+  'age': function(d) { var dcreated = new Date(d['created']); return dcreated.getYear() + dcreated.getMonth()/12*900 + dcreated.getDay()/31*100; },
+  // TODO
+  'popular': function(d) { return d['narrative_id']; }
+}
+
+bubbles_label_text = {
+  'agrees': function(d) { return d['agrees']; },
+  'disagrees': function(d) { return d['disagrees']; },
+  'views': function(d) { return d['views']; },
+  'age': function(d) { return !d.children ? String(d['created']).split(' ')[0] : null; },
+  // TODO
+  'popular': function(d) { return d['narrative_id']; }
+}

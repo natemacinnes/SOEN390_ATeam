@@ -4,16 +4,17 @@
       <h1>YouDeliberate</h1>
     </div>
 
-    <h3>Should GMO foods be labelled?</h3>
+    <h3>Should GMO foods be labeled?</h3>
 
 
     <div class="sort-container float-left">
       <div class="btn-group">
         <a href="#" class="btn btn-default disabled" role="button">Sort by: </a>
-        <a href="#" title="New narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span></a>
-        <a href="#" title="Popular narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-fire"></span></a>
-        <a href="#" title="Agreed narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up"></span></a>
-        <a href="#" title="Disagreed narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+        <a href="#views" title="Number of listens" class="btn btn-default active" role="button"><span class="glyphicon glyphicon-headphones"></span></a>
+        <a href="#age" title="New narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span></a>
+        <a href="#popular" title="Popular narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-fire"></span></a>
+        <a href="#agrees" title="Agreed narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+        <a href="#disagrees" title="Disagreed narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down"></span></a>
       </div>
     </div>
     <div class="filter-container float-right">

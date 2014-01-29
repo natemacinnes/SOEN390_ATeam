@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class narrative_model extends CI_Model {
+  private $table = 'narratives';
   public function __construct() {
     parent::__construct();
     $this->load->database();
@@ -10,7 +11,7 @@ class narrative_model extends CI_Model {
    * Retrieve a narrative data structure by ID, or FALSE upon failure.
    */
   public function get($narrative_id) {
-    $query = $this->db->get_where('narratives', array('narrative_id' => $narrative_id));
+    $query = $this->db->get_where($this->table, array('narrative_id' => $narrative_id));
     $narrative = $query->row_array();
     return $narrative;
   }
@@ -18,11 +19,28 @@ class narrative_model extends CI_Model {
   /**
    * Retrieve a narrative data structure by ID, or FALSE upon failure.
    */
-  public function get_all() {
-    $query = $this->db->get('narratives');
+  public function get_all($sortby = 'id') {
+    // Get the sort column
+    $sort_cols = array(
+      'id' => 'narrative_id',
+      'age' => 'created',
+      'agrees' => 'agrees',
+      'disagrees' => 'disagrees',
+    );
+    if (!isset($sort_cols[$sortby])) {
+      // TODO: Error handling
+      return array();
+    }
+    $sort_col = $sort_cols[$sortby];
+
+
+    $query = $this->db->from($this->table)
+      ->order_by($sort_col, 'desc')
+      ->get();
     $narratives = $query->result_array();
     return $narratives;
   }
+<<<<<<< HEAD
   
   public function process_narrative($narrative_path)
   {
@@ -149,5 +167,23 @@ class narrative_model extends CI_Model {
 	$temp2 = shell_exec($command_concatenation);
 	//echo "returned: " . $temp2 . "</br>";
   
+=======
+
+  /**
+   * Inserts a narrative structure into the database.
+   */
+  public function insert($narrative) {
+    $this->db->insert($this->table, $narrative);
+  }
+
+  /**
+   * Deletes an narrative based on the conditions passed.
+   *
+   * Example:
+   *   $this->narrative_model->delete(array('narrative_id' => $narrative->id));
+   */
+  public function delete($conditions) {
+    $this->db->delete($this->table, $conditions);
+>>>>>>> ddce7130d114f7e7f914f6dc660173195c825bac
   }
 }
