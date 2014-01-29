@@ -3,6 +3,8 @@ application/cache
 application/logs
 application/config/database.php
 
+uploads/*
+
 # OS Thumbnails
 Thumbs.db
 .DS_Store
