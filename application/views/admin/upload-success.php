@@ -33,7 +33,7 @@
   <div class="page-header">
     <h1>Narratives <small>Batch Upload</small></h1>
   </div>
-
+  <?php if(isset($path)) echo $path; ?>
   <p>The narrative was uploaded successfully.</p>
 
 </div>

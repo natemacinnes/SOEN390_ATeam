@@ -75,7 +75,7 @@ function loadBubbles(sortBy) {
         .text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
 
       circles.transition()
-          .duration(2000)
+          .duration(700)
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; })
           .attr("r", function(d) { return d.r; });
@@ -83,7 +83,7 @@ function loadBubbles(sortBy) {
       nodes.text(bubbles_label_text[sortBy]);
 
       nodes.transition()
-        .duration(2000)
+        .duration(700)
         .attr("dx", function(d) { return d.x; })
         .attr("dy", function(d) { return d.y; });
     }
