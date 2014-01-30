@@ -106,10 +106,12 @@ function dateFromString(str) {
   return new Date(a[0], a[1]-1 || 0, a[2] || 1, a[3] || 0, a[4] || 0, a[5] || 0, a[6] || 0);
 }
 
+// +1 because 0 views/agrees/disagrees is valid state, but results in weird bubble rendering
+// TODO: normalization
 bubbles_sorting = {
-  'agrees': function(d) { return d['agrees']; },
-  'disagrees': function(d) { return d['disagrees']; },
-  'views': function(d) { return parseInt(d['views']) + 150/30; },
+  'agrees': function(d) { return d['agrees']+1; },
+  'disagrees': function(d) { return d['disagrees']+1; },
+  'views': function(d) { return parseInt(d['views']+1) + 150/30; },
   'age': function(d) { var dcreated = dateFromString(d['created']); return dcreated.getYear() + dcreated.getMonth()/12*900 + dcreated.getDay()/31*100; },
   // TODO
   'popular': function(d) { return d['narrative_id']; }
