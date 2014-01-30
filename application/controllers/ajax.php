@@ -49,16 +49,16 @@ class Ajax extends MY_Controller {
     $path = "./uploads/$narrative_id/AudioTimes.xml";
     if (file_exists($path) && $xml = simplexml_load_file($path)) {
       $timeNarrative =0;
-      if($current_time <= floatval($xml->Narrative[$timeNarrative]->End))
+      if ($current_time <= floatval($xml->Narrative[$timeNarrative]->End))
       {
-        echo base_url() . 'uploads/' . $xml->Narrative[$timeNarrative]->Image;
+        echo base_url() . 'uploads/' . $narrative_id . '/' . $xml->Narrative[$timeNarrative]->Image;
       }
       else
       {
         while($current_time > floatval($xml->Narrative[$timeNarrative]->End)){
           $timeNarrative +=1;
         }
-        echo base_url() . 'uploads/' . $xml->Narrative[$timeNarrative]->Image;
+        echo base_url() . 'uploads/' . $narrative_id . '/' .  $xml->Narrative[$timeNarrative]->Image;
       }
     }
     else {
