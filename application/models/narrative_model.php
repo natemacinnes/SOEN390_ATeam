@@ -200,7 +200,7 @@ class narrative_model extends CI_Model {
     if (!is_dir($new_dir)) {
       rename($dir, $new_dir);
     }
-    return TRUE;
+    return array('error' => 0);
   }
 
   /**
