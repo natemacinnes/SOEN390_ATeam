@@ -65,7 +65,9 @@ class narrative_model extends CI_Model {
     //check the directory
     if (!is_dir($dir))
     {
-      return FALSE;
+		$data['error'] = 1;
+		$data['error_message'] = 'Processing failed. Please attempt the upload again.';
+      return $data;
     }
 
     //Scan the folder to determine the amount of pictures in a narrative
@@ -200,7 +202,8 @@ class narrative_model extends CI_Model {
     if (!is_dir($new_dir)) {
       rename($dir, $new_dir);
     }
-    return TRUE;
+	$data['error'] = 0;
+    return $data;
   }
 
   /**
