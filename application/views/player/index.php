@@ -3,7 +3,7 @@
 
 <?php
 // Need to add path to narrative here and in the source of the video
-$path = 'uploads/' . $narrative_id . '/narrative' . $narrative_id . '.mp3';
+$path = 'uploads/' . $narrative_id . '/combined.mp3';
 if (file_exists($path)):
 ?>
 <div class="player-wrapper" id="narrative-<?php echo $narrative_id; ?>">
