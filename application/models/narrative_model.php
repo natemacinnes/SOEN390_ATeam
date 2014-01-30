@@ -183,8 +183,8 @@ class narrative_model extends CI_Model {
 
     $database_data = array(
       'created' => $narrative_submit_date . " " . $narrative_submit_time,
-      'uploaded' => "", // TODO insert current date in TIMESTAMP format
-      'uploaded_by' => 1,
+      'audio_length' => $endTimes,
+      'uploaded_by' => 1, // TODO hardcoded
       'language' => "en", // TODO hardcoded
       'views' => 0,
       'agrees' => 0,
