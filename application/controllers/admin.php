@@ -7,6 +7,7 @@ class admin extends MY_Controller {
   public function __construct() {
     parent::__construct();
     $this->load->model('upload_model');
+	$this->load->model('narrative_model');
   }
 
   /**
@@ -40,7 +41,7 @@ class admin extends MY_Controller {
 	}
 	
 	//Setting constraints on the file uploaded
-    $config['upload_path'] = './uploads/tmp/'.$folder_name.'/';
+    $config['upload_path'] = $path;
     $config['allowed_types'] = 'zip';
     $config['overwrite'] = FALSE;
     $this->load->library('upload', $config);
@@ -56,8 +57,23 @@ class admin extends MY_Controller {
 		$upload_data = $this->upload->data();
 		$zipFileName = $upload_data['file_name'];
 		
-		// Calling preprocessing method to unzip and handover folder
-		$data = $this->upload_model->preprocessing($path, $folder_name, $zipFileName);
+		// Calling upload_model to unzip, handling error
+		$data = $this->upload_model->unzip($path, $zipFileName);
+		if($data['error'] === 1)
+		{
+			$error['error'] = $data['error_message'];
+			$this->view_wrapper('admin/upload', $error);
+		}
+		
+		//Calling arrative_model for processing
+		$data = $this->narrative_model->process_narrative($data['narrative_path']);
+		if($data['error'] === 1)
+		{
+			$error['error'] = $data['error_message'];
+			$this->view_wrapper('admin/upload', $error);
+		}
+		
+		//Output success
 		$this->view_wrapper('admin/upload-success', $data);
 	}	
 	
