@@ -82,7 +82,7 @@
       <?php foreach ($narratives as $narrative): ?>
         <tr>
           <td><?php print $narrative['narrative_id']; ?></td>
-          <td><?php print intval($narrative['audio_length'] / 60); ?>:<?php print $narrative['audio_length'] % 60; ?></td>
+          <td><?php printf('%d', $narrative['audio_length']/60); ?>:<?php printf('%02d', $narrative['audio_length']%60); ?></td>
           <td><?php print $narrative['language']; ?></td>
           <td><?php print $narrative['created']; ?></td>
           <td><?php print $narrative['uploaded']; ?></td>
