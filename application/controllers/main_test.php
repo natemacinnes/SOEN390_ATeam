@@ -48,7 +48,7 @@ class Main_Test extends MY_Controller {
 								"shares" => 52,
 								"flags" => 3
 							);
-	$data['narrative_get'] = $this->unit->run($narrative_get, $narrative_get_array, "Narrative Model Get Test");
+	$data['narrative_get'] = $this->unit->run($narrative_get, $narrative_get_array, "Narrative Model Get Test", "This test is for the get function which will take in an ID of a narrative as input and will get all the record from the narratives table in the database. This test will pass if the array matches the hard-coded array.");
 	$data['n_db_array'] = $narrative_get;  //array that's gotten from db
 	$data['n_created_array'] = $narrative_get_array; // array that's hardcoded
 	
@@ -152,7 +152,7 @@ class Main_Test extends MY_Controller {
 											"flags" => 3
 										)
 									);
-	$data['narrative_get_all'] = $this->unit->run($narr_get_all, $narrative_get_all_array, "Narrative Model Get All Test");
+	$data['narrative_get_all'] = $this->unit->run($narr_get_all, $narrative_get_all_array, "Narrative Model Get All Test", "The get_all function takes in an optional sorting parameter and returns the full table entries for the narratives table. Test will make sure that it matches the hard-coded array and will succeed if it does.");
 	$data['n_get_all_array'] = $narr_get_all;
 	$data['n_all_created_arr'] = $narrative_get_all_array;
 	
@@ -181,7 +181,7 @@ class Main_Test extends MY_Controller {
 	 $this->narrative_model->insert($array_to_add);
 	 $narrative_insert_check = $this->narrative_model->get(7);
 	 
-	 $data['narrative_insert'] = $this->unit->run($narrative_insert_check, $array_to_add, "Narrative Model Insert Test");
+	 $data['narrative_insert'] = $this->unit->run($narrative_insert_check, $array_to_add, "Narrative Model Insert Test", "This test (insert function) takes in an array to add to the narratives table in the database. It will check whether the array has been added by using the previously tested get function.");
 	 $data['n_insert_array'] = $array_to_add;
 	 $data['n_insert_get'] = $narrative_insert_check; 
 
@@ -190,7 +190,7 @@ class Main_Test extends MY_Controller {
 	$this->narrative_model->delete(array('narrative_id' => 7));
 	$narrative_delete_check = $this->narrative_model->get(7);
 	
-	$data['narrative_delete'] = $this->unit->run($narrative_delete_check, null, "Narrative Model Delete Test");
+	$data['narrative_delete'] = $this->unit->run($narrative_delete_check, null, "Narrative Model Delete Test", "This test (delete function) takes in an array of fields to find a specific row in the narratives table in the database and will delete that row. In this case we delete the previously inserted record and verify by the get function." );
 	
 	 
 	 
