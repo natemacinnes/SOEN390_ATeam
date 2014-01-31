@@ -65,15 +65,6 @@ function loadBubbles(sortBy) {
 
     updateVis('views');
 
-    $.plot('.node-base', [[1,3], [2,3] ], {
-      series: {
-        pie: {
-          innerRadius: 0.5,
-          show: true
-        }
-      }
-    });
-
     function updateVis(sortBy) {
       console.log('updating bubbles to be sorted by ' + sortBy);
 
