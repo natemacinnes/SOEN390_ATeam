@@ -25,6 +25,12 @@ class Ajax extends MY_Controller {
     // Load nodes into the active cluster
     $result = $this->narrative_model->get_all();
     foreach ($result as $narrative) {
+      $pie_data = array(
+        array("label" => "one", "value" => 20),
+        array("label" => "two", "value" => 50),
+        array("label" => "thgree", "value" => 30),
+      );
+      $narrative['pie_data'] = $pie_data;
       //$narrative['created'] = strtotime($narrative['created']);
       $nodes[] = $narrative;
     }
@@ -33,6 +39,7 @@ class Ajax extends MY_Controller {
       'name' => 'cluster1',
       'children' => $nodes,
     );
+
 
     $groupings[] = array(
       'name' => 'grouping1',
