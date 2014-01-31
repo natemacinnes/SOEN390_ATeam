@@ -9,7 +9,7 @@ class upload_model extends CI_Model {
   /**
    * Pre-processing: unzipping folder and moving it to tmp folder
    */
-  public function preprocessing($path, $folder_name, $zipFileName) {
+  public function unzip($path, $zipFileName) {
 	$zipFile = $path . $zipFileName;
 	//Unzipping
 	$zip = new ZipArchive;
@@ -20,15 +20,14 @@ class upload_model extends CI_Model {
 	}
 	else
 	{
-		$error['error'] = 'Unzipping failed. Please attempt the upload again.';
-		$this->view_wrapper('admin/upload', $error);
+		$data['error'] = 1;
+		$data['error_message'] = 'Unzipping failed. Please attempt the upload again.';
+		return $data;
 	}
 	
-	//Call narrative_model for processing
-	$narrative_path = $path.substr($zipFileName, 0, -4);
-	$this->narrative_model->process_narrative($narrative_path);
-	$data['path'] = $narrative_path;
-	
+	//Return for processing
+	$data['error'] = 0;
+	$data['narrative_path'] = $path.substr($zipFileName, 0, -4);
 	return $data;
   }
 }

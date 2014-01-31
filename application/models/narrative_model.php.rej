@@ -1,0 +1,9 @@
+diff a/application/models/narrative_model.php b/application/models/narrative_model.php	(rejected hunks)
+@@ -200,6 +200,7 @@
+     if (!is_dir($new_dir)) {
+       rename($dir, $new_dir);
+     }
++    return array('error' => 0);
+   }
+ 
+   /**
