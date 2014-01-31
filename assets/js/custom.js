@@ -42,13 +42,39 @@ function loadBubbles(sortBy) {
       .attr("y", function(d) { return d.y; })
       .text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
 
-    var circles = vis.append("circle")
+    /*var circles = vis.append("circle")
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
       .attr("r", function(d) { return d.r; })
       .attr("id", function(d) { return 'narrative-' + d['narrative_id']; })
       .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
-      .style("fill", function(d) { return !d.children ? color(d.parent.name) : "#eeeeee"; })
+      .style("fill", function(d) { return !d.children ? color(d.parent.name) : "#eeeeee"; })*/
+
+    var w = 300,
+    h = 300,
+    r = 50,
+    color = d3.scale.category20c();
+
+    var arc = d3.svg.arc()
+      .outerRadius(r);
+
+    var pie = d3.layout.pie()
+      .value(function(d) { return d.value; });
+
+    data_pie = [{"label": "one", "value": 20},
+      {"label": "two", "value": 50},
+      {"label": "three", "value": 30}];
+
+    var arcs = vis.selectAll("g.slice")
+      .data(pie(data_pie))
+      .enter()
+      .append("svg:g")
+      .attr("class", "slice");
+
+    arcs.append("svg:path")
+      .attr("fill", function(d, i) { return color(i); } )
+      .attr("d", arc)
+      .attr("transform", function(d) { console.log(d); return 'translate(50,50)'; });
 
     var nodes = vis.append("text")
       .attr("dx", function(d) { return d.x; })
@@ -56,23 +82,12 @@ function loadBubbles(sortBy) {
       .style("text-anchor", "middle")
       .text(bubbles_label_text[sortBy]);
 
-    console.log("checking for a node");
-
     $(".node-base").click(function() {
       jQuery.colorbox({href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id});
       loadMediaElement();
     });
 
     updateVis('views');
-
-    $.plot('.node-base', [[1,3], [2,3] ], {
-      series: {
-        pie: {
-          innerRadius: 0.5,
-          show: true
-        }
-      }
-    });
 
     function updateVis(sortBy) {
       console.log('updating bubbles to be sorted by ' + sortBy);
@@ -83,11 +98,11 @@ function loadBubbles(sortBy) {
         .attr("y", function(d) { return d.y; })
         .text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
 
-      circles.transition()
+      /*circles.transition()
           .duration(700)
           .attr("cx", function(d) { return d.x; })
           .attr("cy", function(d) { return d.y; })
-          .attr("r", function(d) { return d.r; });
+          .attr("r", function(d) { return d.r; });*/
 
       nodes.text(bubbles_label_text[sortBy]);
 
