@@ -52,6 +52,10 @@ class Main_Test extends MY_Controller {
 	$data['n_db_array'] = $narrative_get;  //array that's gotten from db
 	$data['n_created_array'] = $narrative_get_array; // array that's hardcoded
 	
+	//get function with non-existing input
+	$narr_get_non_ex = $this->narrative_model->get(999);
+	$data['narr_get_non_ex'] = $this->unit->run($narr_get_non_ex, array(), "Narrative Model Get Test", "This test is for get with a non-existant input. Should return empty array.");
+	
 	
 	//get_all() function
 	$narr_get_all = $this->narrative_model->get_all();

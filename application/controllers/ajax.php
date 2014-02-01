@@ -42,28 +42,34 @@ class Ajax extends MY_Controller {
     $data['children'] = $groupings;
 
     print json_encode($data);
+	return $data;
   }
 
   public function audioImage($narrative_id, $time) {
     $current_time = floatval($time);
     $path = "./uploads/$narrative_id/AudioTimes.xml";
+	$return = "";
     if (file_exists($path) && $xml = simplexml_load_file($path)) {
       $timeNarrative =0;
       if ($current_time <= floatval($xml->Narrative[$timeNarrative]->End))
       {
-        echo base_url() . 'uploads/' . $narrative_id . '/' . $xml->Narrative[$timeNarrative]->Image;
+		$return = base_url() . 'uploads/' . $narrative_id . '/' . $xml->Narrative[$timeNarrative]->Image;
+        //echo $return;
+		return $return;
       }
       else
       {
         while($current_time > floatval($xml->Narrative[$timeNarrative]->End)){
           $timeNarrative +=1;
         }
-        echo base_url() . 'uploads/' . $narrative_id . '/' .  $xml->Narrative[$timeNarrative]->Image;
+		$return = base_url() . 'uploads/' . $narrative_id . '/' .  $xml->Narrative[$timeNarrative]->Image;
+        //echo $return;
+		return $return;
       }
     }
     else {
       print '';
-      return;
+      return $return;
     }
   }
 }

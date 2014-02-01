@@ -4,6 +4,8 @@ echo $title;
 
 echo $narrative_get;
 
+echo $narr_get_non_ex;
+
 print_r($n_db_array); echo "<br>";
 print_r($n_created_array);
 echo "<br><br><br>";
