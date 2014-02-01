@@ -61,7 +61,47 @@ class Narrative_Model_Test extends MY_Controller {
  	$data['narrativeModelNoMessage'] = $this->unit->run($nar_model_goodpath['error_message'], "", "Narrative Model Process Narrative test","Tests process narrative using a an existing tmp path, check to see if we get error = 0, fails if error != 0 (This test case is expected to pass");
 	
  	
-    $this->view_wrapper('pages/narrative_model_test_report',$data);
+    $getallTest = $this->narrative_model->get_All("id");
+ 	
+ 	$data['sorting_id_fail'] = $this->unit->run($getallTest[0]['narrative_id'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  In the case of this test highest is 16, lowest is 0, Testing narrative idTest expected to fail"); 
+ 	$data['sorting_path_fail'] = $this->unit->run($getallTest[0]['xml_path'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing xml_path, In the case of this test it is null,  Test expected to fail"); 
+ 	$data['sorting_length_fail'] = $this->unit->run($getallTest[0]['audio_length'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing audio length value, In the case of this test it should be 0 (placeholder file), Test expected to fail"); 
+ 	$data['sorting_created_fail'] = $this->unit->run($getallTest[0]['created'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing created value, In the case of this test it should be 0 (placeholder file) Test expected to fail"); 
+ 	$data['sorting_uploaded_fail'] = $this->unit->run($getallTest[0]['uploaded'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing uploaded value, In the case of this test it should be 0 (placeholder file), Test expected to fail"); 
+ 	$data['sorting_uploadby_fail'] = $this->unit->run($getallTest[0]['uploaded_by'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing uploaded by value,  In the case of this test it should be 1, Test expected to fail"); 
+ 	$data['sorting_lang_fail'] = $this->unit->run($getallTest[0]['language'], "fr", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing language value, In the case of this test it should be en,  Test expected to fail"); 
+ 	$data['sorting_view_fail'] = $this->unit->run($getallTest[0]['views'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing views value, In the case of this test it should be 0, Test expected to fail"); 
+ 	$data['sorting_agree_fail'] = $this->unit->run($getallTest[0]['agrees'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing agrees value, In the case of this test it should be 0, Test expected to fail"); 
+ 	$data['sorting_disagree_fail'] = $this->unit->run($getallTest[0]['disagrees'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing disagrees value, In the case of this test it should be 0, Test expected to fail");
+ 	$data['sorting_shares_fail'] = $this->unit->run($getallTest[0]['shares'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing shares value, In the case of this test it should be 0, Test expected to fail");
+ 	$data['sorting_flags_fail'] = $this->unit->run($getallTest[0]['flags'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing flags value, In the case of this test it should be 0, Test expected to fail");
+ 	
+ 	$data['sorting_id_pass'] = $this->unit->run($getallTest[0]['narrative_id'], "16", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  In the case of this test highest is 16, lowest is 0, Test expected to pass"); 
+ 	$data['sorting_path_pass'] = $this->unit->run($getallTest[0]['xml_path'], null, "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing xml_path, In the case of this test it is null,  Test expected to pass"); 
+ 	$data['sorting_length_pass'] = $this->unit->run($getallTest[0]['audio_length'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing audio length value, In the case of this test it should be 0 (placeholder file), Test expected to pass"); 
+ 	$data['sorting_created_pass'] = $this->unit->run($getallTest[0]['created'], "0000-00-00 00:00:00", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing created value, In the case of this test it should be 0 (placeholder file) Test expected to pass"); 
+ 	$data['sorting_uploaded_pass'] = $this->unit->run($getallTest[0]['uploaded'], "0000-00-00 00:00:00", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing uploaded value, In the case of this test it should be 0 (placeholder file), Test expected to pass"); 
+ 	$data['sorting_uploadby_pass'] = $this->unit->run($getallTest[0]['uploaded_by'], "1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing uploaded by value,  In the case of this test it should be 1, Test expected to pass");
+ 	$data['sorting_lang_pass'] = $this->unit->run($getallTest[0]['language'], "en", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing language value, In the case of this test it should be en,  Test expected to pass"); 
+ 	$data['sorting_view_pass'] = $this->unit->run($getallTest[0]['views'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing views value, In the case of this test it should be 0, Test expected to pass"); 
+ 	$data['sorting_agree_pass'] = $this->unit->run($getallTest[0]['agrees'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing agrees value, In the case of this test it should be 0, Test expected to pass"); 
+ 	$data['sorting_disagree_pass'] = $this->unit->run($getallTest[0]['disagrees'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing disagrees value, In the case of this test it should be 0, Test expected to pass");
+ 	$data['sorting_shares_pass'] = $this->unit->run($getallTest[0]['shares'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing shares value, In the case of this test it should be 0, Test expected to pass");
+ 	$data['sorting_flags_pass'] = $this->unit->run($getallTest[0]['flags'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing flags value, In the case of this test it should be 0, Test expected to pass");
+ 	
+ 	 
+ 	$data['sorting_last'] = $this->unit->run($getallTest[15]['narrative_id'], "1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing that the last file sorted has narrative_id of 1 (being the lowest value in database), Test expected to pass");
+ 	
+ 	
+ 	
+ 	$data['test']=$getallTest[0];
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	$this->view_wrapper('pages/narrative_model_test_report',$data);
+    
   }
 
 }
