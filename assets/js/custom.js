@@ -13,9 +13,9 @@ function loadBubbles(sortBy) {
   if (!jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
     return false;
   }
-  var diameter = (document.getElementById("bubble-container").offsetWidth)/2
-  format = d3.format(",d"),
-  color = d3.scale.category20c();
+  var diameter = (document.getElementById("bubble-container").offsetWidth)/2;
+  var format = d3.format(",d");
+  var color = d3.scale.category20c();
 
   var pack = d3.layout.pack()
     .sort(null)
@@ -40,15 +40,15 @@ function loadBubbles(sortBy) {
     var titles = vis.append('title')
       .attr("x", function(d) { return d.x; })
       .attr("y", function(d) { return d.y; })
-      .text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
+      .text(function(d) { return (d.children ? d.name : 'Narrative ' + d.narrative_id + ": " + format(d.value)); });
 
     var circles = vis.append("circle")
       .attr("cx", function(d) { return d.x; })
       .attr("cy", function(d) { return d.y; })
       .attr("r", function(d) { return d.r; })
-      .attr("id", function(d) { return 'narrative-' + d['narrative_id']; })
+      .attr("id", function(d) { return 'narrative-' + d.narrative_id; })
       .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
-      .style("fill", function(d) { return !d.children ? color(d.parent.name) : "#eeeeee"; })
+      .style("fill", function(d) { return !d.children ? color(d.parent.name) : "#eeeeee"; });
 
     var nodes = vis.append("text")
       .attr("dx", function(d) { return d.x; })
@@ -72,7 +72,7 @@ function loadBubbles(sortBy) {
       var data1 = pack.nodes(data);
       titles.attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
-        .text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
+        .text(function(d) { return (d.children ? d.name : 'Narrative ' + d.narrative_id + ": " + format(d.value)); });
 
       circles.transition()
           .duration(700)
@@ -102,29 +102,29 @@ function loadBubbles(sortBy) {
 }
 
 function dateFromString(str) {
-  var a = $.map(str.split(/[^0-9]/), function(s) { return parseInt(s, 10) });
+  var a = $.map(str.split(/[^0-9]/), function(s) { return parseInt(s, 10); });
   return new Date(a[0], a[1]-1 || 0, a[2] || 1, a[3] || 0, a[4] || 0, a[5] || 0, a[6] || 0);
 }
 
 // +1 because 0 views/agrees/disagrees is valid state, but results in weird bubble rendering
 // TODO: normalization
 bubbles_sorting = {
-  'agrees': function(d) { return d['agrees']+1; },
-  'disagrees': function(d) { return d['disagrees']+1; },
-  'views': function(d) { return parseInt(d['views']+1) + 150/30; },
-  'age': function(d) { var dcreated = dateFromString(d['created']); return dcreated.getYear() + dcreated.getMonth()/12*900 + dcreated.getDay()/31*100; },
+  'agrees': function(d) { return d.agrees+1; },
+  'disagrees': function(d) { return d.disagrees+1; },
+  'views': function(d) { return parseInt(d.views+1) + 150/30; },
+  'age': function(d) { var dcreated = dateFromString(d.created); return dcreated.getYear() + dcreated.getMonth()/12*900 + dcreated.getDay()/31*100; },
   // TODO
-  'popular': function(d) { return d['narrative_id']; }
-}
+  'popular': function(d) { return d.narrative_id; }
+};
 
 bubbles_label_text = {
-  'agrees': function(d) { return d['agrees']; },
-  'disagrees': function(d) { return d['disagrees']; },
-  'views': function(d) { return d['views']; },
-  'age': function(d) { return !d.children ? String(d['created']).split(' ')[0] : null; },
+  'agrees': function(d) { return d.agrees; },
+  'disagrees': function(d) { return d.disagrees; },
+  'views': function(d) { return d.views; },
+  'age': function(d) { return !d.children ? String(d.created).split(' ')[0] : null; },
   // TODO
-  'popular': function(d) { return d['narrative_id']; }
-}
+  'popular': function(d) { return d.narrative_id; }
+};
 
 function loadMediaElement() {
   if (jQuery('audio,video').not('player-processed').addClass('player-processed').length) {
@@ -145,7 +145,7 @@ function loadMediaElement() {
         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
           document.getElementById("audioImage").src = xmlhttp.responseText;
         }
-      }
+      };
       // TODO make this jQuery using jQuery.get()
       // TODO make this a real controller method
       var narrative_id = jQuery('.player-wrapper').attr('id').substring(10);
