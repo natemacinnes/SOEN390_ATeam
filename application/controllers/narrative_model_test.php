@@ -94,7 +94,7 @@ class Narrative_Model_Test extends MY_Controller {
  	
  	
  	
- 	$data['test']=$getallTest[0];
+ 	
  	
  	
  	

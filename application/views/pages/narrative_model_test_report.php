@@ -59,7 +59,7 @@ echo $sorting_last;
 
 
 
-print_r($test);
+
 
 
 
