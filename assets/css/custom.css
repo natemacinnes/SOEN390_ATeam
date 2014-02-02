@@ -30,16 +30,18 @@ body {
 .node:hover{background: #000;}
 
 /* Homepage Banner */
+.page-header {
+  margin: 1em 0px;
+  padding-bottom: 0px;
+}
 .page-header h1 {
   font-family: myFirstFont;
   font-size: 400%;
+  margin: 0px;
 }
 
 #page-header-you {
   color: white; text-shadow: 1px 1px #000000, -1px -1px #000000;
-}
-#page-header-deliberate {
-  padding-left: 20px;
 }
 
 .flagicon {
