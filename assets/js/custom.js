@@ -61,7 +61,8 @@ function loadBubbles(sortBy) {
 
     // This computes the SVG path data required to form an arc.
     var arc = d3.svg.arc()
-      .outerRadius(function(d) { return d.r; });
+      .outerRadius(function(d) { return d.r; })
+      .innerRadius(function(d) { return d.r*.8; });
 
     // This transforms simple data objects into a arc values from 0 to 2*pi
     var pie = d3.layout.pie()
