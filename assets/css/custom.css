@@ -93,4 +93,6 @@ pie chart hover.node-base:hover {
 
 .float-left{ float: left; }
 .float-right { float: right; }
+.portal-topic { padding: 0em 1em; }
+.portal-topic h3 { margin: 3px 0; }
 .clear{ clear: both; }

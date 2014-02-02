@@ -114,6 +114,7 @@ function loadBubbles(sortBy, language) {
         href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
         left: 0,
         speed: 700,
+        opacity: 0,
         onComplete : function() {
           $(this).colorbox.resize();
         }
