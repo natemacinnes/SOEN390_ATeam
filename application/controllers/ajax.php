@@ -25,10 +25,10 @@ class Ajax extends MY_Controller {
     // Load nodes into the active cluster
     $result = $this->narrative_model->get_all();
     foreach ($result as $narrative) {
+      // +1 to ensure that 0 doesn't give us NaN
       $pie_data = array(
-        array("label" => "one", "value" => 30),
-        array("label" => "two", "value" => 70),
-        //array("label" => "three", "value" => 30),
+        array("label" => "agrees", "value" => $narrative['agrees']+1),
+        array("label" => "disagrees", "value" => $narrative['disagrees']+1),
       );
       $narrative['pie_data'] = $pie_data;
       //$narrative['created'] = strtotime($narrative['created']);

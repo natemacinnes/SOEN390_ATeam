@@ -96,8 +96,8 @@ function loadBubbles(sortBy) {
 
     // In the container, write a path based on the generated arc data
     var paths = arcs.append("svg:path")
-      .attr("fill", function(d, i) { return color(i); } )
-      .attr("d", arc)
+      .attr("fill", function(d, i) { return d.data.label == 'agrees' ? '#009933' : '#CC0000'; } )
+      .attr("d", arc);
 
     // This comes after the paths so that the text doesn't get covered by the
     // path rendering
