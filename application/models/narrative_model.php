@@ -111,7 +111,7 @@ class narrative_model extends CI_Model {
             //Get the name of the audio file to combine
             $file_input = "file " . "'" . $dir . "/" .$file ."'\r\n";
             fwrite($file_concat, $file_input);
-            $command = "ffmpeg -i ". $dir . '/' .$file . " 2>&1";
+            $command = "../storage/ffmpeg -i ". $dir . '/' .$file . " 2>&1";
             $temp = shell_exec($command);
 
             preg_match("/Duration: (.*?), start:/", $temp, $matches);
@@ -179,7 +179,7 @@ class narrative_model extends CI_Model {
     $xmlpath = $dir . "/AudioTimes.xml";
     $xml->save($xmlpath) or die("Error");
     fclose($file_concat);
-    $command_concatenation = "ffmpeg -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
+    $command_concatenation = "../storage/ffmpeg -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
     $temp2 = shell_exec($command_concatenation);
     //die("returned: " . $temp2 . "</br>");
 
