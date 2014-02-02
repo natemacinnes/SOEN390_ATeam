@@ -9,17 +9,17 @@
 
     <div class="sort-container float-left">
       <div class="btn-group">
-        <a href="#views" title="Number of listens&#013;Nombres &eacute;coutes" class="btn btn-default active" role="button"><span class="glyphicon glyphicon-headphones"></span></a>
+        <a href="#views" title="Number of listens&#013;Nombres d'&eacute;coutes" class="btn btn-default active" role="button"><span class="glyphicon glyphicon-headphones"></span></a>
         <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span></a>
         <a href="#popular" title="Popular narratives&#013;Discussions populaires" class="btn btn-default" role="button"><span class="glyphicon glyphicon-fire"></span></a>
-        <a href="#agrees" title="Agreed narratives&#013;Contenu approuv." class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up"></span></a>
-        <a href="#disagrees" title="Disagreed narratives&#013;Contenu contest&eacute;" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+        <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacutel;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up"></span></a>
+        <a href="#disagrees" title="Disagreed narratives&#013;Discussions contest&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down"></span></a>
       </div>
     </div>
     <div class="filter-container float-right">
       <div class="btn-group">
-        <a href="#" title="English&#013;Anglais" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span></a>
-        <a href="#" title="French&#013;Fran&ccedil;ais" class="btn btn-default" role="button"><span class="flagicon flagicon-fr"></span></a>
+        <a href="fr" title="English&#013;Anglais" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span></a>
+        <a href="en" title="French&#013;Fran&ccedil;ais" class="btn btn-default" role="button"><span class="flagicon flagicon-fr"></span></a>
       </div>
     </div>
     <!--<div class="sort-container float-left">
@@ -40,7 +40,7 @@
 
   </div>
   <div class="help-container">
-    <a href="#" title="Need help?&#013;Vos r&eacute;actions?" class="btn btn-info btn-lg btn-help"><span class="glyphicon glyphicon-question-sign"></span></a>
+    <a href="#" title="Need help?&#013;Besoin d'aide?" class="btn btn-info btn-lg btn-help"><span class="glyphicon glyphicon-question-sign"></span></a>
     <a href="#" title="Give us your feedback&#013;Donnez-nous votre feedback" class="btn btn-warning btn-lg btn-feedback"><span class="glyphicon glyphicon-bullhorn"></span></a>
   </div>
 </div>
