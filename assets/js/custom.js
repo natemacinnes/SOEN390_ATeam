@@ -110,8 +110,14 @@ function loadBubbles(sortBy) {
 
     // Colorbox popup for audio player
     $(".node-base").click(function() {
-      jQuery.colorbox({href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id});
+      var colorbox = jQuery.colorbox({
+        href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
+        onComplete : function() {
+          $(this).colorbox.resize();
+        }
+      });
       loadMediaElement();
+      colorbox.resize();
     });
 
     // Maps initial data to bubble pack
