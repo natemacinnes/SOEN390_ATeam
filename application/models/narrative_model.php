@@ -78,7 +78,7 @@ class narrative_model extends CI_Model {
       if($file_extension == "jpg")
       {
         $image_count++;
-        $audio_jpg = $dir . "/" . $filecheck;
+        $audio_jpg = $filecheck;
       }
       if($file_extension == "xml")
       {
