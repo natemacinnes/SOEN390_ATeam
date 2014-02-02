@@ -40,6 +40,8 @@ function loadBubbles(sortBy) {
       .data(pack.nodes)
       .enter()
         .append('g')
+        .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
+        .attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
         .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; });
         // ^ the root g container is transformed, so for all children x and y is
         //   relative to 0
@@ -97,7 +99,6 @@ function loadBubbles(sortBy) {
     var paths = arcs.append("svg:path")
       .attr("fill", function(d, i) { return color(i); } )
       .attr("d", arc)
-      .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
 
     // This comes after the paths so that the text doesn't get covered by the
     // path rendering
