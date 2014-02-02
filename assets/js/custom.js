@@ -218,10 +218,14 @@ function loadMediaElement() {
       };
       // TODO make this jQuery using jQuery.get()
       // TODO make this a real controller method
-      var narrative_id = jQuery('.player-wrapper').attr('id').substring(10);
-      xmlhttp.open("GET",yd_settings.site_url + "ajax/audioImage/" + narrative_id + "/" + myaudio.currentTime, true);
-      myaudio.play();
-      xmlhttp.send();
+      var player = jQuery('.player-wrapper');
+      if (player.length) {
+        var narrative_id = player.attr('id').substring(10);
+        var url = yd_settings.site_url + "ajax/audioImage/" + narrative_id + "/" + myaudio.currentTime;
+        xmlhttp.open("GET", url, true);
+        myaudio.play();
+        xmlhttp.send();
+      }
     }, false);
   }
 }
