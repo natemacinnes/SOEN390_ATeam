@@ -178,7 +178,6 @@ function loadBubbles(sortBy, language) {
       jQuery('.filter-container .btn-group a').not(this).removeClass('active');
       var sortBy = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
       var language = jQuery('.filter-container .btn-group a.active').attr('href');
-      console.log(sortBy);
       loadBubbles(sortBy, language);
       return false;
     });

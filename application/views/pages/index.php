@@ -19,8 +19,8 @@
     </div>
     <div class="filter-container float-right">
       <div class="btn-group">
-        <a href="fr" title="English&#013;Anglais" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span></a>
-        <a href="en" title="French&#013;Fran&ccedil;ais" class="btn btn-default" role="button"><span class="flagicon flagicon-fr"></span></a>
+        <a href="en" title="English&#013;Anglais" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span></a>
+        <a href="fr" title="French&#013;Fran&ccedil;ais" class="btn btn-default" role="button"><span class="flagicon flagicon-fr"></span></a>
       </div>
     </div>
     <!--<div class="sort-container float-left">
@@ -41,7 +41,7 @@
 
   </div>
   <div class="help-container">
-    <a href="#" title="Need help?&#013;Besoin d'aide?" class="btn btn-info btn-lg btn-help"><span class="glyphicon glyphicon-question-sign"></span></a>
+    <a href="#" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help"><span class="glyphicon glyphicon-question-sign"></span></a>
     <a href="#" title="Give us your feedback&#013;Donnez-nous votre feedback" class="btn btn-warning btn-lg btn-feedback"><span class="glyphicon glyphicon-bullhorn"></span></a>
   </div>
 </div>
