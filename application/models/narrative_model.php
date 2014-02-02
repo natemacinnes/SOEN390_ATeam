@@ -19,7 +19,7 @@ class narrative_model extends CI_Model {
   /**
    * Retrieve a narrative data structure by ID, or FALSE upon failure.
    */
-  public function get_all($sortby = 'id') {
+  public function get_all($sortby = 'id', $language = NULL) {
     // Get the sort column
     $sort_cols = array(
       'id' => 'narrative_id',
@@ -34,7 +34,11 @@ class narrative_model extends CI_Model {
     $sort_col = $sort_cols[$sortby];
 
 
-    $query = $this->db->from($this->table)
+    $query = $this->db->from($this->table);
+    if ($language) {
+      $this->db->where('language', $language);
+    }
+    $query = $this->db
       ->order_by($sort_col, 'desc')
       ->get();
     $narratives = $query->result_array();

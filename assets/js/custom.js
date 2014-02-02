@@ -1,31 +1,31 @@
 jQuery(document).ready(function() {
-  loadBubbles('views');
+  if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
+    loadBubbles('views');
+  }
+
 });
 
-function loadBubbles(sortBy) {
+function loadBubbles(sortBy, language) {
 
   // sortBy may be undefined. If so, don't call ajax/bubbles/undefined -_-
   var url = yd_settings.site_url + "ajax/bubbles";
-  if (typeof(sortBy) !== 'undefined') {
-    url += '/' + sortBy;
+  if (typeof(language) !== 'undefined') {
+    url += '/' + language;
   }
 
-  if (!jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
-    return false;
-  }
   var diameter = (document.getElementById("bubble-container").offsetWidth)/2;
-  var format = d3.format(",d");
+  var format = d3.format(",.0f");
   var color = d3.scale.category20c();
 
   // Accepts nodes and computes the position of them for use by .data()
   var pack = d3.layout.pack()
-    .sort(null)
+    .sort(function(a, b) { return d3.descending(bubbles_values[sortBy](a), bubbles_values[sortBy](b)); })
     .size([diameter, diameter])
-    .value(bubbles_sorting[sortBy])
+    .value(bubbles_values[sortBy])
     .padding(1.5);
 
   // Create the SVG bubble structure
-  var svg = d3.select(".test").append("svg")
+  var svg = d3.select(".test").html('').append("svg")
     .attr("width", diameter)
     .attr("height", diameter)
     .attr("class", "bubble");
@@ -123,7 +123,7 @@ function loadBubbles(sortBy) {
     });
 
     // Maps initial data to bubble pack
-    updateVis('views');
+    updateVis(sortBy);
 
     /**
      * Binds actual data to the DOM and provides a transition if a new ordering
@@ -132,7 +132,8 @@ function loadBubbles(sortBy) {
     function updateVis(sortBy) {
       console.log('updating bubbles to be sorted by ' + sortBy);
 
-      pack.value(bubbles_sorting[sortBy]);
+      pack.value(bubbles_values[sortBy]);
+      pack.sort(function(a, b) { return d3.descending(bubbles_values[sortBy](a), bubbles_values[sortBy](b)); });
       var data1 = pack.nodes(data);
 
       vis.transition()
@@ -148,7 +149,8 @@ function loadBubbles(sortBy) {
           .attr("r", function(d) { return d.r; });
 
       arcs.data(radiusmapper)
-      paths.data(radiusmapper).transition()
+      paths.data(radiusmapper)
+      paths.transition()
         .duration(700)
         .attr("d", function(d) { return arc(d); });
 
@@ -161,11 +163,23 @@ function loadBubbles(sortBy) {
     }
 
     // Toggle buttons for navigation links
-    jQuery('.btn-group a').click(function() {
-      jQuery('.btn-group a').removeClass('active');
+    jQuery('.sort-container .btn-group a').unbind('click').click(function() {
+      jQuery('.sort-container .btn-group a').removeClass('active');
       jQuery(this).toggleClass('active');
-      var sortBy = jQuery(this).attr('href').substring(1);
+      var sortBy = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
       updateVis(sortBy);
+      return false;
+    });
+
+    // Toggle buttons for navigation links
+    jQuery('.filter-container .btn-group a').unbind('click').click(function() {
+      jQuery(this).toggleClass('active');
+      jQuery('.filter-container .btn-group a').not(this).removeClass('active');
+      var sortBy = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+      var language = jQuery('.filter-container .btn-group a.active').attr('href');
+      console.log(sortBy);
+      loadBubbles(sortBy, language);
+      return false;
     });
 
     // Toggle buttons for navigation links
@@ -185,14 +199,15 @@ function dateFromString(str) {
 }
 
 // +1 because 0 views/agrees/disagrees is valid state, but results in weird bubble rendering
+// Coersion here; *ALWAYS* return integers
 // TODO: normalization
-bubbles_sorting = {
-  'agrees': function(d) { return d.agrees+1; },
-  'disagrees': function(d) { return d.disagrees+1; },
-  'views': function(d) { return parseInt(d.views+1) + 150/30; },
+bubbles_values = {
+  'agrees': function(d) { return parseInt(d.agrees)+1; },
+  'disagrees': function(d) { return parseInt(d.disagrees)+1; },
+  'views': function(d) { return parseInt(d.views)+1; },
   'age': function(d) { var dcreated = dateFromString(d.created); return dcreated.getYear() + dcreated.getMonth()/12*900 + dcreated.getDay()/31*100; },
   // TODO
-  'popular': function(d) { return d.narrative_id; }
+  'popular': function(d) { return parseInt(d.narrative_id); }
 };
 
 bubbles_label_text = {
