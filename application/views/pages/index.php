@@ -1,7 +1,7 @@
 <div class="home">
   <div class="container">
     <div class="page-header">
-      <h1>YouDeliberate</h1>
+      <h1><span id="page-header-you">You</span><span id="page-header-deliberate">Deliberate</span></h1>
     </div>
 
     <h3>Should GMO foods be labeled?</h3>

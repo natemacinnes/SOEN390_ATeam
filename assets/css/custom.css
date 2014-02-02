@@ -1,6 +1,13 @@
 /**
  * All your custom CSS should go into this file
  */
+
+@font-face {
+  font-family: myFirstFont;
+  src: url('../font/COUTURE-Bold.ttf');
+  font-weight:bold;
+}
+
 body {
    background: #fcfcfc;
    /*overflow: hidden;*/
@@ -22,7 +29,18 @@ body {
 
 .node:hover{background: #000;}
 
+/* Homepage Banner */
+.page-header h1 {
+  font-family: myFirstFont;
+  font-size: 400%;
+}
 
+#page-header-you {
+  color: white; text-shadow: 1px 1px #000000, -1px -1px #000000;
+}
+#page-header-deliberate {
+  padding-left: 20px;
+}
 
 /* circle thing/
 circle:hover {
