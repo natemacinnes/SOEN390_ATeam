@@ -53,13 +53,11 @@ function loadBubbles(sortBy) {
       .text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
 
     // TODO: Expose these normally, and only show pie charts on hover
-    /*var circles = vis.append("circle")
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
+    var circles = vis.append("circle")
       .attr("r", function(d) { return d.r; })
       .attr("id", function(d) { return 'narrative-' + d['narrative_id']; })
       .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
-      .style("fill", function(d) { return !d.children ? color(d.parent.name) : "#eeeeee"; })*/
+      .style("fill", function(d) { return !d.children ? color(d.parent.name) : "#eeeeee"; })
 
     // This computes the SVG path data required to form an arc.
     var arc = d3.svg.arc()
@@ -93,7 +91,8 @@ function loadBubbles(sortBy) {
       .data(radiusmapper)
       .enter()
       .append("svg:g")
-      .attr("class", "slice");
+      .attr("class", "slice")
+      .style('display', 'none');
 
     // In the container, write a path based on the generated arc data
     var paths = arcs.append("svg:path")
@@ -136,11 +135,9 @@ function loadBubbles(sortBy) {
         .text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
 
       // TODO: Expose these normally, and only show pie charts on hover
-      /*circles.transition()
+      circles.transition()
           .duration(700)
-          .attr("cx", function(d) { return d.x; })
-          .attr("cy", function(d) { return d.y; })
-          .attr("r", function(d) { return d.r; });*/
+          .attr("r", function(d) { return d.r; });
 
       arcs.data(radiusmapper)
       paths.data(radiusmapper).transition()
@@ -162,6 +159,12 @@ function loadBubbles(sortBy) {
       var sortBy = jQuery(this).attr('href').substring(1);
       updateVis(sortBy);
     });
+
+    // Toggle buttons for navigation links
+    jQuery('g.node-base').hover(
+      function() { jQuery('g.slice', this).show(); },
+      function() { jQuery('g.slice', this).hide(); }
+    );
 
     d3.select(self.frameElement).style("height", diameter + "px");
 
