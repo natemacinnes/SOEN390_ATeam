@@ -42,6 +42,23 @@ body {
   padding-left: 20px;
 }
 
+.flagicon {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  top: 6px;
+  margin-top: -6px;
+}
+
+.flagicon-en {
+  background: transparent url('../img/flag-en.png') no-repeat center center;
+}
+
+.flagicon-fr {
+  background: transparent url('../img/flag-fr.png') no-repeat center center;
+}
+
 /* circle thing/
 circle:hover {
 	opacity: 0.8;

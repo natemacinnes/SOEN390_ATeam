@@ -9,7 +9,6 @@
 
     <div class="sort-container float-left">
       <div class="btn-group">
-        <a href="#" class="btn btn-default disabled" role="button">Sort by: </a>
         <a href="#views" title="Number of listens" class="btn btn-default active" role="button"><span class="glyphicon glyphicon-headphones"></span></a>
         <a href="#age" title="New narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span></a>
         <a href="#popular" title="Popular narratives" class="btn btn-default" role="button"><span class="glyphicon glyphicon-fire"></span></a>
@@ -19,9 +18,8 @@
     </div>
     <div class="filter-container float-right">
       <div class="btn-group">
-        <a href="#" class="btn btn-default disabled" role="button">Filter by: </a>
-        <a href="#" title="English" class="btn btn-default" role="button"><span class="glyphicon glyphicon-minus"></span> EN</a>
-        <a href="#" title="French" class="btn btn-default" role="button"><span class="glyphicon glyphicon-minus"></span> FR</a>
+        <a href="#" title="English" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span></a>
+        <a href="#" title="French" class="btn btn-default" role="button"><span class="flagicon flagicon-fr"></span></a>
       </div>
     </div>
     <!--<div class="sort-container float-left">
