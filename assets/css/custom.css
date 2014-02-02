@@ -24,16 +24,17 @@ body {
 
 
 
-/* circle thing */
+/* circle thing/
 circle:hover {
 	opacity: 0.8;
 
 }
-
-/*pie chart hover*/
-.node-base:hover {
+*/
+/*
+pie chart hover.node-base:hover {
   opacity: 0.8;
 }
+*/
 
 /* Admin */
 
