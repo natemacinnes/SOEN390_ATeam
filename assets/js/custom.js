@@ -235,7 +235,6 @@ function loadMediaElement() {
         var narrative_id = player.attr('id').substring(10);
         var url = yd_settings.site_url + "ajax/audioImage/" + narrative_id + "/" + myaudio.currentTime;
         xmlhttp.open("GET", url, true);
-        myaudio.play();
         xmlhttp.send();
       }
     }, false);
