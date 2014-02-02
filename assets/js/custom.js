@@ -17,6 +17,7 @@ function loadBubbles(sortBy) {
   var format = d3.format(",d");
   var color = d3.scale.category20c();
 
+  // Accepts nodes and computes the position of them for use by .data()
   var pack = d3.layout.pack()
     .sort(null)
     .size([diameter, diameter])
@@ -29,63 +30,125 @@ function loadBubbles(sortBy) {
     .attr("height", diameter)
     .attr("class", "bubble");
 
+  // Retrieve JSON from AJAX controller, but only once upon initial load
   d3.json(url, function(error, data) {
     console.log('creating bubbles sorted by ' + sortBy);
 
+    // Select elements, even if they do not exist yet. enter() creates them and
+    // appends them to the selection object. Then, we operate on them.
     var vis = svg.datum(data).selectAll('.node')
       .data(pack.nodes)
       .enter()
-        .append('g');
+        .append('g')
+        .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
+        .attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
+        .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; });
+        // ^ the root g container is transformed, so for all children x and y is
+        //   relative to 0
 
+    // Title (text tooltip on hover)
     var titles = vis.append('title')
       .attr("x", function(d) { return d.x; })
       .attr("y", function(d) { return d.y; })
       .text(function(d) { return (d.children ? d.name : 'Narrative ' + d.narrative_id + ": " + format(d.value)); });
 
+    // TODO: Expose these normally, and only show pie charts on hover
     var circles = vis.append("circle")
-      .attr("cx", function(d) { return d.x; })
-      .attr("cy", function(d) { return d.y; })
       .attr("r", function(d) { return d.r; })
       .attr("id", function(d) { return 'narrative-' + d.narrative_id; })
       .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
       .style("fill", function(d) { return !d.children ? color(d.parent.name) : "#eeeeee"; });
 
+    // This computes the SVG path data required to form an arc.
+    var arc = d3.svg.arc()
+      .outerRadius(function(d) { return d.r; });
+
+    // This transforms simple data objects into a arc values from 0 to 2*pi
+    var pie = d3.layout.pie()
+      .value(function(d) { return d.value; })
+
+    /**
+     * FIXME HACKY but works
+     * The arc generator above needs to know about the bubble radius, but it is
+     * only aware of what .data() has bound to it;
+     * namely, the arc segments calculated for us by the pie layout generator.
+     * So, let's just copy the data 'r' property into the pie data segments.
+     */
+    function radiusmapper(d) {
+      if (d.children) {
+        return [];
+      }
+      var pie_data = pie(d.pie_data);
+      pie_data.forEach(function(slice, i) {
+        slice.r = d.r;
+      });
+
+      return pie_data;
+    }
+
+    // One SVG g container per pie chart slice
+    var arcs = vis.selectAll("g.slice")
+      .data(radiusmapper)
+      .enter()
+      .append("svg:g")
+      .attr("class", "slice")
+      .style('display', 'none');
+
+    // In the container, write a path based on the generated arc data
+    var paths = arcs.append("svg:path")
+      .attr("fill", function(d, i) { return d.data.label == 'agrees' ? '#009933' : '#CC0000'; } )
+      .attr("d", arc);
+
+    // This comes after the paths so that the text doesn't get covered by the
+    // path rendering
     var nodes = vis.append("text")
-      .attr("dx", function(d) { return d.x; })
-      .attr("dy", function(d) { return d.y; })
+      .attr("dx", 0)
+      .attr("dy", 0)
       .style("text-anchor", "middle")
       .text(bubbles_label_text[sortBy]);
 
-    console.log("checking for a node");
-
+    // Colorbox popup for audio player
     $(".node-base").click(function() {
       jQuery.colorbox({href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id});
       loadMediaElement();
     });
 
+    // Maps initial data to bubble pack
     updateVis('views');
 
+    /**
+     * Binds actual data to the DOM and provides a transition if a new ordering
+     * is preferred by user.
+     */
     function updateVis(sortBy) {
       console.log('updating bubbles to be sorted by ' + sortBy);
 
       pack.value(bubbles_sorting[sortBy]);
       var data1 = pack.nodes(data);
-      titles.attr("x", function(d) { return d.x; })
-        .attr("y", function(d) { return d.y; })
-        .text(function(d) { return (d.children ? d.name : 'Narrative ' + d.narrative_id + ": " + format(d.value)); });
+
+      vis.transition()
+        .duration(700)
+        .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; });
+
+      titles.attr("x", function(d) { return 0; })
+        .attr("y", function(d) { return 0; })
+        .text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
 
       circles.transition()
           .duration(700)
-          .attr("cx", function(d) { return d.x; })
-          .attr("cy", function(d) { return d.y; })
           .attr("r", function(d) { return d.r; });
+
+      arcs.data(radiusmapper)
+      paths.data(radiusmapper).transition()
+        .duration(700)
+        .attr("d", function(d) { return arc(d); });
 
       nodes.text(bubbles_label_text[sortBy]);
 
       nodes.transition()
         .duration(700)
-        .attr("dx", function(d) { return d.x; })
-        .attr("dy", function(d) { return d.y; });
+        .attr("dx", function(d) { return 0; })
+        .attr("dy", function(d) { return 0; });
     }
 
     // Toggle buttons for navigation links
@@ -95,6 +158,12 @@ function loadBubbles(sortBy) {
       var sortBy = jQuery(this).attr('href').substring(1);
       updateVis(sortBy);
     });
+
+    // Toggle buttons for navigation links
+    jQuery('g.node-base').hover(
+      function() { jQuery('g.slice', this).show(); },
+      function() { jQuery('g.slice', this).hide(); }
+    );
 
     d3.select(self.frameElement).style("height", diameter + "px");
 
