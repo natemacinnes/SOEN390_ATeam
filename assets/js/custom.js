@@ -97,6 +97,7 @@ function loadBubbles(sortBy) {
     var paths = arcs.append("svg:path")
       .attr("fill", function(d, i) { return color(i); } )
       .attr("d", arc)
+      .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
 
     // This comes after the paths so that the text doesn't get covered by the
     // path rendering

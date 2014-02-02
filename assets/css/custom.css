@@ -30,8 +30,10 @@ circle:hover {
 
 }
 
-
-
+/*pie chart hover*/
+.node-base:hover {
+  opacity: 0.8;
+}
 
 /* Admin */
 
