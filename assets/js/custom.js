@@ -112,6 +112,8 @@ function loadBubbles(sortBy) {
     $(".node-base").click(function() {
       var colorbox = jQuery.colorbox({
         href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
+        left: 0,
+        speed: 700,
         onComplete : function() {
           $(this).colorbox.resize();
         }
