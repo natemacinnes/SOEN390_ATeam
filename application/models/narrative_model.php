@@ -65,8 +65,8 @@ class narrative_model extends CI_Model {
     //check the directory
     if (!is_dir($dir))
     {
-		$data['error'] = 1;
-		$data['error_message'] = 'Processing failed. Please attempt the upload again.';
+      $data['error'] = 1;
+      $data['error_message'] = 'Processing failed. Please attempt the upload again.';
       return $data;
     }
 
@@ -95,9 +95,9 @@ class narrative_model extends CI_Model {
      //This is the txt file that will combine all the txt files with ffmpeg
     $file_concat = fopen($dir . "/audio_container.txt", "w+");
 
-    if ($dh = opendir($dir))
+    if (is_dir($dir))
     {
-      while (($file = readdir($dh)) !== false)
+      foreach (scandir($dir) as $file)
       {
         //get the file name plus it's extension
         $file_name = pathinfo($file, PATHINFO_FILENAME);
@@ -137,7 +137,6 @@ class narrative_model extends CI_Model {
             $endTimes = $endTimes + floatval($duration);
 
             //Add narrative node to XML file
-
             $name  = $xml->createElement("Mp3Name");
             $mp3Name = $xml->createTextNode($file);
             $name->appendChild($mp3Name);
@@ -172,7 +171,6 @@ class narrative_model extends CI_Model {
           }
         }
       }
-      closedir($dh);
     }
 
     //change path of xml
@@ -202,7 +200,7 @@ class narrative_model extends CI_Model {
     if (!is_dir($new_dir)) {
       rename($dir, $new_dir);
     }
-	$data['error'] = 0;
+    $data['error'] = 0;
     return $data;
   }
 
