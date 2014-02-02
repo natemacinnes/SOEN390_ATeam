@@ -202,7 +202,7 @@ function loadMediaElement() {
       // the order of controls you want on the control bar (and other plugins below)
       features: ['playpause','current','progress','duration','tracks','volume'],
       // show framecount in timecode (##:00:00:00)
-      showTimecodeFrameCount: true
+      showTimecodeFrameCount: false
      });
 
     //AJAX function that changes the picture according to the time of the
