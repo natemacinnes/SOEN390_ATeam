@@ -52,19 +52,19 @@ class Ajax extends MY_Controller {
   }
 
   public function audioImage($narrative_id, $time) {
+    $narrative = $this->narrative_model->get($narrative_id);
+    if (!$narrative) {
+      return;
+    }
     $current_time = floatval($time);
     $path = "./uploads/$narrative_id/AudioTimes.xml";
     $return = "";
     if (file_exists($path) && $xml = simplexml_load_file($path)) {
-      $timeNarrative =0;
-      if ($current_time <= floatval($xml->Narrative[$timeNarrative]->End)) {
-        print base_url() . 'uploads/' . $narrative_id . '/' . $xml->Narrative[$timeNarrative]->Image;
-      }
-      else {
-        while($current_time > floatval($xml->Narrative[$timeNarrative]->End)){
-          $timeNarrative +=1;
+      foreach($xml->children() as $element) {
+        if ($current_time >= $element->Start && $current_time < $element->End) {
+          print base_url() . 'uploads/' . $narrative_id . '/' .  $element->Image;
+          break;
         }
-        print base_url() . 'uploads/' . $narrative_id . '/' .  $xml->Narrative[$timeNarrative]->Image;
       }
     }
     else {
