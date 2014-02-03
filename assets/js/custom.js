@@ -19,7 +19,7 @@ function loadBubbles(sortBy, language) {
 
   // Accepts nodes and computes the position of them for use by .data()
   var pack = d3.layout.pack()
-    .sort(function(a, b) { return d3.descending(bubbles_values[sortBy](a), bubbles_values[sortBy](b)); })
+    .sort(function(a, b) { return d3.descending(Math.random(), bubbles_values[sortBy](b)); })
     .size([diameter, diameter])
     .value(bubbles_values[sortBy])
     .padding(1.5);
@@ -134,7 +134,7 @@ function loadBubbles(sortBy, language) {
       console.log('updating bubbles to be sorted by ' + sortBy);
 
       pack.value(bubbles_values[sortBy]);
-      pack.sort(function(a, b) { return d3.descending(bubbles_values[sortBy](a), bubbles_values[sortBy](b)); });
+      pack.sort(function(a, b) { return d3.descending(Math.random(), bubbles_values[sortBy](b)); });
       var data1 = pack.nodes(data);
 
       vis.transition()
