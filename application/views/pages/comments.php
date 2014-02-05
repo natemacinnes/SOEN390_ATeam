@@ -25,8 +25,8 @@
   			<div class="comment">
   				<a class="report" href="#"><span class="glyphicon glyphicon-flag"></span></a>
   				<p>
-  					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tristique 
-  					ante eget adipiscing euismod. Etiam cursus aliquam ultricies. Praesent 
+  					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tristique
+  					ante eget adipiscing euismod. Etiam cursus aliquam ultricies. Praesent
   					pellentesque elementum nisi Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tristique ante eget adipiscing euismod. Etiam cursus aliquam ultricies. Praesent pellentesque elementum nisi
   				</p>
   				<a class="reply" href="#">Reply</a>
