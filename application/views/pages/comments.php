@@ -8,7 +8,7 @@
 
 
   	<div class="comments-container float-left">
-  		<div class="comments-wrapper">
+  		<div class="comments-wr apper">
   			<div class="comment">
   				<textarea class="form-control" rows="3" placeholder="Enter your comment..."></textarea>
   				<a href="#" class="btn btn-primary btn-sm top-margin float-right" role="button">Post</a>
