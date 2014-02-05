@@ -53,12 +53,7 @@ function loadBubbles(sortBy, language) {
         .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
         .attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
         .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
-        .style('opacity', function(d) {
-          if (yd_settings.language_filter) {
-            return (d.language == yd_settings.language_filter ? 1 : 0.3);
-          }
-          return 1;
-        });
+        .style('opacity', function(d) { narrative_matches_filter(d) ? 1 : 0.3; });
         // ^ the root g container is transformed, so for all children x and y is
         //   relative to 0
 
@@ -140,7 +135,7 @@ function loadBubbles(sortBy, language) {
     // Colorbox popup for audio player
     $(".node-base").click(function() {
       // Don't open colorbox for unmatched language filter
-      if (yd_settings.language_filter && yd_settings.language_filter != this.__data__.language) {
+      if (!narrative_matches_filter(this.__data__)) {
         return false;
       }
       var colorbox = jQuery.colorbox({
@@ -239,7 +234,7 @@ function loadBubbles(sortBy, language) {
       // Hover
       if (debug_ring_mode == 0) {
         jQuery('g.node-base').hover(
-          function() { jQuery('g.slice', this).show(); },
+          function() { if (narrative_matches_filter(this.__data__)) { jQuery('g.slice', this).show(); }},
           function() { jQuery('g.slice', this).hide(); }
         );
       }
@@ -250,7 +245,7 @@ function loadBubbles(sortBy, language) {
           jQuery('g.slice', this).css('opacity', bubble_opacity).show();
         });
         jQuery('g.node-base').hover(
-          function() { jQuery('g.slice', this).css('opacity', 1); },
+          function() { if (narrative_matches_filter(this.__data__)) { jQuery('g.slice', this).css('opacity', 1); }},
           function() { jQuery('g.slice', this).css('opacity', bubble_opacity); }
         );
       }
@@ -258,7 +253,7 @@ function loadBubbles(sortBy, language) {
       else if (debug_ring_mode == 2) {
         jQuery('g.node-base').each(function() { jQuery('g.slice', this).show(); });
         jQuery('g.node-base').hover(
-          function() { jQuery('circle', this).css('opacity', 0.8); },
+          function() { if (narrative_matches_filter(this.__data__)) { jQuery('circle', this).css('opacity', 0.8); }},
           function() { jQuery('circle', this).css('opacity', 0.5); }
         );
       }
@@ -334,6 +329,10 @@ bubble_colors = {
   red: '#009933',
   green: '#CC0000',
   grey: '#eeeeee'
+}
+
+function narrative_matches_filter(d) {
+  return yd_settings.language_filter == null || yd_settings.language_filter == d.language;
 }
 
 function loadMediaElement() {

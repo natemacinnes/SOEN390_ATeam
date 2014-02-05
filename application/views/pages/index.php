@@ -19,9 +19,9 @@
     </div>
     <div class="debug-rings float-left">
       <input id="debug-ring-toggle-hover" type="radio" name="ring-toggle" value="0" checked="checked" />
-      <label for="debug-ring-toggle-always">Hover</label>
+      <label for="debug-ring-toggle-hover">Hover</label>
       <input id="debug-ring-toggle-transparent" type="radio" name="ring-toggle" value="1" />
-      <label for="debug-ring-toggle-always">Transparent</label>
+      <label for="debug-ring-toggle-transparent">Transparent</label>
       <input id="debug-ring-toggle-always" type="radio" name="ring-toggle" value="2" />
       <label for="debug-ring-toggle-always">Always</label>
 
