@@ -17,6 +17,18 @@
     <div class="portal-topic float-left">
       <h3>Should GMO foods be labeled?</h3>
     </div>
+    <div class="debug-rings float-left">
+      <input id="debug-ring-toggle-hover" type="radio" name="ring-toggle" value="0" checked="checked" />
+      <label for="debug-ring-toggle-hover">Hover</label>
+      <input id="debug-ring-toggle-transparent" type="radio" name="ring-toggle" value="1" />
+      <label for="debug-ring-toggle-transparent">Transparent</label>
+      <input id="debug-ring-toggle-always" type="radio" name="ring-toggle" value="2" />
+      <label for="debug-ring-toggle-always">Always</label>
+
+
+      <label for="debug-ring-toggle-always">Always</label>
+      <input id="debug-ring-toggle-always" type="text" size="1" name="ring-opacity" value="0.3" />
+    </div>
     <div class="filter-container float-right">
       <div class="btn-group">
         <a href="en" title="English&#013;Anglais" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span></a>

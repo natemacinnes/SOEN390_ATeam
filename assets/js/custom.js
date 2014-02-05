@@ -5,17 +5,25 @@ jQuery(document).ready(function() {
 
 });
 
+
 function loadBubbles(sortBy, language) {
 
   // sortBy may be undefined. If so, don't call ajax/bubbles/undefined -_-
   var url = yd_settings.site_url + "ajax/bubbles";
-  if (typeof(language) !== 'undefined') {
+  if (typeof(language) === 'undefined') {
+    yd_settings.language_filter = null;
+  }
+  else {
+    // Deprecated - to remove later once new filtering passes UAT
     url += '/' + language;
   }
 
   var diameter = (document.getElementById("bubble-container").offsetWidth)/2;
   var format = d3.format(",.0f");
   var color = d3.scale.category20c();
+
+  // See yd_settings.constants
+  var debug_ring_mode = 0;
 
   // Accepts nodes and computes the position of them for use by .data()
   var pack = d3.layout.pack()
@@ -34,6 +42,8 @@ function loadBubbles(sortBy, language) {
   d3.json(url, function(error, data) {
     console.log('creating bubbles sorted by ' + sortBy);
 
+
+
     // Select elements, even if they do not exist yet. enter() creates them and
     // appends them to the selection object. Then, we operate on them.
     var vis = svg.datum(data).selectAll('.node')
@@ -42,7 +52,8 @@ function loadBubbles(sortBy, language) {
         .append('g')
         .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
         .attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
-        .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; });
+        .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
+        .style('opacity', function(d) { narrative_matches_filter(d) ? 1 : 0.3; });
         // ^ the root g container is transformed, so for all children x and y is
         //   relative to 0
 
@@ -57,7 +68,8 @@ function loadBubbles(sortBy, language) {
       .attr("r", function(d) { return d.r; })
       .attr("id", function(d) { return 'narrative-' + d.narrative_id; })
       .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
-      .style("fill", function(d) { return !d.children ? color(d.parent.name) : "#eeeeee"; });
+      .style("fill", bubble_fill_color)
+      .style("opacity", function(d) { return !d.children ?  0.5: 1; });
 
     // This computes the SVG path data required to form an arc.
     var arc = d3.svg.arc()
@@ -88,6 +100,13 @@ function loadBubbles(sortBy, language) {
     }
 
     // One SVG g container per pie chart slice
+    var arcs_grey = vis.selectAll("g.slice-grey")
+      .data(radiusmapper)
+      .enter()
+      .append("svg:g")
+      .attr("class", "slice-grey");
+
+    // One SVG g container per pie chart slice
     var arcs = vis.selectAll("g.slice")
       .data(radiusmapper)
       .enter()
@@ -96,8 +115,13 @@ function loadBubbles(sortBy, language) {
       .style('display', 'none');
 
     // In the container, write a path based on the generated arc data
+    var paths_grey = arcs_grey.append("svg:path")
+      .attr("fill", function(d, i) { return '#dddddd'; } )
+      .attr("d", arc);
+
+    // In the container, write a path based on the generated arc data
     var paths = arcs.append("svg:path")
-      .attr("fill", function(d, i) { return d.data.label == 'agrees' ? '#009933' : '#CC0000'; } )
+      .attr("fill", function(d, i) { return d.data.label == 'agrees' ? bubble_colors.red : bubble_colors.green; } )
       .attr("d", arc);
 
     // This comes after the paths so that the text doesn't get covered by the
@@ -110,6 +134,10 @@ function loadBubbles(sortBy, language) {
 
     // Colorbox popup for audio player
     $(".node-base").click(function() {
+      // Don't open colorbox for unmatched language filter
+      if (!narrative_matches_filter(this.__data__)) {
+        return false;
+      }
       var colorbox = jQuery.colorbox({
         href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
         left: 0,
@@ -122,6 +150,24 @@ function loadBubbles(sortBy, language) {
       loadMediaElement();
       colorbox.resize();
     });
+
+    jQuery('.debug-rings input[type=radio]').click(function() {
+      var lmode = jQuery(this).val();
+      debugRingMode(lmode);
+    });
+    jQuery('.debug-rings input[type=text]').change(function() {
+      var lmode = jQuery('.debug-rings input[type=radio]:checked').val();;
+      debugRingMode(lmode);
+    });
+
+    // 0 = hover
+    // 1 = transparent
+    // 2 = always
+    function debugRingMode(lmode){
+      // Set global
+      debug_ring_mode = lmode;
+      updateVis(sortBy);
+    }
 
     // Maps initial data to bubble pack
     updateVis(sortBy);
@@ -139,7 +185,13 @@ function loadBubbles(sortBy, language) {
 
       vis.transition()
         .duration(700)
-        .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; });
+        .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
+        .style('opacity', function(d) {
+          if (yd_settings.language_filter) {
+            return (d.language == yd_settings.language_filter ? 1 : 0.3);
+          }
+          return 1;
+        });
 
       titles.attr("x", function(d) { return 0; })
         .attr("y", function(d) { return 0; })
@@ -149,7 +201,14 @@ function loadBubbles(sortBy, language) {
           .duration(700)
           .attr("r", function(d) { return d.r; });
 
+      arcs_grey.data(radiusmapper)
       arcs.data(radiusmapper)
+
+      paths_grey.data(radiusmapper)
+      paths_grey.transition()
+        .duration(700)
+        .attr("d", function(d) { return arc(d); });
+
       paths.data(radiusmapper)
       paths.transition()
         .duration(700)
@@ -161,6 +220,43 @@ function loadBubbles(sortBy, language) {
         .duration(700)
         .attr("dx", function(d) { return 0; })
         .attr("dy", function(d) { return 0; });
+
+
+      // Normalize
+      var bubble_opacity = parseFloat(jQuery('.debug-rings input[type=text]').val());
+      jQuery('g.node-base').unbind('mouseenter mouseleave');
+      jQuery('g.node-base').each(function() {
+        jQuery('g.slice', this).hide();
+        jQuery('g.slice-grey', this).hide();
+        jQuery('g.slice', this).css('opacity', 1);
+      });
+      // Debug-specific stuffs
+      // Hover
+      if (debug_ring_mode == 0) {
+        jQuery('g.node-base').hover(
+          function() { if (narrative_matches_filter(this.__data__)) { jQuery('g.slice', this).show(); }},
+          function() { jQuery('g.slice', this).hide(); }
+        );
+      }
+      // Transparent
+      else if (debug_ring_mode == 1) {
+        jQuery('g.node-base').each(function() {
+          jQuery('g.slice-grey', this).show();
+          jQuery('g.slice', this).css('opacity', bubble_opacity).show();
+        });
+        jQuery('g.node-base').hover(
+          function() { if (narrative_matches_filter(this.__data__)) { jQuery('g.slice', this).css('opacity', 1); }},
+          function() { jQuery('g.slice', this).css('opacity', bubble_opacity); }
+        );
+      }
+      // Always
+      else if (debug_ring_mode == 2) {
+        jQuery('g.node-base').each(function() { jQuery('g.slice', this).show(); });
+        jQuery('g.node-base').hover(
+          function() { if (narrative_matches_filter(this.__data__)) { jQuery('circle', this).css('opacity', 0.8); }},
+          function() { jQuery('circle', this).css('opacity', 0.5); }
+        );
+      }
     }
 
     // Toggle buttons for navigation links
@@ -177,16 +273,10 @@ function loadBubbles(sortBy, language) {
       jQuery(this).toggleClass('active');
       jQuery('.filter-container .btn-group a').not(this).removeClass('active');
       var sortBy = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
-      var language = jQuery('.filter-container .btn-group a.active').attr('href');
-      loadBubbles(sortBy, language);
+      yd_settings.language_filter = jQuery('.filter-container .btn-group a.active').attr('href');
+      updateVis(sortBy);
       return false;
     });
-
-    // Toggle buttons for navigation links
-    jQuery('g.node-base').hover(
-      function() { jQuery('g.slice', this).show(); },
-      function() { jQuery('g.slice', this).hide(); }
-    );
 
     d3.select(self.frameElement).style("height", diameter + "px");
 
@@ -218,6 +308,32 @@ bubbles_label_text = {
   // TODO
   'popular': function(d) { return d.narrative_id; }
 };
+
+bubble_fill_color = function(d) {
+  if (!d.children) {
+    switch (parseInt(d.position)) {
+      case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
+        return '#777777';
+
+      case yd_settings.constants.NARRATIVE_POSITION_AGREE:
+        return bubble_colors.red;
+
+      case yd_settings.constants.NARRATIVE_POSITION_DISAGREE:
+        return bubble_colors.green;
+    }
+  }
+  return bubble_colors.grey;
+}
+
+bubble_colors = {
+  red: '#009933',
+  green: '#CC0000',
+  grey: '#eeeeee'
+}
+
+function narrative_matches_filter(d) {
+  return yd_settings.language_filter == null || yd_settings.language_filter == d.language;
+}
 
 function loadMediaElement() {
   if (jQuery('audio,video').not('player-processed').addClass('player-processed').length) {
