@@ -75,10 +75,24 @@ class narrative_model extends CI_Model {
     }
 
     //Scan the folder to determine the amount of pictures in a narrative
+	$xmlExistence = FALSE; //Used for handling folder uploaded with no XML file
+	$isBatchUpload = FALSE; //Used to handle batch uploading
     $file_scan = scandir($dir);
     foreach($file_scan as $filecheck)
     {
       $file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
+	  //Handling of batch upload, ignoring directories '.' and '..'
+	  if($file_extension == '' && $filecheck != '.' && $filecheck != '..')
+	  {
+		$isBatchUpload = TRUE;
+		$newPath = $narrative_path.'/'.$filecheck;
+		$data = $this->process_narrative($newPath);
+		if($data['error'] === 1)
+		{
+			$data['error_message'] = 'Processing failed, one of the narrative folders uploaded does not contain an XML file. Please attempt the upload again.';
+			return $data;
+		}
+	  }
       if($file_extension == "jpg")
       {
         $image_count++;
@@ -87,15 +101,28 @@ class narrative_model extends CI_Model {
       if($file_extension == "xml")
       {
         //read uploaded xml here and hash unique id
+		$xmlExistence = TRUE;
         $xml_reader = simplexml_load_file($dir . "/" . $filecheck);
         $narrative_name = $xml_reader->narrativeName;
         $narrative_language = $xml_reader->language;
         $narrative_submit_date = $xml_reader->submitDate;
         $narrative_submit_time = $xml_reader->time;
         str_replace("-", ":", $narrative_submit_time);
-		echo $narrative_language;
       }
     }
+	//Handling error when folder does not contain XML file
+	if($xmlExistence == FALSE && $isBatchUpload == FALSE)
+	{
+		$data['error'] = 1;
+		$data['error_message'] = 'Processing failed, the narrative folder uploaded does not contain an XML file. Please attempt the upload again.';
+		return $data;
+	}
+	//Interrupting further action if batch upload
+	if($isBatchUpload)
+	{
+		$data['error'] = 0;
+		return $data;
+	}
 
      //This is the txt file that will combine all the txt files with ffmpeg
     $file_concat = fopen($dir . "/audio_container.txt", "w+");

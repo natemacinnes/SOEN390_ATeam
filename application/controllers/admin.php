@@ -48,40 +48,33 @@ class admin extends MY_Controller {
 
     //Executing upload, display errors if any
     if (!$this->upload->do_upload()) {
-      $error['error'] = $this->upload->display_errors();
-	  $this->view_wrapper('admin/upload', $error);
+      $data['error_message'] = $this->upload->display_errors();
+	  $this->view_wrapper('admin/upload', $data);
+	  return;
     }
-	else
-	{
-		// Getting data from upload, filename of uploaded file is available at $upload_data['file_name']
-		$upload_data = $this->upload->data();
-		$zipFileName = $upload_data['file_name'];
-		
-		// Calling upload_model to unzip, handling error
-		$data = $this->upload_model->unzip($path, $zipFileName);
-		if($data['error'] === 1)
-		{
-			$error['error'] = $data['error_message'];
-			$this->view_wrapper('admin/upload', $error);
-		}
-		
-		//Calling arrative_model for processing
-		$data = $this->narrative_model->process_narrative($data['narrative_path']);
-		if($data['error'] === 1)
-		{
-			$error['error'] = $data['error_message'];
-			$this->view_wrapper('admin/upload', $error);
-		}
-		
-		//Output success
-		$this->view_wrapper('admin/upload-success', $data);
-	}	
 	
-    //$narrative = $this->narrative_model->unpack($path);
-    //$this->narrative_model->insert($narrative);
-
-    //$data = array("upload_data" => $upload_data, 'error' => $upload_error);
-    //$this->view_wrapper('admin/upload-success', $data);
+	// Getting data from upload, filename of uploaded file is available at $upload_data['file_name']
+	$upload_data = $this->upload->data();
+	$zipFileName = $upload_data['file_name'];
+	
+	// Calling upload_model to unzip, handling error
+	$data = $this->upload_model->unzip($path, $zipFileName);
+	if($data['error'] === 1)
+	{
+		$this->view_wrapper('admin/upload', $data);
+		return;
+	}
+	
+	//Calling arrative_model for processing
+	$data = $this->narrative_model->process_narrative($data['narrative_path']);
+	if($data['error'] === 1)
+	{
+		$this->view_wrapper('admin/upload', $data);
+		return;
+	}
+	
+	//Output success
+	$this->view_wrapper('admin/upload-success', $data);	
   }
 }
 
