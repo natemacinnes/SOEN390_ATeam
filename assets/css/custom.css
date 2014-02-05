@@ -57,12 +57,46 @@ body {
   background: transparent url('../img/flag-fr.png') no-repeat center center;
 }
 
-/* circle thing/
-circle:hover {
-	opacity: 0.8;
 
+.slice {
+
+   -webkit-appearance: button;
+    -webkit-animation: fadein .5s; /* Safari and Chrome */
+       -moz-animation: fadein .5s; /* Firefox */
+        -ms-animation: fadein .5s; /* Internet Explorer */
+         -o-animation: fadein .5s; /* Opera */
+            animation: fadein .5s;
 }
-*/
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Firefox */
+@-moz-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Safari and Chrome */
+@-webkit-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}​
+
+/* Opera */
+@-o-keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}​
+
 /*
 pie chart hover.node-base:hover {
   opacity: 0.8;
@@ -76,6 +110,8 @@ pie chart hover.node-base:hover {
 
 /* Comments */
 .filler{ height: 400px; width: 400px; background: black;}
+
+textarea{ resize: vertical;}
 
 .comments-container{ height: 400px; overflow-y: scroll; overflow-x: hidden;}
 .comments-wrapper{ height: 9999px;}
