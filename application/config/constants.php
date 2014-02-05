@@ -51,5 +51,17 @@ define('METRIC_EVENT_SHARE', 4);
 define('METRIC_EVENT_LIKE', 5);
 define('METRIC_EVENT_DISLIKE', 6);
 
+/*
+|--------------------------------------------------------------------------
+| Narrative position types
+|--------------------------------------------------------------------------
+|
+| These constants are used in the database to prevent storage of redundant text
+|
+*/
+define('NARRATIVE_POSITION_NEUTRAL', 0);
+define('NARRATIVE_POSITION_AGREE', 1);
+define('NARRATIVE_POSITION_DISAGREE', 2);
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
