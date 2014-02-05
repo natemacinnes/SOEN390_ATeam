@@ -10,7 +10,11 @@ function loadBubbles(sortBy, language) {
 
   // sortBy may be undefined. If so, don't call ajax/bubbles/undefined -_-
   var url = yd_settings.site_url + "ajax/bubbles";
-  if (typeof(language) !== 'undefined') {
+  if (typeof(language) === 'undefined') {
+    yd_settings.language_filter = null;
+  }
+  else {
+    // Deprecated - to remove later once new filtering passes UAT
     url += '/' + language;
   }
 
@@ -48,7 +52,13 @@ function loadBubbles(sortBy, language) {
         .append('g')
         .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
         .attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
-        .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; });
+        .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
+        .style('opacity', function(d) {
+          if (yd_settings.language_filter) {
+            return (d.language == yd_settings.language_filter ? 1 : 0.3);
+          }
+          return 1;
+        });
         // ^ the root g container is transformed, so for all children x and y is
         //   relative to 0
 
@@ -176,7 +186,13 @@ function loadBubbles(sortBy, language) {
 
       vis.transition()
         .duration(700)
-        .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; });
+        .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
+        .style('opacity', function(d) {
+          if (yd_settings.language_filter) {
+            return (d.language == yd_settings.language_filter ? 1 : 0.3);
+          }
+          return 1;
+        });
 
       titles.attr("x", function(d) { return 0; })
         .attr("y", function(d) { return 0; })
@@ -258,8 +274,8 @@ function loadBubbles(sortBy, language) {
       jQuery(this).toggleClass('active');
       jQuery('.filter-container .btn-group a').not(this).removeClass('active');
       var sortBy = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
-      var language = jQuery('.filter-container .btn-group a.active').attr('href');
-      loadBubbles(sortBy, language);
+      yd_settings.language_filter = jQuery('.filter-container .btn-group a.active').attr('href');
+      updateVis(sortBy);
       return false;
     });
 
