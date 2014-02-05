@@ -111,7 +111,7 @@ pie chart hover.node-base:hover {
 /* Comments */
 .filler{ height: 400px; width: 400px; background: black;}
 
-textarea{ resize: vertical;}
+.form-control{ resize: vertical;}
 
 .comments-container{ height: 400px; overflow-y: scroll; overflow-x: hidden;}
 .comments-wrapper{ height: 9999px;}
