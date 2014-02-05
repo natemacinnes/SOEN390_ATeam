@@ -139,6 +139,10 @@ function loadBubbles(sortBy, language) {
 
     // Colorbox popup for audio player
     $(".node-base").click(function() {
+      // Don't open colorbox for unmatched language filter
+      if (yd_settings.language_filter && yd_settings.language_filter != this.__data__.language) {
+        return false;
+      }
       var colorbox = jQuery.colorbox({
         href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
         left: 0,
