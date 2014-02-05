@@ -93,6 +93,7 @@ class narrative_model extends CI_Model {
         $narrative_submit_date = $xml_reader->submitDate;
         $narrative_submit_time = $xml_reader->time;
         str_replace("-", ":", $narrative_submit_time);
+		echo $narrative_language;
       }
     }
 
@@ -115,7 +116,13 @@ class narrative_model extends CI_Model {
             //Get the name of the audio file to combine
             $file_input = "file " . "'" . $dir . "/" .$file ."'\r\n";
             fwrite($file_concat, $file_input);
-            $command = "../storage/ffmpeg -i ". $dir . '/' .$file . " 2>&1";
+			if (PHP_OS == 'WINNT') {
+			  $path = realpath("../storage/ffmpeg.exe");
+			}
+			else {
+				$path = realpath("../storage/ffmpeg");
+			}
+			$command = $path . " -i ". $dir . '/' .$file . " 2>&1";
             $temp = shell_exec($command);
 
             preg_match("/Duration: (.*?), start:/", $temp, $matches);
