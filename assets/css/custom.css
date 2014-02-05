@@ -10,13 +10,9 @@
 
 body {
    background: #fcfcfc;
-   /*overflow: hidden;*/
 }
 
 /* home page */
-
-
-.container{ }
 
 .home{ position: relative; height: 100%; width: 100%; overflow: hidden;}
 
@@ -78,8 +74,21 @@ pie chart hover.node-base:hover {
 .dropdown-margin{ margin: 20px 0; }
 
 
+/* Comments */
+.filler{ height: 400px; width: 400px; background: black;}
 
+.comments-container{ height: 400px; overflow-y: scroll; overflow-x: hidden;}
+.comments-wrapper{ height: 9999px;}
 
+.comment{ position:relative; min-height: 80px; width: 400px; border: 1px solid #fff; border-top: none; background: #EDEFF4; color: #333; padding: 15px;}
+.comment:first-child { border-top: 0px solid #fff;}
+
+.quote{ margin: 10px; background: #DDDFE4; color: #333; padding: 10px; }
+.quote:hover{ background: #D3D4DD; }
+
+.reply{ position: absolute; bottom: 5px; right: 5px;}
+.report{ position: absolute; top: 5px; right: 5px;}
+.report2{ position: absolute; bottom: 5px; right: 45px;}
 
 
 /* helper classes */
