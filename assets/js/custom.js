@@ -396,7 +396,7 @@ bubbles_values = {
   'agrees': function(d) { return parseInt(d.agrees)+1; },
   'disagrees': function(d) { return parseInt(d.disagrees)+1; },
   'views': function(d) { return parseInt(d.views)+1; },
-  'age': function(d) { var dcreated = dateFromString(d.created); return dcreated.getYear() + dcreated.getMonth()/12*900 + dcreated.getDay()/31*100; },
+  'age': function(d) { var dcreated = dateFromString(d.created); var datenum = (dcreated.getFullYear()-2000)*1000 + dcreated.getMonth()/12*900 + dcreated.getDate()/31*100; console.log(d.created, datenum); return datenum },
   // TODO
   'popular': function(d) { return parseInt(d.narrative_id); }
 };
