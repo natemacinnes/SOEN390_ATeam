@@ -52,14 +52,14 @@ class narrative_model extends CI_Model {
   }
   public function get_XML_narrative_language($xml_r)
   {
-	$sql_entry = ""
+	$sql_entry = "";
 	if($xml_r->language == "English")
 	{
-		sql_entry = "EN";
+		$sql_entry = "EN";
 	}
 	else
 	{
-		sql_entry = "FR";
+		$sql_entry = "FR";
 	}
 	return $sql_entry;	  
   }
@@ -131,12 +131,13 @@ class narrative_model extends CI_Model {
       }
       if($file_extension == "xml")
       {
+		$xmlExistence = TRUE;
         //read uploaded xml here and hash unique id
         $xml_reader = simplexml_load_file($dir . "/" . $filecheck);
-        $narrative_name = get_XML_narrative_name($xml_reader); //check if integer, check if RIGHT integer
-        $narrative_language = get_XML_narrative_language($xml_reader); //check if right language (string format)
-        $narrative_submit_date = get_XML_narrative_submitDate($xml_reader); //check if it is a date, check that it is in right format
-        $narrative_submit_time = get_XML_narrative_submitTime($xml_reader); //check that time format is correct
+        $narrative_name = $this->get_XML_narrative_name($xml_reader); //check if integer, check if RIGHT integer
+        $narrative_language = $this->get_XML_narrative_language($xml_reader); //check if right language (string format)
+        $narrative_submit_date = $this->get_XML_narrative_submitDate($xml_reader); //check if it is a date, check that it is in right format
+        $narrative_submit_time = $this->get_XML_narrative_submitTime($xml_reader); //check that time format is correct
         str_replace("-", ":", $narrative_submit_time);
       }
     }
@@ -178,7 +179,7 @@ class narrative_model extends CI_Model {
 			else {
 				$path = realpath("../storage/ffmpeg");
 			}
-			$command = $path . " -i ". $dir . '/' .$file . "-n -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
+			$command = $path . " -i ". $dir . '/' .$file . " -n -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
             $temp = shell_exec($command);
 			
 			//write the file name to audio_container.txt
