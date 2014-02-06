@@ -61,6 +61,8 @@ class Narrative_Model_Test extends MY_Controller {
  	$data['narrativeModelNoMessage'] = $this->unit->run($nar_model_goodpath['error_message'], "", "Narrative Model Process Narrative test","Tests process narrative using a an existing tmp path, check to see if we get error = 0, fails if error != 0 (This test case is expected to pass");
 	
  	
+ 	
+ 	//testing the get_all function which helps with sorting
     $getallTest = $this->narrative_model->get_All("id");
  	
  	$data['sorting_id_fail'] = $this->unit->run($getallTest[0]['narrative_id'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  In the case of this test highest is 16, lowest is 0, Testing narrative idTest expected to fail"); 
@@ -93,8 +95,25 @@ class Narrative_Model_Test extends MY_Controller {
  	$data['sorting_last'] = $this->unit->run($getallTest[15]['narrative_id'], "1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing that the last file sorted has narrative_id of 1 (being the lowest value in database), Test expected to pass");
  	
  	
+ 	//testing the xml file parsing functions in narrative_model
+ 	$xml_parse_name = $this->narrative_model->get_XML_narrative_name(simplexml_load_file("./uploads/tmp/1391652225/1.xml"));
+ 	$xml_parse_lang = $this->narrative_model->get_XML_narrative_language(simplexml_load_file("./uploads/tmp/1391652225/1.xml"));
+ 	$xml_parse_date = $this->narrative_model->get_XML_narrative_submitDate(simplexml_load_file("./uploads/tmp/1391652225/1.xml"));
+ 	$xml_parse_time = $this->narrative_model->get_XML_narrative_submitTime(simplexml_load_file("./uploads/tmp/1391652225/1.xml"));
+ 	 
+ 	
+ 	$data['xmlParseNameFail'] = $this->unit->run($xml_parse_name, "Hello", "Narrative Model Parse Name Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to fail by passing string");
+ 	$data['xmlParseLanguageFail'] = $this->unit->run($xml_parse_lang, "1", "Narrative Model Parse Language Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to fail by passing integer");
+ 	$data['xmlParseDateFail'] = $this->unit->run($xml_parse_date, "Date", "Narrative Model Parse Date Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to fail by passing string");
+ 	$data['xmlParseTimeFail'] = $this->unit->run($xml_parse_time, "Time", "Narrative Model Parse Time Test", "Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to fail by passing string");
  	
  	
+ 	
+ 	
+ 	$data['xmlParseNamePass'] = $this->unit->run($xml_parse_name, 1, "Narrative Model Parse Name Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to pass");
+ 	$data['xmlParseLanguagePass'] = $this->unit->run($xml_parse_lang, "English", "Narrative Model Parse Language Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to pass");
+ 	$data['xmlParseDatePass'] = $this->unit->run($xml_parse_date, "2013-05-30", "Narrative Model Parse Date Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to pass");
+ 	$data['xmlParseTimePass'] = $this->unit->run($xml_parse_time, "20-19-33", "Narrative Model Parse Time Test", "Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to pass");
  	
  	
  	

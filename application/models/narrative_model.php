@@ -54,12 +54,13 @@ class narrative_model extends CI_Model {
   {
 	return $xml_r->language;	  
   }
+  
   public function get_XML_narrative_submitDate($xml_r)
   {
-	$xml_r->submitDate;  
-  
-	}
-	public function get_XML_narrative_submitTime($xml_r)
+	return $xml_r->submitDate;  
+  }
+
+  public function get_XML_narrative_submitTime($xml_r)
   {
 	return $xml_r->time;	  
   }

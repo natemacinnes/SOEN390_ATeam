@@ -57,6 +57,17 @@ echo $sorting_flags_pass;
 
 echo $sorting_last;
 
+echo $xmlParseNameFail;
+echo $xmlParseLanguageFail;
+echo $xmlParseDateFail;
+echo $xmlParseTimeFail;
+
+echo $xmlParseNamePass;
+echo $xmlParseLanguagePass;
+echo $xmlParseDatePass;
+echo $xmlParseTimePass;
+ 
+
 
 
 
