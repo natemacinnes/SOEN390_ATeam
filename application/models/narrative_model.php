@@ -141,18 +141,21 @@ class narrative_model extends CI_Model {
           if(is_readable($dir . "/" .$file))
           {
             //Get the name of the audio file to combine
-            $file_input = "file " . "'" . $dir . "/" .$file ."'\r\n";
-            fwrite($file_concat, $file_input);
+            
 			if (PHP_OS == 'WINNT') {
 			  $path = realpath("../storage/ffmpeg.exe");
 			}
 			else {
 				$path = realpath("../storage/ffmpeg");
 			}
-			$command = $path . " -i ". $dir . '/' .$file . " 2>&1";
+			$command = $path . " -i ". $dir . '/' .$file . " -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
             $temp = shell_exec($command);
-
-            preg_match("/Duration: (.*?), start:/", $temp, $matches);
+			
+			//write the file name to audio_container.txt
+			$file_input = "file " . "'" . $dir . "/" .$file_name .".mp3'\r\n";
+            fwrite($file_concat, $file_input);
+			
+            preg_match("/Duration: (.*?),/", $temp, $matches);
 
             $raw_duration = $matches[1];
 
