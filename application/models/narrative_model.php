@@ -73,6 +73,26 @@ class narrative_model extends CI_Model {
   {
 	return $xml_r->time;	  
   }
+  
+  //determine if the file is an audio file
+  public function is_audio($file_ext) {
+		switch($file_ext) {
+		case "mp3":
+		case "wav":
+		case "mp4":
+		case "m4a":
+		case "aac":
+		case "avi":
+		case "3gp":
+		case "ogg":
+		case "mp2":
+		case "ac3":
+		return true;
+		break;
+		default:
+		return false;
+		}
+	}
 //end of test stuff
   
   
@@ -166,7 +186,8 @@ class narrative_model extends CI_Model {
         $file_name = pathinfo($file, PATHINFO_FILENAME);
 
         //Check if the file is an mp3
-        if(pathinfo($file, PATHINFO_EXTENSION) == "mp3")
+        //if(pathinfo($file, PATHINFO_EXTENSION) == "mp3")
+		if($this->is_audio(pathinfo($file, PATHINFO_EXTENSION)))
         {
           //simple verification to see if the file is readable
           if(is_readable($dir . "/" .$file))
