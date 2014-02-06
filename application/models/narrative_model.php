@@ -52,7 +52,16 @@ class narrative_model extends CI_Model {
   }
   public function get_XML_narrative_language($xml_r)
   {
-	return $xml_r->language;	  
+	$sql_entry = ""
+	if($xml_r->language == "English")
+	{
+		sql_entry = "EN";
+	}
+	else
+	{
+		sql_entry = "FR";
+	}
+	return $sql_entry;	  
   }
   
   public function get_XML_narrative_submitDate($xml_r)
@@ -247,7 +256,7 @@ class narrative_model extends CI_Model {
       'created' => $narrative_submit_date . " " . $narrative_submit_time,
       'audio_length' => $endTimes,
       'uploaded_by' => 1, // TODO hardcoded
-      'language' => "en", // TODO hardcoded
+      'language' => $narrative_language, // TODO hardcoded DONE 02/06/2014
       'views' => 0,
       'agrees' => 0,
       'disagrees' => 0,
