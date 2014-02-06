@@ -169,7 +169,7 @@ class narrative_model extends CI_Model {
 			else {
 				$path = realpath("../storage/ffmpeg");
 			}
-			$command = $path . " -i ". $dir . '/' .$file . " -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
+			$command = $path . " -i ". $dir . '/' .$file . "-n -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
             $temp = shell_exec($command);
 			
 			//write the file name to audio_container.txt
