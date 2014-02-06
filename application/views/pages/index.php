@@ -10,8 +10,8 @@
         <a href="#views" title="Number of listens&#013;Nombres d'&eacute;coutes" class="btn btn-default active" role="button"><span class="glyphicon glyphicon-headphones"></span></a>
         <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span></a>
         <a href="#popular" title="Popular narratives&#013;Discussions populaires" class="btn btn-default" role="button"><span class="glyphicon glyphicon-fire"></span></a>
-        <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up"></span></a>
-        <a href="#disagrees" title="Disagreed narratives&#013;Discussions contest&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down"></span></a>
+        <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span></a>
+        <a href="#disagrees" title="Disagreed narratives&#013;Discussions contest&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span></a>
       </div>
     </div>
     <div class="filter-container float-right">
