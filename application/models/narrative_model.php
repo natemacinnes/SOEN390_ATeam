@@ -44,7 +44,28 @@ class narrative_model extends CI_Model {
     $narratives = $query->result_array();
     return $narratives;
   }
-
+  
+  //following is for testing xml parsing
+    public function get_XML_narrative_name($xml_r)
+  {
+	return $xml_r->narrativeName;	  
+  }
+  public function get_XML_narrative_language($xml_r)
+  {
+	return $xml_reader->language;	  
+  }
+  public function get_XML_narrative_submitDate($xml_r)
+  {
+	$xml_reader->submitDate;  
+  
+	}
+	public function get_XML_narrative_submitTime($xml_r)
+  {
+	return $xml_reader->time;	  
+  }
+//end of test stuff
+  
+  
   public function process_narrative($narrative_path)
   {
     // Get the absolute path
@@ -101,12 +122,11 @@ class narrative_model extends CI_Model {
       if($file_extension == "xml")
       {
         //read uploaded xml here and hash unique id
-		$xmlExistence = TRUE;
         $xml_reader = simplexml_load_file($dir . "/" . $filecheck);
-        $narrative_name = $xml_reader->narrativeName;
-        $narrative_language = $xml_reader->language;
-        $narrative_submit_date = $xml_reader->submitDate;
-        $narrative_submit_time = $xml_reader->time;
+        $narrative_name = get_XML_narrative_name($xml_reader); //check if integer, check if RIGHT integer
+        $narrative_language = get_XML_narrative_language($xml_reader); //check if right language (string format)
+        $narrative_submit_date = get_XML_narrative_submitDate($xml_reader); //check if it is a date, check that it is in right format
+        $narrative_submit_time = get_XML_narrative_submitTime($xml_reader); //check that time format is correct
         str_replace("-", ":", $narrative_submit_time);
       }
     }
