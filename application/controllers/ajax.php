@@ -12,13 +12,6 @@ class Ajax extends MY_Controller {
   public function bubbles($language = NULL) {
     $data = array();
     $data['name'] = 'flare';
-
-    // A flare can have on or more groupings
-    $groupings = array();
-
-    // A flare can have on or more clusters
-    $clusters = array();
-
     // Clusters are groups of nodes
     $nodes = array();
 
@@ -35,18 +28,7 @@ class Ajax extends MY_Controller {
       $nodes[] = $narrative;
     }
 
-    $clusters[] = array(
-      'name' => 'cluser1',
-      'children' => $nodes,
-    );
-
-
-    $groupings[] = array(
-      'name' => 'grouping1',
-      'children' => $clusters,
-    );
-
-    $data['children'] = $groupings;
+    $data['children'] = $nodes;
 
     print json_encode($data);
   }
