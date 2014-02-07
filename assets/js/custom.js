@@ -124,6 +124,7 @@ function loadBubbles(language) {
 
     // This transforms simple data objects into a arc values from 0 to 2*pi
     var pie = d3.layout.pie()
+      .sort(null)
       .value(function(d) { return d.value; })
 
     /**
@@ -452,7 +453,7 @@ function bubble_get_multiplier(d) {
 
   var multiplier = 1;
   if (d.r > 20 && d.r <= 30) {
-    multipler = 2;
+    multiplier = 2;
   }
   else if (d.r > 30 && d.r <= 40) {
     multiplier = 3;
@@ -473,11 +474,13 @@ function bubbles_label_text_1(d) {
 }
 
 glyphicon_map = {
-  'agrees': '',
-  'disagrees': '',
-  'views': '',
-  'age': '',
-  'popular': ''
+  'agrees': '', // thumbs-up
+  'disagrees': '', // thumbs-down
+  //'views': '', // headphones
+  'views': '', // eye-open
+  'age': '', // time
+  //'popular': '' // fire
+  'popular': '' // star
 };
 
 bubble_fill_color = function(d) {
