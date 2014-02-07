@@ -586,7 +586,7 @@ bubble_colors = {
   darkgrey: '#777777',
   darkergrey: '#333333',
   blue: '#4282D3',
-  purple: '#5D4BD8'
+  purple: '#540EAD'
 }
 
 function narrative_matches_filter(d) {
