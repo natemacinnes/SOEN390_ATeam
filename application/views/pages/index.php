@@ -81,14 +81,16 @@
 
       Bubble color fill mode:
       <div class="debug-color">
-        <input id="debug-color-toggle-grey" type="radio" name="color-toggle" value="0" checked="checked" />
+        <input id="debug-color-toggle-grey" type="radio" name="color-toggle" value="0" />
         <label for="debug-color-toggle-grey">Grey</label>
         <input id="debug-color-toggle-greys" type="radio" name="color-toggle" value="1" />
         <label for="debug-color-toggle-greys">Greys</label>
         <input id="debug-color-toggle-color" type="radio" name="color-toggle" value="2" />
-        <label for="debug-color-toggle-color">Color</label>
+        <label for="debug-color-toggle-color">Color (R/G)</label>
         <input id="debug-color-toggle-color2" type="radio" name="color-toggle" value="3" />
-        <label for="debug-color-toggle-color2">Color (2)</label>
+        <label for="debug-color-toggle-color2">Color (B/P)</label>
+        <input id="debug-color-toggle-hue" type="radio" name="color-toggle" value="4" checked="checked" />
+        <label for="debug-color-toggle-hue">Hue</label>
       </div>
     </div>
 

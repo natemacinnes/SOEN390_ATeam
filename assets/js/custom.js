@@ -13,7 +13,7 @@ jQuery(document).ready(function() {
 var debug_ring_mode = 0;
 var debug_text_mode = 2;
 var debug_text_content_mode = 1;
-var debug_color_mode = 0;
+var debug_color_mode = 4;
 
 function loadBubbles(language) {
 
@@ -36,7 +36,7 @@ function loadBubbles(language) {
     .sort(null)
     .size([diameter, diameter/2])
     .value(bubbles_values[yd_settings.sort_by])
-    .padding(1.5);
+    .padding(3);
 
   // Create the SVG bubble structure
   var svg = d3.select(".svg-container").html('').append("svg")
@@ -167,17 +167,20 @@ function loadBubbles(language) {
 
     // In the container, write a path based on the generated arc data
     var paths = arcs.append("svg:path")
-      .attr("fill", function(d, i) { return d.data.label == 'agrees' ? bubble_colors.red : bubble_colors.green; } )
+      .attr("fill", function(d, i) { return d.data.label == 'agrees' ? bubble_colors.green : bubble_colors.red; } )
       .attr("d", arc);
 
     // This comes after the paths so that the text doesn't get covered by the
     // path rendering
     var nodes = vis.append("text")
       .attr("dx", 0)
-      .attr("dy", 0)
+      .attr("dy", 3)
+      .attr("width", function(d) { return d.r - 10; })
       .style("text-anchor", "middle")
       .text(bubbles_label_text(yd_settings.sort_by))
-      .style('font-family', debug_text_content_mode == 0 ? "'Helvetica Neue', Helvetica, Arial, sans-serif;" : "'Glyphicons Halflings'");
+      .style('font-family', debug_text_content_mode == 0 ? "'Helvetica Neue', Helvetica, Arial, sans-serif;" : "'Glyphicons Halflings'")
+      .style('letter-spacing', debug_text_content_mode == 0 ? 'normal' : '5px')
+      .style('font-size', debug_text_content_mode == 0 ? '1em' : '0.8em');
 
     // Colorbox popup for audio player
     $(".node-base").click(function() {
@@ -247,6 +250,8 @@ function loadBubbles(language) {
     // 0=grey
     // 1=greys
     // 2=color
+    // 3=color (alternate)
+    // 4=hue
     function debugColorMode(cmode){
       // Set global
       debug_color_mode = cmode;
@@ -302,12 +307,14 @@ function loadBubbles(language) {
         .attr("d", function(d) { return arc(d); });
 
       nodes.text(bubbles_label_text(yd_settings.sort_by))
-        .style('font-family', debug_text_content_mode == 0 ? "'Helvetica Neue', Helvetica, Arial, sans-serif;" : "'Glyphicons Halflings'");
+        .style('font-family', debug_text_content_mode == 0 ? "'Helvetica Neue', Helvetica, Arial, sans-serif;" : "'Glyphicons Halflings'")
+        .style('letter-spacing', debug_text_content_mode == 0 ? 'normal' : '5px')
+        .style('font-size', debug_text_content_mode == 0 ? '1em' : '0.8em');
 
       nodes.transition()
         .duration(700)
         .attr("dx", function(d) { return 0; })
-        .attr("dy", function(d) { return 0; });
+        .attr("dy", function(d) { return 3; });
 
 
       // Normalize
@@ -415,7 +422,7 @@ bubbles_values = {
   'agrees': function(d) { return parseInt(d.agrees)+1; },
   'disagrees': function(d) { return parseInt(d.disagrees)+1; },
   'views': function(d) { return parseInt(d.views)+1; },
-  'age': function(d) { var dcreated = dateFromString(d.created); var datenum = (dcreated.getFullYear()-2000)*1000 + dcreated.getMonth()/12*900 + dcreated.getDate()/31*100; console.log(d.created, datenum); return datenum },
+  'age': function(d) { var dcreated = dateFromString(d.created); var datenum = (dcreated.getFullYear()-2013)*1000 + dcreated.getMonth()/12*900 + dcreated.getDate()/31*100; return datenum },
   // TODO
   'popular': function(d) { return parseInt(d.narrative_id); }
 };
@@ -444,16 +451,16 @@ function bubble_get_multiplier(d) {
   }
 
   var multiplier = 1;
-  if (d.r > 10 && d.r <= 20) {
+  if (d.r > 20 && d.r <= 30) {
     multipler = 2;
   }
-  else if (d.r > 20 && d.r <= 30) {
+  else if (d.r > 30 && d.r <= 40) {
     multiplier = 3;
   }
-  else if (d.r > 30 && d.r <= 40) {
+  else if (d.r > 40 && d.r <= 50) {
     multiplier = 4;
   }
-  else if (d.r > 40) {
+  else if (d.r > 50) {
     multiplier = 5;
   }
 
@@ -496,11 +503,17 @@ bubble_fill_color = function(d) {
           return bubble_colors.darkgrey;
 
         case yd_settings.constants.NARRATIVE_POSITION_AGREE:
-          return bubble_colors.orange;
+          return bubble_colors.purple;
 
         case yd_settings.constants.NARRATIVE_POSITION_DISAGREE:
           return bubble_colors.blue;
       }
+    }
+    else if (debug_color_mode == 4) {
+      var color = d3.scale.linear()
+        .domain([0.1, 1, 3])
+        .range(["red", "grey", "green"]);
+      return color(Math.min(3, (d.agrees+1) / (d.disagrees+1)));
     }
 
     switch (parseInt(d.position)) {
@@ -522,9 +535,9 @@ bubble_colors = {
   red: '#CC0000',
   grey: '#eeeeee',
   darkgrey: '#777777',
-  darkgrey: '#555555',
-  blue: '#66a3d2',
-  orange: '#ffc073'
+  darkergrey: '#333333',
+  blue: '#4282D3',
+  purple: '#5D4BD8'
 }
 
 function narrative_matches_filter(d) {
