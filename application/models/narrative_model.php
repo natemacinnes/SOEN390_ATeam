@@ -91,6 +91,7 @@ class narrative_model extends CI_Model {
 		break;
 		default:
 		return false;
+		break;
 		}
 	}
 	
@@ -107,6 +108,7 @@ class narrative_model extends CI_Model {
 		break;
 		default:
 		return false;
+		break;
 		}
 	}
 //end of test stuff
