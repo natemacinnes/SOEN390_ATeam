@@ -73,7 +73,7 @@ function loadBubbles(sortBy, language) {
       .attr("x", 0)
       .attr("y", 0)
       .attr("class", 'legend')
-      .attr("transform", function(d) { return 'translate(' + (diameter-250) + ',' +  25 +  ')'; })
+      .attr("transform", function(d) { return 'translate(' + (75) + ',' +  25 +  ')'; })
 
     legend.append('text')
       .attr("dx", 0)

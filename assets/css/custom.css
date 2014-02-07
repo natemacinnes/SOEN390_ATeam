@@ -17,9 +17,10 @@ body {
 .home{ position: relative; height: 100%; width: 100%; overflow: hidden;}
 
 
-#bubble-container { position: relative; border: 1px solid #ccc; border-radius: 6px; padding: 1px; margin-bottom: 30px; line-height: 2.1428571435; color: inherit; background-color: #eeeeee; }
+#bubble-container { position: relative; width: 85%; border: 1px solid #ccc; border-radius: 6px; border-top-right-radius:0; border-bottom-right-radius:0; padding: 1px; margin-bottom: 30px; line-height: 2.1428571435; color: inherit; background-color: #eeeeee; }
+#recent-container { position: relative; height: 498px; width: 15%; border: 1px solid #ccc; border-radius: 6px; border-bottom-left-radius:0; border-top-left-radius:0; padding: 1px; margin-bottom: 30px; line-height: 2.1428571435; color: inherit; background-color: #eeeeee;  }
 
-.help-container { position: fixed; bottom: 0; right: 20px; }
+.help-container { position: absolute; bottom: -1px; right: 20px; }
 .btn-help { border-bottom-right-radius:0; border-bottom-left-radius:0; }
 .btn-feedback { border-bottom-right-radius:0; border-bottom-left-radius:0; }
 
@@ -64,8 +65,8 @@ body {
 }
 .filter-container {
   position: absolute;
-  top: -1px;
-  right: -1px;
+  bottom: -1px;
+  left: -1px;
 }
 
 .slice {

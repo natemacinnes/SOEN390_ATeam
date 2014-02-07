@@ -14,10 +14,10 @@
     <div class="filter-container float-right">
       <a href="#" title="English" class="btn btn-default" role="button"><span class="glyphicon glyphicon-minus"></span> EN</a>
       <a href="#" title="French" class="btn btn-default" role="button"><span class="glyphicon glyphicon-minus"></span> FR</a>
-    </div>-->
-    <div class="clear"></div>
+    </div>
+    <div class="clear"></div>-->
 
-    <div id="bubble-container" class="top-margin">
+    <div id="bubble-container" class="top-margin float-left">
       <div class="sort-container">
         <div class="btn-group btn-group-vertical">
           <a href="#views" title="Number of listens&#013;Nombres d'&eacute;coutes" class="btn btn-default active" role="button"><span class="glyphicon glyphicon-headphones"></span></a>
@@ -34,7 +34,16 @@
           <a href="fr" title="French&#013;Fran&ccedil;ais" class="btn btn-default" role="button"><span class="flagicon flagicon-fr"></span></a>
         </div>
       </div>
+      <div class="help-container">
+        <a href="#" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help"><span class="glyphicon glyphicon-question-sign"></span></a>
+        <a href="#" title="Give us your feedback&#013;Donnez-nous votre feedback" class="btn btn-warning btn-lg btn-feedback"><span class="glyphicon glyphicon-bullhorn"></span></a>
+      </div>
     </div>
+
+    <div id="recent-container" class="top-margin float-left">
+    </div>
+
+    <div class="clear"></div>
 
     <div class="debug">
       Bubble ring mode:
@@ -75,8 +84,5 @@
     </div>
 
   </div>
-  <div class="help-container">
-    <a href="#" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help"><span class="glyphicon glyphicon-question-sign"></span></a>
-    <a href="#" title="Give us your feedback&#013;Donnez-nous votre feedback" class="btn btn-warning btn-lg btn-feedback"><span class="glyphicon glyphicon-bullhorn"></span></a>
-  </div>
+  
 </div>
