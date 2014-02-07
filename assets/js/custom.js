@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
 
 var debug_ring_mode = 0;
 var debug_text_mode = 2;
-var debug_text_content_mode = 1;
+var debug_text_content_mode = 2;
 var debug_color_mode = 4;
 
 function loadBubbles(language) {
@@ -242,6 +242,7 @@ function loadBubbles(language) {
 
     // 0=metric
     // 1=glyph
+    // 2=glyphhover
     function debugTextContentMode(tcmode){
       // Set global
       debug_text_content_mode = tcmode;
@@ -329,7 +330,7 @@ function loadBubbles(language) {
 
       jQuery('g.node-base text').each(function() {
         jQuery(this).hide();
-      })
+      });
 
       jQuery('g.legend').hide();
 
@@ -371,7 +372,6 @@ function loadBubbles(language) {
           function() { jQuery('text', this).show(); },
           function() { jQuery('text', this).hide(); }
         );
-
       }
       if (debug_text_mode == 2) {
         jQuery('g.node-base text').each(function() {
@@ -384,6 +384,13 @@ function loadBubbles(language) {
         d = {'position': 1};
         rect2.style("fill", bubble_fill_color(d));
         jQuery('g.legend').show();
+      }
+
+      if (debug_text_content_mode == 2) {
+        jQuery('g.node-base').hover(
+          function() { d3.select(this).selectAll('text').text(glyphicon_map.play); },
+          function() { d3.select(this).selectAll('text').text(bubbles_label_text(yd_settings.sort_by)); }
+        );
       }
     }
 
@@ -479,8 +486,9 @@ glyphicon_map = {
   //'views': '', // headphones
   'views': '', // eye-open
   'age': '', // time
-  //'popular': '' // fire
-  'popular': '' // star
+  //'popular': '', // fire
+  'popular': '', // star
+  'play': '' // play
 };
 
 bubble_fill_color = function(d) {
