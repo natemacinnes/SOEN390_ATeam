@@ -40,6 +40,7 @@
       </div>
     </div>
 
+
     <div id="recent-container" class="top-margin float-left">
     </div>
 
@@ -60,14 +61,22 @@
         <input id="debug-ring-toggle-opacity" type="text" size="1" name="ring-opacity" value="0.3" />
       </div>
 
-      Text mode:
+      Text display mode:
       <div class="debug-text">
-        <input id="debug-text-toggle-none" type="radio" name="text-toggle" value="0" checked="checked" />
+        <input id="debug-text-toggle-none" type="radio" name="text-toggle" value="0" />
         <label for="debug-text-toggle-none">None</label>
         <input id="debug-text-toggle-hover" type="radio" name="text-toggle" value="1" />
         <label for="debug-text-toggle-hover">Hover</label>
-        <input id="debug-text-toggle-always" type="radio" name="text-toggle" value="2" />
+        <input id="debug-text-toggle-always" type="radio" name="text-toggle" value="2" checked="checked" />
         <label for="debug-text-toggle-always">Always</label>
+      </div>
+
+      Text content mode:
+      <div class="debug-text-content">
+        <input id="debug-text-content-toggle-metric" type="radio" name="text-content-toggle" value="0" />
+        <label for="debug-text-content-toggle-metric">Metric</label>
+        <input id="debug-text-content-toggle-glyph" type="radio" name="text-content-toggle" value="1" checked="checked" />
+        <label for="debug-text-content-toggle-glyph">Glyph</label>
       </div>
 
       Bubble color fill mode:
@@ -84,5 +93,5 @@
     </div>
 
   </div>
-  
+
 </div>

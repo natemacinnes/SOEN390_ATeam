@@ -1,17 +1,23 @@
+String.prototype.repeat = function(num) {
+  return new Array(num + 1).join(this);
+}
+
 jQuery(document).ready(function() {
   if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
-    loadBubbles('views');
+    yd_settings.sort_by = 'views';
+    loadBubbles();
   }
 
 });
 
 var debug_ring_mode = 0;
-var debug_text_mode = 0;
+var debug_text_mode = 2;
+var debug_text_content_mode = 1;
 var debug_color_mode = 0;
 
-function loadBubbles(sortBy, language) {
+function loadBubbles(language) {
 
-  // sortBy may be undefined. If so, don't call ajax/bubbles/undefined -_-
+  // yd_settings.sort_by may be undefined. If so, don't call ajax/bubbles/undefined -_-
   var url = yd_settings.site_url + "ajax/bubbles";
   if (typeof(language) === 'undefined') {
     yd_settings.language_filter = null;
@@ -29,7 +35,7 @@ function loadBubbles(sortBy, language) {
   var pack = d3.layout.pack()
     .sort(null)
     .size([diameter, diameter/2])
-    .value(bubbles_values[sortBy])
+    .value(bubbles_values[yd_settings.sort_by])
     .padding(1.5);
 
   // Create the SVG bubble structure
@@ -40,7 +46,7 @@ function loadBubbles(sortBy, language) {
 
   // Retrieve JSON from AJAX controller, but only once upon initial load
   d3.json(url, function(error, data) {
-    console.log('creating bubbles sorted by ' + sortBy);
+    console.log('creating bubbles sorted by ' + yd_settings.sort_by);
 
     // Select elements, even if they do not exist yet. enter() creates them and
     // appends them to the selection object. Then, we operate on them.
@@ -170,7 +176,8 @@ function loadBubbles(sortBy, language) {
       .attr("dx", 0)
       .attr("dy", 0)
       .style("text-anchor", "middle")
-      .text(bubbles_label_text[sortBy]);
+      .text(bubbles_label_text(yd_settings.sort_by))
+      .style('font-family', debug_text_content_mode == 0 ? "'Helvetica Neue', Helvetica, Arial, sans-serif;" : "'Glyphicons Halflings'");
 
     // Colorbox popup for audio player
     $(".node-base").click(function() {
@@ -203,6 +210,10 @@ function loadBubbles(sortBy, language) {
       var tmode = jQuery(this).val();
       debugTextMode(tmode);
     });
+    jQuery('.debug-text-content input[type=radio]').click(function() {
+      var tcmode = jQuery(this).val();
+      debugTextContentMode(tcmode);
+    });
     jQuery('.debug-color input[type=radio]').click(function() {
       var cmode = jQuery(this).val();
       debugColorMode(cmode);
@@ -214,7 +225,7 @@ function loadBubbles(sortBy, language) {
     function debugRingMode(lmode){
       // Set global
       debug_ring_mode = lmode;
-      updateVis(sortBy);
+      updateVis();
     }
     // 0=none
     // 1=hover
@@ -222,7 +233,15 @@ function loadBubbles(sortBy, language) {
     function debugTextMode(tmode){
       // Set global
       debug_text_mode = tmode;
-      updateVis(sortBy);
+      updateVis();
+    }
+
+    // 0=metric
+    // 1=glyph
+    function debugTextContentMode(tcmode){
+      // Set global
+      debug_text_content_mode = tcmode;
+      updateVis();
     }
 
     // 0=grey
@@ -231,23 +250,22 @@ function loadBubbles(sortBy, language) {
     function debugColorMode(cmode){
       // Set global
       debug_color_mode = cmode;
-      updateVis(sortBy);
+      updateVis();
     }
 
 
 
     // Maps initial data to bubble pack
-    updateVis(sortBy);
+    updateVis();
 
     /**
      * Binds actual data to the DOM and provides a transition if a new ordering
      * is preferred by user.
      */
-    function updateVis(sortBy2) {
-      sortBy = sortBy2;
-      console.log('updating bubbles to be sorted by ' + sortBy);
+    function updateVis() {
+      console.log('updating bubbles to be sorted by ' + yd_settings.sort_by);
 
-      pack.value(bubbles_values[sortBy]);
+      pack.value(bubbles_values[yd_settings.sort_by]);
       pack.sort(null);
       var data1 = pack.nodes(data);
 
@@ -283,7 +301,8 @@ function loadBubbles(sortBy, language) {
         .duration(700)
         .attr("d", function(d) { return arc(d); });
 
-      nodes.text(bubbles_label_text[sortBy]);
+      nodes.text(bubbles_label_text(yd_settings.sort_by))
+        .style('font-family', debug_text_content_mode == 0 ? "'Helvetica Neue', Helvetica, Arial, sans-serif;" : "'Glyphicons Halflings'");
 
       nodes.transition()
         .duration(700)
@@ -364,8 +383,8 @@ function loadBubbles(sortBy, language) {
     jQuery('.sort-container .btn-group a').unbind('click').click(function() {
       jQuery('.sort-container .btn-group a').removeClass('active');
       jQuery(this).toggleClass('active');
-      var sortBy = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
-      updateVis(sortBy);
+      yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+      updateVis();
       return false;
     });
 
@@ -373,9 +392,9 @@ function loadBubbles(sortBy, language) {
     jQuery('.filter-container .btn-group a').unbind('click').click(function() {
       jQuery(this).toggleClass('active');
       jQuery('.filter-container .btn-group a').not(this).removeClass('active');
-      var sortBy = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+      yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
       yd_settings.language_filter = jQuery('.filter-container .btn-group a.active').attr('href');
-      updateVis(sortBy);
+      updateVis();
       return false;
     });
 
@@ -401,13 +420,57 @@ bubbles_values = {
   'popular': function(d) { return parseInt(d.narrative_id); }
 };
 
-bubbles_label_text = {
-  'agrees': function(d) { return d.agrees; },
-  'disagrees': function(d) { return d.disagrees; },
-  'views': function(d) { return d.views; },
-  'age': function(d) { return !d.children ? String(d.created).split(' ')[0] : null; },
+function bubbles_label_text(metric) {
+  if (debug_text_content_mode == 0) {
+    return bubbles_label_text_0[metric];
+  }
+  else {
+    return bubbles_label_text_1;
+  }
+}
+
+bubbles_label_text_0 = {
+  'agrees': function(d) { return d.children ? null : d.agrees; },
+  'disagrees': function(d) { return d.children ? null : d.disagrees; },
+  'views': function(d) { return d.children ? null : d.views; },
+  'age': function(d) { return d.children ? null : String(d.created).split(' ')[0]; },
   // TODO
-  'popular': function(d) { return d.narrative_id; }
+  'popular': function(d) { return d.children ? null : d.narrative_id; }
+};
+
+function bubble_get_multiplier(d) {
+  if (d.children) {
+    return null;
+  }
+
+  var multiplier = 1;
+  if (d.r > 10 && d.r <= 20) {
+    multipler = 2;
+  }
+  else if (d.r > 20 && d.r <= 30) {
+    multiplier = 3;
+  }
+  else if (d.r > 30 && d.r <= 40) {
+    multiplier = 4;
+  }
+  else if (d.r > 40) {
+    multiplier = 5;
+  }
+
+  return multiplier;
+}
+
+function bubbles_label_text_1(d) {
+  var multiplier = bubble_get_multiplier(d);
+  return glyphicon_map[yd_settings.sort_by].repeat(multiplier);
+}
+
+glyphicon_map = {
+  'agrees': '',
+  'disagrees': '',
+  'views': '',
+  'age': '',
+  'popular': ''
 };
 
 bubble_fill_color = function(d) {
