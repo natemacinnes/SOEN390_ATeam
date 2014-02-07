@@ -77,8 +77,10 @@
         <label for="debug-text-content-toggle-metric">Metric</label>
         <input id="debug-text-content-toggle-glyph" type="radio" name="text-content-toggle" value="1" />
         <label for="debug-text-content-toggle-glyph">Glyph</label>
-        <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="2" checked="checked" />
+        <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="2" />
         <label for="debug-text-content-toggle-glyph-play">Glyph+Play Hover</label>
+        <input id="debug-text-content-toggle-glyph-play-animate" type="radio" name="text-content-toggle" value="3" checked="checked" />
+        <label for="debug-text-content-toggle-glyph-play-animate">Glyph+Play Hover Animation</label>
       </div>
 
       Bubble color fill mode:

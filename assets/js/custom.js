@@ -12,7 +12,7 @@ jQuery(document).ready(function() {
 
 var debug_ring_mode = 0;
 var debug_text_mode = 2;
-var debug_text_content_mode = 2;
+var debug_text_content_mode = 3;
 var debug_color_mode = 4;
 
 function loadBubbles(language) {
@@ -388,8 +388,43 @@ function loadBubbles(language) {
 
       if (debug_text_content_mode == 2) {
         jQuery('g.node-base').hover(
-          function() { d3.select(this).selectAll('text').text(glyphicon_map.play); },
+          function() { d3.select(this).selectAll('text').text(function(d) { return d.children ? null : glyphicon_map.play }); },
           function() { d3.select(this).selectAll('text').text(bubbles_label_text(yd_settings.sort_by)); }
+        );
+      }
+      if (debug_text_content_mode == 3) {
+        var timer;
+
+        function animate_1(item) {
+          d3.select(item).selectAll('text')
+            .text(glyphicon_map.volume_down)
+            .style("font-size", "1.1em")
+            .attr("dy", 8);
+          timer = setTimeout(function() { animate_2(item); }, 400);
+
+        }
+
+        function animate_2(item) {
+          d3.select(item).selectAll('text')
+            .text(glyphicon_map.volume_up)
+            .style("font-size", "1.1em")
+            .attr("dy", 8);
+          timer = setTimeout(function() { animate_1(item); }, 400);
+        }
+
+        nodes.text(function(d) { return d.children ? null : glyphicon_map.play });
+
+        jQuery('g.node-base').hover(
+          function() {
+            animate_1(this);
+          },
+          function() {
+            clearTimeout(timer);
+            d3.select(this).selectAll('text')
+              .text(function(d) { return d.children ? null : glyphicon_map.play })
+              .attr("dy", 6)
+              .style("font-size", "0.8em");
+          }
         );
       }
     }
@@ -480,6 +515,7 @@ function bubbles_label_text_1(d) {
   return glyphicon_map[yd_settings.sort_by].repeat(multiplier);
 }
 
+// object properties here are the sort keys, not the glyphicon keys
 glyphicon_map = {
   'agrees': '', // thumbs-up
   'disagrees': '', // thumbs-down
@@ -488,7 +524,9 @@ glyphicon_map = {
   'age': '', // time
   //'popular': '', // fire
   'popular': '', // star
-  'play': '' // play
+  'play': '', // play
+  'volume_down': '', // volume_up
+  'volume_up': '' // volume_down
 };
 
 bubble_fill_color = function(d) {
