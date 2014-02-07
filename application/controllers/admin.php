@@ -8,6 +8,7 @@ class admin extends MY_Controller {
     parent::__construct();
     $this->load->model('upload_model');
 	$this->load->model('narrative_model');
+	$this->load->model('editing_model');
   }
 
   /**
@@ -76,6 +77,18 @@ class admin extends MY_Controller {
 	//Output success
 	$this->view_wrapper('admin/upload-success', $data);	
   }
+  
+	public function showNarrative($id)
+	{
+		//Getting info on the narrative and opening the page
+		$data = $this->editing_model->gatherInfo($id);
+		$this->view_wrapper('admin/narrative', $data);
+	}
+	
+	public function editNarrative($id)
+	{
+		
+	}
 }
 
 /* End of file welcome.php */
