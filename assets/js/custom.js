@@ -175,7 +175,7 @@ function loadBubbles(language) {
     // path rendering
     var nodes = vis.append("text")
       .attr("dx", 0)
-      .attr("dy", 3)
+      .attr("dy", 6)
       .attr("width", function(d) { return d.r - 10; })
       .style("text-anchor", "middle")
       .text(bubbles_label_text(yd_settings.sort_by))
@@ -314,8 +314,8 @@ function loadBubbles(language) {
 
       nodes.transition()
         .duration(700)
-        .attr("dx", function(d) { return 0; })
-        .attr("dy", function(d) { return 3; });
+        .attr("dx", 0)
+        .attr("dy", 6)
 
 
       // Normalize
