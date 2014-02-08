@@ -17,6 +17,7 @@
     </div>
     <div class="clear"></div>-->
 
+    Should GMO foods be labelled?
     <div id="bubble-container" class="top-margin float-left">
       <div class="sort-container">
         <div class="btn-group btn-group-vertical">
@@ -27,7 +28,8 @@
           <a href="#disagrees" title="Disagreed narratives&#013;Discussions contest&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span></a>
         </div>
       </div>
-      <center class="svg-container"></center>
+      <left class="svg-container svg-container-1"></left>
+      <right class="svg-container svg-container-2"></right>
       <div class="filter-container">
         <div class="btn-group btn-group-vertical">
           <a href="en" title="English&#013;Anglais" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span></a>
@@ -45,6 +47,15 @@
     </div>
 
     <div class="clear"></div>
+
+    <div class="debug">
+      Bubble cluster/positioning mode:
+      <div class="debug-position">
+        <input id="debug-position-toggle-single" type="radio" name="position-toggle" value="0" />
+        <label for="debug-ring-toggle-single">Single</label>
+        <input id="debug-position-toggle-multi" type="radio" name="position-toggle" value="1" checked="checked" />
+        <label for="debug-position-toggle-multi">Multi</label>
+      </div>
 
     <div class="debug">
       Bubble ring mode:
@@ -79,10 +90,10 @@
         <label for="debug-text-content-toggle-glyph">Glyph</label>
         <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="2" />
         <label for="debug-text-content-toggle-glyph-play">Glyph, play on hover</label>
-        <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="4" checked="checked" />
-        <label for="debug-text-content-toggle-glyph-play">Glyph+play on hover</label>
+        <input id="debug-text-content-toggle-glyph-playhover" type="radio" name="text-content-toggle" value="4" checked="checked" />
+        <label for="debug-text-content-toggle-glyph-playhover">Play, glyph+play on hover</label>
         <input id="debug-text-content-toggle-glyph-play-animate" type="radio" name="text-content-toggle" value="3" />
-        <label for="debug-text-content-toggle-glyph-play-animate">Glyph, play animation on hover</label>
+        <label for="debug-text-content-toggle-glyph-play-animate">Play, glyph+play animation on hover</label>
       </div>
 
       Bubble color fill mode:

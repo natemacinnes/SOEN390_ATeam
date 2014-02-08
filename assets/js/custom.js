@@ -2,29 +2,57 @@ String.prototype.repeat = function(num) {
   return new Array(num + 1).join(this);
 }
 
+var debug_ring_mode;
+var debug_text_mode;
+var debug_text_content_mode;
+var debug_color_mode;
+var debug_position_mode;
+
 jQuery(document).ready(function() {
+  debug_ring_mode = parseInt(jQuery('.debug-rings input:checked').val());
+  debug_text_mode = parseInt(jQuery('.debug-text input:checked').val());
+  debug_text_content_mode = parseInt(jQuery('.debug-text-content input:checked').val());
+  debug_color_mode = parseInt(jQuery('.debug-color input:checked').val());
+  debug_position_mode = parseInt(jQuery('.debug-position input:checked').val());
+
   if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
     yd_settings.sort_by = 'views';
-    loadBubbles();
+    reloadBubbles();
   }
-
 });
 
-var debug_ring_mode = parseInt(jQuery('.debug-rings input:checked').val());
-var debug_text_mode = parseInt(jQuery('.debug-text input:checked').val());
-var debug_text_content_mode = parseInt(jQuery('.debug-text-content input:checked').val());
-var debug_color_mode = parseInt(jQuery('.debug-text-color input:checked').val());
+function reloadBubbles() {
+  jQuery('.debug input').unbind('click change');
+  jQuery('.btn-group a').unbind('click');
+  jQuery('.svg-container').html('');
+  if (debug_position_mode == 0) {
+    loadBubbles(null, null);
+  }
+  else {
+    loadBubbles(null, 1);
+    loadBubbles(null, 2);
+  }
+}
 
-function loadBubbles(language) {
+function loadBubbles(language, position) {
+  var svgselect;
 
   // yd_settings.sort_by may be undefined. If so, don't call ajax/bubbles/undefined -_-
   var url = yd_settings.site_url + "ajax/bubbles";
-  if (typeof(language) === 'undefined') {
+  if (typeof(language) === 'undefined' || language === null) {
     yd_settings.language_filter = null;
   }
   else {
     // Deprecated - to remove later once new filtering passes UAT
-    url += '/' + language;
+    //url += '/' + language;
+    yd_settings.language_filter = language;
+  }
+  if (typeof(position) === 'undefined' || position === null) {
+    svgselect = ".svg-container-1";
+  }
+  else {
+    svgselect = ".svg-container-" + position;
+    url += '/' + position;
   }
 
   var diameter = (document.getElementById("bubble-container").offsetWidth);
@@ -34,13 +62,13 @@ function loadBubbles(language) {
   // Accepts nodes and computes the position of them for use by .data()
   var pack = d3.layout.pack()
     .sort(null)
-    .size([diameter, diameter/2])
+    .size([debug_position_mode == 0 ? diameter : diameter/2-4, diameter/2])
     .value(bubbles_values[yd_settings.sort_by])
     .padding(3);
 
   // Create the SVG bubble structure
-  var svg = d3.select(".svg-container").html('').append("svg")
-    .attr("width", diameter)
+  var svg = d3.select(svgselect).html('').append("svg")
+    .attr("width", debug_position_mode == 0 ? diameter : diameter/2-4)
     .attr("height", diameter/2)
     .attr("class", "bubble");
 
@@ -74,6 +102,14 @@ function loadBubbles(language) {
       .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
       .style("fill", bubble_fill_color)
       .style("opacity", function(d) { return !d.children ?  0.5: 1; });
+
+    var position = svg.append('g')
+      .attr("transform", function(d) { return 'translate(' + (260) + ',' +  25 +  ')'; })
+      .append('text')
+        .attr("dx", 0)
+        .attr("dy", 10)
+        .style("text-anchor", "left")
+        .text(svgselect == '.svg-container-1' ? 'For' : 'Against');
 
     var legend = svg.append('g')
       .attr("x", 0)
@@ -222,6 +258,11 @@ function loadBubbles(language) {
       var cmode = jQuery(this).val();
       debugColorMode(cmode);
     });
+    jQuery('.debug-position input[type=radio]').click(function(event) {
+      var pmode = jQuery(this).val();
+      debugPositionMode(pmode);
+      event.stopImmediatePropagation();
+    });
 
     // 0 = hover
     // 1 = transparent
@@ -229,7 +270,7 @@ function loadBubbles(language) {
     function debugRingMode(lmode){
       // Set global
       debug_ring_mode = lmode;
-      updateVis();
+      updateVis(svgselect);
     }
     // 0=none
     // 1=hover
@@ -237,7 +278,7 @@ function loadBubbles(language) {
     function debugTextMode(tmode){
       // Set global
       debug_text_mode = tmode;
-      updateVis();
+      updateVis(svgselect);
     }
 
     // 0=metric
@@ -246,7 +287,7 @@ function loadBubbles(language) {
     function debugTextContentMode(tcmode){
       // Set global
       debug_text_content_mode = tcmode;
-      updateVis();
+      updateVis(svgselect);
     }
 
     // 0=grey
@@ -257,19 +298,27 @@ function loadBubbles(language) {
     function debugColorMode(cmode){
       // Set global
       debug_color_mode = cmode;
-      updateVis();
+      updateVis(svgselect);
+    }
+
+    // 0=single
+    // 1=multi
+    function debugPositionMode(pmode){
+      // Set global
+      debug_position_mode = pmode;
+      reloadBubbles()
     }
 
 
 
     // Maps initial data to bubble pack
-    updateVis();
+    updateVis(svgselect);
 
     /**
      * Binds actual data to the DOM and provides a transition if a new ordering
      * is preferred by user.
      */
-    function updateVis() {
+    function updateVis(svgselect) {
       console.log('updating bubbles to be sorted by ' + yd_settings.sort_by);
 
       pack.value(bubbles_values[yd_settings.sort_by]);
@@ -321,60 +370,60 @@ function loadBubbles(language) {
 
       // Normalize
       var bubble_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
-      jQuery('g.node-base').unbind('mouseenter mouseleave');
-      jQuery('g.node-base').each(function() {
+      jQuery(svgselect + ' g.node-base').unbind('mouseenter mouseleave');
+      jQuery(svgselect + ' g.node-base').each(function() {
         jQuery('g.slice', this).hide();
         jQuery('g.slice-grey', this).hide();
         jQuery('g.slice', this).css('opacity', 1);
       });
 
-      jQuery('g.node-base text').each(function() {
+      jQuery(svgselect + ' g.node-base text').each(function() {
         jQuery(this).hide();
       });
 
-      jQuery('g.legend').hide();
+      jQuery(svgselect + ' g.legend').hide();
 
       // Debug-specific stuffs
       // Hover
       if (debug_ring_mode == 0) {
-        jQuery('g.node-base').hover(
+        jQuery(svgselect + ' g.node-base').hover(
           function() { if (narrative_matches_filter(this.__data__)) { jQuery('g.slice', this).show(); }},
           function() { jQuery('g.slice', this).hide(); }
         );
       }
       // Transparent
       else if (debug_ring_mode == 1) {
-        jQuery('g.node-base').each(function() {
+        jQuery(svgselect + ' g.node-base').each(function() {
           jQuery('g.slice-grey', this).show();
           jQuery('g.slice', this).css('opacity', bubble_opacity).show();
         });
-        jQuery('g.node-base').hover(
+        jQuery(svgselect + ' g.node-base').hover(
           function() { if (narrative_matches_filter(this.__data__)) { jQuery('g.slice', this).css('opacity', 1); }},
           function() { jQuery('g.slice', this).css('opacity', bubble_opacity); }
         );
       }
       // Always
       else if (debug_ring_mode == 2) {
-        jQuery('g.node-base').each(function() { jQuery('g.slice', this).show(); });
-        jQuery('g.node-base').hover(
+        jQuery(svgselect + ' g.node-base').each(function() { jQuery('g.slice', this).show(); });
+        jQuery(svgselect + ' g.node-base').hover(
           function() { if (narrative_matches_filter(this.__data__)) { jQuery('circle', this).css('opacity', 0.8); }},
           function() { jQuery('circle', this).css('opacity', 0.5); }
         );
       }
 
       if (debug_text_mode == 0 || debug_text_mode == 1) {
-        jQuery('g.node-base text').each(function() {
+        jQuery(svgselect + ' g.node-base text').each(function() {
           jQuery(this).hide();
         });
       }
       if (debug_text_mode == 1) {
-        jQuery('g.node-base').hover(
+        jQuery(svgselect + ' g.node-base').hover(
           function() { jQuery('text', this).show(); },
           function() { jQuery('text', this).hide(); }
         );
       }
       if (debug_text_mode == 2) {
-        jQuery('g.node-base text').each(function() {
+        jQuery(svgselect + ' g.node-base text').each(function() {
           jQuery(this).show();
         })
       }
@@ -383,11 +432,11 @@ function loadBubbles(language) {
         rect1.style("fill", bubble_fill_color(d));
         d = {'position': 1};
         rect2.style("fill", bubble_fill_color(d));
-        jQuery('g.legend').show();
+        jQuery(svgselect + ' g.legend').show();
       }
 
       if (debug_text_content_mode == 2) {
-        jQuery('g.node-base').hover(
+        jQuery(svgselect + ' g.node-base').hover(
           function() { d3.select(this).selectAll('text').text(function(d) { return d.children ? null : glyphicon_map.play }); },
           function() { d3.select(this).selectAll('text').text(bubbles_label_text(yd_settings.sort_by)); }
         );
@@ -414,7 +463,7 @@ function loadBubbles(language) {
 
         nodes.text(function(d) { return d.children ? null : glyphicon_map.play });
 
-        jQuery('g.node-base').hover(
+        jQuery(svgselect + ' g.node-base').hover(
           function() {
             animate_1(this);
           },
@@ -430,56 +479,50 @@ function loadBubbles(language) {
       if (debug_text_content_mode == 4) {
         var timer;
 
-        function animate_2(item) {
+        function animate_4(item) {
           d3.select(item).selectAll('text')
             .text(glyphicon_map.play)
-            .style("font-size", "1.1em")
-            .attr("dy", 8);
-          timer = setTimeout(function() { animate_1(item); }, 800);
+          timer = setTimeout(function() { animate_3(item); }, 800);
 
         }
 
-        function animate_1(item) {
+        function animate_3(item) {
           d3.select(item).selectAll('text')
             .text(bubbles_label_text(yd_settings.sort_by))
-            .style("font-size", "0.8em")
-            .attr("dy", 6);
-          timer = setTimeout(function() { animate_2(item); }, 2000);
+          timer = setTimeout(function() { animate_4(item); }, 2000);
         }
 
         nodes.text(function(d) { return d.children ? null : glyphicon_map.play });
 
-        jQuery('g.node-base').hover(
+        jQuery(svgselect + ' g.node-base').hover(
           function() {
-            animate_1(this);
+            animate_3(this);
           },
           function() {
             clearTimeout(timer);
             d3.select(this).selectAll('text')
-              .text(bubbles_label_text(yd_settings.sort_by))
-              .attr("dy", 6)
-              .style("font-size", "0.8em");
+              .text(glyphicon_map.play)
           }
         );
       }
     }
 
     // Toggle buttons for navigation links
-    jQuery('.sort-container .btn-group a').unbind('click').click(function() {
+    jQuery('.sort-container .btn-group a').click(function() {
       jQuery('.sort-container .btn-group a').removeClass('active');
       jQuery(this).toggleClass('active');
       yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
-      updateVis();
+      updateVis(svgselect);
       return false;
     });
 
     // Toggle buttons for navigation links
-    jQuery('.filter-container .btn-group a').unbind('click').click(function() {
+    jQuery('.filter-container .btn-group a').click(function() {
       jQuery(this).toggleClass('active');
       jQuery('.filter-container .btn-group a').not(this).removeClass('active');
       yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
       yd_settings.language_filter = jQuery('.filter-container .btn-group a.active').attr('href');
-      updateVis();
+      updateVis(svgselect);
       return false;
     });
 

@@ -9,14 +9,14 @@ class Ajax extends MY_Controller {
     $this->load->model('narrative_model');
   }
 
-  public function bubbles($language = NULL) {
+  public function bubbles($position = NULL) {
     $data = array();
     $data['name'] = 'flare';
     // Clusters are groups of nodes
     $nodes = array();
 
     // Load nodes into the active cluster
-    $result = $this->narrative_model->get_all('id', $language);
+    $result = $this->narrative_model->get_all('id', $position);
     foreach ($result as $narrative) {
       // +1 to ensure that 0 doesn't give us NaN
       $pie_data = array(
