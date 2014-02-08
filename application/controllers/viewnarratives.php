@@ -30,7 +30,6 @@ class Viewnarratives extends MY_Controller {
     $data = array('narratives' => $narratives);
     $this->view_wrapper('pages/viewnarratives', $data);
   }
-
 }
 
 /* End of file welcome.php */

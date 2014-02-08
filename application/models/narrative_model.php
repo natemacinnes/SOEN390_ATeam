@@ -39,33 +39,31 @@ class narrative_model extends CI_Model {
       $this->db->where('language', $language);
     }
     $query = $this->db
-      ->order_by($sort_col, 'desc')
-      ->get();
+    ->order_by($sort_col, 'desc')
+    ->get();
     $narratives = $query->result_array();
     return $narratives;
   }
-  
+
   //following is for testing xml parsing
-    public function get_XML_narrative_name($xml_r)
+  public function get_XML_narrative_name($xml_r)
   {
-	return $xml_r->narrativeName;	  
-  }
-  public function get_XML_narrative_language($xml_r)
-  {
-	return $xml_r->language;	  
-  }
+    return $xml_r->narrativeName;
+   }
+   public function get_XML_narrative_language($xml_r)
+   {
+     return $xml_r->language;
+   }
   public function get_XML_narrative_submitDate($xml_r)
   {
-	$xml_r->submitDate;  
-  
-	}
-	public function get_XML_narrative_submitTime($xml_r)
+    $xml_r->submitDate;
+   }
+  public function get_XML_narrative_submitTime($xml_r)
   {
-	return $xml_r->time;	  
+    return $xml_r->time;
   }
-//end of test stuff
-  
-  
+  //end of test stuff
+
   public function process_narrative($narrative_path)
   {
     // Get the absolute path
@@ -96,24 +94,24 @@ class narrative_model extends CI_Model {
     }
 
     //Scan the folder to determine the amount of pictures in a narrative
-	$xmlExistence = FALSE; //Used for handling folder uploaded with no XML file
-	$isBatchUpload = FALSE; //Used to handle batch uploading
+    $xmlExistence = FALSE; //Used for handling folder uploaded with no XML file
+    $isBatchUpload = FALSE; //Used to handle batch uploading
     $file_scan = scandir($dir);
     foreach($file_scan as $filecheck)
     {
       $file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
-	  //Handling of batch upload, ignoring directories '.' and '..'
-	  if($file_extension == '' && $filecheck != '.' && $filecheck != '..')
-	  {
-		$isBatchUpload = TRUE;
-		$newPath = $narrative_path.'/'.$filecheck;
-		$data = $this->process_narrative($newPath);
-		if($data['error'] === 1)
-		{
-			$data['error_message'] = 'Processing failed, one of the narrative folders uploaded does not contain an XML file. Please attempt the upload again.';
-			return $data;
-		}
-	  }
+      //Handling of batch upload, ignoring directories '.' and '..'
+      if($file_extension == '' && $filecheck != '.' && $filecheck != '..')
+      {
+        $isBatchUpload = TRUE;
+        $newPath = $narrative_path.'/'.$filecheck;
+        $data = $this->process_narrative($newPath);
+        if($data['error'] === 1)
+        {
+          $data['error_message'] = 'Processing failed, one of the narrative folders uploaded does not contain an XML file. Please attempt the upload again.';
+          return $data;
+        }
+      }
       if($file_extension == "jpg")
       {
         $image_count++;
@@ -130,21 +128,21 @@ class narrative_model extends CI_Model {
         str_replace("-", ":", $narrative_submit_time);
       }
     }
-	//Handling error when folder does not contain XML file
-	if($xmlExistence == FALSE && $isBatchUpload == FALSE)
-	{
-		$data['error'] = 1;
-		$data['error_message'] = 'Processing failed, the narrative folder uploaded does not contain an XML file. Please attempt the upload again.';
-		return $data;
-	}
-	//Interrupting further action if batch upload
-	if($isBatchUpload)
-	{
-		$data['error'] = 0;
-		return $data;
-	}
+    //Handling error when folder does not contain XML file
+    if($xmlExistence == FALSE && $isBatchUpload == FALSE)
+    {
+      $data['error'] = 1;
+      $data['error_message'] = 'Processing failed, the narrative folder uploaded does not contain an XML file. Please attempt the upload again.';
+      return $data;
+    }
+    //Interrupting further action if batch upload
+    if($isBatchUpload)
+    {
+      $data['error'] = 0;
+      return $data;
+    }
 
-     //This is the txt file that will combine all the txt files with ffmpeg
+    //This is the txt file that will combine all the txt files with ffmpeg
     $file_concat = fopen($dir . "/audio_container.txt", "w+");
 
     if (is_dir($dir))
@@ -161,25 +159,25 @@ class narrative_model extends CI_Model {
           if(is_readable($dir . "/" .$file))
           {
             //Get the name of the audio file to combine
-            
-			if (PHP_OS == 'WINNT') {
-			  $path = realpath("../storage/ffmpeg.exe");
-			}
-			else {
-				$path = realpath("../storage/ffmpeg");
-			}
-			$command = $path . " -i ". $dir . '/' .$file . " -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
+
+            if (PHP_OS == 'WINNT') {
+             $path = realpath("../storage/ffmpeg.exe");
+            }
+            else {
+              $path = realpath("../storage/ffmpeg");
+            }
+            $command = $path . " -i ". $dir . '/' .$file . " -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
             $temp = shell_exec($command);
-			
-			//write the file name to audio_container.txt
-			$file_input = "file " . "'" . $dir . "/" .$file_name .".mp3'\r\n";
+
+            //write the file name to audio_container.txt
+            $file_input = "file " . "'" . $dir . "/" .$file_name .".mp3'\r\n";
             fwrite($file_concat, $file_input);
-			
+
             preg_match("/Duration: (.*?),/", $temp, $matches);
 
             $raw_duration = $matches[1];
 
-            //raw_duration is in 00:00:00.00 format. This converts it to seconds.
+              //raw_duration is in 00:00:00.00 format. This converts it to seconds.
             $ar = array_reverse(explode(":", $raw_duration));
             $duration = floatval($ar[0]);
             if (!empty($ar[1])) {
@@ -194,10 +192,10 @@ class narrative_model extends CI_Model {
               $audio_jpg = $file_name . ".jpg";
             }
 
-            //Get the time that the narrative end in the concatenated narrative
+              //Get the time that the narrative end in the concatenated narrative
             $endTimes = $endTimes + floatval($duration);
 
-            //Add narrative node to XML file
+              //Add narrative node to XML file
             $name  = $xml->createElement("Mp3Name");
             $mp3Name = $xml->createTextNode($file);
             $name->appendChild($mp3Name);
