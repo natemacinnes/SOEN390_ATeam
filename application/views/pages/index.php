@@ -20,7 +20,7 @@
     <div id="bubble-container" class="top-margin float-left">
       <div class="sort-container">
         <div class="btn-group btn-group-vertical">
-          <a href="#views" title="Number of listens&#013;Nombres d'&eacute;coutes" class="btn btn-default active" role="button"><span class="glyphicon glyphicon-eye-open"></span></a>
+          <a href="#views" title="Number of listens&#013;Nombres d'&eacute;coutes" class="btn btn-default active" role="button"><span class="glyphicon glyphicon-headphones"></span></a>
           <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span></a>
           <a href="#popular" title="Popular narratives&#013;Discussions populaires" class="btn btn-default" role="button"><span class="glyphicon glyphicon-star"></span></a>
           <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span></a>
@@ -65,9 +65,9 @@
       <div class="debug-text">
         <input id="debug-text-toggle-none" type="radio" name="text-toggle" value="0" />
         <label for="debug-text-toggle-none">None</label>
-        <input id="debug-text-toggle-hover" type="radio" name="text-toggle" value="1" />
+        <input id="debug-text-toggle-hover" type="radio" name="text-toggle" value="1" checked="checked" />
         <label for="debug-text-toggle-hover">Hover</label>
-        <input id="debug-text-toggle-always" type="radio" name="text-toggle" value="2" checked="checked" />
+        <input id="debug-text-toggle-always" type="radio" name="text-toggle" value="2" />
         <label for="debug-text-toggle-always">Always</label>
       </div>
 
@@ -78,9 +78,11 @@
         <input id="debug-text-content-toggle-glyph" type="radio" name="text-content-toggle" value="1" />
         <label for="debug-text-content-toggle-glyph">Glyph</label>
         <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="2" />
-        <label for="debug-text-content-toggle-glyph-play">Glyph+Play Hover</label>
-        <input id="debug-text-content-toggle-glyph-play-animate" type="radio" name="text-content-toggle" value="3" checked="checked" />
-        <label for="debug-text-content-toggle-glyph-play-animate">Glyph+Play Hover Animation</label>
+        <label for="debug-text-content-toggle-glyph-play">Glyph, play on hover</label>
+        <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="4" checked="checked" />
+        <label for="debug-text-content-toggle-glyph-play">Glyph+play on hover</label>
+        <input id="debug-text-content-toggle-glyph-play-animate" type="radio" name="text-content-toggle" value="3" />
+        <label for="debug-text-content-toggle-glyph-play-animate">Glyph, play animation on hover</label>
       </div>
 
       Bubble color fill mode:

@@ -10,10 +10,10 @@ jQuery(document).ready(function() {
 
 });
 
-var debug_ring_mode = 0;
-var debug_text_mode = 2;
-var debug_text_content_mode = 3;
-var debug_color_mode = 4;
+var debug_ring_mode = parseInt(jQuery('.debug-rings input:checked').val());
+var debug_text_mode = parseInt(jQuery('.debug-text input:checked').val());
+var debug_text_content_mode = parseInt(jQuery('.debug-text-content input:checked').val());
+var debug_color_mode = parseInt(jQuery('.debug-text-color input:checked').val());
 
 function loadBubbles(language) {
 
@@ -427,6 +427,41 @@ function loadBubbles(language) {
           }
         );
       }
+      if (debug_text_content_mode == 4) {
+        var timer;
+
+        function animate_2(item) {
+          d3.select(item).selectAll('text')
+            .text(glyphicon_map.play)
+            .style("font-size", "1.1em")
+            .attr("dy", 8);
+          timer = setTimeout(function() { animate_1(item); }, 800);
+
+        }
+
+        function animate_1(item) {
+          d3.select(item).selectAll('text')
+            .text(bubbles_label_text(yd_settings.sort_by))
+            .style("font-size", "0.8em")
+            .attr("dy", 6);
+          timer = setTimeout(function() { animate_2(item); }, 2000);
+        }
+
+        nodes.text(function(d) { return d.children ? null : glyphicon_map.play });
+
+        jQuery('g.node-base').hover(
+          function() {
+            animate_1(this);
+          },
+          function() {
+            clearTimeout(timer);
+            d3.select(this).selectAll('text')
+              .text(bubbles_label_text(yd_settings.sort_by))
+              .attr("dy", 6)
+              .style("font-size", "0.8em");
+          }
+        );
+      }
     }
 
     // Toggle buttons for navigation links
@@ -519,8 +554,8 @@ function bubbles_label_text_1(d) {
 glyphicon_map = {
   'agrees': '', // thumbs-up
   'disagrees': '', // thumbs-down
-  //'views': '', // headphones
-  'views': '', // eye-open
+  'views': '', // headphones
+  //'views': '', // eye-open
   'age': '', // time
   //'popular': '', // fire
   'popular': '', // star

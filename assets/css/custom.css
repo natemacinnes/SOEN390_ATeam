@@ -152,3 +152,10 @@ pie chart hover.node-base:hover {
 .portal-topic { padding: 0em 1em; }
 .portal-topic h3 { margin: 3px 0; }
 .clear{ clear: both; }
+
+.debug input {
+  margin-left: 1em;
+}
+.debug label {
+  padding-left: 0.1em;
+}
