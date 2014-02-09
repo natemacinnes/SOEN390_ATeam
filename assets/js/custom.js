@@ -132,7 +132,8 @@ function loadBubbles(language, position) {
       .attr("id", function(d) { return 'narrative-' + d.narrative_id; })
       .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
       .style("fill", bubble_fill_color)
-      .style("opacity", function(d) { return !d.children ?  0.5: 1; });
+      .style("opacity", function(d) { return !d.children ?  0.5: 1; })
+      .style("cursor", function(d) { return d.children ?  "normal" : "pointer"; });
 
     var positionLabel = svg.append('g')
       .attr("transform", function(d) { return 'translate(' + (260) + ',' +  25 +  ')'; })
@@ -250,7 +251,8 @@ function loadBubbles(language, position) {
       .text(bubbles_label_text(yd_settings.sort_by))
       .style('font-family', debug_text_content_mode == 0 ? "'Helvetica Neue', Helvetica, Arial, sans-serif;" : "'Glyphicons Halflings'")
       .style('letter-spacing', debug_text_content_mode == 0 ? 'normal' : '5px')
-      .style('font-size', debug_text_content_mode == 0 ? '1em' : '0.8em');
+      .style('font-size', debug_text_content_mode == 0 ? '1em' : '0.8em')
+      .style("cursor", "pointer");
 
     // Colorbox popup for audio player
     $(".node-base").click(function() {
