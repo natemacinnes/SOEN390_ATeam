@@ -97,7 +97,7 @@ function loadBubbles(language, position) {
     .sort(null)
     .size([debug_position_mode == 0 ? diameter : diameter/2-4, diameter/2])
     .value(bubbles_values[yd_settings.sort_by])
-    .padding(3);
+    .padding(5);
 
   // Create the SVG bubble structure
   var svg = d3.select(svgselect).html('').append("svg")
@@ -192,7 +192,7 @@ function loadBubbles(language, position) {
     // This computes the SVG path data required to form an arc.
     var arc = d3.svg.arc()
       .outerRadius(function(d) { return d.r; })
-      .innerRadius(function(d) { return d.r*.8; });
+      .innerRadius(function(d) { return d.r*.90; });
 
     // This transforms simple data objects into a arc values from 0 to 2*pi
     var pie = d3.layout.pie()

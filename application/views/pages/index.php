@@ -67,11 +67,11 @@
 
       Bubble ring mode:
       <div class="debug-rings">
-        <input id="debug-ring-toggle-hover" type="radio" name="ring-toggle" value="0" checked="checked" />
+        <input id="debug-ring-toggle-hover" type="radio" name="ring-toggle" value="0" />
         <label for="debug-ring-toggle-hover">Hover</label>
         <input id="debug-ring-toggle-transparent" type="radio" name="ring-toggle" value="1" />
         <label for="debug-ring-toggle-transparent">Transparent</label>
-        <input id="debug-ring-toggle-always" type="radio" name="ring-toggle" value="2" />
+        <input id="debug-ring-toggle-always" type="radio" name="ring-toggle" value="2" checked="checked" />
         <label for="debug-ring-toggle-always">Always</label>
       </div>
       <div class="debug-ring-opacity">
@@ -83,9 +83,9 @@
       <div class="debug-text">
         <input id="debug-text-toggle-none" type="radio" name="text-toggle" value="0" />
         <label for="debug-text-toggle-none">None</label>
-        <input id="debug-text-toggle-hover" type="radio" name="text-toggle" value="1" checked="checked" />
+        <input id="debug-text-toggle-hover" type="radio" name="text-toggle" value="1" />
         <label for="debug-text-toggle-hover">Hover</label>
-        <input id="debug-text-toggle-always" type="radio" name="text-toggle" value="2" />
+        <input id="debug-text-toggle-always" type="radio" name="text-toggle" value="2" checked="checked" />
         <label for="debug-text-toggle-always">Always</label>
       </div>
 
@@ -95,7 +95,7 @@
         <label for="debug-text-content-toggle-metric">Metric</label>
         <input id="debug-text-content-toggle-glyph" type="radio" name="text-content-toggle" value="1" />
         <label for="debug-text-content-toggle-glyph">Glyph</label>
-        <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="2" />
+        <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="2" checked="checked" />
         <label for="debug-text-content-toggle-glyph-play">Glyph, play on hover</label>
         <input id="debug-text-content-toggle-glyph-playhover" type="radio" name="text-content-toggle" value="4" />
         <label for="debug-text-content-toggle-glyph-playhover">Play, glyph+play on hover</label>
