@@ -582,7 +582,7 @@ bubbles_values = {
   'agrees': function(d) { return parseInt(d.agrees)+1; },
   'disagrees': function(d) { return parseInt(d.disagrees)+1; },
   'views': function(d) { return parseInt(d.views)+1; },
-  'age': function(d) { var dcreated = dateFromString(d.created); var datenum = (dcreated.getFullYear()-2013)*1000 + dcreated.getMonth()/12*900 + dcreated.getDate()/31*100; return datenum },
+  'age': function(d) { var dcreated = dateFromString(d.created); var datenum = (dcreated.getFullYear()-2013)*1000 + dcreated.getMonth()/12*900 + dcreated.getDate()/31*50; return datenum },
   // TODO
   'popular': function(d) { return parseInt(d.narrative_id); }
 };
@@ -715,6 +715,7 @@ function narrative_matches_filter(d) {
     var todayData = {
       created: dateStr
     };
+    console.log(bubbles_values.age(d) + ' vs ' + bubbles_values.age(todayData));
     recent = bubbles_values.age(d) > bubbles_values.age(todayData);
   }
   return (yd_settings.language_filter == null || yd_settings.language_filter == d.language) && recent;
