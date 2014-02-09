@@ -639,7 +639,10 @@ function bubble_get_multiplier(d) {
 
 function bubbles_label_text_1(d) {
   var multiplier = bubble_get_multiplier(d);
-  return glyphicon_map[yd_settings.sort_by].repeat(multiplier);
+  var glyph = parseInt(d.agrees) > parseInt(d.disagrees) ? 'agrees' : 'disagrees';
+  if (d.narrative_id == 56) { console.log(d); }
+  //return glyphicon_map[yd_settings.sort_by].repeat(multiplier);
+  return glyphicon_map[glyph].repeat(multiplier);
 }
 
 // object properties here are the sort keys, not the glyphicon keys
@@ -725,7 +728,6 @@ function narrative_matches_filter(d) {
     var todayData = {
       created: dateStr
     };
-    console.log(bubbles_values.age(d) + ' vs ' + bubbles_values.age(todayData));
     recent = bubbles_values.age(d) > bubbles_values.age(todayData);
   }
   return (yd_settings.language_filter == null || yd_settings.language_filter == d.language) && recent;

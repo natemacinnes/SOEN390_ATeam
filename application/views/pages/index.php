@@ -97,7 +97,7 @@
         <label for="debug-text-content-toggle-glyph">Glyph</label>
         <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="2" />
         <label for="debug-text-content-toggle-glyph-play">Glyph, play on hover</label>
-        <input id="debug-text-content-toggle-glyph-playhover" type="radio" name="text-content-toggle" value="4" checked="checked" />
+        <input id="debug-text-content-toggle-glyph-playhover" type="radio" name="text-content-toggle" value="4" />
         <label for="debug-text-content-toggle-glyph-playhover">Play, glyph+play on hover</label>
         <input id="debug-text-content-toggle-glyph-play-animate" type="radio" name="text-content-toggle" value="3" />
         <label for="debug-text-content-toggle-glyph-play-animate">Play, glyph+play animation on hover</label>
