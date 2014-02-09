@@ -74,9 +74,9 @@
         <input id="debug-ring-toggle-always" type="radio" name="ring-toggle" value="2" />
         <label for="debug-ring-toggle-always">Always</label>
       </div>
-      <div class="debug-opacity">
+      <div class="debug-ring-opacity">
         <label for="debug-ring-toggle-opacity">Opacity</label>
-        <input id="debug-ring-toggle-opacity" type="text" size="1" name="ring-opacity" value="0.1" />
+        <input id="debug-ring-toggle-opacity" type="text" size="1" name="ring-opacity" value="0.7" />
       </div>
 
       Text display mode:
@@ -115,6 +115,10 @@
         <label for="debug-color-toggle-color2">Color (B/P)</label>
         <input id="debug-color-toggle-hue" type="radio" name="color-toggle" value="4" checked="checked" />
         <label for="debug-color-toggle-hue">Hue</label>
+      </div>
+      <div class="debug-bubble-opacity">
+        <label for="debug-bubble-toggle-opacity">Opacity</label>
+        <input id="debug-bubble-toggle-opacity" type="text" size="1" name="ring-opacity" value="0.1" />
       </div>
     </div>
 

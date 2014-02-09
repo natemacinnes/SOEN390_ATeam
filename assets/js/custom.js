@@ -7,6 +7,7 @@ var debug_text_mode;
 var debug_text_content_mode;
 var debug_color_mode;
 var debug_position_mode;
+var debug_ring_opacity;
 var debug_bubble_opacity;
 var debug_recent_sort;
 
@@ -16,7 +17,8 @@ jQuery(document).ready(function() {
   debug_text_content_mode = parseInt(jQuery('.debug-text-content input:checked').val());
   debug_color_mode = parseInt(jQuery('.debug-color input:checked').val());
   debug_position_mode = parseInt(jQuery('.debug-position input:checked').val());
-  debug_bubble_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+  debug_ring_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+  debug_bubble_opacity = parseFloat(jQuery('#debug-bubble-toggle-opacity').val());
   debug_recent_sort = parseFloat(jQuery('.debug-recent-sort input:checked').val());
 
   // Toggle buttons for navigation links
@@ -279,6 +281,11 @@ function loadBubbles(language, position) {
     });
     jQuery('#debug-ring-toggle-opacity').change(function() {
       var lmode = jQuery('.debug-rings input[type=radio]:checked').val();
+      debug_ring_opacity = parseFloat(jQuery(this).val());
+      debugRingMode(lmode);
+    });
+    jQuery('#debug-bubble-toggle-opacity').change(function() {
+      var lmode = jQuery('.debug-rings input[type=radio]:checked').val();
       debug_bubble_opacity = parseFloat(jQuery(this).val());
       debugRingMode(lmode);
     });
@@ -418,7 +425,8 @@ function loadBubbles(language, position) {
 
 
       // Normalize
-      debug_bubble_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+      debug_ring_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+      debug_bubble_opacity = parseFloat(jQuery('#debug-bubble-toggle-opacity').val());
       jQuery(svgselect + ' g.node-base').unbind('mouseenter mouseleave');
       jQuery(svgselect + ' g.node-base').each(function() {
         jQuery('g.slice', this).hide();
@@ -444,18 +452,18 @@ function loadBubbles(language, position) {
       else if (debug_ring_mode == 1) {
         jQuery(svgselect + ' g.node-base').each(function() {
           jQuery('g.slice-grey', this).show();
-          jQuery('g.slice', this).css('opacity', bubble_opacity).show();
+          jQuery('g.slice', this).css('opacity', debug_ring_opacity).show();
         });
         jQuery(svgselect + ' g.node-base').hover(
           function() { if (narrative_matches_filter(this.__data__)) { jQuery('g.slice', this).css('opacity', 1); }},
-          function() { jQuery('g.slice', this).css('opacity', bubble_opacity); }
+          function() { jQuery('g.slice', this).css('opacity', debug_ring_opacity); }
         );
       }
       // Always
       else if (debug_ring_mode == 2) {
         jQuery(svgselect + ' g.node-base').each(function() { jQuery('g.slice', this).show(); });
         jQuery(svgselect + ' g.node-base').hover(
-          function() { if (narrative_matches_filter(this.__data__)) { jQuery('circle', this).css('opacity', 0.8); }},
+          function() { if (narrative_matches_filter(this.__data__)) { jQuery('circle', this).css('opacity', 0.7); }},
           function() { jQuery('circle', this).css('opacity', 0.5); }
         );
       }
