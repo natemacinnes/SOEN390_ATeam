@@ -49,20 +49,74 @@ class narrative_model extends CI_Model {
   public function get_XML_narrative_name($xml_r)
   {
     return $xml_r->narrativeName;
-   }
-   public function get_XML_narrative_language($xml_r)
-   {
-     return $xml_r->language;
-   }
+  }
+
+  /**
+   * following is for testing xml parsing
+   */
+  public function get_XML_narrative_language($xml_r)
+  {
+    $sql_entry = "";
+    if ($xml_r->language == "English")
+    {
+      $sql_entry = "EN";
+    }
+    else
+    {
+      $sql_entry = "FR";
+    }
+    return $sql_entry;
+  }
+
   public function get_XML_narrative_submitDate($xml_r)
   {
-    $xml_r->submitDate;
-   }
+    return $xml_r->submitDate;
+  }
+
   public function get_XML_narrative_submitTime($xml_r)
   {
     return $xml_r->time;
   }
-  //end of test stuff
+
+  /**
+   * Determine if the file is an audio file
+   */
+  public function is_audio($file_ext) {
+    switch($file_ext) {
+      case "mp3":
+      case "wav":
+      case "mp4":
+      case "m4a":
+      case "aac":
+      case "avi":
+      case "3gp":
+      case "ogg":
+      case "mp2":
+      case "ac3":
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * Determine if the file is an image file
+   */
+  public function is_image($file_ext) {
+    switch($file_ext) {
+    case "jpg":
+    case "jpeg":
+    case "gif":
+    case "bmp":
+    case "png":
+    case "tif":
+    return true;
+    break;
+    default:
+    return false;
+    break;
+    }
+  }
 
   public function process_narrative($narrative_path)
   {
@@ -74,7 +128,8 @@ class narrative_model extends CI_Model {
     $startTimes = 0.0000;
     $endTimes = 0.000;
     $image_count = 0;
-    $audio_jpg = "";
+    $audio_image = "";
+    $image_format = "";
     $unique_id = "";
     $narrative_language = "";
     $narrative_submit_date = "";
@@ -112,19 +167,21 @@ class narrative_model extends CI_Model {
           return $data;
         }
       }
-      if($file_extension == "jpg")
+      if($this->is_image($file_extension))
       {
+        $image_format = $file_extension;
         $image_count++;
-        $audio_jpg = $filecheck;
+        $audio_image = $filecheck;
       }
       if($file_extension == "xml")
       {
+        $xmlExistence = TRUE;
         //read uploaded xml here and hash unique id
         $xml_reader = simplexml_load_file($dir . "/" . $filecheck);
-        $narrative_name = get_XML_narrative_name($xml_reader); //check if integer, check if RIGHT integer
-        $narrative_language = get_XML_narrative_language($xml_reader); //check if right language (string format)
-        $narrative_submit_date = get_XML_narrative_submitDate($xml_reader); //check if it is a date, check that it is in right format
-        $narrative_submit_time = get_XML_narrative_submitTime($xml_reader); //check that time format is correct
+        $narrative_name = $this->get_XML_narrative_name($xml_reader); //check if integer, check if RIGHT integer
+        $narrative_language = $this->get_XML_narrative_language($xml_reader); //check if right language (string format)
+        $narrative_submit_date = $this->get_XML_narrative_submitDate($xml_reader); //check if it is a date, check that it is in right format
+        $narrative_submit_time = $this->get_XML_narrative_submitTime($xml_reader); //check that time format is correct
         str_replace("-", ":", $narrative_submit_time);
       }
     }
@@ -153,20 +210,20 @@ class narrative_model extends CI_Model {
         $file_name = pathinfo($file, PATHINFO_FILENAME);
 
         //Check if the file is an mp3
-        if(pathinfo($file, PATHINFO_EXTENSION) == "mp3")
+        //if(pathinfo($file, PATHINFO_EXTENSION) == "mp3")
+        if($this->is_audio(pathinfo($file, PATHINFO_EXTENSION)))
         {
           //simple verification to see if the file is readable
           if(is_readable($dir . "/" .$file))
           {
             //Get the name of the audio file to combine
-
             if (PHP_OS == 'WINNT') {
-             $path = realpath("../storage/ffmpeg.exe");
+              $path = realpath("../storage/ffmpeg.exe");
             }
             else {
               $path = realpath("../storage/ffmpeg");
             }
-            $command = $path . " -i ". $dir . '/' .$file . " -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
+            $command = $path . " -i ". $dir . '/' .$file . " -n -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
             $temp = shell_exec($command);
 
             //write the file name to audio_container.txt
@@ -187,9 +244,9 @@ class narrative_model extends CI_Model {
               $duration += intval($ar[2]) * 60 * 60;
             }
 
-            if(file_exists($dir . "/" . $file_name . ".jpg"))
+            if(file_exists($dir . "/" . $file_name . "." . $image_format))
             {
-              $audio_jpg = $file_name . ".jpg";
+              $audio_image = $file_name . "." . $image_format;
             }
 
               //Get the time that the narrative end in the concatenated narrative
@@ -213,7 +270,7 @@ class narrative_model extends CI_Model {
             $end->appendChild($endTime);
 
             $image  = $xml->createElement("Image");
-            $imageNarrative = $xml->createTextNode($audio_jpg);
+            $imageNarrative = $xml->createTextNode($audio_image);
             $image->appendChild($imageNarrative);
 
             $narrative = $xml->createElement("Narrative");
@@ -244,7 +301,7 @@ class narrative_model extends CI_Model {
       'created' => $narrative_submit_date . " " . $narrative_submit_time,
       'audio_length' => $endTimes,
       'uploaded_by' => 1, // TODO hardcoded
-      'language' => "en", // TODO hardcoded
+      'language' => $narrative_language, // TODO hardcoded DONE 02/06/2014
       'views' => 0,
       'agrees' => 0,
       'disagrees' => 0,

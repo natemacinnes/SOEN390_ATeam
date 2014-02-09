@@ -57,10 +57,51 @@ echo $sorting_flags_pass;
 
 echo $sorting_last;
 
+echo $xmlParseNameFail;
+echo $xmlParseLanguageFail;
+echo $xmlParseDateFail;
+echo $xmlParseTimeFail;
 
+echo $xmlParseNamePass;
+echo $xmlParseLanguagePass;
+echo $xmlParseDatePass;
+echo $xmlParseTimePass;
+ 
+echo $audioMp3DetectFail;
+echo $audioWavDetectFail;
+echo $audioMp4DetectFail;
+echo $audioM4aDetectFail;
+echo $audioAacDetectFail;
+echo $audioAviDetectFail;
+echo $audio3gpDetectFail;
+echo $audioOggDetectFail;
+echo $audioMp2DetectFail;
+echo $audioAc3DetectFail;
 
+echo $audioMp3DetectPass;
+echo $audioWavDetectPass;
+echo $audioMp4DetectPass;
+echo $audioM4aDetectPass;
+echo $audioAacDetectPass;
+echo $audioAviDetectPass;
+echo $audio3gpDetectPass;
+echo $audioOggDetectPass;
+echo $audioMp2DetectPass;
+echo $audioAc3DetectPass;
 
+echo $imageJpgDetectFail;
+echo $imageJpegDetectFail;
+echo $imageGifDetectFail;
+echo $imageBmpDetectFail;
+echo $imagePngDetectFail;
+echo $imageTifDetectFail;
 
+echo $imageJpgDetectPass;
+echo $imageJpegDetectPass;
+echo $imageGifDetectPass;
+echo $imageBmpDetectPass;
+echo $imagePngDetectPass;
+echo $imageTifDetectPass;
 
 
 ?>
