@@ -49,9 +49,9 @@
 	for($i = 1; $i <= $trackCtr; $i++)
 	{
 		echo '</br>';
-		echo form_checkbox('track', $trackName[$i], FALSE);
+		echo form_checkbox('tracks[]', $trackName[$i], FALSE);
 		echo '<h4>'.$trackName[$i].'</h4>';
-		echo '<audio controls><source src="'.$trackPath[$i].'" type="audio/mpeg"></audio>';
+		echo '<audio controls><source src="'.base_url().$trackPath[$i].'" type="audio/mpeg"></audio>';
 	}
   ?>
   </br>
@@ -61,9 +61,9 @@
 	for($i = 1; $i <= $picCtr; $i++)
 	{
 		echo '</br></br>';
-		echo form_checkbox('picture', $picName[$i], FALSE);
+		echo form_checkbox('pics[]', $trackName[$i], FALSE);
 		echo '<h4>'.$picName[$i].'</h4>';
-		echo '<img src="'.$picPath[$i].'" alt="'.$picName[$i].'" width="200" height="300">';
+		echo '<img src="'.base_url().$picPath[$i].'" alt="'.$picName[$i].'" width="200" height="300">';
 	}
   ?>
   </br></br>

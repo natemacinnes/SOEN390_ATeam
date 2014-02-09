@@ -87,9 +87,84 @@ class admin extends MY_Controller {
 	
 	public function editNarrative($id)
 	{
+		echo 'POST: ';
+		print_r($_POST);
+		echo '</br></br>';
+		
 		//Getting info on the narrative to edit the narrative
-		$data = $this->editing_model->gatherInfo($id);
-		echo $id;
+		$info = $this->editing_model->gatherInfo($id);
+		
+		//Unpublishing the narrative before reprocessing
+		$this->narrative_model->unpublish($id);
+		
+		//Removing desired tracks
+		if(isset($_POST['tracks']))
+		{
+			$trackName = $info['trackName'];
+			$trackPath = $info['trackPath'];
+			$tracksToDelete = $_POST['tracks'];
+			
+			$j = 0;
+			for($i = 1; $i <= count($trackName); $i++)
+			{
+				if($j < count($tracksToDelete) && $trackName[$i] == $tracksToDelete[$j])
+				{
+					unlink('.'.$trackPath[$i]);
+					$j++;
+				}
+			}
+		}
+		
+		//Removing desired images
+		if(isset($_POST['pics']))
+		{
+			$picName = $info['picName'];
+			$picPath = $info['picPath'];
+			$picsToDelete = $_POST['pics'];
+			
+			$j = 0;
+			for($i = 1; $i <= count($picName); $i++)
+			{
+				if($j < count($picsToDelete) && $picName[$i] == $picsToDelete[$j])
+				{
+					unlink('.'.$picPath[$i]);
+					$j++;
+				}
+			}
+		}
+		/*
+		//Remove files to be deleted
+		$this->editing_model->deleteFiles($id);
+		
+		//Creating new folder to move all the files of the narrative into it
+		$folder_name = time();
+		$path = './uploads/'.$id.'/'.$id.'/';
+		if(!is_dir($path))
+		{
+			mkdir($path, 0775, TRUE);
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		//Placing all needed files in a folder ready for processing
+		$file_scan = scandir('./uploads/'.$id.'/');
+		foreach($file_scan as $filecheck)
+		{
+		  $file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
+		  if($file_extension == "xml" && $filecheck != 'AudioTimes.xml')
+		  {
+			//read uploaded xml here
+			$xml_reader = simplexml_load_file('./uploads/'.$id.'/'. $filecheck);
+			$narrative_name = $this->get_XML_narrative_name($xml_reader); //check if integer, check if RIGHT integer
+		  }
+		}
+		
+		*/
 		
 	}
 }

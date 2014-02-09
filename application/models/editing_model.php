@@ -39,16 +39,16 @@ class editing_model extends CI_Model {
 			{
 				//Getting track
 				$trackCtr++;
-				$data['trackName'][$trackCtr] = $narrative->Mp3Name;
-				$data['trackPath'][$trackCtr] = base_url().("/uploads/".$row->narrative_id."/".$narrative->Mp3Name);
+				$data['trackName'][$trackCtr] = (string) $narrative->Mp3Name;
+				$data['trackPath'][$trackCtr] = (string) ("/uploads/".$row->narrative_id."/".$narrative->Mp3Name);
 				
 				//Getting picture
 				if(strcmp($lastPic, $narrative->Image))
 				{
 					$picCtr++;
 					$lastPic = $narrative->Image;
-					$data['picName'][$picCtr] = $narrative->Image;
-					$data['picPath'][$picCtr] = base_url().("/uploads/".$row->narrative_id."/".$narrative->Image);
+					$data['picName'][$picCtr] = (string) $narrative->Image;
+					$data['picPath'][$picCtr] = (string) ("/uploads/".$row->narrative_id."/".$narrative->Image);
 				}
 			}
 			$data['trackCtr'] = $trackCtr;
@@ -56,6 +56,13 @@ class editing_model extends CI_Model {
 			
 			return $data;
 		}
+	}
+	
+	/**
+	*	Deleting the files that are meant to be deleted
+	*/
+	public function deleteFiles($id, $filesToDelete)
+	{
 	}
 }
 ?>

@@ -114,7 +114,7 @@ class narrative_model extends CI_Model {
 //end of test stuff
   
   
-  public function process_narrative($narrative_path)
+  public function process_narrative($narrative_path, $id = null)
   {
     // Get the absolute path
     $dir = realpath(FCPATH . $narrative_path);
@@ -143,7 +143,7 @@ class narrative_model extends CI_Model {
       $data['error_message'] = 'Processing failed. Please attempt the upload again.';
       return $data;
     }
-
+	
     //Scan the folder to determine the amount of pictures in a narrative
 	$xmlExistence = FALSE; //Used for handling folder uploaded with no XML file
 	$isBatchUpload = FALSE; //Used to handle batch uploading
@@ -294,19 +294,22 @@ class narrative_model extends CI_Model {
     $temp2 = shell_exec($command_concatenation);
     //die("returned: " . $temp2 . "</br>");
 
-    $database_data = array(
-      'created' => $narrative_submit_date . " " . $narrative_submit_time,
-      'audio_length' => $endTimes,
-      'uploaded_by' => 1, // TODO hardcoded
-      'language' => $narrative_language, // TODO hardcoded DONE 02/06/2014
-      'views' => 0,
-      'agrees' => 0,
-      'disagrees' => 0,
-      'shares' => 0,
-      'flags' => 0
-    );
+	if($id == null)
+	{
+		$database_data = array(
+		  'created' => $narrative_submit_date . " " . $narrative_submit_time,
+		  'audio_length' => $endTimes,
+		  'uploaded_by' => 1, // TODO hardcoded
+		  'language' => $narrative_language, // TODO hardcoded DONE 02/06/2014
+		  'views' => 0,
+		  'agrees' => 0,
+		  'disagrees' => 0,
+		  'shares' => 0,
+		  'flags' => 0
+		);
 
-    $id = $this->narrative_model->insert($database_data);
+		$id = $this->narrative_model->insert($database_data);
+	}
 
     //creating the directory on the server
     $new_dir = "./uploads/" . $id;
@@ -334,5 +337,12 @@ class narrative_model extends CI_Model {
    */
   public function delete($conditions) {
     $this->db->delete($this->table, $conditions);
+  }
+  
+  /**
+  *	unpublishing the narrative
+  */
+  public function unpublish($narrative)
+  {
   }
 }
