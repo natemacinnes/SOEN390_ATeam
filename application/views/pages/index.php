@@ -21,11 +21,11 @@
     <div id="bubble-container" class="top-margin float-left">
       <div class="sort-container">
         <div class="btn-group btn-group-vertical">
-          <a href="#views" title="Number of listens&#013;Nombres d'&eacute;coutes" class="btn btn-default active" role="button"><span class="glyphicon glyphicon-headphones"></span></a>
           <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span></a>
-          <a href="#popular" title="Popular narratives&#013;Discussions populaires" class="btn btn-default" role="button"><span class="glyphicon glyphicon-star"></span></a>
-          <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span></a>
-          <a href="#disagrees" title="Disagreed narratives&#013;Discussions contest&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span></a>
+          <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default active" role="button">
+            <span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span> /
+            <span class="glyphicon glyphicon-thumbs-down" style="color: red;">
+          </a>
         </div>
       </div>
       <left class="svg-container svg-container-1"></left>
@@ -52,12 +52,19 @@
       Bubble cluster/positioning mode:
       <div class="debug-position">
         <input id="debug-position-toggle-single" type="radio" name="position-toggle" value="0" />
-        <label for="debug-ring-toggle-single">Single</label>
+        <label for="debug-position-toggle-single">Single</label>
         <input id="debug-position-toggle-multi" type="radio" name="position-toggle" value="1" checked="checked" />
         <label for="debug-position-toggle-multi">Multi</label>
       </div>
 
-    <div class="debug">
+      Recent sorting method
+      <div class="debug-recent-sort">
+        <input id="debug-recent-sort-toggle-sort" type="radio" name="recent-sort-toggle" value="0" />
+        <label for="debug-recent-sort-toggle-sort">Sort</label>
+        <input id="debug-recent-sort-toggle-filter" type="radio" name="recent-sort-toggle" value="1" checked="checked" />
+        <label for="debug-recent-sort-toggle-filter">Filter</label>
+      </div>
+
       Bubble ring mode:
       <div class="debug-rings">
         <input id="debug-ring-toggle-hover" type="radio" name="ring-toggle" value="0" checked="checked" />
@@ -69,7 +76,7 @@
       </div>
       <div class="debug-opacity">
         <label for="debug-ring-toggle-opacity">Opacity</label>
-        <input id="debug-ring-toggle-opacity" type="text" size="1" name="ring-opacity" value="0.3" />
+        <input id="debug-ring-toggle-opacity" type="text" size="1" name="ring-opacity" value="0.1" />
       </div>
 
       Text display mode:

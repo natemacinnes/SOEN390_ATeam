@@ -7,6 +7,8 @@ var debug_text_mode;
 var debug_text_content_mode;
 var debug_color_mode;
 var debug_position_mode;
+var debug_bubble_opacity;
+var debug_recent_sort;
 
 jQuery(document).ready(function() {
   debug_ring_mode = parseInt(jQuery('.debug-rings input:checked').val());
@@ -14,16 +16,44 @@ jQuery(document).ready(function() {
   debug_text_content_mode = parseInt(jQuery('.debug-text-content input:checked').val());
   debug_color_mode = parseInt(jQuery('.debug-color input:checked').val());
   debug_position_mode = parseInt(jQuery('.debug-position input:checked').val());
+  debug_bubble_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+  debug_recent_sort = parseFloat(jQuery('.debug-recent-sort input:checked').val());
+
+  // Toggle buttons for navigation links
+  jQuery('.filter-container .btn-group a').click(function() {
+    jQuery(this).toggleClass('active');
+    jQuery('.filter-container .btn-group a').not(this).removeClass('active');
+    if (debug_recent_sort == 0) {
+      yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+    }
+    yd_settings.language_filter = jQuery('.filter-container .btn-group a.active').attr('href');
+    return false;
+  });
 
   if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
-    yd_settings.sort_by = 'views';
+    yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
     reloadBubbles();
   }
+
+  // Radio-like toggle buttons for sort
+  jQuery('.sort-container .btn-group a').click(function () {
+    if (debug_recent_sort == 0) {
+      jQuery('.sort-container .btn-group a').removeClass('active');
+      jQuery(this).addClass('active');
+      yd_settings.recent_filter = null;
+      yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+    }
+    else {
+      jQuery(this).toggleClass('active');
+      yd_settings.recent_filter = jQuery('.sort-container .btn-group a[href="#age"]').hasClass('active');
+    }
+    return false;
+  });
 });
 
 function reloadBubbles() {
   jQuery('.debug input').unbind('click change');
-  jQuery('.btn-group a').unbind('click');
+  jQuery('.sort-container .btn-group a').unbind('click');
   jQuery('.svg-container').html('');
   if (debug_position_mode == 0) {
     loadBubbles(null, null);
@@ -54,6 +84,7 @@ function loadBubbles(language, position) {
     svgselect = ".svg-container-" + position;
     url += '/' + position;
   }
+  yd_settings.recent_filter = null;
 
   var diameter = (document.getElementById("bubble-container").offsetWidth);
   var format = d3.format(",.0f");
@@ -85,7 +116,7 @@ function loadBubbles(language, position) {
         .attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
         .attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
         .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
-        .style('opacity', function(d) { narrative_matches_filter(d) ? 1 : 0.3; });
+        .style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : debug_bubble_opacity; });
         // ^ the root g container is transformed, so for all children x and y is
         //   relative to 0
 
@@ -103,55 +134,57 @@ function loadBubbles(language, position) {
       .style("fill", bubble_fill_color)
       .style("opacity", function(d) { return !d.children ?  0.5: 1; });
 
-    var position = svg.append('g')
+    var positionLabel = svg.append('g')
       .attr("transform", function(d) { return 'translate(' + (260) + ',' +  25 +  ')'; })
       .append('text')
         .attr("dx", 0)
         .attr("dy", 10)
         .style("text-anchor", "left")
-        .text(svgselect == '.svg-container-1' ? 'For' : 'Against');
+        .text(position == null ? null : (position == 1 ? 'For' : 'Against'));
 
-    var legend = svg.append('g')
-      .attr("x", 0)
-      .attr("y", 0)
-      .attr("class", 'legend')
-      .attr("transform", function(d) { return 'translate(' + (75) + ',' +  25 +  ')'; })
+    if (position == null || position == 1) {
+      var legend = svg.append('g')
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("class", 'legend')
+        .attr("transform", function(d) { return 'translate(' + (75) + ',' +  15 +  ')'; })
 
-    legend.append('text')
-      .attr("dx", 0)
-      .attr("dy", 0)
-      .style("text-anchor", "left")
-      .text('Should GMO foods be labeled?');
+      legend.append('text')
+        .attr("dx", 0)
+        .attr("dy", 0)
+        .style("text-anchor", "left")
+        .text('Should GMO foods be labeled?');
 
-    d = {'position': 2};
-    rect1 = legend.append("rect")
-      .attr("x", 0)
-      .attr("y", 5)
-      .attr("width", 10)
-      .attr("height", 10)
-      .style("stroke", 'black')
-      .style("fill", bubble_fill_color(d));
+      d = {'position': 2};
+      rect1 = legend.append("rect")
+        .attr("x", 0)
+        .attr("y", 5)
+        .attr("width", 10)
+        .attr("height", 10)
+        .style("stroke", 'black')
+        .style("fill", bubble_fill_color(d));
 
-    d = {'position': 1};
-    rect2 =legend.append("rect")
-      .attr("x", 0)
-      .attr("y", 25)
-      .attr("width", 10)
-      .attr("height", 10)
-      .style("stroke", 'black')
-      .style("fill", bubble_fill_color(d))
+      d = {'position': 1};
+      rect2 =legend.append("rect")
+        .attr("x", 0)
+        .attr("y", 25)
+        .attr("width", 10)
+        .attr("height", 10)
+        .style("stroke", 'black')
+        .style("fill", bubble_fill_color(d))
 
-    legend.append("text")
-      .style("font-size", "12px")
-      .attr("x", 20)
-      .attr("y", 15)
-      .text("Yes");
+      legend.append("text")
+        .style("font-size", "12px")
+        .attr("x", 20)
+        .attr("y", 15)
+        .text("Yes");
 
-    legend.append("text")
-      .style("font-size", "12px")
-      .attr("x", 20)
-      .attr("y", 35)
-      .text("No");
+      legend.append("text")
+        .style("font-size", "12px")
+        .attr("x", 20)
+        .attr("y", 35)
+        .text("No");
+    }
 
     // This computes the SVG path data required to form an arc.
     var arc = d3.svg.arc()
@@ -244,6 +277,7 @@ function loadBubbles(language, position) {
     });
     jQuery('#debug-ring-toggle-opacity').change(function() {
       var lmode = jQuery('.debug-rings input[type=radio]:checked').val();
+      debug_bubble_opacity = parseFloat(jQuery(this).val());
       debugRingMode(lmode);
     });
     jQuery('.debug-text input[type=radio]').click(function() {
@@ -262,6 +296,16 @@ function loadBubbles(language, position) {
       var pmode = jQuery(this).val();
       debugPositionMode(pmode);
       event.stopImmediatePropagation();
+    });
+    jQuery('.debug-recent-sort input[type=radio]').click(function() {
+      var rsmode = jQuery(this).val();
+      if (rsmode == 0) {
+        yd_settings.sort_by = 'agrees';
+        yd_settings.recent_filter = null;
+        jQuery('.sort-container .btn-group a').removeClass('active');
+        jQuery('.sort-container .btn-group a[href="#agrees"]').addClass('active');
+      }
+      debugRecentSortMode(rsmode);
     });
 
     // 0 = hover
@@ -306,7 +350,15 @@ function loadBubbles(language, position) {
     function debugPositionMode(pmode){
       // Set global
       debug_position_mode = pmode;
-      reloadBubbles()
+      reloadBubbles();
+    }
+
+    // 0=sort
+    // 1=filter
+    function debugRecentSortMode(rsmode){
+      // Set global
+      debug_recent_sort = rsmode;
+      updateVis(svgselect);
     }
 
 
@@ -328,12 +380,7 @@ function loadBubbles(language, position) {
       vis.transition()
         .duration(700)
         .attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
-        .style('opacity', function(d) {
-          if (yd_settings.language_filter) {
-            return (d.language == yd_settings.language_filter ? 1 : 0.3);
-          }
-          return 1;
-        });
+        .style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : debug_bubble_opacity; });
 
       titles.attr("x", function(d) { return 0; })
         .attr("y", function(d) { return 0; })
@@ -369,7 +416,7 @@ function loadBubbles(language, position) {
 
 
       // Normalize
-      var bubble_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+      debug_bubble_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
       jQuery(svgselect + ' g.node-base').unbind('mouseenter mouseleave');
       jQuery(svgselect + ' g.node-base').each(function() {
         jQuery('g.slice', this).hide();
@@ -509,25 +556,17 @@ function loadBubbles(language, position) {
 
     // Toggle buttons for navigation links
     jQuery('.sort-container .btn-group a').click(function() {
-      jQuery('.sort-container .btn-group a').removeClass('active');
-      jQuery(this).toggleClass('active');
-      yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
       updateVis(svgselect);
       return false;
     });
 
     // Toggle buttons for navigation links
     jQuery('.filter-container .btn-group a').click(function() {
-      jQuery(this).toggleClass('active');
-      jQuery('.filter-container .btn-group a').not(this).removeClass('active');
-      yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
-      yd_settings.language_filter = jQuery('.filter-container .btn-group a.active').attr('href');
       updateVis(svgselect);
       return false;
     });
 
     d3.select(self.frameElement).style("height", diameter + "px");
-
   });
 }
 
@@ -668,7 +707,17 @@ bubble_colors = {
 }
 
 function narrative_matches_filter(d) {
-  return yd_settings.language_filter == null || yd_settings.language_filter == d.language;
+  var recent = true;
+  if (!d.children && yd_settings.recent_filter) {
+    var today = new Date();
+    today.setDate(today.getDate() - 7);
+    var dateStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+    var todayData = {
+      created: dateStr
+    };
+    recent = bubbles_values.age(d) > bubbles_values.age(todayData);
+  }
+  return (yd_settings.language_filter == null || yd_settings.language_filter == d.language) && recent;
 }
 
 function loadMediaElement() {
