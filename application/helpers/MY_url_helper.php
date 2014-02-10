@@ -14,13 +14,13 @@
  */
 function base_url($uri = null)
 {
-   $CI =& get_instance();
+	$CI =& get_instance();
 
-   $cdn = $CI->config->item('cdn_url');
-   if (!empty($cdn))
-      return $cdn . $uri;
+	$cdn = $CI->config->item('cdn_url');
+	if (!empty($cdn))
+		return $cdn . $uri;
 
-   return $CI->config->base_url($uri);
+	return $CI->config->base_url($uri);
 }
 
 /*
@@ -32,37 +32,37 @@ function base_url($uri = null)
  *
  * This function is order sensitive.
  * If the page is /view/lab/1 and you put
- * lab/view, this will return false. 
+ * lab/view, this will return false.
  *
  * @author sjlu
  */
 function is_active($input_params = "")
 {
-   // uri_string is a CodeIgniter function
-   $uri_string = uri_string();
+	// uri_string is a CodeIgniter function
+	$uri_string = uri_string();
 
-   // direct matching, faster than looping.
-   if ($uri_string == $input_params)
-      return true;
-      
-   $uri_params = preg_split("/\//", $uri_string);
-   $input_params = preg_split("/\//", $input_params);
+	// direct matching, faster than looping.
+	if ($uri_string == $input_params)
+		return true;
 
-   $prev_key = -1;
-   foreach ($input_params as $param)
-   {
-      $curr_key = array_search($param, $uri_params);
+	$uri_params = preg_split("/\//", $uri_string);
+	$input_params = preg_split("/\//", $input_params);
 
-      // if it doesn't exist, return null
-      if ($curr_key === FALSE)
-         return false;
+	$prev_key = -1;
+	foreach ($input_params as $param)
+	{
+		$curr_key = array_search($param, $uri_params);
 
-      // this makes us order sensitive
-      if ($curr_key < $prev_key)
-         return false;
+		// if it doesn't exist, return null
+		if ($curr_key === FALSE)
+			return false;
 
-      $prev_key = $curr_key;
-   }
+		// this makes us order sensitive
+		if ($curr_key < $prev_key)
+			return false;
 
-   return true;
+		$prev_key = $curr_key;
+	}
+
+	return true;
 }

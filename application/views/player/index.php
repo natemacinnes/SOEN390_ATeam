@@ -7,7 +7,7 @@ $path = 'uploads/' . $narrative_id . '/combined.mp3';
 if (file_exists($path)):
 ?>
 <div class="player-wrapper" id="narrative-<?php echo $narrative_id; ?>">
-  <img src='' id='audioImage' alt='audio_image' height='400' width='400'>
+	<img src='' id='audioImage' alt='audio_image' height='400' width='400'>
 	<audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls' autoplay=''></audio></br>
 	<span id='current-time'></span>
 </div>
@@ -15,7 +15,7 @@ if (file_exists($path)):
 Video does not exist.
 <?php endif; ?>
 <script type="text/javascript">
-  jQuery(document).ready(function() {
-    loadMediaElement();
-  });
+	jQuery(document).ready(function() {
+		loadMediaElement();
+	});
 </script>

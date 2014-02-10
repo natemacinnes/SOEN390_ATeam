@@ -5,7 +5,7 @@ class editing_model extends CI_Model {
 		parent::__construct();
 		$this->load->database();
 	}
-	
+
 	/**
 	* Gathering all tracks, images, and info on a narrative
 	*/
@@ -29,8 +29,8 @@ class editing_model extends CI_Model {
 			$data['disagrees'] = $row->disagrees;
 			$data['shares'] = $row->shares;
 			$data['flags'] = $row->flags;
-			
-			//Getting the path and the number of tracks 
+
+			//Getting the path and the number of tracks
 			$xml_reader = simplexml_load_file("./uploads/".$row->narrative_id."/AudioTimes.xml");
 			$trackCtr = 0;
 			$picCtr = 0;
@@ -41,7 +41,7 @@ class editing_model extends CI_Model {
 				$trackCtr++;
 				$data['trackName'][$trackCtr] = (string) $narrative->Mp3Name;
 				$data['trackPath'][$trackCtr] = (string) ("/uploads/".$row->narrative_id."/".$narrative->Mp3Name);
-				
+
 				//Getting picture
 				if(strcmp($lastPic, $narrative->Image))
 				{
@@ -53,11 +53,11 @@ class editing_model extends CI_Model {
 			}
 			$data['trackCtr'] = $trackCtr;
 			$data['picCtr'] = $picCtr;
-			
+
 			return $data;
 		}
 	}
-	
+
 	/**
 	*	Deleting the tracks that are meant to be deleted
 	*/
@@ -77,7 +77,7 @@ class editing_model extends CI_Model {
 			}
 		}
 	}
-	
+
 	/**
 	*	Deleting the pics that are meant to be deleted
 	*/
@@ -97,7 +97,7 @@ class editing_model extends CI_Model {
 			}
 		}
 	}
-	
+
 	/**
 	*	Moving XML file to new folder
 	*/
@@ -115,7 +115,7 @@ class editing_model extends CI_Model {
 			}
 		}
 	}
-	
+
 	/**
 	*	Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
 	*/
@@ -128,14 +128,14 @@ class editing_model extends CI_Model {
 			mkdir($tmpPath, 0775, TRUE);
 		}
 		$tmpPath = $tmpPath.'/'.$id.'/';
-		
+
 		if(!is_dir($tmpPath))
 		{
 			rename($baseDir, $tmpPath);
 		}
 		return $tmpPath;
 	}
-	
+
 	/**
 	*	Deleting old folder
 	*/

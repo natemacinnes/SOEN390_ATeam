@@ -23,7 +23,7 @@ class upload_model extends CI_Model {
 		$data['error_message'] = 'Unzipping failed. Please attempt the upload again.';
 		return $data;
 	}
-	
+
 	//Return for processing
 	$data['error'] = 0;
 	$data['narrative_path'] = $path.substr($zipFileName, 0, -4);
