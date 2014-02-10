@@ -1,5 +1,5 @@
 <?php
-class MY_Controller extends CI_Controller {
+class YD_Controller extends CI_Controller {
 	function __construct() {
 		parent::__construct();
 		// To store persistent data across a browsing session

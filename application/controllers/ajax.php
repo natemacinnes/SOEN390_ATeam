@@ -1,23 +1,27 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Ajax extends MY_Controller {
+class Ajax extends YD_Controller
+{
 	/**
 	 * Constructor: initialize required libraries.
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 		$this->load->model('narrative_model');
 	}
 
-	public function bubbles($language = NULL) {
+	public function bubbles($position = NULL)
+	{
 		$data = array();
 		$data['name'] = 'flare';
 		// Clusters are groups of nodes
 		$nodes = array();
 
 		// Load nodes into the active cluster
-		$result = $this->narrative_model->get_all('id', $language);
-		foreach ($result as $narrative) {
+		$result = $this->narrative_model->get_all('id', $position);
+		foreach ($result as $narrative)
+		{
 			// +1 to ensure that 0 doesn't give us NaN
 			$pie_data = array(
 				array("label" => "agrees", "value" => $narrative['agrees']+1),
@@ -33,23 +37,29 @@ class Ajax extends MY_Controller {
 		print json_encode($data);
 	}
 
-	public function audioImage($narrative_id, $time) {
+	public function audioImage($narrative_id, $time)
+	{
 		$narrative = $this->narrative_model->get($narrative_id);
-		if (!$narrative) {
+		if (!$narrative)
+		{
 			return;
 		}
 		$current_time = floatval($time);
 		$path = "./uploads/$narrative_id/AudioTimes.xml";
 		$return = "";
-		if (file_exists($path) && $xml = simplexml_load_file($path)) {
-			foreach($xml->children() as $element) {
-				if ($current_time >= $element->Start && $current_time < $element->End) {
+		if (file_exists($path) && $xml = simplexml_load_file($path))
+		{
+			foreach($xml->children() as $element)
+			{
+				if ($current_time >= $element->Start && $current_time < $element->End)
+				{
 					print base_url() . 'uploads/' . $narrative_id . '/' .  $element->Image;
 					break;
 				}
 			}
 		}
-		else {
+		else
+		{
 			print $return;
 		}
 	}

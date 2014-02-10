@@ -1,10 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Comments extends MY_Controller {
+class Comments extends YD_Controller
+{
 	/**
 	 * Constructor: initialize required libraries.
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 	}
 
@@ -23,7 +25,8 @@ class Comments extends MY_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function index() {
+	public function index()
+	{
 		$this->view_wrapper('pages/comments');
 	}
 

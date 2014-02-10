@@ -1,10 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Pages extends MY_Controller {
+class Pages extends YD_Controller
+{
 	/**
 	 * Constructor: initialize required libraries.
 	 */
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 	}
 
@@ -23,11 +25,13 @@ class Pages extends MY_Controller {
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function index() {
+	public function index()
+	{
 		$this->view_wrapper('pages/index');
 	}
 
-	public function contact() {
+	public function contact()
+	{
 		// Demo the system messages
 		$this->system_message_model->set_message("This is a normal (notice) message");
 		$this->system_message_model->set_message("This is a warning message", MESSAGE_WARNING);
