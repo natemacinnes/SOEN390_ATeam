@@ -133,12 +133,7 @@ class admin extends MY_Controller {
 		$this->editing_model->deleteDir('./uploads/'.$id.'/');
 		
 		//Calling processing on the new folder
-		$data = $this->narrative_model->process_narrative($tmpPath, $id);
-		if($data['error'] === 1)
-		{
-			$this->view_wrapper('admin/upload', $data);
-			return;
-		}
+		$this->narrative_model->process_narrative($tmpPath, $id);
 
 		//Output success
 		$this->view_wrapper('admin/editing-success', $data);	
