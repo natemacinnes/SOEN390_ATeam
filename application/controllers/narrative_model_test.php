@@ -116,9 +116,62 @@ class Narrative_Model_Test extends MY_Controller {
  	$data['xmlParseTimePass'] = $this->unit->run($xml_parse_time, "20-19-33", "Narrative Model Parse Time Test", "Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to pass");
  	
  	
- 	
- 	
- 	
+ 	//testing audio detection functions in narrative model
+	
+	$audio_mp3 = $this->narrative_model->is_audio("mp3");
+	$audio_wav = $this->narrative_model->is_audio("wav");
+	$audio_mp4 = $this->narrative_model->is_audio("mp4");
+	$audio_m4a = $this->narrative_model->is_audio("m4a");
+	$audio_aac = $this->narrative_model->is_audio("aac");
+	$audio_avi = $this->narrative_model->is_audio("avi");
+	$audio_3gp = $this->narrative_model->is_audio("3gp");
+	$audio_ogg = $this->narrative_model->is_audio("ogg");
+	$audio_mp2 = $this->narrative_model->is_audio("mp2");
+	$audio_ac3 = $this->narrative_model->is_audio("ac3");
+	
+	$data['audioMp3DetectFail'] = $this->unit->run($audio_mp3, false, "Mp3 Audio File Detection Test", "Expected to Fail");
+	$data['audioWavDetectFail'] = $this->unit->run($audio_wav, false, "Wav Audio File Detection Test", "Expected to Fail");
+	$data['audioMp4DetectFail'] = $this->unit->run($audio_mp4, false, "Mp4 Audio File Detection Test", "Expected to Fail");
+	$data['audioM4aDetectFail'] = $this->unit->run($audio_m4a, false, "M4a Audio File Detection Test", "Expected to Fail");
+	$data['audioAacDetectFail'] = $this->unit->run($audio_aac, false, "Aac Audio File Detection Test", "Expected to Fail");
+	$data['audioAviDetectFail'] = $this->unit->run($audio_avi, false, "Avi Audio File Detection Test", "Expected to Fail");
+	$data['audio3gpDetectFail'] = $this->unit->run($audio_3gp, false, "3gp Audio File Detection Test", "Expected to Fail");
+	$data['audioOggDetectFail'] = $this->unit->run($audio_ogg, false, "Ogg Audio File Detection Test", "Expected to Fail");
+	$data['audioMp2DetectFail'] = $this->unit->run($audio_mp2, false, "Mp2 Audio File Detection Test", "Expected to Fail");
+	$data['audioAc3DetectFail'] = $this->unit->run($audio_ac3, false, "Ac3 Audio File Detection Test", "Expected to Fail");
+	
+	$data['audioMp3DetectPass'] = $this->unit->run($audio_mp3, true, "Mp3 Audio File Detection Test", "Expected to Pass");
+	$data['audioWavDetectPass'] = $this->unit->run($audio_wav, true, "Wav Audio File Detection Test", "Expected to Pass");
+	$data['audioMp4DetectPass'] = $this->unit->run($audio_mp4, true, "Mp4 Audio File Detection Test", "Expected to Pass");
+	$data['audioM4aDetectPass'] = $this->unit->run($audio_m4a, true, "M4a Audio File Detection Test", "Expected to Pass");
+	$data['audioAacDetectPass'] = $this->unit->run($audio_aac, true, "Aac Audio File Detection Test", "Expected to Pass");
+	$data['audioAviDetectPass'] = $this->unit->run($audio_avi, true, "Avi Audio File Detection Test", "Expected to Pass");
+	$data['audio3gpDetectPass'] = $this->unit->run($audio_3gp, true, "3gp Audio File Detection Test", "Expected to Pass");
+	$data['audioOggDetectPass'] = $this->unit->run($audio_ogg, true, "Ogg Audio File Detection Test", "Expected to Pass");
+	$data['audioMp2DetectPass'] = $this->unit->run($audio_mp2, true, "Mp2 Audio File Detection Test", "Expected to Pass");
+	$data['audioAc3DetectPass'] = $this->unit->run($audio_ac3, true, "Ac3 Audio File Detection Test", "Expected to Pass");
+	
+	$image_jpg = $this->narrative_model->is_image("jpg");
+	$image_jpeg = $this->narrative_model->is_image("jpeg");
+	$image_gif = $this->narrative_model->is_image("gif");
+	$image_bmp = $this->narrative_model->is_image("bmp");
+	$image_png = $this->narrative_model->is_image("png");
+	$image_tif = $this->narrative_model->is_image("tif");
+	
+	$data['imageJpgDetectFail'] = $this->unit->run($image_jpg, false, "Jpg Image File Detection Test", "Expected to Fail");
+	$data['imageJpegDetectFail'] = $this->unit->run($image_jpeg, false, "Jpeg Image File Detection Test", "Expected to Fail");
+	$data['imageGifDetectFail'] = $this->unit->run($image_gif, false, "Gif Image File Detection Test", "Expected to Fail");
+	$data['imageBmpDetectFail'] = $this->unit->run($image_bmp, false, "Bmp Image File Detection Test", "Expected to Fail");
+	$data['imagePngDetectFail'] = $this->unit->run($image_png, false, "Png Image File Detection Test", "Expected to Fail");
+	$data['imageTifDetectFail'] = $this->unit->run($image_tif, false, "Tif Image File Detection Test", "Expected to Fail");
+	
+	$data['imageJpgDetectPass'] = $this->unit->run($image_jpg, true, "Jpg Image File Detection Test", "Expected to Pass");
+	$data['imageJpegDetectPass'] = $this->unit->run($image_jpeg, true, "Jpeg Image File Detection Test", "Expected to Pass");
+	$data['imageGifDetectPass'] = $this->unit->run($image_gif, true, "Gif Image File Detection Test", "Expected to Pass");
+	$data['imageBmpDetectPass'] = $this->unit->run($image_bmp, true, "Bmp Image File Detection Test", "Expected to Pass");
+	$data['imagePngDetectPass'] = $this->unit->run($image_png, true, "Png Image File Detection Test", "Expected to Pass");
+	$data['imageTifDetectPass'] = $this->unit->run($image_tif, true, "Tif Image File Detection Test", "Expected to Pass");
+	
  	$this->view_wrapper('pages/narrative_model_test_report',$data);
     
   }

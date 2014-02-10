@@ -73,6 +73,44 @@ class narrative_model extends CI_Model {
   {
 	return $xml_r->time;	  
   }
+  
+  //determine if the file is an audio file
+  public function is_audio($file_ext) {
+		switch($file_ext) {
+		case "mp3":
+		case "wav":
+		case "mp4":
+		case "m4a":
+		case "aac":
+		case "avi":
+		case "3gp":
+		case "ogg":
+		case "mp2":
+		case "ac3":
+		return true;
+		break;
+		default:
+		return false;
+		break;
+		}
+	}
+	
+	//determine if the file is an image file
+	public function is_image($file_ext) {
+		switch($file_ext) {
+		case "jpg":
+		case "jpeg":
+		case "gif":
+		case "bmp":
+		case "png":
+		case "tif":
+		return true;
+		break;
+		default:
+		return false;
+		break;
+		}
+	}
 //end of test stuff
   
   
@@ -86,7 +124,8 @@ class narrative_model extends CI_Model {
     $startTimes = 0.0000;
     $endTimes = 0.000;
     $image_count = 0;
-    $audio_jpg = "";
+    $audio_image = "";
+	$image_format = "";
     $unique_id = "";
     $narrative_language = "";
     $narrative_submit_date = "";
@@ -124,10 +163,11 @@ class narrative_model extends CI_Model {
 			return $data;
 		}
 	  }
-      if($file_extension == "jpg")
+      if($this->is_image($file_extension))
       {
+		$image_format = $file_extension;
         $image_count++;
-        $audio_jpg = $filecheck;
+        $audio_image = $filecheck;
       }
       if($file_extension == "xml")
       {
@@ -166,7 +206,8 @@ class narrative_model extends CI_Model {
         $file_name = pathinfo($file, PATHINFO_FILENAME);
 
         //Check if the file is an mp3
-        if(pathinfo($file, PATHINFO_EXTENSION) == "mp3")
+        //if(pathinfo($file, PATHINFO_EXTENSION) == "mp3")
+		if($this->is_audio(pathinfo($file, PATHINFO_EXTENSION)))
         {
           //simple verification to see if the file is readable
           if(is_readable($dir . "/" .$file))
@@ -200,9 +241,9 @@ class narrative_model extends CI_Model {
               $duration += intval($ar[2]) * 60 * 60;
             }
 
-            if(file_exists($dir . "/" . $file_name . ".jpg"))
+            if(file_exists($dir . "/" . $file_name . "." . $image_format))
             {
-              $audio_jpg = $file_name . ".jpg";
+              $audio_image = $file_name . "." . $image_format;
             }
 
             //Get the time that the narrative end in the concatenated narrative
@@ -226,7 +267,7 @@ class narrative_model extends CI_Model {
             $end->appendChild($endTime);
 
             $image  = $xml->createElement("Image");
-            $imageNarrative = $xml->createTextNode($audio_jpg);
+            $imageNarrative = $xml->createTextNode($audio_image);
             $image->appendChild($imageNarrative);
 
             $narrative = $xml->createElement("Narrative");
