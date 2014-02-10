@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class View_Narratives extends YD_Controller
+class Viewnarratives extends YD_Controller
 {
 	/**
 	 * Constructor: initialize required libraries.
