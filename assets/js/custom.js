@@ -645,8 +645,8 @@ function bubbles_label_text_1(d) {
   var total = parseInt(d.agrees) + parseInt(d.disagrees);
   //return glyphicon_map[yd_settings.sort_by].repeat(multiplier);
 
-  var agree_glyphs = Math.round(multiplier * parseInt(d.agrees) / total, 0);
-  var disagree_glyphs = Math.round(multiplier * parseInt(d.disagrees) / total, 0);
+  var agree_glyphs = Math.round(multiplier * parseInt(d.agrees) / Math.max(total, 1), 0);
+  var disagree_glyphs = Math.round(multiplier * parseInt(d.disagrees) / Math.max(total, 1), 0);
 
   return glyphicon_map['agrees'].repeat(agree_glyphs) + glyphicon_map['disagrees'].repeat(disagree_glyphs);
 }
