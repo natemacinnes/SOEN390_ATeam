@@ -129,7 +129,6 @@ class editing_model extends CI_Model {
 		}
 		$tmpPath = $tmpPath.'/'.$id.'/';
 		
-		echo $folder_name.'</br>';
 		if(!is_dir($tmpPath))
 		{
 			rename($baseDir, $tmpPath);
