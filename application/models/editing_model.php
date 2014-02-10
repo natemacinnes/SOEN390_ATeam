@@ -122,7 +122,13 @@ class editing_model extends CI_Model {
 	public function moveDir($baseDir, $id)
 	{
 		$folder_name = time();
-		$tmpPath = './uploads/tmp/'.$folder_name.'/'.$id.'/';
+		$tmpPath = './uploads/tmp/'.$folder_name.'/';
+		if(!is_dir($tmpPath))
+		{
+			mkdir($tmpPath, 0775, TRUE);
+		}
+		$tmpPath = $tmpPath.'/'.$id.'/';
+		
 		echo $folder_name.'</br>';
 		if(!is_dir($tmpPath))
 		{

@@ -290,7 +290,13 @@ class narrative_model extends CI_Model {
     $xmlpath = $dir . "/AudioTimes.xml";
     $xml->save($xmlpath) or die("Error");
     fclose($file_concat);
-    $command_concatenation = "../storage/ffmpeg.exe -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
+	if (PHP_OS == 'WINNT') {
+	  $path = realpath("../storage/ffmpeg.exe");
+	}
+	else {
+		$path = realpath("../storage/ffmpeg");
+	}
+    $command_concatenation = $path." -f concat -i " . $dir . "\audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
     $temp2 = shell_exec($command_concatenation);
     //die("returned: " . $temp2 . "</br>");
 
