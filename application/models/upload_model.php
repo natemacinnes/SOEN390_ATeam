@@ -27,7 +27,6 @@ class upload_model extends CI_Model {
 	//Return for processing
 	$data['error'] = 0;
 	$data['narrative_path'] = $path.substr($zipFileName, 0, -4);
-	die($data['narrative_path']);
 	return $data;
   }
 }

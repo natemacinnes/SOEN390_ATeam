@@ -215,12 +215,11 @@ class narrative_model extends CI_Model {
             //Get the name of the audio file to combine
             
 			if (PHP_OS == 'WINNT') {
-			  $path = realpath("../storage/ffmpeg.exe");
+			  $command = realpath("../storage/ffmpeg.exe"). " -i ". $dir . '\\' .$file . " -n -f mp3 -ab 128k " . $dir . '\\' .$file_name . ".mp3 2>&1";
 			}
 			else {
-				$path = realpath("../storage/ffmpeg");
+				$command = realpath("../storage/ffmpeg"). " -i ". $dir . '/' .$file . " -n -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
 			}
-			$command = $path . " -i ". $dir . '/' .$file . " -n -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
             $temp = shell_exec($command);
 			
 			//write the file name to audio_container.txt
@@ -291,12 +290,11 @@ class narrative_model extends CI_Model {
     $xml->save($xmlpath) or die("Error");
     fclose($file_concat);
 	if (PHP_OS == 'WINNT') {
-	  $path = realpath("../storage/ffmpeg.exe");
+	  $command_concatenation = realpath("../storage/ffmpeg.exe")." -f concat -i " . $dir . "\audio_container.txt -c copy " . $dir . "\combined.mp3 2>&1";
 	}
 	else {
-		$path = realpath("../storage/ffmpeg");
+		$command_concatenation = realpath("../storage/ffmpeg")." -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
 	}
-    $command_concatenation = $path." -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
     $temp2 = shell_exec($command_concatenation);
     //die("returned: " . $temp2 . "</br>");
 
