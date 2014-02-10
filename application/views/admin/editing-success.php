@@ -31,8 +31,8 @@
 
 <div class="container fixed-margin">
   <div class="page-header">
-    <h1>Narratives <small>Batch Upload</small></h1>
+    <h1>Narratives <small>Editing</small></h1>
   </div>
-  <p>The narrative was uploaded successfully.</p>
+  <p>The narrative was edited successfully.</p>
 
 </div>

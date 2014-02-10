@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Login extends MY_Controller {
+class Viewnarratives extends MY_Controller {
 	/**
 	 * Constructor: initialize required libraries.
 	 */
@@ -24,7 +24,11 @@ class Login extends MY_Controller {
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
 	public function index() {
-		$this->view_wrapper('pages/login');
+		$this->load->model('narrative_model');
+		$narratives = $this->narrative_model->get_all();
+
+		$data = array('narratives' => $narratives);
+		$this->view_wrapper('pages/viewnarratives', $data);
 	}
 
 }
