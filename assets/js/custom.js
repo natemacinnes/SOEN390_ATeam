@@ -638,11 +638,17 @@ function bubble_get_multiplier(d) {
 }
 
 function bubbles_label_text_1(d) {
+  if (d.children) {
+    return null;
+  }
   var multiplier = bubble_get_multiplier(d);
-  var glyph = parseInt(d.agrees) > parseInt(d.disagrees) ? 'agrees' : 'disagrees';
-  if (d.narrative_id == 56) { console.log(d); }
+  var total = parseInt(d.agrees) + parseInt(d.disagrees);
   //return glyphicon_map[yd_settings.sort_by].repeat(multiplier);
-  return glyphicon_map[glyph].repeat(multiplier);
+
+  var agree_glyphs = Math.round(multiplier * parseInt(d.agrees) / total, 0);
+  var disagree_glyphs = Math.round(multiplier * parseInt(d.disagrees) / total, 0);
+
+  return glyphicon_map['agrees'].repeat(agree_glyphs) + glyphicon_map['disagrees'].repeat(disagree_glyphs);
 }
 
 // object properties here are the sort keys, not the glyphicon keys
@@ -700,10 +706,10 @@ bubble_fill_color = function(d) {
         return bubble_colors.darkgrey;
 
       case yd_settings.constants.NARRATIVE_POSITION_AGREE:
-        return bubble_colors.red;
+        return bubble_colors.green;
 
       case yd_settings.constants.NARRATIVE_POSITION_DISAGREE:
-        return bubble_colors.green;
+        return bubble_colors.red;
     }
   }
   return bubble_colors.grey;
