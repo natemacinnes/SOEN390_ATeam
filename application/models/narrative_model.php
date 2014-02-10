@@ -296,7 +296,7 @@ class narrative_model extends CI_Model {
 	else {
 		$path = realpath("../storage/ffmpeg");
 	}
-    $command_concatenation = $path." -f concat -i " . $dir . "\audio_container.txt -c copy " . $dir . "\combined.mp3 2>&1";
+    $command_concatenation = $path." -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
     $temp2 = shell_exec($command_concatenation);
     //die("returned: " . $temp2 . "</br>");
 
