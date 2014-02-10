@@ -114,7 +114,7 @@ class narrative_model extends CI_Model {
 //end of test stuff
   
   
-  public function process_narrative($narrative_path)
+  public function process_narrative($narrative_path, $id = null)
   {
     // Get the absolute path
     $dir = realpath(FCPATH . $narrative_path);
@@ -143,7 +143,7 @@ class narrative_model extends CI_Model {
       $data['error_message'] = 'Processing failed. Please attempt the upload again.';
       return $data;
     }
-
+	
     //Scan the folder to determine the amount of pictures in a narrative
 	$xmlExistence = FALSE; //Used for handling folder uploaded with no XML file
 	$isBatchUpload = FALSE; //Used to handle batch uploading
@@ -215,12 +215,11 @@ class narrative_model extends CI_Model {
             //Get the name of the audio file to combine
             
 			if (PHP_OS == 'WINNT') {
-			  $path = realpath("../storage/ffmpeg.exe");
+			  $command = realpath("../storage/ffmpeg.exe"). " -i ". $dir . '\\' .$file . " -n -f mp3 -ab 128k " . $dir . '\\' .$file_name . ".mp3 2>&1";
 			}
 			else {
-				$path = realpath("../storage/ffmpeg");
+				$command = realpath("../storage/ffmpeg"). " -i ". $dir . '/' .$file . " -n -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
 			}
-			$command = $path . " -i ". $dir . '/' .$file . " -n -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
             $temp = shell_exec($command);
 			
 			//write the file name to audio_container.txt
@@ -290,23 +289,31 @@ class narrative_model extends CI_Model {
     $xmlpath = $dir . "/AudioTimes.xml";
     $xml->save($xmlpath) or die("Error");
     fclose($file_concat);
-    $command_concatenation = "../storage/ffmpeg -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
+	if (PHP_OS == 'WINNT') {
+	  $command_concatenation = realpath("../storage/ffmpeg.exe")." -f concat -i " . $dir . "\audio_container.txt -c copy " . $dir . "\combined.mp3 2>&1";
+	}
+	else {
+		$command_concatenation = realpath("../storage/ffmpeg")." -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
+	}
     $temp2 = shell_exec($command_concatenation);
     //die("returned: " . $temp2 . "</br>");
 
-    $database_data = array(
-      'created' => $narrative_submit_date . " " . $narrative_submit_time,
-      'audio_length' => $endTimes,
-      'uploaded_by' => 1, // TODO hardcoded
-      'language' => $narrative_language, // TODO hardcoded DONE 02/06/2014
-      'views' => 0,
-      'agrees' => 0,
-      'disagrees' => 0,
-      'shares' => 0,
-      'flags' => 0
-    );
+	if($id == null)
+	{
+		$database_data = array(
+		  'created' => $narrative_submit_date . " " . $narrative_submit_time,
+		  'audio_length' => $endTimes,
+		  'uploaded_by' => 1, // TODO hardcoded
+		  'language' => $narrative_language, // TODO hardcoded DONE 02/06/2014
+		  'views' => 0,
+		  'agrees' => 0,
+		  'disagrees' => 0,
+		  'shares' => 0,
+		  'flags' => 0
+		);
 
-    $id = $this->narrative_model->insert($database_data);
+		$id = $this->narrative_model->insert($database_data);
+	}
 
     //creating the directory on the server
     $new_dir = "./uploads/" . $id;
@@ -334,5 +341,19 @@ class narrative_model extends CI_Model {
    */
   public function delete($conditions) {
     $this->db->delete($this->table, $conditions);
+  }
+  
+  /**
+  *	publishing the narrative
+  */
+  public function publish($narrative)
+  {
+  }
+  
+  /**
+  *	unpublishing the narrative
+  */
+  public function unpublish($narrative)
+  {
   }
 }

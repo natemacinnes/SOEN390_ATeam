@@ -8,6 +8,7 @@ class admin extends MY_Controller {
     parent::__construct();
     $this->load->model('upload_model');
 	$this->load->model('narrative_model');
+	$this->load->model('editing_model');
   }
 
   /**
@@ -76,6 +77,72 @@ class admin extends MY_Controller {
 	//Output success
 	$this->view_wrapper('admin/upload-success', $data);	
   }
+  
+	public function showNarrative($id)
+	{
+		//Getting info on the narrative and opening the page
+		$data = $this->editing_model->gatherInfo($id);
+		$this->view_wrapper('admin/narrative', $data);
+	}
+	
+	public function editNarrative($id)
+	{
+		//Getting info on the narrative to edit the narrative
+		$info = $this->editing_model->gatherInfo($id);
+		
+		//Unpublishing the narrative before reprocessing
+		$this->narrative_model->unpublish($id);
+		
+		//Creating a new folder to move for processing
+		$newDir = './uploads/'.$id.'/'.$id.'/';
+		mkdir($newDir, 0755);
+		
+		//Removing desired tracks and moving the rest to the new folder
+		$trackName = $info['trackName'];
+		$trackPath = $info['trackPath'];
+		if(isset($_POST['tracks']))
+		{
+			$tracksToDelete = $_POST['tracks'];
+			$this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete);
+		}
+		else
+		{
+			$this->editing_model->deleteTracks($trackName, $trackPath, $newDir);
+		}
+		
+		//Removing desired images and moving the rest to the new folder
+		$picName = $info['picName'];
+		$picPath = $info['picPath'];
+		if(isset($_POST['pics']))
+		{
+			$picsToDelete = $_POST['pics'];
+			$this->editing_model->deletePics($picName, $picPath, $newDir, $picsToDelete);
+		}
+		else
+		{
+			$this->editing_model->deletePics($picName, $picPath, $newDir);
+		}
+		
+		//Moving XML file to the new folder
+		$this->editing_model->moveXML($id, $newDir);
+		
+		//Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
+		$tmpPath = $this->editing_model->moveDir($newDir, $id);
+		
+		//Deleting old narrative folder
+		$this->editing_model->deleteDir('./uploads/'.$id.'/');
+		
+		//Calling processing on the new folder
+		$data = $this->narrative_model->process_narrative($tmpPath, $id);
+		if($data['error'] === 1)
+		{
+			$this->view_wrapper('admin/upload', $data);
+			return;
+		}
+
+		//Output success
+		$this->view_wrapper('admin/editing-success', $data);	
+	}
 }
 
 /* End of file welcome.php */
