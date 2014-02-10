@@ -467,6 +467,14 @@ function loadBubbles(language, position) {
           function() { jQuery('circle', this).css('opacity', 0.5); }
         );
       }
+      // Always+Anti-hover
+      else if (debug_ring_mode == 3) {
+        jQuery(svgselect + ' g.node-base').each(function() { jQuery('g.slice', this).show(); });
+        jQuery(svgselect + ' g.node-base').hover(
+          function() { if (narrative_matches_filter(this.__data__)) { jQuery('g.slice', this).hide(); }},
+          function() { jQuery('g.slice', this).show(); }
+        );
+      }
 
       if (debug_text_mode == 0 || debug_text_mode == 1) {
         jQuery(svgselect + ' g.node-base text').each(function() {

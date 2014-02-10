@@ -73,6 +73,8 @@
         <label for="debug-ring-toggle-transparent">Transparent</label>
         <input id="debug-ring-toggle-always" type="radio" name="ring-toggle" value="2" checked="checked" />
         <label for="debug-ring-toggle-always">Always</label>
+        <input id="debug-ring-toggle-always-antihover" type="radio" name="ring-toggle" value="3" />
+        <label for="debug-ring-toggle-always-antihover">Always+Anti-hover</label>
       </div>
       <div class="debug-ring-opacity">
         <label for="debug-ring-toggle-opacity">Opacity</label>
