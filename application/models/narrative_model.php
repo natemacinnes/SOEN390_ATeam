@@ -290,7 +290,7 @@ class narrative_model extends CI_Model {
     $xmlpath = $dir . "/AudioTimes.xml";
     $xml->save($xmlpath) or die("Error");
     fclose($file_concat);
-    $command_concatenation = "../storage/ffmpeg -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
+    $command_concatenation = "../storage/ffmpeg.exe -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
     $temp2 = shell_exec($command_concatenation);
     //die("returned: " . $temp2 . "</br>");
 
@@ -337,6 +337,13 @@ class narrative_model extends CI_Model {
    */
   public function delete($conditions) {
     $this->db->delete($this->table, $conditions);
+  }
+  
+  /**
+  *	publishing the narrative
+  */
+  public function publish($narrative)
+  {
   }
   
   /**

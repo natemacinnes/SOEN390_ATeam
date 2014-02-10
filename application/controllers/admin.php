@@ -87,7 +87,7 @@ class admin extends MY_Controller {
 	
 	public function editNarrative($id)
 	{
-		echo 'POST: ';
+		echo '</br></br></br></br>POST: ';
 		print_r($_POST);
 		echo '</br></br>';
 		
@@ -97,75 +97,55 @@ class admin extends MY_Controller {
 		//Unpublishing the narrative before reprocessing
 		$this->narrative_model->unpublish($id);
 		
-		//Removing desired tracks
+		//Creating a new folder to move for processing
+		$newDir = './uploads/'.$id.'/'.$id.'/';
+		mkdir($newDir, 0755);
+		
+		//Removing desired tracks and moving the rest to the new folder
+		$trackName = $info['trackName'];
+		$trackPath = $info['trackPath'];
 		if(isset($_POST['tracks']))
 		{
-			$trackName = $info['trackName'];
-			$trackPath = $info['trackPath'];
 			$tracksToDelete = $_POST['tracks'];
-			
-			$j = 0;
-			for($i = 1; $i <= count($trackName); $i++)
-			{
-				if($j < count($tracksToDelete) && $trackName[$i] == $tracksToDelete[$j])
-				{
-					unlink('.'.$trackPath[$i]);
-					$j++;
-				}
-			}
+			$this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete);
+		}
+		else
+		{
+			$this->editing_model->deleteTracks($trackName, $trackPath, $newDir);
 		}
 		
-		//Removing desired images
+		//Removing desired images and moving the rest to the new folder
+		$picName = $info['picName'];
+		$picPath = $info['picPath'];
 		if(isset($_POST['pics']))
 		{
-			$picName = $info['picName'];
-			$picPath = $info['picPath'];
 			$picsToDelete = $_POST['pics'];
-			
-			$j = 0;
-			for($i = 1; $i <= count($picName); $i++)
-			{
-				if($j < count($picsToDelete) && $picName[$i] == $picsToDelete[$j])
-				{
-					unlink('.'.$picPath[$i]);
-					$j++;
-				}
-			}
+			$this->editing_model->deletePics($picName, $picPath, $newDir, $picsToDelete);
 		}
-		/*
-		//Remove files to be deleted
-		$this->editing_model->deleteFiles($id);
-		
-		//Creating new folder to move all the files of the narrative into it
-		$folder_name = time();
-		$path = './uploads/'.$id.'/'.$id.'/';
-		if(!is_dir($path))
+		else
 		{
-			mkdir($path, 0775, TRUE);
+			$this->editing_model->deletePics($picName, $picPath, $newDir);
 		}
 		
+		//Moving XML file to the new folder
+		$this->editing_model->moveXML($id, $newDir);
 		
+		//Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
+		$tmpPath = $this->editing_model->moveDir($newDir, $id);
 		
+		//Deleting old narrative folder
+		$this->editing_model->deleteDir('./uploads/'.$id.'/');
 		
-		
-		
-		
-		
-		//Placing all needed files in a folder ready for processing
-		$file_scan = scandir('./uploads/'.$id.'/');
-		foreach($file_scan as $filecheck)
+		//Calling processing on the new folder
+		$data = $this->narrative_model->process_narrative($tmpPath, $id);
+		if($data['error'] === 1)
 		{
-		  $file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
-		  if($file_extension == "xml" && $filecheck != 'AudioTimes.xml')
-		  {
-			//read uploaded xml here
-			$xml_reader = simplexml_load_file('./uploads/'.$id.'/'. $filecheck);
-			$narrative_name = $this->get_XML_narrative_name($xml_reader); //check if integer, check if RIGHT integer
-		  }
+			$this->view_wrapper('admin/upload', $data);
+			return;
 		}
-		
-		*/
-		
+
+		//Output success
+		$this->view_wrapper('admin/editing-success', $data);	
 	}
 }
 

@@ -61,7 +61,7 @@
 	for($i = 1; $i <= $picCtr; $i++)
 	{
 		echo '</br></br>';
-		echo form_checkbox('pics[]', $trackName[$i], FALSE);
+		echo form_checkbox('pics[]', $picName[$i], FALSE);
 		echo '<h4>'.$picName[$i].'</h4>';
 		echo '<img src="'.base_url().$picPath[$i].'" alt="'.$picName[$i].'" width="200" height="300">';
 	}
