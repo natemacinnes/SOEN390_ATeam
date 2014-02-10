@@ -87,6 +87,10 @@ class admin extends MY_Controller {
 	
 	public function editNarrative($id)
 	{
+		echo '</br></br></br></br>POST: ';
+		print_r($_POST);
+		echo '</br></br>';
+		
 		//Getting info on the narrative to edit the narrative
 		$info = $this->editing_model->gatherInfo($id);
 		
