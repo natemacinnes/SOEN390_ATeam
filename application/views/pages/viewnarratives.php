@@ -87,7 +87,8 @@
           <td><?php print $narrative['created']; ?></td>
           <td><?php print $narrative['uploaded']; ?></td>
           <td>
-            <a href="#" title="Edit" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-pencil"></a></a>
+            <a href="#" title="View Comments" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-comment"></a>
+            <a href="#" title="Edit" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-pencil"></a>
             <a href="#" title="Delete" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a>
           </td>
         </tr>
