@@ -3,13 +3,13 @@
  */
 
 @font-face {
-  font-family: myFirstFont;
-  src: url('../font/COUTURE-Bold.ttf');
-  font-weight:bold;
+	font-family: myFirstFont;
+	src: url('../font/COUTURE-Bold.ttf');
+	font-weight:bold;
 }
 
 body {
-   background: #fcfcfc;
+	 background: #fcfcfc;
 }
 
 /* home page */
@@ -17,9 +17,10 @@ body {
 .home{ position: relative; height: 100%; width: 100%; overflow: hidden;}
 
 
-#bubble-container { border: 1px solid #ccc; border-radius: 6px; padding: 1px; margin-bottom: 30px; line-height: 2.1428571435; color: inherit; background-color: #eeeeee; }
+#bubble-container { position: relative; width: 85%; border: 1px solid #ccc; border-radius: 6px; border-top-right-radius:0; border-bottom-right-radius:0; padding: 1px; margin-bottom: 30px; line-height: 2.1428571435; color: inherit; background-color: #eeeeee; }
+#recent-container { position: relative; height: 498px; width: 15%; border: 1px solid #ccc; border-radius: 6px; border-bottom-left-radius:0; border-top-left-radius:0; padding: 1px; margin-bottom: 30px; line-height: 2.1428571435; color: inherit; background-color: #eeeeee;  }
 
-.help-container { position: fixed; bottom: 0; right: 20px; }
+.help-container { position: absolute; bottom: -1px; right: 20px; }
 .btn-help { border-bottom-right-radius:0; border-bottom-left-radius:0; }
 .btn-feedback { border-bottom-right-radius:0; border-bottom-left-radius:0; }
 
@@ -27,79 +28,89 @@ body {
 
 /* Homepage Banner */
 .page-header {
-  margin: 1em 0px;
-  padding-bottom: 0px;
+	margin: 1em 0px;
+	padding-bottom: 0px;
 }
 .page-header h1 {
-  font-family: myFirstFont;
-  font-size: 400%;
-  margin: 0px;
+	font-family: myFirstFont;
+	font-size: 400%;
+	margin: 0px;
 }
 
 #page-header-you {
-  color: white; text-shadow: 1px 1px #000000, -1px -1px #000000;
+	color: white; text-shadow: 1px 1px #000000, -1px -1px #000000;
 }
 
 .flagicon {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  position: relative;
-  top: 6px;
-  margin-top: -6px;
+	display: inline-block;
+	width: 24px;
+	height: 24px;
+	position: relative;
+	top: 6px;
+	margin-top: -6px;
 }
 
 .flagicon-en {
-  background: transparent url('../img/flag-en.png') no-repeat center center;
+	background: transparent url('../img/flag-en.png') no-repeat center center;
 }
 
 .flagicon-fr {
-  background: transparent url('../img/flag-fr.png') no-repeat center center;
+	background: transparent url('../img/flag-fr.png') no-repeat center center;
 }
 
+.sort-container {
+	position: absolute;
+	top: -1px;
+	left: -1px;
+}
+.filter-container {
+	position: absolute;
+	bottom: -1px;
+	left: -1px;
+}
 
 .slice {
 
-   -webkit-appearance: button;
-    -webkit-animation: fadein .5s; /* Safari and Chrome */
-       -moz-animation: fadein .5s; /* Firefox */
-        -ms-animation: fadein .5s; /* Internet Explorer */
-         -o-animation: fadein .5s; /* Opera */
-            animation: fadein .5s;
+	 -webkit-appearance: button;
+		-webkit-animation: fadein .5s; /* Safari and Chrome */
+			 -moz-animation: fadein .5s; /* Firefox */
+				-ms-animation: fadein .5s; /* Internet Explorer */
+				 -o-animation: fadein .5s; /* Opera */
+						animation: fadein .5s;
 }
 
 @keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+		from { opacity: 0; }
+		to   { opacity: 1; }
 }
 
 /* Firefox */
 @-moz-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+		from { opacity: 0; }
+		to   { opacity: 1; }
 }
 
 /* Safari and Chrome */
 @-webkit-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+		from { opacity: 0; }
+		to   { opacity: 1; }
 }
 
 /* Internet Explorer */
 @-ms-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+		from { opacity: 0; }
+		to   { opacity: 1; }
 }​
 
 /* Opera */
 @-o-keyframes fadein {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+		from { opacity: 0; }
+		to   { opacity: 1; }
 }​
 
 /*
 pie chart hover.node-base:hover {
-  opacity: 0.8;
+	opacity: 0.8;
 }
 */
 
@@ -141,3 +152,10 @@ pie chart hover.node-base:hover {
 .portal-topic { padding: 0em 1em; }
 .portal-topic h3 { margin: 3px 0; }
 .clear{ clear: both; }
+
+.debug input {
+	margin-left: 1em;
+}
+.debug label {
+	padding-left: 0.1em;
+}

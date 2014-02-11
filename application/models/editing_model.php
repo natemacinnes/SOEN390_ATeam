@@ -1,11 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class editing_model extends CI_Model {
-	public function __construct() {
+class Editing_Model extends CI_Model
+{
+	public function __construct()
+	{
 		parent::__construct();
 		$this->load->database();
 	}
-	
+
 	/**
 	* Gathering all tracks, images, and info on a narrative
 	*/
@@ -29,8 +31,8 @@ class editing_model extends CI_Model {
 			$data['disagrees'] = $row->disagrees;
 			$data['shares'] = $row->shares;
 			$data['flags'] = $row->flags;
-			
-			//Getting the path and the number of tracks 
+
+			//Getting the path and the number of tracks
 			$xml_reader = simplexml_load_file("./uploads/".$row->narrative_id."/AudioTimes.xml");
 			$trackCtr = 0;
 			$picCtr = 0;
@@ -41,9 +43,9 @@ class editing_model extends CI_Model {
 				$trackCtr++;
 				$data['trackName'][$trackCtr] = (string) $narrative->Mp3Name;
 				$data['trackPath'][$trackCtr] = (string) ("/uploads/".$row->narrative_id."/".$narrative->Mp3Name);
-				
+
 				//Getting picture
-				if(strcmp($lastPic, $narrative->Image))
+				if (strcmp($lastPic, $narrative->Image))
 				{
 					$picCtr++;
 					$lastPic = $narrative->Image;
@@ -53,20 +55,20 @@ class editing_model extends CI_Model {
 			}
 			$data['trackCtr'] = $trackCtr;
 			$data['picCtr'] = $picCtr;
-			
+
 			return $data;
 		}
 	}
-	
+
 	/**
 	*	Deleting the tracks that are meant to be deleted
 	*/
 	public function deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete = null)
 	{
 		$j = 0;
-		for($i = 1; $i <= count($trackName); $i++)
+		for ($i = 1; $i <= count($trackName); $i++)
 		{
-			if($tracksToDelete != null && $j < count($tracksToDelete) && $trackName[$i] == $tracksToDelete[$j])
+			if ($tracksToDelete != null && $j < count($tracksToDelete) && $trackName[$i] == $tracksToDelete[$j])
 			{
 				unlink('.'.$trackPath[$i]);
 				$j++;
@@ -77,16 +79,16 @@ class editing_model extends CI_Model {
 			}
 		}
 	}
-	
+
 	/**
 	*	Deleting the pics that are meant to be deleted
 	*/
 	public function deletePics($picName, $picPath, $newDir, $picsToDelete = null)
 	{
 		$j = 0;
-		for($i = 1; $i <= count($picName); $i++)
+		for ($i = 1; $i <= count($picName); $i++)
 		{
-			if($picsToDelete != null && $j < count($picsToDelete) && $picName[$i] == $picsToDelete[$j])
+			if ($picsToDelete != null && $j < count($picsToDelete) && $picName[$i] == $picsToDelete[$j])
 			{
 				unlink('.'.$picPath[$i]);
 				$j++;
@@ -97,7 +99,7 @@ class editing_model extends CI_Model {
 			}
 		}
 	}
-	
+
 	/**
 	*	Moving XML file to new folder
 	*/
@@ -109,13 +111,13 @@ class editing_model extends CI_Model {
 		{
 			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
 			//Finding the XML file to be moved
-			if($file_extension == "xml" && $filecheck != 'AudioTimes.xml')
+			if ($file_extension == "xml" && $filecheck != 'AudioTimes.xml')
 			{
 				rename($baseDir.$filecheck, $newDir.$filecheck);
 			}
 		}
 	}
-	
+
 	/**
 	*	Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
 	*/
@@ -123,19 +125,19 @@ class editing_model extends CI_Model {
 	{
 		$folder_name = time();
 		$tmpPath = './uploads/tmp/'.$folder_name.'/';
-		if(!is_dir($tmpPath))
+		if (!is_dir($tmpPath))
 		{
 			mkdir($tmpPath, 0775, TRUE);
 		}
 		$tmpPath = $tmpPath.'/'.$id.'/';
-		
-		if(!is_dir($tmpPath))
+
+		if (!is_dir($tmpPath))
 		{
 			rename($baseDir, $tmpPath);
 		}
 		return $tmpPath;
 	}
-	
+
 	/**
 	*	Deleting old folder
 	*/
@@ -144,7 +146,7 @@ class editing_model extends CI_Model {
 		$file_scan = scandir($path);
 		foreach($file_scan as $filecheck)
 		{
-			if($filecheck != '.' && $filecheck != '..')
+			if ($filecheck != '.' && $filecheck != '..')
 				unlink($path.$filecheck);
 		}
 		rmdir($path);
