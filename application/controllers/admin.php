@@ -12,6 +12,8 @@ class Admin extends YD_Controller
 		$this->load->model('narrative_model');
 		$this->load->model('editing_model');
 		$this->load->model('admin_model');
+		// Used to pass admin ID between methods during validation
+		$admin_id = null;
 	}
 
 	public function index() {
@@ -25,7 +27,7 @@ class Admin extends YD_Controller
 			redirect('admin/index');
 		}
 		$this->form_validation->set_rules('email', 'Email', 'required|xss_clean|trim');
-		$this->form_validation->set_rules('password', 'Password', 'required|xss_clean|callback_authenticate_user');
+		$this->form_validation->set_rules('password', 'Password', 'required|xss_clean|callback_validate_authenticate_user');
 
 		if ($this->form_validation->run() == FALSE)
 		{
@@ -34,6 +36,7 @@ class Admin extends YD_Controller
 		else
 		{
 			// set session
+			$this->set_logged_in_user($this->admin_id);
 			redirect('admin/index');
 		}
 	}
@@ -45,17 +48,16 @@ class Admin extends YD_Controller
 		redirect('admin/login');
 	}
 
-	public function authenticate_user($password)
+	public function validate_authenticate_user($password)
 	{
 		$email = $this->input->post("email");
-		if ($admin_id = $this->admin_model->valid_admin($email, $password))
+		if ($this->admin_id = $this->admin_model->valid_admin($email, $password))
 		{
-			$this->set_logged_in_user($admin_id);
 			return true;
 		}
 		else
 		{
-			$this->form_validation->set_message('authenticate_user', 'Your email or password is incorrect');
+			$this->form_validation->set_message('validate_authenticate_user', 'Your email or password is incorrect.');
 			return false;
 		}
 	}
@@ -141,7 +143,7 @@ class Admin extends YD_Controller
 		$this->view_wrapper('admin/upload-success', $data);
 	}
 
-	public function narrativeShow($id)
+	public function showNarrative($id)
 	{
 		$this->require_login();
 		//Getting info on the narrative and opening the page
@@ -149,7 +151,7 @@ class Admin extends YD_Controller
 		$this->view_wrapper('admin/narrative', $data);
 	}
 
-	public function narrativeEdit($id)
+	public function editNarrative($id)
 	{
 		$this->require_login();
 		//Getting info on the narrative to edit the narrative

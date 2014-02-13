@@ -44,7 +44,7 @@ class YD_Controller extends CI_Controller
 	 */
 	public function view_wrapper($template, $data = array(), $display_messages = TRUE)
 	{
-		$data['user_id'] = $this->get_logged_in_user();
+		$data['logged_in_user'] = $this->get_logged_in_user();
 		$data['system_messages'] = array();
 		if ($display_messages)
 		{
@@ -52,7 +52,9 @@ class YD_Controller extends CI_Controller
 			$data['validation_errors'] = validation_errors();
 		}
 		$this->load->view('include/header', $data);
-		$this->load->view('include/navigation', $data);
+		if ($data['logged_in_user']) {
+			$this->load->view('include/navigation', $data);
+		}
 		$this->load->view('include/system_messages', $data);
 		$this->load->view($template, $data);
 		$this->load->view('include/footer', $data);
