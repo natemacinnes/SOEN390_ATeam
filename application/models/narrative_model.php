@@ -51,7 +51,7 @@ class Narrative_Model extends CI_Model
 		return $narratives;
 	}
 
-	//following is for testing xml parsing
+	//following is for xml parsing
 	public function get_XML_narrative_name($xml_r)
 	{
 		return $xml_r->narrativeName;
@@ -118,7 +118,39 @@ class Narrative_Model extends CI_Model
 				return false;
 		}
 	}
-//end of test stuff
+	
+	function process_image($original_image, $original_image_name, $original_image_extension, $directory, $image_destroy) {
+		$image_container = null;
+		//getimagesize will determine the type of image 
+		$image_size = getimagesize($directory . '/' . $original_image);
+		switch($image_size[2])
+		{
+			case 0: //Case 0 = gif type
+				$image_container =  imagecreatefromgif($directory . '/' . $original_image);
+				break;
+			case 2: //Case 2 = jpg/jpeg type
+				$image_container = imagecreatefromjpeg($directory . '/' . $original_image) or die("Cannot format");
+				//echo "goes here <br><br>";
+				break;
+			case 3: //Case 3 = png type
+				$image_container = imagecreatefrompng($directory . '/' . $original_image) or die("Cannot format");
+				break;
+			default:
+				return false;
+				break;
+		}
+		
+		//deletes original image
+		if($image_destroy)
+		{
+			unlink($directory . '/' . $original_image);
+		}
+		
+		imagejpeg($image_container, $directory . '/' . $original_image_name . ".jpg", 100);
+		imagedestroy($image_container);
+		
+		return true;
+	}
 
 
 	public function process_narrative($narrative_path, $id = null)
@@ -132,12 +164,13 @@ class Narrative_Model extends CI_Model
 		$endTimes = 0.000;
 		$image_count = 0;
 		$audio_image = "";
-		$image_format = "";
+		$image_format = "jpg";
 		$unique_id = "";
 		$narrative_language = "";
 		$narrative_submit_date = "";
 		$narrative_submit_time = "";
-
+		$found_first_image = false;
+		
 		$xml = new DOMDocument();
 		$xml->formatOutput = true;
 		$root = $xml->createElement("data");
@@ -158,6 +191,7 @@ class Narrative_Model extends CI_Model
 		foreach ($file_scan as $filecheck)
 		{
 			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
+			
 			//Handling of batch upload, ignoring directories '.' and '..'
 			if ($file_extension == '' && $filecheck != '.' && $filecheck != '..')
 			{
@@ -170,11 +204,24 @@ class Narrative_Model extends CI_Model
 					return $data;
 				}
 			}
-			if ($this->is_image($file_extension))
+			if($this->is_image($file_extension))
 			{
-				$image_format = $file_extension;
+				$fname = pathinfo($filecheck, PATHINFO_FILENAME);
+				//False variable in process_image controls whether we delete the original image or not (false = do not delete image)
+				$this->process_image($filecheck, $fname, $file_extension, $dir, false);
 				$image_count++;
-				$audio_image = $filecheck;
+				
+				//Once the first image in the folder is found, stop changing audio_image
+				if($image_count == 1)
+				{
+					$found_first_image = true;
+				}
+				
+				//First image in the folder is found, set audio_image
+				if(!$found_first_image)
+				{
+					$audio_image = $dir . "/" . $filecheck;
+				}
 			}
 			if ($file_extension == "xml")
 			{
