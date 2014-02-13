@@ -14,6 +14,11 @@ class Admin extends YD_Controller
 		$this->load->model('admin_model');
 	}
 
+	public function index() {
+		// FIXME change this when we have dashboard
+		$this->narratives();
+	}
+
 	public function login() {
 		if ($this->get_logged_in_user())
 		{
@@ -24,7 +29,7 @@ class Admin extends YD_Controller
 
 		if ($this->form_validation->run() == FALSE)
 		{
-			$this->view_wrapper('pages/login');
+			$this->view_wrapper('admin/login');
 		}
 		else
 		{
@@ -55,6 +60,16 @@ class Admin extends YD_Controller
 		}
 	}
 
+	public function narratives()
+	{
+		$this->require_login();
+		$this->load->model('narrative_model');
+		$narratives = $this->narrative_model->get_all();
+
+		$data = array('narratives' => $narratives);
+		$this->view_wrapper('admin/list_narratives', $data);
+	}
+
 	/**
 	 * Index Page for this controller.
 	 *
@@ -73,12 +88,13 @@ class Admin extends YD_Controller
 
 	public function upload()
 	{
-		// Render the views/pages/uploader.php file using including the header/footer
+		$this->require_login();
 		$this->view_wrapper('admin/upload');
 	}
 
 	public function processUpload()
 	{
+		$this->require_login();
 		//Creating unique folder name
 		$folder_name = time();
 		$path = './uploads/tmp/'.$folder_name.'/';
@@ -125,15 +141,17 @@ class Admin extends YD_Controller
 		$this->view_wrapper('admin/upload-success', $data);
 	}
 
-	public function showNarrative($id)
+	public function narrativeShow($id)
 	{
+		$this->require_login();
 		//Getting info on the narrative and opening the page
 		$data = $this->editing_model->gatherInfo($id);
 		$this->view_wrapper('admin/narrative', $data);
 	}
 
-	public function editNarrative($id)
+	public function narrativeEdit($id)
 	{
+		$this->require_login();
 		//Getting info on the narrative to edit the narrative
 		$info = $this->editing_model->gatherInfo($id);
 

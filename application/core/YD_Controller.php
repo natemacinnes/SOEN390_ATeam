@@ -24,7 +24,11 @@ class YD_Controller extends CI_Controller
 		return $this->session->userdata('user_id');
 	}
 
-
+	/**
+	 * Ensures the user is logged in, and if not, redirect them to the login page.
+	 *
+	 * TODO: Redirect them to the page they requested after login.
+	 */
 	function require_login()
 	{
 		if (!$this->get_logged_in_user())
