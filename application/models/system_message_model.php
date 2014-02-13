@@ -9,18 +9,19 @@
  * upon construction.
  */
 
-define('MESSAGE_NOTICE', 'notice');
+define('MESSAGE_NOTICE', 'success');
 define('MESSAGE_WARNING', 'warning');
-define('MESSAGE_ERROR', 'error');
+define('MESSAGE_ERROR', 'danger');
 
 class System_Message_Model extends CI_Model
 {
 	public function __construct()
 	{
 		parent::__construct();
-		if (!isset($_SESSION['system_messages']))
+		$messages = $this->session->userdata('system_messages');
+		if (!isset($messages))
 		{
-			$_SESSION['system_messages'] = array();
+			$this->session->set_userdata('system_messages', array());
 		}
 	}
 
@@ -35,7 +36,9 @@ class System_Message_Model extends CI_Model
 	 */
 	public function set_message($message, $level = MESSAGE_NOTICE)
 	{
-		$_SESSION['system_messages'][$level][] = $message;
+		$messages = $this->session->userdata('system_messages');
+		$messages[$level][] = $message;
+		$this->session->set_userdata('system_messages', $messages);
 	}
 
 	/**
@@ -45,9 +48,9 @@ class System_Message_Model extends CI_Model
 	 */
 	public function get_messages($clear = TRUE)
 	{
-		$messages = $_SESSION['system_messages'];
+		$messages = $this->session->userdata('system_messages');
 		if ($clear) {
-			$_SESSION['system_messages'] = array();
+			$this->session->set_userdata('system_messages', array());
 		}
 		return $messages;
 	}

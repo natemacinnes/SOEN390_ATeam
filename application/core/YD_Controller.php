@@ -1,27 +1,51 @@
 <?php
-class YD_Controller extends CI_Controller {
-	function __construct() {
+class YD_Controller extends CI_Controller
+{
+	function __construct()
+	{
 		parent::__construct();
-		// To store persistent data across a browsing session
-		//session_start();
-
-		// Common helpers
-		$this->load->helper('url');
-		$this->load->helper('form');
-
-			// Session-based messaging
-			$this->load->model('system_message_model');
-		$this->load->helper('form');
+		// Session-based messaging
+		$this->load->model('system_message_model');
 	 }
+
+	/**
+	 * Returns the User ID of the logged in user, or NULL if not authenticated.
+	 */
+	function set_logged_in_user($admin_id)
+	{
+		return $this->session->set_userdata('user_id', $admin_id);
+	}
+
+	/**
+	 * Returns the User ID of the logged in user, or NULL if not authenticated.
+	 */
+	function get_logged_in_user()
+	{
+		return $this->session->userdata('user_id');
+	}
+
+
+	function require_login()
+	{
+		if (!$this->get_logged_in_user())
+		{
+			$this->system_message_model->set_message('You must log in to view this page.', MESSAGE_WARNING);
+			redirect('admin/login');
+		}
+	}
 
 	/**
 	 * Load the specified View, automatically wrapping it between the site's
 	 * header and footer.
 	 */
-	public function view_wrapper($template, $data = array(), $display_messages = TRUE) {
+	public function view_wrapper($template, $data = array(), $display_messages = TRUE)
+	{
+		$data['user_id'] = $this->get_logged_in_user();
 		$data['system_messages'] = array();
-		if ($display_messages) {
+		if ($display_messages)
+		{
 			$data['system_messages'] = $this->system_message_model->get_messages();
+			$data['validation_errors'] = validation_errors();
 		}
 		$this->load->view('include/header', $data);
 		$this->load->view('include/navigation', $data);

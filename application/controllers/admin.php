@@ -11,6 +11,48 @@ class Admin extends YD_Controller
 		$this->load->model('upload_model');
 		$this->load->model('narrative_model');
 		$this->load->model('editing_model');
+		$this->load->model('admin_model');
+	}
+
+	public function login() {
+		if ($this->get_logged_in_user())
+		{
+			redirect('admin/index');
+		}
+		$this->form_validation->set_rules('email', 'Email', 'required|xss_clean|trim');
+		$this->form_validation->set_rules('password', 'Password', 'required|xss_clean|callback_authenticate_user');
+
+		if ($this->form_validation->run() == FALSE)
+		{
+			$this->view_wrapper('pages/login');
+		}
+		else
+		{
+			// set session
+			redirect('admin/index');
+		}
+	}
+
+	public function logout() {
+		$this->require_login();
+		$this->set_logged_in_user(NULL);
+		$this->system_message_model->set_message('You have been logged out.', MESSAGE_NOTICE);
+		redirect('admin/login');
+	}
+
+	public function authenticate_user($password)
+	{
+		$email = $this->input->post("email");
+		if ($admin_id = $this->admin_model->valid_admin($email, $password))
+		{
+			$this->set_logged_in_user($admin_id);
+			return true;
+		}
+		else
+		{
+			$this->form_validation->set_message('authenticate_user', 'Your email or password is incorrect');
+			return false;
+		}
 	}
 
 	/**
