@@ -31,6 +31,7 @@
 
 <div class="container fixed-margin">
   <div class="page-header">
+  <?php if(isset($error)) echo 'Narrative requested does not exist'; else{?>
     <h1>Narrative <?php echo $narrative_id; ?></h1>
   </div>
   <p>Created on: <?php echo $created; ?></p>
@@ -67,5 +68,5 @@
 	}
   ?>
   </br></br>
-  <?php echo form_submit('submit', 'Delete', "class='btn btn-default'"); ?>
+  <?php echo form_submit('submit', 'Delete', "class='btn btn-default'");} ?>
 </div>
