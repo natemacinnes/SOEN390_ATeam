@@ -143,11 +143,17 @@ class Admin extends YD_Controller
 		$this->view_wrapper('admin/upload-success', $data);
 	}
 
-	public function showNarrative($id)
+	public function showNarrative($id = null)
 	{
+
 		$this->require_login();
+
+		//Handling error when method gets called by it's URL without an input
+		if($id == null) redirect('viewnarratives');
 		//Getting info on the narrative and opening the page
 		$data = $this->editing_model->gatherInfo($id);
+		//Handling error when input id doesn't exist
+		if($data == null) $data['error'] = 1;
 		$this->view_wrapper('admin/narrative', $data);
 	}
 
@@ -170,7 +176,7 @@ class Admin extends YD_Controller
 		if(isset($_POST['tracks']))
 		{
 			$tracksToDelete = $_POST['tracks'];
-			$this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete);
+			if($this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete) == 0) redirect('admin/deleteNarrative/'.$id);
 		}
 		else
 		{
@@ -202,9 +208,30 @@ class Admin extends YD_Controller
 		//Calling processing on the new folder
 		$this->narrative_model->process_narrative($tmpPath, $id);
 
+		//Republishing the narrative before announcing success
+		$this->narrative_model->publish($id);
+		
 		//Output success
-		$this->view_wrapper('admin/editing-success', $data);
+		$this->view_wrapper('admin/editing-success');
 	}
+	
+	public function deleteNarrative($id = null)
+	{
+		$this->editing_model->deleteDir('./uploads/'.$id.'/');
+		$this->narrative_model->delete(array('narrative_id' => $id));
+		$this->view_wrapper('admin/deleting-success');
+	}
+	
+	public function publishNarrative($id = null)
+	{
+		
+	}
+	
+	public function unpublishNarrative($id = null)
+	{
+		
+	}
+	
 }
 
 /* End of file welcome.php */

@@ -65,19 +65,25 @@ class Editing_Model extends CI_Model
 	*/
 	public function deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete = null)
 	{
+		$tracksLeft = count($trackName);
 		$j = 0;
 		for ($i = 1; $i <= count($trackName); $i++)
 		{
 			if ($tracksToDelete != null && $j < count($tracksToDelete) && $trackName[$i] == $tracksToDelete[$j])
 			{
+				echo 'Deleting track '.$trackName[$i].'</br>';
+				$tracksLeft--;
 				unlink('.'.$trackPath[$i]);
 				$j++;
 			}
 			else
 			{
+				echo 'Moving track '.$trackName[$i].'</br>';
 				rename('.'.$trackPath[$i], $newDir.$trackName[$i]);
 			}
 		}
+		echo 'tracksLeft: '.$tracksLeft.'</br>';
+		return $tracksLeft;
 	}
 
 	/**
@@ -146,8 +152,12 @@ class Editing_Model extends CI_Model
 		$file_scan = scandir($path);
 		foreach($file_scan as $filecheck)
 		{
+			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
 			if ($filecheck != '.' && $filecheck != '..')
-				unlink($path.$filecheck);
+			{
+				if($file_extension == '') $this->deleteDir($path.$filecheck.'/');
+				else unlink($path.$filecheck);
+			}
 		}
 		rmdir($path);
 	}

@@ -8,6 +8,7 @@ class Comments extends YD_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('commenting_model');
 	}
 
 	/**
@@ -27,9 +28,26 @@ class Comments extends YD_Controller
 	 */
 	public function index()
 	{
-		$this->view_wrapper('pages/comments');
+		$data = $this->commenting_model->get_all_non_parent($narrative_id);
+		//$this->view_wrapper('pages/comments', $data);
+		//Not sure if view_wrapper will cause errors so I commented it out for now
+		$this->load->view('pages/comments', $data);
 	}
-
+	
+	public function post_comment($narrative_id, $parent_comment, $time_created, $body_of_text)
+	{
+		$this->commenting_model->add_comment_to_database($narrative_id, $parent_comment, $time_created, $body_of_text);
+	}
+	
+	public function flag_comment($comment_id, $narrative_id)
+	{
+		$this->commenting_model->flag_comment_in_database($comment_id, $narrative_id)
+	}
+	
+	public function reply_to_comment($narrative_id, $comment_id, $time_created, $body_of_text)
+	{
+		$this->commenting_model->add_comment_with_parent_to_database($narrative_id, $comment_id, $time_created, $body_of_text)
+	}
 }
 
 /* End of file welcome.php */
