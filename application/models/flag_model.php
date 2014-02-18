@@ -4,7 +4,6 @@ class Flag_model extends CI_Model {
   private $table = 'flags';
   public function __construct() {
     parent::__construct();
-    $this->load->database();
   }
 
 

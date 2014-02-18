@@ -4,7 +4,6 @@ class Admin_model extends CI_Model {
   private $table = 'admins';
   public function __construct() {
     parent::__construct();
-    $this->load->database();
   }
 
 
