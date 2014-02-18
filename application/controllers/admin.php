@@ -114,9 +114,8 @@ class Admin extends YD_Controller
 		//Executing upload, display errors if any
 		if (!$this->upload->do_upload())
 		{
-			$data['error_message'] = $this->upload->display_errors();
-			$this->view_wrapper('admin/upload', $data);
-			return;
+			$this->system_message_model->set_message($this->upload->display_errors(), MESSAGE_ERROR);
+			redirect('admin/upload');
 		}
 
 		// Getting data from upload, filename of uploaded file is available at $upload_data['file_name']

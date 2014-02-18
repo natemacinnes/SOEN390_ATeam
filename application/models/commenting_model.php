@@ -5,7 +5,6 @@ class Commenting_Model extends CI_Model
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->database();
 	}
 	
 	//get all the comments relating to this narrative
