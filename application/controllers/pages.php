@@ -18,6 +18,6 @@ class Pages extends YD_Controller
    */
 	public function index()
 	{
-		$this->view_wrapper('pages/index');
+		$this->view_wrapper('pages/home');
 	}
 }
