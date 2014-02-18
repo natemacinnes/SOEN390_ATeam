@@ -21,6 +21,6 @@ class Player extends YD_Controller
 	{
 		$narrative = $this->narrative_model->get($narrative_id);
 		$data = array('narrative_id' => $narrative_id, 'narrative' => $narrative);
-		$this->load->view('player/index', $data);
+		$this->load->view('embedded/player', $data);
 	}
 }
