@@ -57,7 +57,7 @@
           <td><?php print $narrative['uploaded']; ?></td>
           <td>
             <a href="#" title="View Comments" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-comment"></a>
-            <a href="#" title="Edit" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-pencil"></a>
+            <?php echo anchor('admin/narratives/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-pencil"></span>', 'title="Edit" class="btn btn-default btn-xs" role="button"'); ?>
             <a href="#" title="Delete" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a>
           </td>
         </tr>

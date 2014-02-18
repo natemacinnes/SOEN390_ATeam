@@ -69,7 +69,7 @@ class Admin extends YD_Controller
 		$narratives = $this->narrative_model->get_all();
 
 		$data = array('narratives' => $narratives);
-		$this->view_wrapper('admin/list_narratives', $data);
+		$this->view_wrapper('admin/narratives/list', $data);
 	}
 
 	/**
@@ -142,96 +142,6 @@ class Admin extends YD_Controller
 		//Output success
 		$this->view_wrapper('admin/upload-success', $data);
 	}
-
-	public function showNarrative($id = null)
-	{
-
-		$this->require_login();
-
-		//Handling error when method gets called by it's URL without an input
-		if($id == null) redirect('viewnarratives');
-		//Getting info on the narrative and opening the page
-		$data = $this->editing_model->gatherInfo($id);
-		//Handling error when input id doesn't exist
-		if($data == null) $data['error'] = 1;
-		$this->view_wrapper('admin/narrative', $data);
-	}
-
-	public function editNarrative($id)
-	{
-		$this->require_login();
-		//Getting info on the narrative to edit the narrative
-		$info = $this->editing_model->gatherInfo($id);
-
-		//Unpublishing the narrative before reprocessing
-		$this->narrative_model->unpublish($id);
-
-		//Creating a new folder to move for processing
-		$newDir = './uploads/'.$id.'/'.$id.'/';
-		mkdir($newDir, 0755);
-
-		//Removing desired tracks and moving the rest to the new folder
-		$trackName = $info['trackName'];
-		$trackPath = $info['trackPath'];
-		if(isset($_POST['tracks']))
-		{
-			$tracksToDelete = $_POST['tracks'];
-			if($this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete) == 0) redirect('admin/deleteNarrative/'.$id);
-		}
-		else
-		{
-			$this->editing_model->deleteTracks($trackName, $trackPath, $newDir);
-		}
-
-		//Removing desired images and moving the rest to the new folder
-		$picName = $info['picName'];
-		$picPath = $info['picPath'];
-		if(isset($_POST['pics']))
-		{
-			$picsToDelete = $_POST['pics'];
-			$this->editing_model->deletePics($picName, $picPath, $newDir, $picsToDelete);
-		}
-		else
-		{
-			$this->editing_model->deletePics($picName, $picPath, $newDir);
-		}
-
-		//Moving XML file to the new folder
-		$this->editing_model->moveXML($id, $newDir);
-
-		//Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
-		$tmpPath = $this->editing_model->moveDir($newDir, $id);
-
-		//Deleting old narrative folder
-		$this->editing_model->deleteDir('./uploads/'.$id.'/');
-
-		//Calling processing on the new folder
-		$this->narrative_model->process_narrative($tmpPath, $id);
-
-		//Republishing the narrative before announcing success
-		$this->narrative_model->publish($id);
-		
-		//Output success
-		$this->view_wrapper('admin/editing-success');
-	}
-	
-	public function deleteNarrative($id = null)
-	{
-		$this->editing_model->deleteDir('./uploads/'.$id.'/');
-		$this->narrative_model->delete(array('narrative_id' => $id));
-		$this->view_wrapper('admin/deleting-success');
-	}
-	
-	public function publishNarrative($id = null)
-	{
-		
-	}
-	
-	public function unpublishNarrative($id = null)
-	{
-		
-	}
-	
 }
 
 /* End of file welcome.php */

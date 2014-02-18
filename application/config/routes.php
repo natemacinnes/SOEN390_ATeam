@@ -53,6 +53,10 @@ $route['404_override'] = '';
  */
 $route['home'] = "pages/index";
 $route['narratives/(:num)'] = "player/index/$1";
+$route['admin/narratives/(:num)/(:any)'] = "admin_narrative/$2/$1";
+$route['admin/narratives/(:num)'] = "admin_narrative/index/$1";
+$route['admin/(:any)'] = "admin/$1";
+
 
 
 
