@@ -16,6 +16,7 @@
   <?php
     // Need to add path to narrative here and in the source of the video
     $path = 'uploads/' . $narrative_id . '/combined.mp3';
+    echo $path;
     if (file_exists($path)):
     ?>
     <div class="player-wrapper" id="narrative-<?php echo $narrative_id; ?>">

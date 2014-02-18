@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Edit_narrative extends MY_Controller {
+class Edit_narrative extends YD_Controller {
   /**
    * Constructor: initialize required libraries.
    */
@@ -23,7 +23,11 @@ class Edit_narrative extends MY_Controller {
    * map to /index.php/welcome/<method_name>
    * @see http://codeigniter.com/user_guide/general/urls.html
    */
-  public function index($narrative_id = 1) {
+  public function index() {
+    $this->edit(1);
+  }
+
+  public function edit($narrative_id = 1) {
     $data = array();
 
     $this->load->model('narrative_model');
@@ -36,6 +40,7 @@ class Edit_narrative extends MY_Controller {
     $data['flags'] = $flags;
     $this->view_wrapper('admin/editnarrative', $data);
   }
+
 
 }
 
