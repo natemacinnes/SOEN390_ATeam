@@ -26,7 +26,7 @@ class Comments extends YD_Controller
 	 * map to /index.php/welcome/<method_name>
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
-	public function index()
+	public function index($narrative_id = 1)
 	{
 		$data = $this->commenting_model->get_all_non_parent($narrative_id);
 		//$this->view_wrapper('pages/comments', $data);
@@ -41,11 +41,11 @@ class Comments extends YD_Controller
 
 	public function flag_comment($comment_id, $narrative_id)
 	{
-		$this->commenting_model->flag_comment_in_database($comment_id, $narrative_id)
+		$this->commenting_model->flag_comment_in_database($comment_id, $narrative_id);
 	}
 
 	public function reply_to_comment($narrative_id, $comment_id, $time_created, $body_of_text)
 	{
-		$this->commenting_model->add_comment_with_parent_to_database($narrative_id, $comment_id, $time_created, $body_of_text)
+		$this->commenting_model->add_comment_with_parent_to_database($narrative_id, $comment_id, $time_created, $body_of_text);
 	}
 }

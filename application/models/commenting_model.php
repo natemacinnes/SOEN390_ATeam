@@ -35,7 +35,7 @@ class Commenting_Model extends CI_Model
 		//$this->db->where('narrative_id', $narrative_id);
 		//$this->db->where('comment_id' , $comment_id);
 		//Top part is in case the update to the database doesn't work properly
-		$this->db->update('comments', $data, array('narrative_id' => $narrative_id, 'comment_id' =>$comment_id);
+		$this->db->update('comments', $data, array('narrative_id' => $narrative_id, 'comment_id' =>$comment_id));
 	}
 	
 	public function add_comment_with_parent_to_database($narrative_id, $parent_id, $time_created, $body_of_text)
@@ -50,5 +50,6 @@ class Commenting_Model extends CI_Model
 		
 		$this->db->insert('comments', $data); 
 	}
+}
 	
 ?>
