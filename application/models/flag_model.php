@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Flag_model extends CI_Model {
+class Flag_Model extends CI_Model {
   private $table = 'flags';
   public function __construct() {
     parent::__construct();

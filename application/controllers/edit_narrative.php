@@ -43,6 +43,3 @@ class Edit_narrative extends YD_Controller {
 
 
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

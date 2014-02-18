@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Admin_model extends CI_Model {
+class Admin_Model extends CI_Model {
   private $table = 'admins';
   public function __construct() {
     parent::__construct();

@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Test the Narrative_Model model.
+ */
 class Narrative_Model_Test extends YD_Controller
 {
 	/**
@@ -178,6 +181,3 @@ class Narrative_Model_Test extends YD_Controller
 		$this->view_wrapper('pages/narrative_model_test_report',$data);
 	}
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

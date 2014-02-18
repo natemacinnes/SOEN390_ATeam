@@ -33,22 +33,19 @@ class Comments extends YD_Controller
 		//Not sure if view_wrapper will cause errors so I commented it out for now
 		$this->load->view('pages/comments', $data);
 	}
-	
+
 	public function post_comment($narrative_id, $parent_comment, $time_created, $body_of_text)
 	{
 		$this->commenting_model->add_comment_to_database($narrative_id, $parent_comment, $time_created, $body_of_text);
 	}
-	
+
 	public function flag_comment($comment_id, $narrative_id)
 	{
 		$this->commenting_model->flag_comment_in_database($comment_id, $narrative_id)
 	}
-	
+
 	public function reply_to_comment($narrative_id, $comment_id, $time_created, $body_of_text)
 	{
 		$this->commenting_model->add_comment_with_parent_to_database($narrative_id, $comment_id, $time_created, $body_of_text)
 	}
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

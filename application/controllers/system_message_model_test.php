@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Test the System_Message_Model model.
+ */
 class System_Message_Model_Test extends YD_Controller
 {
 	/**
@@ -61,6 +64,3 @@ class System_Message_Model_Test extends YD_Controller
 	}
 
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

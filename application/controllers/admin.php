@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Defines top-level administrative operations.
+ */
 class Admin extends YD_Controller
 {
 	/**
@@ -16,11 +19,17 @@ class Admin extends YD_Controller
 		$admin_id = null;
 	}
 
+	/**
+   * The default method called, if none is provided.
+   */
 	public function index() {
 		// FIXME change this when we have dashboard
 		$this->narratives();
 	}
 
+	/**
+   * Display login form.
+   */
 	public function login() {
 		if ($this->get_logged_in_user())
 		{
@@ -41,6 +50,9 @@ class Admin extends YD_Controller
 		}
 	}
 
+	/**
+   * Terminates a user session.
+   */
 	public function logout() {
 		$this->require_login();
 		$this->set_logged_in_user(NULL);
@@ -48,6 +60,12 @@ class Admin extends YD_Controller
 		redirect('admin/login');
 	}
 
+	/**
+   * Validation callback that attempts to authenticate the user, returning a
+   * form error if not.
+   *
+   * TODO: figure out how to hide this from being accessed via URLs
+   */
 	public function validate_authenticate_user($password)
 	{
 		$email = $this->input->post("email");
@@ -62,6 +80,9 @@ class Admin extends YD_Controller
 		}
 	}
 
+	/**
+	 * Displays a list of all narratives on the portal with management links.
+	 */
 	public function narratives()
 	{
 		$this->require_login();
@@ -73,27 +94,17 @@ class Admin extends YD_Controller
 	}
 
 	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 *    http://example.com/index.php/welcome
-	 *  - or -
-	 *    http://example.com/index.php/welcome/index
-	 *  - or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
+ 	 * Display narrative upload form.
 	 */
-
 	public function upload()
 	{
 		$this->require_login();
 		$this->view_wrapper('admin/upload');
 	}
 
+	/**
+	 * Process the upload of a new narrative, unpacking it and processing its XML.
+	 */
 	public function processUpload()
 	{
 		$this->require_login();
@@ -142,6 +153,3 @@ class Admin extends YD_Controller
 		$this->view_wrapper('admin/upload-success', $data);
 	}
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

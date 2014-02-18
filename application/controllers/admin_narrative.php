@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Defines admin operations to be performed on a narrative.
+ */
 class Admin_Narrative extends YD_Controller
 {
   /**
@@ -127,6 +130,3 @@ class Admin_Narrative extends YD_Controller
 
   }
 }
-
-/* End of file admin_narrative.php */
-/* Location: ./application/controllers/admin_narrative.php */
