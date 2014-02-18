@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * The narrative player & related operations.
+ */
 class Player extends YD_Controller
 {
 	/**
@@ -12,8 +15,8 @@ class Player extends YD_Controller
 	}
 
 	/**
-	 * Index Page for this controller.
-	 */
+   * The default method called, if none is provided.
+   */
 	public function index($narrative_id)
 	{
 		$narrative = $this->narrative_model->get($narrative_id);
@@ -21,6 +24,3 @@ class Player extends YD_Controller
 		$this->load->view('player/index', $data);
 	}
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

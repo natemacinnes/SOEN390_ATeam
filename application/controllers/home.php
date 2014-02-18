@@ -1,6 +1,13 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+<<<<<<< HEAD:application/controllers/home.php
 class Home extends YD_Controller
+=======
+/**
+ * Used for providing static/view-only pages.
+ */
+class Pages extends YD_Controller
+>>>>>>> 162f47074e073c03185dd35993e73de914aad96d:application/controllers/pages.php
 {
 	/**
 	 * Constructor: initialize required libraries.
@@ -11,24 +18,13 @@ class Home extends YD_Controller
 	}
 
 	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 *    http://example.com/index.php/welcome
-	 *  - or -
-	 *    http://example.com/index.php/welcome/index
-	 *  - or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
-	 */
+   * The default method called, if none is provided.
+   */
 	public function index()
 	{
 		$this->view_wrapper('pages/home');
 	}
+<<<<<<< HEAD:application/controllers/home.php
 
 	/*public function contact()
 	{
@@ -41,7 +37,6 @@ class Home extends YD_Controller
 		// Render the views/pages/contact.php file using including the header/footer
 		$this->view_wrapper('pages/contact', $data);
 	}*/
+=======
+>>>>>>> 162f47074e073c03185dd35993e73de914aad96d:application/controllers/pages.php
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

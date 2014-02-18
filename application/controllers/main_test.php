@@ -194,6 +194,3 @@ class Main_Test extends YD_Controller
 	}
 
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

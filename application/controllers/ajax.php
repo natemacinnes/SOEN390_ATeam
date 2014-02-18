@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Provides callbacks for any AJAX calls in the system.
+ */
 class Ajax extends YD_Controller
 {
 	/**
@@ -11,6 +14,11 @@ class Ajax extends YD_Controller
 		$this->load->model('narrative_model');
 	}
 
+	/**
+	 * Callback for d3 upon page load.
+	 *
+	 * Returns matching narrative information in JSON format.
+	 */
 	public function bubbles($position = NULL)
 	{
 		$data = array();
@@ -37,6 +45,9 @@ class Ajax extends YD_Controller
 		print json_encode($data);
 	}
 
+	/**
+	 * Return the image URL given a narrative & timecode.
+	 */
 	public function audioImage($narrative_id, $time)
 	{
 		$narrative = $this->narrative_model->get($narrative_id);
@@ -64,6 +75,3 @@ class Ajax extends YD_Controller
 		}
 	}
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

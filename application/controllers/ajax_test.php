@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * Test the Ajax controller.
+ */
 class Ajax_Test extends YD_Controller
 {
 	/**
@@ -46,6 +49,3 @@ class Ajax_Test extends YD_Controller
 		$this->view_wrapper('pages/ajax_test_report',$data);
 	}
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
