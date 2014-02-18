@@ -40,7 +40,7 @@
 
 // These two MUST come first
 // Default route when no URI is specified
-$route['default_controller'] = "pages";
+$route['default_controller'] = "home";
 // 404 controller class, default=application/errors/error_404.php
 $route['404_override'] = '';
 

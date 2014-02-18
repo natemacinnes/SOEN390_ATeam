@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Pages extends YD_Controller
+class Home extends YD_Controller
 {
 	/**
 	 * Constructor: initialize required libraries.
@@ -27,10 +27,10 @@ class Pages extends YD_Controller
 	 */
 	public function index()
 	{
-		$this->view_wrapper('pages/index');
+		$this->view_wrapper('pages/home');
 	}
 
-	public function contact()
+	/*public function contact()
 	{
 		// Demo the system messages
 		$this->system_message_model->set_message("This is a normal (notice) message");
@@ -40,7 +40,7 @@ class Pages extends YD_Controller
 		$data = array('ip_address' => $this->input->ip_address());
 		// Render the views/pages/contact.php file using including the header/footer
 		$this->view_wrapper('pages/contact', $data);
-	}
+	}*/
 }
 
 /* End of file welcome.php */
