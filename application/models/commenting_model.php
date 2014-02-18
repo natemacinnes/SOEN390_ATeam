@@ -11,8 +11,8 @@ class Commenting_Model extends CI_Model
 	public function get_all_non_parent($narrative_id)
 	{
 		$query = $this->db->get_where('comments', array('parent_comment' => NULL));
-		$comments = $query->row_array();
-		return $query;
+		$comments = $query->result_array();
+		return $comments;
 	}
 	
 	public function add_comment_to_database($narrative_id, $time_created, $body_of_text)
