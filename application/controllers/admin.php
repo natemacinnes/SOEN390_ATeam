@@ -33,7 +33,7 @@ class Admin extends YD_Controller
 	public function login() {
 		if ($this->get_logged_in_user())
 		{
-			redirect('admin/index');
+			redirect('admin');
 		}
 		$this->form_validation->set_rules('email', 'Email', 'required|xss_clean|trim');
 		$this->form_validation->set_rules('password', 'Password', 'required|xss_clean|callback_validate_authenticate_user');
@@ -46,7 +46,7 @@ class Admin extends YD_Controller
 		{
 			// set session
 			$this->set_logged_in_user($this->admin_id);
-			redirect('admin/index');
+			redirect('admin');
 		}
 	}
 

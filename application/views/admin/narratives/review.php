@@ -59,9 +59,9 @@
 
   <div class="player-wrapper float-left">
     <div style="width:400px; height:400px; background:black; margin-top:60px;"><p style="color:#fff;">narrative placeholder</p></div>
-    <a href="#" class="btn btn-primary btn-lg top-margin" role="button">Save</a>
-    <a href="#" class="btn btn-primary btn-lg top-margin" role="button">Delete</a>
-    <a href="#" class="btn btn-primary btn-lg top-margin" role="button">Back</a>
+    <a href="#" class="btn btn-default top-margin" role="button">Save</a>
+    <a href="#" class="btn btn-default top-margin" role="button">Delete</a>
+    <a href="#" class="btn btn-default top-margin" role="button">Back</a>
   </div>
 
 </div>
