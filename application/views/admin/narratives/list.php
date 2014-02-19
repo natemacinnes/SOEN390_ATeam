@@ -12,7 +12,13 @@
       <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Unpublished</a></li>
     </ul>
   </div>-->
-
+  
+  <?php echo form_open('admin/batchAction'); ?>
+  <ul class="pagination float-left">
+    <li><?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?></li>
+    <li><?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?></li>
+    <li><?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?></li>
+  </ul>
   <ul class="pagination float-right">
     <li><a href="#">&laquo;</a></li>
     <li><a href="#">1</a></li>
@@ -27,6 +33,7 @@
   <table class="table table-hover">
     <thead>
       <tr>
+		<th></th>
         <th><a href="#" class="sort-btn active desc">ID</a></th>
         <th><a href="#" class="sort-btn">Length</a></th>
         <th><a href="#" class="sort-btn">Language</a></th>
@@ -40,6 +47,7 @@
     <tbody>
       <?php foreach ($narratives as $narrative): ?>
         <tr>
+		  <td><?php echo form_checkbox('narratives[]', $narrative['narrative_id'], FALSE); ?>
           <td><?php print $narrative['narrative_id']; ?></td>
           <td><?php printf('%d', $narrative['audio_length']/60); ?>:<?php printf('%02d', $narrative['audio_length']%60); ?></td>
           <td><?php print $narrative['language']; ?></td>
@@ -56,7 +64,13 @@
       <?php endforeach; ?>
     </tbody>
   </table>
-
+  
+  <?php echo form_open('admin/batchAction'); ?>
+  <ul class="pagination float-left">
+    <li><?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?></li>
+    <li><?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?></li>
+    <li><?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?></li>
+  </ul>
   <ul class="pagination float-right">
     <li><a href="#">&laquo;</a></li>
     <li><a href="#">1</a></li>

@@ -91,7 +91,7 @@ class Admin_Narrative extends YD_Controller
     if(isset($_POST['tracks']))
     {
       $tracksToDelete = $_POST['tracks'];
-      if($this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete) == 0) redirect('admin/deleteNarrative/'.$id);
+      if($this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete) == 0) redirect('admin/narratives/'.$id.'/delete');
     }
     else
     {
