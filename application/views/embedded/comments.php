@@ -8,6 +8,12 @@
 		</div>
 	</div>
 	<?php
+		if($comments == NULL)
+		{
+			echo "<div class='comment'>
+					<p>Comments show here</p>
+				  </div>";
+		}
 		foreach($comments as $com)
 		{
 			echo "<div class='comment'>
