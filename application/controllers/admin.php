@@ -164,7 +164,7 @@ class Admin extends YD_Controller
 		//Perform action depending on clicked button
 		if(isset($_POST['delete']))
 		{
-			//Delete narratives and then remove them from the db
+			//Delete selected narratives and then remove them from the database
 			$message = 'Narratives';
 			foreach($narratives as $id)
 			{
@@ -178,6 +178,7 @@ class Admin extends YD_Controller
 		}
 		else if(isset($_POST['publish']))
 		{
+			//Publish selected narratives
 			$message = 'Narratives';
 			foreach($narratives as $id)
 			{
@@ -190,6 +191,7 @@ class Admin extends YD_Controller
 		}
 		else if(isset($_POST['unpublish']))
 		{
+			//Unpublish selected narratives
 			$message = 'Narratives';
 			foreach($narratives as $id)
 			{

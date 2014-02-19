@@ -54,7 +54,7 @@
           <td><?php print $narrative['created']; ?></td>
           <td><?php print $narrative['uploaded']; ?></td>
           <td><?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/review', $narrative['flags']); ?></td>
-          <td>Published</td>
+          <td><?php if($narrative['status'] == 1) echo 'Published'; else echo 'Not Published'; ?></td>
           <td>
             <a href="<?php echo site_url('admin/comments/' . $narrative['narrative_id']); ?>" title="View Comments" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-comment"></a>
             <?php echo anchor('admin/narratives/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-pencil"></span>', 'title="Edit" class="btn btn-default btn-xs" role="button"'); ?>
