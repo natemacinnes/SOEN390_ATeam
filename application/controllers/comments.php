@@ -28,10 +28,11 @@ class Comments extends YD_Controller
 	 */
 	public function index($narrative_id = 1)
 	{
-		$data = $this->commenting_model->get_all_non_parent($narrative_id);
+		$comments = $this->commenting_model->get_all_non_parent($narrative_id);
 		//$this->view_wrapper('pages/comments', $data);
 		//Not sure if view_wrapper will cause errors so I commented it out for now
-		$this->load->view('pages/comments', $data);
+		$data = array('comments' => $comments);
+		$this->load->view('embedded/comments', $data);
 	}
 
 	public function post_comment($narrative_id, $parent_comment, $time_created, $body_of_text)
