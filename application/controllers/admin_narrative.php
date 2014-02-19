@@ -14,6 +14,7 @@ class Admin_Narrative extends YD_Controller
     $this->load->model('narrative_model');
     $this->load->model('editing_model');
     $this->load->model('admin_model');
+    $this->load->model('flag_model');
     // Used to pass admin ID between methods during validation
     $admin_id = null;
   }
@@ -44,6 +45,27 @@ class Admin_Narrative extends YD_Controller
       $data['error'] = 1;
     }
     $this->view_wrapper('admin/narratives/edit', $data);
+  }
+
+  /**
+   * Review narrative including player, flag and change publish status.
+   */
+  public function review($narrative_id = 0)
+  {
+    $this->require_login();
+
+    $data = array();
+  
+    //get selected narrative
+    $narrative = $this->narrative_model->get($narrative_id);
+    
+    //get flag for given narrative
+    $flags = $this->flag_model->get_by_narrative_id($narrative_id);
+
+    $data['narrative_id'] = $narrative_id;
+    $data['narrative'] = $narrative;
+    $data['flags'] = $flags;
+    $this->view_wrapper('admin/narratives/review', $data);
   }
 
   /**

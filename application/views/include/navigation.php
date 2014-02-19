@@ -19,10 +19,12 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Narratives <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><?php echo anchor('admin/narratives', 'Narratives'); ?></li>
+						<li><?php echo anchor('admin/narratives', 'View All'); ?></li>
 						<li><?php echo anchor('admin/upload', 'Upload'); ?></li>
 					</ul>
 				</li>
+				<li><a href="#">Comments</a></li>
+				<li><a href="#">Flags</a></li>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">

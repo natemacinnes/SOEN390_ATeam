@@ -1,6 +1,6 @@
 <div class="container fixed-margin">
   <div class="page-header">
-    <h1>Narratives <small>View All</small></h1>
+    <h1>Comments <small>View All</small></h1>
   </div>
 
   <!--<div class="dropdown dropdown-margin2 float-left">
@@ -28,28 +28,24 @@
     <thead>
       <tr>
         <th><a href="#" class="sort-btn active desc">ID</a></th>
-        <th><a href="#" class="sort-btn">Length</a></th>
-        <th><a href="#" class="sort-btn">Language</a></th>
+        <th><a href="#" class="sort-btn">Parent ID</a></th>
+        <th><a href="#" class="sort-btn">Content</a></th>
         <th><a href="#" class="sort-btn">Created</a></th>
-        <th><a href="#" class="sort-btn">Uploaded</a></th>
         <th><a href="#" class="sort-btn">Flags</a></th>
         <th><a href="#" class="sort-btn">Status</a></th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <?php foreach ($narratives as $narrative): ?>
+      <?php foreach ($comments as $comment): ?>
         <tr>
-          <td><?php print $narrative['narrative_id']; ?></td>
-          <td><?php printf('%d', $narrative['audio_length']/60); ?>:<?php printf('%02d', $narrative['audio_length']%60); ?></td>
-          <td><?php print $narrative['language']; ?></td>
-          <td><?php print $narrative['created']; ?></td>
-          <td><?php print $narrative['uploaded']; ?></td>
-          <td><?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/review', $narrative['flags']); ?></td>
+          <td><?php print $comment['comment_id']; ?></td>
+          <td><?php print $comment['parent_comment']; ?></td>
+          <td><?php print $comment['body']; ?></td>
+          <td><?php print $comment['created']; ?></td>
+          <td><?php echo anchor('admin/comment/' . $comment['comment_id'] . '/review', 0/*$comment['flags']*/); ?></td>
           <td>Published</td>
           <td>
-            <a href="<?php echo site_url('admin/comments/' . $narrative['narrative_id']); ?>" title="View Comments" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-comment"></a>
-            <?php echo anchor('admin/narratives/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-pencil"></span>', 'title="Edit" class="btn btn-default btn-xs" role="button"'); ?>
             <a href="#" title="Delete" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a>
           </td>
         </tr>

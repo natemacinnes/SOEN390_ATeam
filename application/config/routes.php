@@ -55,6 +55,9 @@ $route['home'] = "pages";
 $route['narratives/(:num)'] = "player/index/$1";
 $route['admin/narratives/(:num)/(:any)'] = "admin_narrative/$2/$1";
 $route['admin/narratives/(:num)'] = "admin_narrative/index/$1";
+$route['admin/comments/(:num)/(:any)'] = "admin_comment/$2/$1";
+$route['admin/comments/(:num)'] = "admin_comment/index/$1";
+$route['admin/comments'] = "admin_comment/index";
 $route['admin/(:any)'] = "admin/$1";
 
 
