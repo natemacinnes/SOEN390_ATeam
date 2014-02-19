@@ -11,7 +11,7 @@
 		if($comments == NULL)
 		{
 			echo "<div class='comment'>
-					<p>Comments show here</p>
+					<p id='defaut'>Comments show here</p>
 				  </div>";
 		}
 		foreach($comments as $com)
@@ -27,6 +27,7 @@
 <script type="text/javascript">
 	jQuery('.btn btn-primary btn-sm top-margin float-right').click(function() 
 	{
+		document.getElementFromId('default').src = "Post Button Pressed";
 		var narrative_id = jQuery('.btn btn-primary btn-sm top-margin float-right').attr('id');
 		var currentDate = new Date();
 		var dateCreated = currentDate.getFullYear() + "-"
