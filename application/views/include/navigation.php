@@ -23,7 +23,7 @@
 						<li><?php echo anchor('admin/upload', 'Upload'); ?></li>
 					</ul>
 				</li>
-				<li><a href="#">Comments</a></li>
+				<li><?php echo anchor('admin/comments', 'Comments'); ?></li>
 				<li><a href="#">Flags</a></li>
 			</ul>
 
