@@ -37,6 +37,7 @@
 					+ currentDate.getSeconds();
 		var text = jQuery('.form-control').val();
 		var url = yd_settings.site_url + "comments/post_comment/" + narrative_id + "/NULL/" + dateCreated + "/" + text;
-		$.get(url, function() { alert( "Comment was added to database. Sample: " + text); });
+		$.get(url, function() { alert( "Comment was added to database. Sample: " + text); })
+			.fail(function() { alert( "Error Comment was not Added" ); });
 	}
 </script>
