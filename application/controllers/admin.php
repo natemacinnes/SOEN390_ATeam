@@ -164,6 +164,7 @@ class Admin extends YD_Controller
 		//Perform action depending on clicked button
 		if(isset($_POST['delete']))
 		{
+			//Delete narratives and then remove them from the db
 			$message = 'Narratives';
 			foreach($narratives as $id)
 			{
@@ -174,15 +175,30 @@ class Admin extends YD_Controller
 			$message = $message.'have all been deleted successfully.';
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
-			
 		}
 		else if(isset($_POST['publish']))
 		{
-			
+			$message = 'Narratives';
+			foreach($narratives as $id)
+			{
+				$this->narrative_model->publish($id);
+				$message = $message.' #'.$id.', ';
+			}
+			$message = $message.'have all been published successfully.';
+			$this->system_message_model->set_message($message);
+			redirect('admin/narratives');
 		}
 		else if(isset($_POST['unpublish']))
 		{
-			
+			$message = 'Narratives';
+			foreach($narratives as $id)
+			{
+				$this->narrative_model->unpublish($id);
+				$message = $message.' #'.$id.', ';
+			}
+			$message = $message.'have all been unpublished successfully.';
+			$this->system_message_model->set_message($message);
+			redirect('admin/narratives');
 		}
 	}
 }

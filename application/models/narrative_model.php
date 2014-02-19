@@ -408,14 +408,16 @@ class Narrative_Model extends CI_Model
 	/**
 	*	publishing the narrative
 	*/
-	public function publish($narrative)
+	public function publish($id)
 	{
+		$this->db->query('UPDATE narratives SET status=1 WHERE narrative_id='.$id.';');
 	}
 
 	/**
 	*	unpublishing the narrative
 	*/
-	public function unpublish($narrative)
+	public function unpublish($id)
 	{
+		$this->db->query('UPDATE narratives SET status=0 WHERE narrative_id='.$id.';');
 	}
 }
