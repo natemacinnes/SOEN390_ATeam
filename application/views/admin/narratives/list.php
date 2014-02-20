@@ -35,6 +35,7 @@
 	<table class="table table-hover">
 		<thead>
 			<tr>
+				<th></th>
 				<th><a href="#" class="sort-btn active desc">ID</a></th>
 				<th><a href="#" class="sort-btn">Length</a></th>
 				<th><a href="#" class="sort-btn">Language</a></th>
