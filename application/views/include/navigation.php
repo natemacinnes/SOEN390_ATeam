@@ -9,7 +9,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">Admin Panel</a>
+			<?php echo anchor('admin', 'Admin Panel', 'class="navbar-brand"'); ?>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
