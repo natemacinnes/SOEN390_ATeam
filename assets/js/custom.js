@@ -12,6 +12,9 @@ var debug_bubble_opacity;
 var debug_recent_sort;
 
 jQuery(document).ready(function() {
+	// Add colorbox to any items with a "colorbox" class
+	initalizeColorBox();
+
 	// This will do nothing on most pages, but prepare any audio embeds we have
 	// present on page load (i.e. on admin review narrative page)
 	loadMediaElement();
@@ -57,6 +60,13 @@ jQuery(document).ready(function() {
 		return false;
 	});
 });
+
+function initalizeColorBox() {
+	jQuery('a, area, input')
+    .filter('.colorbox:not(.initColorbox-processed)')
+    .addClass('initColorbox-processed')
+    .colorbox();
+}
 
 function reloadBubbles() {
 	jQuery('.debug input').unbind('click change');
