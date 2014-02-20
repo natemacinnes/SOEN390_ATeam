@@ -210,16 +210,16 @@ class Narrative_Model extends CI_Model
 				$this->process_image($filecheck, $fname, $file_extension, $dir, false);
 				$image_count++;
 				
-				//Once the first image in the folder is found, stop changing audio_image
-				if($image_count == 1)
-				{
-					$found_first_image = true;
-				}
-				
 				//First image in the folder is found, set audio_image
 				if(!$found_first_image)
 				{
 					$audio_image = $dir . "/" . $filecheck;
+				}
+				
+				//Once the first image in the folder is found, stop changing audio_image
+				if($image_count == 1)
+				{
+					$found_first_image = true;
 				}
 			}
 			if ($file_extension == "xml")
@@ -277,7 +277,7 @@ class Narrative_Model extends CI_Model
 						}
 						$temp = shell_exec($command);
 
-						//write the file name to audio_container.txt
+			//write the file name to audio_container.txt
 						$file_input = "file " . "'" . $dir . "/" .$file_name .".mp3'\r\n";
 						fwrite($file_concat, $file_input);
 
@@ -408,16 +408,14 @@ class Narrative_Model extends CI_Model
 	/**
 	*	publishing the narrative
 	*/
-	public function publish($id)
+	public function publish($narrative)
 	{
-		$this->db->query('UPDATE narratives SET status=1 WHERE narrative_id='.$id.';');
 	}
 
 	/**
 	*	unpublishing the narrative
 	*/
-	public function unpublish($id)
+	public function unpublish($narrative)
 	{
-		$this->db->query('UPDATE narratives SET status=0 WHERE narrative_id='.$id.';');
 	}
 }
