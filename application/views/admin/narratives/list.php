@@ -35,6 +35,7 @@
 	<table class="table table-hover">
 		<thead>
 			<tr>
+				<th></th>
 				<th><a href="#" class="sort-btn active desc">ID</a></th>
 				<th><a href="#" class="sort-btn">Length</a></th>
 				<th><a href="#" class="sort-btn">Language</a></th>
@@ -55,7 +56,7 @@
 					<td><?php print $narrative['created']; ?></td>
 					<td><?php print $narrative['uploaded']; ?></td>
 					<td><?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/review', $narrative['flags']); ?></td>
-					<td><?php if($narrative['status'] == 1) echo 'Published'; else echo 'Not Published'; ?></td>
+					<td><?php echo $narrative['status'] == 1 ? 'Published' : 'Not Published'; ?></td>
 					<td>
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/review', '<span class="glyphicon glyphicon-eye-open"></span>', 'title="Review" class="btn btn-default btn-xs" role="button"'); ?>
 						<?php echo anchor('admin/comments/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-comment">', 'title="View Comments" class="btn btn-default btn-xs" role="button"'); ?>
