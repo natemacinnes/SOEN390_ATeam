@@ -28,9 +28,10 @@
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
-				<?php if ($logged_in_user): ?>
+					<li><?php echo anchor('home', 'User Homepage'); ?></li>
+					<?php if ($logged_in_user): ?>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">User Name<b class="caret"></b></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $logged_in_user['login'] ?><b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><?php echo anchor('#', 'Profile'); ?></li>
 							<li><?php echo anchor('admin/logout', 'Log Out'); ?></li>

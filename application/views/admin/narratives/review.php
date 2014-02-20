@@ -15,7 +15,7 @@
 
   <?php
     // Need to add path to narrative here and in the source of the video
-    /*$path = 'uploads/' . $narrative_id . '/combined.mp3';
+    $path = 'uploads/' . $narrative_id . '/combined.mp3';
 
     if (file_exists($path)):
     ?>
@@ -26,9 +26,9 @@
     </div>
     <?php else: ?>
     Video does not exist.
-  <?php endif;*/ ?>
+  <?php endif; ?>
 
-  
+
   <div class="flag-wrapper  float-left">
     <div class="page-header">
       <h2>Flags</h2>
@@ -65,4 +65,3 @@
   </div>
 
 </div>
-
