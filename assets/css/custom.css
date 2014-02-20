@@ -168,16 +168,28 @@ pie chart hover.node-base:hover {
 
  *****************************************************************************/
 
-.top-margin{margin-top: 5px;}
-.left-margin{margin-left: 5px;}
-.right-margin{margin-right: 5px;}
-.bottom-margin{margin-bottom: 5px;}
+.top-margin{ margin-top: 5px;}
+.left-margin{ margin-left: 5px;}
+.right-margin{ margin-right: 5px;}
+.bottom-margin{ margin-bottom: 5px;}
+
+.big-top-margin{ margin-top: 15px;}
+.big-left-margin{ margin-left: 15px;}
+.big-right-margin{ margin-right: 15px;}
+.big-bottom-margin{ margin-bottom: 15px;}
 
 .float-left{ float: left; }
 .float-right { float: right; }
+.clear{ clear: both; }
+
+.display-block{ display: block; }
+.display-inline{ display: inline; }
+.display-inline-block{ display: inline-block; }
+
+.bottom-border{ border-bottom: 1px solid #ddd; }
+
 .portal-topic { padding: 0em 1em; }
 .portal-topic h3 { margin: 3px 0; }
-.clear{ clear: both; }
 
 .debug input {
 	margin-left: 1em;
