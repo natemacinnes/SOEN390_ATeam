@@ -748,7 +748,6 @@ function narrative_matches_filter(d) {
 }
 
 function loadMediaElement() {
-	alert('hi');
 	if (jQuery('audio,video').not('player-processed').addClass('player-processed').length) {
 		jQuery('audio,video').mediaelementplayer({
 			// the order of controls you want on the control bar (and other plugins below)

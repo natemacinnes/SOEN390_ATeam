@@ -56,6 +56,7 @@
           <td><?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/review', $narrative['flags']); ?></td>
           <td><?php if($narrative['status'] == 1) echo 'Published'; else echo 'Not Published'; ?></td>
           <td>
+          <?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/review', '<span class="glyphicon glyphicon-eye-open"></span>', 'title="Review" class="btn btn-default btn-xs" role="button"'); ?>
             <a href="<?php echo site_url('admin/comments/' . $narrative['narrative_id']); ?>" title="View Comments" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-comment"></a>
             <?php echo anchor('admin/narratives/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-pencil"></span>', 'title="Edit" class="btn btn-default btn-xs" role="button"'); ?>
             <a href="#" title="Delete" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a>
