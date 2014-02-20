@@ -1,6 +1,3 @@
-<head>
-	<script src="SOEN390_ATeam/assets/js/jquery.min.js"></script>	
-</head>
 <body>
 <div class="comments-container float-left">
 	<div class="comments-wrapper">
@@ -32,7 +29,6 @@
 	jQuery(".btn.btn-primary.btn-sm.top-margin.float-right").click(function() 
 	{
 		var text = jQuery('.form-control').val();
-		
 		//Verify that the comments section is not Empty
 		if(text != "")
 		{
