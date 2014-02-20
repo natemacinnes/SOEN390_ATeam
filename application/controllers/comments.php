@@ -31,7 +31,7 @@ class Comments extends YD_Controller
 		$comments = $this->commenting_model->get_all_non_parent($narrative_id);
 		//$this->view_wrapper('pages/comments', $data);
 		//Not sure if view_wrapper will cause errors so I commented it out for now
-		$data = array('comments' => $comments);
+		$data = array('comments' => $comments, 'narrative_id' => $narrative_id);
 		$this->load->view('embedded/comments', $data);
 	}
 

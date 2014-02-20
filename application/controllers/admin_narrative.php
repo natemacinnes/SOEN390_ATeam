@@ -91,7 +91,7 @@ class Admin_Narrative extends YD_Controller
     if(isset($_POST['tracks']))
     {
       $tracksToDelete = $_POST['tracks'];
-      if($this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete) == 0) redirect('admin/deleteNarrative/'.$id);
+      if($this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete) == 0) redirect('admin/narratives/'.$id.'/delete');
     }
     else
     {
@@ -142,13 +142,17 @@ class Admin_Narrative extends YD_Controller
     redirect('admin/narratives');
   }
 
-  public function publish($id = NULL)
+  public function publish($id)
   {
-
+	$this->narrative_model->publish($id);
+	$this->system_message_model->set_message('Narrative '.$id.' has been published successfully.');
+	redirect('admin/narratives/'.$id);
   }
 
-  public function unpublish($id = NULL)
+  public function unpublish($id)
   {
-
+	$this->narrative_model->unpublish($id);
+	$this->system_message_model->set_message('Narrative '.$id.' has been unpublished successfully.');
+	redirect('admin/narratives/'.$id);
   }
 }
