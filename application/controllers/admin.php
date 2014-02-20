@@ -86,7 +86,6 @@ class Admin extends YD_Controller
 	public function narratives()
 	{
 		$this->require_login();
-		$this->load->model('narrative_model'); //Might need to be removed
 		$narratives = $this->narrative_model->get_all();
 
 		$data = array('narratives' => $narratives);
