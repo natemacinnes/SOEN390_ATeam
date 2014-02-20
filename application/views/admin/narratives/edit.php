@@ -39,7 +39,9 @@
   	}
     ?>
     </br></br>
-    <?php echo form_submit('submit', 'Save changes', "class='btn btn-default'"); ?>
-    <?php echo anchor('admin/narratives/' . $narrative_id . '/delete', 'Delete', "class='btn btn-default'"); ?>
+    <?php echo form_submit('submit', 'Remove Selected', "class='btn btn-default'"); ?>
+    <?php echo anchor('admin/narratives/' . $narrative_id . '/delete', 'Delete Narrative', "class='btn btn-default'"); ?>
+	<?php echo anchor('admin/narratives/' . $narrative_id . '/publish', 'Publish', "class='btn btn-default'"); ?>
+	<?php echo anchor('admin/narratives/' . $narrative_id . '/unpublish', 'Unpublish', "class='btn btn-default'"); ?>
   <?php endif; ?>
 </div>
