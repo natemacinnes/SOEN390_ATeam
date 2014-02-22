@@ -12,6 +12,14 @@ var debug_bubble_opacity;
 var debug_recent_sort;
 
 jQuery(document).ready(function() {
+	// Add colorbox to any items with a "colorbox" class
+	initalizeColorBox();
+
+	// This will do nothing on most pages, but prepare any audio embeds we have
+	// present on page load (i.e. on admin review narrative page)
+	loadMediaElement();
+
+	// Process bubbles
 	debug_ring_mode = parseInt(jQuery('.debug-rings input:checked').val());
 	debug_text_mode = parseInt(jQuery('.debug-text input:checked').val());
 	debug_text_content_mode = parseInt(jQuery('.debug-text-content input:checked').val());
@@ -52,6 +60,13 @@ jQuery(document).ready(function() {
 		return false;
 	});
 });
+
+function initalizeColorBox() {
+	jQuery('a, area, input')
+    .filter('.colorbox:not(.initColorbox-processed)')
+    .addClass('initColorbox-processed')
+    .colorbox();
+}
 
 function reloadBubbles() {
 	jQuery('.debug input').unbind('click change');
@@ -748,8 +763,10 @@ function narrative_matches_filter(d) {
 }
 
 function loadMediaElement() {
-	if (jQuery('audio,video').not('player-processed').addClass('player-processed').length) {
-		jQuery('audio,video').mediaelementplayer({
+	var player_wrappers = jQuery('.player-wrapper').not('player-processed')
+	if (player_wrappers.length) {
+		player_wrappers.addClass('player-processed')
+		jQuery('audio,video', player_wrappers).mediaelementplayer({
 			// the order of controls you want on the control bar (and other plugins below)
 			features: ['playpause','current','progress','duration','tracks','volume'],
 			// show framecount in timecode (##:00:00:00)

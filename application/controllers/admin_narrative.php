@@ -14,6 +14,7 @@ class Admin_Narrative extends YD_Controller
     $this->load->model('narrative_model');
     $this->load->model('editing_model');
     $this->load->model('admin_model');
+    $this->load->model('flag_model');
     // Used to pass admin ID between methods during validation
     $admin_id = null;
   }
@@ -47,6 +48,27 @@ class Admin_Narrative extends YD_Controller
   }
 
   /**
+   * Review narrative including player, flag and change publish status.
+   */
+  public function review($narrative_id = 0)
+  {
+    $this->require_login();
+
+    $data = array();
+  
+    //get selected narrative
+    $narrative = $this->narrative_model->get($narrative_id);
+    
+    //get flag for given narrative
+    $flags = $this->flag_model->get_by_narrative_id($narrative_id);
+
+    $data['narrative_id'] = $narrative_id;
+    $data['narrative'] = $narrative;
+    $data['flags'] = $flags;
+    $this->view_wrapper('admin/narratives/review', $data);
+  }
+
+  /**
    * Process the submission of the edit narrative form.
    */
   public function process($id = NULL)
@@ -69,7 +91,7 @@ class Admin_Narrative extends YD_Controller
     if(isset($_POST['tracks']))
     {
       $tracksToDelete = $_POST['tracks'];
-      if($this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete) == 0) redirect('admin/deleteNarrative/'.$id);
+      if($this->editing_model->deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete) == 0) redirect('admin/narratives/'.$id.'/delete');
     }
     else
     {
@@ -120,13 +142,17 @@ class Admin_Narrative extends YD_Controller
     redirect('admin/narratives');
   }
 
-  public function publish($id = NULL)
+  public function publish($id)
   {
-
+	$this->narrative_model->publish($id);
+	$this->system_message_model->set_message('Narrative '.$id.' has been published successfully.');
+	redirect('admin/narratives/'.$id);
   }
 
-  public function unpublish($id = NULL)
+  public function unpublish($id)
   {
-
+	$this->narrative_model->unpublish($id);
+	$this->system_message_model->set_message('Narrative '.$id.' has been unpublished successfully.');
+	redirect('admin/narratives/'.$id);
   }
 }

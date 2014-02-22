@@ -210,16 +210,16 @@ class Narrative_Model extends CI_Model
 				$this->process_image($filecheck, $fname, $file_extension, $dir, false);
 				$image_count++;
 				
-				//Once the first image in the folder is found, stop changing audio_image
-				if($image_count == 1)
-				{
-					$found_first_image = true;
-				}
-				
 				//First image in the folder is found, set audio_image
 				if(!$found_first_image)
 				{
 					$audio_image = $dir . "/" . $filecheck;
+				}
+				
+				//Once the first image in the folder is found, stop changing audio_image
+				if($image_count == 1)
+				{
+					$found_first_image = true;
 				}
 			}
 			if ($file_extension == "xml")

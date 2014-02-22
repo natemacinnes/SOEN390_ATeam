@@ -33,7 +33,7 @@ class Admin extends YD_Controller
 	public function login() {
 		if ($this->get_logged_in_user())
 		{
-			redirect('admin/index');
+			redirect('admin');
 		}
 		$this->form_validation->set_rules('email', 'Email', 'required|xss_clean|trim');
 		$this->form_validation->set_rules('password', 'Password', 'required|xss_clean|callback_validate_authenticate_user');
@@ -46,7 +46,7 @@ class Admin extends YD_Controller
 		{
 			// set session
 			$this->set_logged_in_user($this->admin_id);
-			redirect('admin/index');
+			redirect('admin');
 		}
 	}
 
@@ -86,7 +86,6 @@ class Admin extends YD_Controller
 	public function narratives()
 	{
 		$this->require_login();
-		$this->load->model('narrative_model');
 		$narratives = $this->narrative_model->get_all();
 
 		$data = array('narratives' => $narratives);
@@ -151,5 +150,56 @@ class Admin extends YD_Controller
 
 		//Output success
 		$this->view_wrapper('admin/upload-success', $data);
+	}
+	
+	public function batchAction()
+	{
+		 $this->require_login();
+		
+		//Checking if any narratives have been checked
+		if(isset($_POST['narratives'])) $narratives = $_POST['narratives'];
+		else redirect('admin');
+		
+		//Perform action depending on clicked button
+		if(isset($_POST['delete']))
+		{
+			//Delete selected narratives and then remove them from the database
+			$message = 'Narratives';
+			foreach($narratives as $id)
+			{
+				$this->editing_model->deleteDir('./uploads/' . $id . '/');
+				$this->narrative_model->delete(array('narrative_id' => $id));
+				$message = $message.' #'.$id.', ';
+			}
+			$message = $message.'have all been deleted successfully.';
+			$this->system_message_model->set_message($message);
+			redirect('admin/narratives');
+		}
+		else if(isset($_POST['publish']))
+		{
+			//Publish selected narratives
+			$message = 'Narratives';
+			foreach($narratives as $id)
+			{
+				$this->narrative_model->publish($id);
+				$message = $message.' #'.$id.', ';
+			}
+			$message = $message.'have all been published successfully.';
+			$this->system_message_model->set_message($message);
+			redirect('admin/narratives');
+		}
+		else if(isset($_POST['unpublish']))
+		{
+			//Unpublish selected narratives
+			$message = 'Narratives';
+			foreach($narratives as $id)
+			{
+				$this->narrative_model->unpublish($id);
+				$message = $message.' #'.$id.', ';
+			}
+			$message = $message.'have all been unpublished successfully.';
+			$this->system_message_model->set_message($message);
+			redirect('admin/narratives');
+		}
 	}
 }

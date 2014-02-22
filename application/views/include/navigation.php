@@ -9,7 +9,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">Admin Panel</a>
+			<?php echo anchor('admin', 'Admin Panel', 'class="navbar-brand"'); ?>
 		</div>
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
@@ -19,16 +19,19 @@
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Narratives <b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><?php echo anchor('admin/narratives', 'Narratives'); ?></li>
+						<li><?php echo anchor('admin/narratives', 'View All'); ?></li>
 						<li><?php echo anchor('admin/upload', 'Upload'); ?></li>
 					</ul>
 				</li>
+				<li><?php echo anchor('admin/comments', 'Comments'); ?></li>
+				<li><a href="#">Flags</a></li>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
-				<?php if ($logged_in_user): ?>
+					<li><?php echo anchor('home', 'User Homepage'); ?></li>
+					<?php if ($logged_in_user): ?>
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">User Name<b class="caret"></b></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $logged_in_user['login'] ?><b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							<li><?php echo anchor('#', 'Profile'); ?></li>
 							<li><?php echo anchor('admin/logout', 'Log Out'); ?></li>

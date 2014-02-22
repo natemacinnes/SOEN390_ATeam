@@ -10,16 +10,13 @@ class Flag_Model extends CI_Model {
   /**
    * Retrieve flags for a given narrative
    */
-  public function get_by_narrative($narrative_id) {
-
-
-
-    $query = $this->db->from($this->table);
+  public function get_by_narrative_id($narrative_id)
+  {
+    $this->db->from($this->table);
     $this->db->where('narrative_id', $narrative_id);
 
     $query = $this->db->get();
 
-    $flags = $query->result_array();
-    return $flags;
+    return $query->result_array();
   }
 }

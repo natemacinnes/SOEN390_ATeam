@@ -4,9 +4,7 @@ class YD_Controller extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-		// Session-based messaging
-		$this->load->model('system_message_model');
-	 }
+	}
 
 	/**
 	 * Returns the User ID of the logged in user, or NULL if not authenticated.
@@ -21,7 +19,8 @@ class YD_Controller extends CI_Controller
 	 */
 	function get_logged_in_user()
 	{
-		return $this->session->userdata('user_id');
+		$admin_id = $this->session->userdata('user_id');
+		return $this->admin_model->get($admin_id);
 	}
 
 	/**

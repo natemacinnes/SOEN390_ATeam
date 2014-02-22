@@ -19,6 +19,7 @@ class Editing_Model extends CI_Model
 			$data['narrative_id'] = $row->narrative_id;
 			$data['created'] = $row->created;
 			$data['uploaded'] = $row->uploaded;
+			$data['length'] = $row->audio_length;
 			$admin = $this->db->query('SELECT * FROM admins WHERE admin_id="'.$row->uploaded_by.'";');
 			foreach ($admin->result() as $item)
 			{
