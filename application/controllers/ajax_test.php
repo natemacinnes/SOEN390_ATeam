@@ -35,17 +35,24 @@ class Ajax_Test extends YD_Controller
 	{
 		$data['title'] = "Unit Tests For ajax.php";
 
-		//narrative_model.php
-		//audioImage() function
-		$this->load->controller('ajax');
-		$ajax_audioImage = $this->ajax->audioImage(1, 1);
+		// Controllers render page output; we'll use ob_start() to buffer output and
+		// capture printed data.
+		$ajax = $this->load->controller('ajax');
 
-		$data['audioImage'] = $this->unit->run($ajax_audioImage, "http://localhost/SOEN390_ATeam/uploads/1/1/1.jpg", "audioImage Function Test", "Tests the audioImage function with narrative 1. Passes if there is a narrative 1 in the uploads folder with the associated xml file");
+		ob_start();
+		$ajax->audioImage(1, 1);
+		$ajax_audioImage = ob_get_contents();
+		ob_end_clean();
 
-		$ajax_audioImage2 = $this->ajax->audioImage(2, 2);
+		$data['audioImage'] = $this->unit->run($ajax_audioImage, base_url() . "uploads/1/1.jpg", "audioImage Function Test", "Tests the audioImage function with narrative 1. Passes if there is a narrative 1 in the uploads folder with the associated xml file");
 
-		$data['audioImage2'] = $this->unit->run($ajax_audioImage2, "http://localhost/SOEN390_ATeam/uploads/2/2/2.jpg", "audioImage Function Test", "Tests the audioImage function with narrative 2 which doesn't exist. Expected to fail");
+		ob_start();
+		$ajax->audioImage(3, 40);
+		$ajax_audioImage2 = ob_get_contents();
+		ob_end_clean();
 
-		$this->view_wrapper('pages/ajax_test_report',$data);
+		$data['audioImage2'] = $this->unit->run($ajax_audioImage2, base_url() . "uploads/3/5.jpg", "audioImage Function Test", "Tests the audioImage function with narrative 2 which doesn't exist. Expected to fail");
+
+		return $this->unit->result();
 	}
 }

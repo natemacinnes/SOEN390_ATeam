@@ -14,7 +14,7 @@ class Admin_Narrative extends YD_Controller
     $this->load->model('narrative_model');
     $this->load->model('editing_model');
     $this->load->model('admin_model');
-    $this->load->model('flag_model');
+    $this->load->model('narrative_flag_model');
     // Used to pass admin ID between methods during validation
     $admin_id = null;
   }
@@ -55,12 +55,12 @@ class Admin_Narrative extends YD_Controller
     $this->require_login();
 
     $data = array();
-  
+
     //get selected narrative
     $narrative = $this->narrative_model->get($narrative_id);
-    
+
     //get flag for given narrative
-    $flags = $this->flag_model->get_by_narrative_id($narrative_id);
+    $flags = $this->narrative_flag_model->get_by_narrative_id($narrative_id);
 
     $data['narrative_id'] = $narrative_id;
     $data['narrative'] = $narrative;

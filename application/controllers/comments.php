@@ -28,25 +28,34 @@ class Comments extends YD_Controller
 	 */
 	public function index($narrative_id = 1)
 	{
-		$comments = $this->commenting_model->get_all_non_parent($narrative_id);
+		$comments = $this->commenting_model->get_by_narrative_id($narrative_id);
 		//$this->view_wrapper('pages/comments', $data);
 		//Not sure if view_wrapper will cause errors so I commented it out for now
 		$data = array('comments' => $comments, 'narrative_id' => $narrative_id);
-		$this->load->view('embedded/comments', $data);
+		$this->view_wrapper('embedded/comments', $data);
 	}
 
-	public function post_comment($narrative_id, $parent_comment, $time_created, $body_of_text)
+	public function gui($narrative_id = 1)
 	{
-		$this->commenting_model->add_comment_to_database($narrative_id, $parent_comment, $time_created, $body_of_text);
+		$comments = $this->commenting_model->get_by_narrative_id($narrative_id);
+		//$this->view_wrapper('pages/comments', $data);
+		//Not sure if view_wrapper will cause errors so I commented it out for now
+		$data = array('comments' => $comments, 'narrative_id' => $narrative_id);
+		$this->view_wrapper('pages/comments', $data);
 	}
 
-	public function flag_comment($comment_id, $narrative_id)
+	public function add($narrative_id, $body_of_text, $parent_comment = NULL)
 	{
-		$this->commenting_model->flag_comment_in_database($comment_id, $narrative_id);
+		$this->commenting_model->add_comment($narrative_id, $body_of_text, $parent_comment);
 	}
 
-	public function reply_to_comment($narrative_id, $comment_id, $time_created, $body_of_text)
+	public function flag($comment_id)
 	{
-		$this->commenting_model->add_comment_with_parent_to_database($narrative_id, $comment_id, $time_created, $body_of_text);
+		$this->comment_flag_model->insert($comment_id);
+	}
+
+	public function reply($narrative_id, $body_of_text, $parent_comment = NULL)
+	{
+		$this->commenting_model->add_comment($narrative_id, $body_of_text, $parent_comment);
 	}
 }
