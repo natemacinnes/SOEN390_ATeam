@@ -5,7 +5,6 @@
 			<a href="#" class="btn btn-primary btn-sm top-margin float-right" id="<?php echo $narrative_id; ?>" role="button">Post</a>
 			<div class="clear"></div>
 		</div>
-	</div>
 	<?php if($comments == NULL): ?>
 		<div class="comment">
 			<p id="default">No comments yet, be the first!</p>
@@ -21,6 +20,7 @@
 			</div>
 		<?php endforeach; ?>
 	<?php endif; ?>
+	</div>
 </div>
 
 <script type="text/javascript">
