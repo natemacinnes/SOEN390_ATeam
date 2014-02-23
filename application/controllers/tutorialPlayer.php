@@ -15,10 +15,11 @@ class tutorialPlayer extends YD_Controller
 	}
 
 	public function index($language){
-    	
-		$row = $this->tutorial_model->get_by_language($language);
-		//die(print_r($row,TRUE));
-		$data = array('url' => $row['url']);
+		$row = $this->tutorial_model->get_all();
+	
+		$data['enurl'] = $row[0]['url'];//direct mappings are bad kids
+		$data['frurl'] = $row[1]['url'];//TODO:Make a bit more generic in sprint 3
+	
 		$this->load->view('embedded/tutorial', $data);
 	}
 
