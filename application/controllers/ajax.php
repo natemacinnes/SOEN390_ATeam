@@ -48,7 +48,7 @@ class Ajax extends YD_Controller
 	/**
 	 * Return the image URL given a narrative & timecode.
 	 */
-	public function audioImage($narrative_id, $time)
+	public function audio_image($narrative_id, $time)
 	{
 		$narrative = $this->narrative_model->get($narrative_id);
 		if (!$narrative)
@@ -56,7 +56,7 @@ class Ajax extends YD_Controller
 			return;
 		}
 		$current_time = floatval($time);
-		$path = "./uploads/$narrative_id/AudioTimes.xml";
+		$path =  $this->config->item('site_data_dir') . "/$narrative_id/AudioTimes.xml";
 		$return = "";
 		if (file_exists($path) && $xml = simplexml_load_file($path))
 		{
@@ -64,7 +64,7 @@ class Ajax extends YD_Controller
 			{
 				if ($current_time >= $element->Start && $current_time < $element->End)
 				{
-					print base_url() . 'uploads/' . $narrative_id . '/' .  $element->Image;
+					print base_url() . $this->config->item('site_data_dir') . '/' . $narrative_id . '/' .  $element->Image;
 					break;
 				}
 			}

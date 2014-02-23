@@ -32,7 +32,7 @@ class Narrative_Model extends CI_Model
 		);
 		if (!isset($sort_cols[$sortby]))
 		{
-			// TODO: Error handling
+			// TODO: Error handling- update tests when fixed
 			return array();
 		}
 		$sort_col = $sort_cols[$sortby];
@@ -117,10 +117,10 @@ class Narrative_Model extends CI_Model
 				return false;
 		}
 	}
-	
+
 	function process_image($original_image, $original_image_name, $original_image_extension, $directory, $image_destroy) {
 		$image_container = null;
-		//getimagesize will determine the type of image 
+		//getimagesize will determine the type of image
 		$image_size = getimagesize($directory . '/' . $original_image);
 		switch($image_size[2])
 		{
@@ -138,16 +138,16 @@ class Narrative_Model extends CI_Model
 				return false;
 				break;
 		}
-		
+
 		//deletes original image
 		if($image_destroy)
 		{
 			unlink($directory . '/' . $original_image);
 		}
-		
+
 		imagejpeg($image_container, $directory . '/' . $original_image_name . ".jpg", 100);
 		imagedestroy($image_container);
-		
+
 		return true;
 	}
 
@@ -169,7 +169,7 @@ class Narrative_Model extends CI_Model
 		$narrative_submit_date = "";
 		$narrative_submit_time = "";
 		$found_first_image = false;
-		
+
 		$xml = new DOMDocument();
 		$xml->formatOutput = true;
 		$root = $xml->createElement("data");
@@ -190,7 +190,7 @@ class Narrative_Model extends CI_Model
 		foreach ($file_scan as $filecheck)
 		{
 			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
-			
+
 			//Handling of batch upload, ignoring directories '.' and '..'
 			if ($file_extension == '' && $filecheck != '.' && $filecheck != '..')
 			{
@@ -209,13 +209,13 @@ class Narrative_Model extends CI_Model
 				//False variable in process_image controls whether we delete the original image or not (false = do not delete image)
 				$this->process_image($filecheck, $fname, $file_extension, $dir, false);
 				$image_count++;
-				
+
 				//First image in the folder is found, set audio_image
 				if(!$found_first_image)
 				{
-					$audio_image = $dir . "/" . $filecheck;
+					$audio_image = $filecheck;
 				}
-				
+
 				//Once the first image in the folder is found, stop changing audio_image
 				if($image_count == 1)
 				{
@@ -375,7 +375,7 @@ class Narrative_Model extends CI_Model
 		}
 
 		//creating the directory on the server
-		$new_dir = "./uploads/" . $id;
+		$new_dir = $this->config->item('site_data_dir') . '/' . $id;
 		if (!is_dir($new_dir))
 		{
 			rename($dir, $new_dir);

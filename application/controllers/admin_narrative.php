@@ -82,7 +82,7 @@ class Admin_Narrative extends YD_Controller
     $this->narrative_model->unpublish($id);
 
     //Creating a new folder to move for processing
-    $newDir = './uploads/'.$id.'/'.$id.'/';
+    $newDir = $this->config->item('site_data_dir') . $id . '/' . $id . '/';
     mkdir($newDir, 0755);
 
     //Removing desired tracks and moving the rest to the new folder
@@ -118,7 +118,7 @@ class Admin_Narrative extends YD_Controller
     $tmpPath = $this->editing_model->moveDir($newDir, $id);
 
     //Deleting old narrative folder
-    $this->editing_model->deleteDir('./uploads/'.$id.'/');
+    $this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
 
     //Calling processing on the new folder
     $this->narrative_model->process_narrative($tmpPath, $id);
@@ -127,7 +127,7 @@ class Admin_Narrative extends YD_Controller
     $this->narrative_model->publish($id);
 
     //Output success
-    $this->system_message_model->set_message('The narrative was edited successfully.', MESSAGE_NOTICE);
+    $this->system_message_model->set_message('Narrative #' . $id . ' was edited successfully.', MESSAGE_NOTICE);
     redirect('admin/narratives/' . $id . '/edit');
   }
 
@@ -136,7 +136,7 @@ class Admin_Narrative extends YD_Controller
     // FIXME maybe we should confirm?
     $this->require_login();
 
-    $this->editing_model->deleteDir('./uploads/' . $id . '/');
+    $this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
     $this->narrative_model->delete(array('narrative_id' => $id));
     $this->system_message_model->set_message('Narrative #' . $id . ' was deleted successfully.');
     redirect('admin/narratives');
@@ -145,14 +145,14 @@ class Admin_Narrative extends YD_Controller
   public function publish($id)
   {
 	$this->narrative_model->publish($id);
-	$this->system_message_model->set_message('Narrative '.$id.' has been published successfully.');
+	$this->system_message_model->set_message('Narrative #' . $id . ' has been published successfully.');
 	redirect('admin/narratives/'.$id);
   }
 
   public function unpublish($id)
   {
 	$this->narrative_model->unpublish($id);
-	$this->system_message_model->set_message('Narrative '.$id.' has been unpublished successfully.');
+	$this->system_message_model->set_message('Narrative #' . $id . ' has been unpublished successfully.');
 	redirect('admin/narratives/'.$id);
   }
 }
