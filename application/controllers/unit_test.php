@@ -54,6 +54,7 @@ class Unit_Test extends YD_Controller {
     // Load external classes - see note below about set_instance(). Merge test
     // result data into $data['tests'].
     $this->loadUnitTests('narrative_model_test', $data);
+    $this->loadUnitTests('comment_model_test', $data);
     $this->loadUnitTests('system_message_model_test', $data);
     $this->loadUnitTests('ajax_test', $data);
 
