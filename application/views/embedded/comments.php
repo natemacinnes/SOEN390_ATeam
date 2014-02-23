@@ -1,4 +1,3 @@
-<body>
 <div class="comments-container float-left">
 	<div class="comments-wrapper">
 		<div class="comment">
@@ -7,29 +6,23 @@
 			<div class="clear"></div>
 		</div>
 	</div>
-	<?php
-		if($comments == NULL)
-		{
-			echo "<div class='comment'>
-					<p id='default'>Comments show here</p>
-				  </div>";
-		}
-		else
-		{
-			foreach($comments as $com)
-			{
-				echo "<div class='comment' id='" . $com['narrative_id'] . "'>
-						<a class='report' href='#'><span class='glyphicon glyphicon-flag'></span></a>
-						<p id='comment_body'>" . $com['body'] . "</p>
-						<a class='reply' id='" . $com['comment_id'] . "' href='#'>Reply</a>
-						<textarea class='form-control' rows='3' placeholder='Enter your reply...'></textarea>
-						<a class='btn reply' id='" . $com['comment_id'] . "' href='#'>Post</a>
-					</div>";
-			}
-		}
-	?>
+	<?php if($comments == NULL): ?>
+		<div class="comment">
+			<p id="default">No comments yet, be the first!</p>
+		</div>
+	<?php else: ?>
+		<?php foreach($comments as $comment): ?>
+			<div class="comment" id="<?php echo $comment['narrative_id'] ?>">
+				<a class="report" href="#"><span class="glyphicon glyphicon-flag"></span></a>
+				<p id="comment_body"><?php echo $comment['body']; ?></p>
+				<a class="reply" id="<?php echo $comment['comment_id'] ?>" href="#">Reply</a>
+				<!--<textarea class='form-control' rows='3' placeholder='Enter your reply...'></textarea>
+				<a class='btn reply' id='<?php echo $comment['comment_id']; ?>' href='#'>Post</a>-->
+			</div>
+		<?php endforeach; ?>
+	<?php endif; ?>
 </div>
-</body>
+
 <script type="text/javascript">
 	//Post Comment
 	jQuery(".btn.btn-primary.btn-sm.top-margin.float-right").click(function() 
