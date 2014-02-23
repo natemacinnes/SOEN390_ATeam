@@ -23,7 +23,7 @@ class Player extends YD_Controller
 		$narrative = $this->narrative_model->get($narrative_id);
 		$data = array('narrative_id' => $narrative_id, 'narrative' => $narrative);
 		$this->load->view('embedded/player', $data);
-		$comments = $this->commenting_model->get_all_non_parent($narrative_id);
+		$comments = $this->commenting_model->get_by_narrative_id($narrative_id);
 		//$this->view_wrapper('pages/comments', $data);
 		//Not sure if view_wrapper will cause errors so I commented it out for now
 		$data = array('comments' => $comments, 'narrative_id' => $narrative_id);
