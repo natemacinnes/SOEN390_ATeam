@@ -13,7 +13,7 @@ class Editing_Model extends CI_Model
 	public function gatherInfo($id)
 	{
 		$query = $this->db->query('SELECT * FROM narratives WHERE narrative_id=\''.$id.'\';');
-		foreach($query->result() as $row)
+		foreach ($query->result() as $row)
 		{
 			//Getting info on the narrative
 			$data['narrative_id'] = $row->narrative_id;
@@ -33,16 +33,16 @@ class Editing_Model extends CI_Model
 			$data['flags'] = $row->flags;
 
 			//Getting the path and the number of tracks
-			$xml_reader = simplexml_load_file("./uploads/".$row->narrative_id."/AudioTimes.xml");
+			$xml_reader = simplexml_load_file($this->config->item('site_data_dir') . '/' . $row->narrative_id . "/AudioTimes.xml");
 			$trackCtr = 0;
 			$picCtr = 0;
 			$lastPic = '';
-			foreach($xml_reader->Narrative as $narrative)
+			foreach ($xml_reader->Narrative as $narrative)
 			{
 				//Getting track
 				$trackCtr++;
 				$data['trackName'][$trackCtr] = (string) $narrative->Mp3Name;
-				$data['trackPath'][$trackCtr] = (string) ("/uploads/".$row->narrative_id."/".$narrative->Mp3Name);
+				$data['trackPath'][$trackCtr] = (string) ($this->config->item('site_data_dir') . '/' . $row->narrative_id . '/' . $narrative->Mp3Name);
 
 				//Getting picture
 				if (strcmp($lastPic, $narrative->Image))
@@ -50,7 +50,7 @@ class Editing_Model extends CI_Model
 					$picCtr++;
 					$lastPic = $narrative->Image;
 					$data['picName'][$picCtr] = (string) $narrative->Image;
-					$data['picPath'][$picCtr] = (string) ("/uploads/".$row->narrative_id."/".$narrative->Image);
+					$data['picPath'][$picCtr] = ($this->config->item('site_data_dir') . '/' . $row->narrative_id . '/' . $narrative->Image);
 				}
 			}
 			$data['trackCtr'] = $trackCtr;
@@ -73,13 +73,13 @@ class Editing_Model extends CI_Model
 			{
 				echo 'Deleting track '.$trackName[$i].'</br>';
 				$tracksLeft--;
-				unlink('.'.$trackPath[$i]);
+				unlink($trackPath[$i]);
 				$j++;
 			}
 			else
 			{
 				echo 'Moving track '.$trackName[$i].'</br>';
-				rename('.'.$trackPath[$i], $newDir.$trackName[$i]);
+				rename($trackPath[$i], $newDir.$trackName[$i]);
 			}
 		}
 		echo 'tracksLeft: '.$tracksLeft.'</br>';
@@ -96,12 +96,12 @@ class Editing_Model extends CI_Model
 		{
 			if ($picsToDelete != null && $j < count($picsToDelete) && $picName[$i] == $picsToDelete[$j])
 			{
-				unlink('.'.$picPath[$i]);
+				unlink('.' . $picPath[$i]);
 				$j++;
 			}
 			else
 			{
-				rename('.'.$picPath[$i], $newDir.$picName[$i]);
+				rename('.' . $picPath[$i], $newDir.$picName[$i]);
 			}
 		}
 	}
@@ -111,9 +111,9 @@ class Editing_Model extends CI_Model
 	*/
 	public function moveXML($id, $newDir)
 	{
-		$baseDir = './uploads/'.$id.'/';
+		$baseDir = $this->config->item('site_data_dir') . '/' . $id . '/';
 		$file_scan = scandir($baseDir);
-		foreach($file_scan as $filecheck)
+		foreach ($file_scan as $filecheck)
 		{
 			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
 			//Finding the XML file to be moved
@@ -130,12 +130,12 @@ class Editing_Model extends CI_Model
 	public function moveDir($baseDir, $id)
 	{
 		$folder_name = time();
-		$tmpPath = './uploads/tmp/'.$folder_name.'/';
+		$tmpPath = $this->config->item('site_data_dir') . '/tmp/'.$folder_name.'/';
 		if (!is_dir($tmpPath))
 		{
 			mkdir($tmpPath, 0775, TRUE);
 		}
-		$tmpPath = $tmpPath.'/'.$id.'/';
+		$tmpPath = $tmpPath . '/' . $id . '/';
 
 		if (!is_dir($tmpPath))
 		{
@@ -150,13 +150,19 @@ class Editing_Model extends CI_Model
 	public function deleteDir($path)
 	{
 		$file_scan = scandir($path);
-		foreach($file_scan as $filecheck)
+		foreach ($file_scan as $filecheck)
 		{
 			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
 			if ($filecheck != '.' && $filecheck != '..')
 			{
-				if($file_extension == '') $this->deleteDir($path.$filecheck.'/');
-				else unlink($path.$filecheck);
+				if ($file_extension == '')
+				{
+					$this->deleteDir($path.$filecheck.'/');
+				}
+				else
+				{
+					unlink($path.$filecheck);
+				}
 			}
 		}
 		rmdir($path);

@@ -2,6 +2,19 @@
 
 class Unit_Test extends YD_Controller {
 
+  /**
+   * Constructor: initialize required libraries.
+   */
+  public function __construct()
+  {
+    parent::__construct();
+    $this->load->library('unit_test');
+
+    // Change directory for all site data to test folder
+    $this->config->set_item('site_data_dir', 'test');
+  }
+
+
   private function getClassDefinedMethods($object) {
     $methods = array();
     $reflection = new ReflectionClass($object);
@@ -20,7 +33,7 @@ class Unit_Test extends YD_Controller {
       $$controller_name = $this->load->controller($controller_name);
       foreach ($this->getClassDefinedMethods($$controller_name) as $method) {
         // We don't want to call constructors.
-        if ($method == '__construct') {
+        if (strpos($method, "test") !== 0) {
           continue;
         }
 
@@ -36,15 +49,13 @@ class Unit_Test extends YD_Controller {
   }
 
   public function index() {
-    $this->load->library('unit_test');
     $data['test_controllers'] = array();
 
     // Load external classes - see note below about set_instance(). Merge test
     // result data into $data['tests'].
-    $this->loadUnitTests('ajax_test', $data);
-    $this->loadUnitTests('main_test', $data);
     $this->loadUnitTests('narrative_model_test', $data);
     $this->loadUnitTests('system_message_model_test', $data);
+    $this->loadUnitTests('ajax_test', $data);
 
     // Loading unit tests from a controller resets the global $CI object so that
     // each controller can load its own models, libraries and classes. Set it

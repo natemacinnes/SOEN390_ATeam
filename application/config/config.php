@@ -389,5 +389,15 @@ function __autoload($class)
  	}
 }
 
+/*
+|--------------------------------------------------------------------------
+| Site data (uploads) directory
+|--------------------------------------------------------------------------
+|
+| Per-portal data (narrative audio, etc) gets saved to this directory.
+|
+*/
+$config['site_data_dir'] = './uploads';
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */

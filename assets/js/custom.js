@@ -791,7 +791,7 @@ function loadMediaElement() {
 			var xmlhttp=new XMLHttpRequest();
 			xmlhttp.onreadystatechange=function() {
 				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-					document.getElementById("audioImage").src = xmlhttp.responseText;
+					document.getElementById("audio_image").src = xmlhttp.responseText;
 				}
 			};
 			// TODO make this jQuery using jQuery.get()
@@ -799,7 +799,7 @@ function loadMediaElement() {
 			var player = jQuery('.player-wrapper');
 			if (player.length) {
 				var narrative_id = player.attr('id').substring(10);
-				var url = yd_settings.site_url + "ajax/audioImage/" + narrative_id + "/" + myaudio.currentTime;
+				var url = yd_settings.site_url + "ajax/audio_image/" + narrative_id + "/" + myaudio.currentTime;
 				xmlhttp.open("GET", url, true);
 				xmlhttp.send();
 			}

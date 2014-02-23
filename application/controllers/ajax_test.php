@@ -2,9 +2,15 @@
 
 /**
  * Test the Ajax controller.
+ *
+ * Note that controllers render page output; we'll use ob_start() to buffer
+ * output and capture printed data.
  */
 class Ajax_Test extends YD_Controller
 {
+	// Stores a reference to the Ajax controller
+	private $ajax;
+
 	/**
 	 * Constructor: initialize required libraries.
 	 */
@@ -12,46 +18,56 @@ class Ajax_Test extends YD_Controller
 	{
 		parent::__construct();
 		$this->load->library('unit_test');
+		$this->load->model('narrative_model');
+		$this->ajax = $this->load->controller('ajax');
 	}
 
 	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 *    http://example.com/index.php/welcome
-	 *  - or -
-	 *    http://example.com/index.php/welcome/index
-	 *  - or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
+	 * UT-0015
 	 */
-
-
-	public function index()
+	public function test__audio_image__valid_folder()
 	{
-		$data['title'] = "Unit Tests For ajax.php";
-
-		// Controllers render page output; we'll use ob_start() to buffer output and
-		// capture printed data.
-		$ajax = $this->load->controller('ajax');
-
-		ob_start();
-		$ajax->audioImage(1, 1);
-		$ajax_audioImage = ob_get_contents();
-		ob_end_clean();
-
-		$data['audioImage'] = $this->unit->run($ajax_audioImage, base_url() . "uploads/1/1.jpg", "audioImage Function Test", "Tests the audioImage function with narrative 1. Passes if there is a narrative 1 in the uploads folder with the associated xml file");
+		// Get the first narrative ID
+		// FIXME prefill a new database with known contents for testing
+		$narratives = $this->narrative_model->get_all();
+		$first_id = $narratives[0]['narrative_id'];
 
 		ob_start();
-		$ajax->audioImage(3, 40);
-		$ajax_audioImage2 = ob_get_contents();
+		$this->ajax->audio_image($first_id, 1);
+		$ajax_audio_image = ob_get_contents();
 		ob_end_clean();
 
-		$data['audioImage2'] = $this->unit->run($ajax_audioImage2, base_url() . "uploads/3/5.jpg", "audioImage Function Test", "Tests the audioImage function with narrative 2 which doesn't exist. Expected to fail");
+		$prefix = base_url() . $this->config->item('site_data_dir') . '/' . $first_id . '/';
+		$matches = array();
+		preg_match("|^(" . $prefix . ")(\d+).jpg$|", $ajax_audio_image, $matches);
+
+		// Expecting 3 because an array of (full match, prefix match, jpg numer match)
+		$this->unit->run(
+			count($matches),
+			3,
+			"audio_image retrieval: valid folder",
+			"Should return the URL to a JPG file."
+		);
+
+		return $this->unit->result();
+	}
+
+	/**
+	 * UT-0015
+	 */
+	public function test__audio_image__invalid_folder()
+	{
+		ob_start();
+		$this->ajax->audio_image(-14, 450);
+		$ajax_audio_image = ob_get_contents();
+		ob_end_clean();
+
+		$this->unit->run(
+			$ajax_audio_image,
+			"",
+			"audio_image retrieval: invalid folder",
+			"Should return an empty string."
+		);
 
 		return $this->unit->result();
 	}
