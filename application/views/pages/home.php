@@ -37,7 +37,9 @@
         </div>
       </div>
       <div class="help-container">
-        <a href="#" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help"><span class="glyphicon glyphicon-question-sign"></span></a>
+        <!--<a href=blah class="btn btn-default colorbox"><a href="www.youtube.com" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help colorbox"><span class="glyphicon glyphicon-question-sign"></span></a>
+        -->
+        <a href="tutorial/english" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help colorbox"><span class="glyphicon glyphicon-question-sign"></span></a>
         <a href="#" title="Give us your feedback&#013;Donnez-nous votre feedback" class="btn btn-warning btn-lg btn-feedback"><span class="glyphicon glyphicon-bullhorn"></span></a>
       </div>
     </div>
