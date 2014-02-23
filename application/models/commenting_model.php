@@ -29,30 +29,20 @@ class Commenting_Model extends CI_Model
 			'created' => $time_created ,
 			'parent_comment' => NULL,
 			'body' => $body_of_text,
-			'flag' => 0
-			);
+			'status' => 1,
+		);
 
 		$this->db->insert('comments', $data);
-	}
-
-	public function flag_comment_in_database($comment_id, $narrative_id)
-	{
-		$data = array('flag' => 1);
-
-		//$this->db->where('narrative_id', $narrative_id);
-		//$this->db->where('comment_id' , $comment_id);
-		//Top part is in case the update to the database doesn't work properly
-		$this->db->update('comments', $data, array('narrative_id' => $narrative_id, 'comment_id' =>$comment_id));
 	}
 
 	public function add_comment_with_parent_to_database($narrative_id, $parent_id, $time_created, $body_of_text)
 	{
 		$data = array(
-		'narrative_id' => $narrative_id,
-		'created' => $time_created ,
-		'parent_comment' => $parent_id,
-		'body' => $body_of_text,
-		'flag' => 0
+			'narrative_id' => $narrative_id,
+			'created' => $time_created ,
+			'parent_comment' => $parent_id,
+			'body' => $body_of_text,
+			'status' => 1,
 		);
 
 		$this->db->insert('comments', $data);

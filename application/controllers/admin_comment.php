@@ -14,7 +14,7 @@ class Admin_Comment extends YD_Controller
     $this->load->model('narrative_model');
     $this->load->model('editing_model');
     $this->load->model('admin_model');
-    $this->load->model('flag_model');
+    $this->load->model('narrative_flag_model');
     $this->load->model('comment_model');
   }
 

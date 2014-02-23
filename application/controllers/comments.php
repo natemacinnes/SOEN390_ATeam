@@ -8,7 +8,7 @@ class Comments extends YD_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('commenting_model');
+		$this->load->model('comment_flag_model');
 	}
 
 	/**
@@ -49,9 +49,9 @@ class Comments extends YD_Controller
 		$this->commenting_model->add_comment_to_database($narrative_id, $parent_comment, $time_created, $body_of_text);
 	}
 
-	public function flag_comment($comment_id, $narrative_id)
+	public function flag_comment($comment_id)
 	{
-		$this->commenting_model->flag_comment_in_database($comment_id, $narrative_id);
+		$this->comment_flag_model->insert($comment_id);
 	}
 
 	public function reply_to_comment($narrative_id, $comment_id, $time_created, $body_of_text)
