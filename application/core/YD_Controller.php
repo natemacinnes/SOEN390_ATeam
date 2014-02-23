@@ -6,10 +6,20 @@ class YD_Controller extends CI_Controller
 		parent::__construct();
 	}
 
+	public static function set_instance(&$newCI) {
+		// Ugly, but the only way to restore the static instance of CI_Controller
+		// since PHP doesn't support proper inheritance of private static methods
+		// and properties.
+		$reflection = new ReflectionClass('CI_Controller');
+		$reflectionProperty = $reflection->getProperty("instance");
+		$reflectionProperty->setAccessible(TRUE);
+		$reflectionProperty->setValue($newCI);
+	}
+
 	/**
 	 * Returns the User ID of the logged in user, or NULL if not authenticated.
 	 */
-	function set_logged_in_user($admin_id)
+	protected function set_logged_in_user($admin_id)
 	{
 		return $this->session->set_userdata('user_id', $admin_id);
 	}
@@ -17,7 +27,7 @@ class YD_Controller extends CI_Controller
 	/**
 	 * Returns the User ID of the logged in user, or NULL if not authenticated.
 	 */
-	function get_logged_in_user()
+	protected function get_logged_in_user()
 	{
 		$admin_id = $this->session->userdata('user_id');
 		return $this->admin_model->get($admin_id);
@@ -28,7 +38,7 @@ class YD_Controller extends CI_Controller
 	 *
 	 * TODO: Redirect them to the page they requested after login.
 	 */
-	function require_login()
+	protected function require_login()
 	{
 		if (!$this->get_logged_in_user())
 		{

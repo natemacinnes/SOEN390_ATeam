@@ -4,7 +4,7 @@ class YD_Loader extends CI_Loader{
 		parent::__construct();
 	}
 	public function controller($file_name){
-		$CI = & get_instance();
+		$CI =& get_instance();
 
 		$file_path = APPPATH.'controllers/'.$file_name.'.php';
 		$object_name = $file_name;
@@ -12,8 +12,7 @@ class YD_Loader extends CI_Loader{
 
 		if(file_exists($file_path)){
 			require $file_path;
-
-			$CI->$object_name = new $class_name();
+			return new $class_name();
 		}
 		else{
 			show_error("Unable to load the requested controller class: ".$class_name);
