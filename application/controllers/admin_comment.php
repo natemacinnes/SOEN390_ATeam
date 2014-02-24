@@ -33,6 +33,13 @@ class Admin_Comment extends YD_Controller
       $comment['flags'] = count($flags);
     }
 
+    function commentsFlagSort($item1,$item2)
+    {
+        if ($item1['flags'] == $item2['flags']) return 0;
+        return ($item1['flags'] < $item2['flags']) ? 1 : -1;
+    }
+    usort($comments,'commentsFlagSort');
+
     $data = array('comments' => $comments);
     $this->view_wrapper('admin/comments/list', $data);
   }
