@@ -161,7 +161,6 @@ class Narrative_Model extends CI_Model
 		//determine the type of narrative to upload, and create an XML file
 		$startTimes = 0.0000;
 		$endTimes = 0.000;
-		//$image_count = 0; Commented out to develop new way to process images
 		$audio_image = "";
 		$image_format = "jpg";
 		$unique_id = "";
@@ -213,21 +212,6 @@ class Narrative_Model extends CI_Model
 				//New method, to be approved by TL
 				$images[$fname] = $fname . '.' . $image_format;
 				if($fname > $lastImage) $lastImage = $fname;
-				
-				/* Following commented out to develop new way to process images
-				$image_count++;
-				
-				//Once the first image in the folder is found, stop changing audio_image
-				if($image_count == 1)
-				{
-					$found_first_image = true;
-				}
-				
-				//First image in the folder is found, set audio_image
-				if(!$found_first_image)
-				{
-					$audio_image = $dir . "/" . $filecheck;
-				}*/
 			}
 			if ($file_extension == "xml")
 			{
@@ -317,12 +301,6 @@ class Narrative_Model extends CI_Model
 								}
 							}
 						}
-						
-						/*Following commented out to develop new way to process images
-						if (file_exists($dir . "/" . $file_name . "." . $image_format))
-						{
-							$audio_image = $file_name . "." . $image_format;
-						}*/
 
 						//Get the time that the narrative end in the concatenated narrative
 						$endTimes = $endTimes + floatval($duration);
