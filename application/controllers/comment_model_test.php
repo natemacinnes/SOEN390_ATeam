@@ -12,6 +12,9 @@ class Comment_Model_Test extends YD_Controller
 		$this->load->model('comment_model');
 	}
 
+	/**
+	* UT-0027
+	*/
 	public function test__get_all__multiple_returned()
 	{
 		$comments = $this->comment_model->get_all();

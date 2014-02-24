@@ -23,7 +23,7 @@ class Ajax_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0015
+	 * UT-0025
 	 */
 	public function test__audio_image__valid_folder()
 	{
@@ -53,7 +53,7 @@ class Ajax_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0015
+	 * UT-0026
 	 */
 	public function test__audio_image__invalid_folder()
 	{

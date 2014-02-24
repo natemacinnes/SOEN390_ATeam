@@ -20,6 +20,9 @@ class Narrative_Model_Test extends YD_Controller
 		$this->load->model('upload_model');
 	}
 
+	/**
+	 * UT-0001
+	 */
 	public function test__unpack__non_existant_source() {
 		$folder_name = time();
 		$path = $this->config->item('site_data_dir') . '/tmp/' . $folder_name . '/';
@@ -39,7 +42,9 @@ class Narrative_Model_Test extends YD_Controller
 			"An error flag should be present in the returned data."
 		);
 	}
-
+	/**
+	 * UT-0002
+	 */
 	public function test__unpack__non_existant_destination() {
 		$folder_name = time();
 		$path = 'non-existent';
@@ -54,7 +59,10 @@ class Narrative_Model_Test extends YD_Controller
 			"An error flag should be present in the returned data."
 		);
 	}
-
+	
+	/**
+	 * UT-0003
+	 */
 	public function test__unpack__valid_source() {
 		$folder_name = time();
 		$path = $this->config->item('site_data_dir') . '/tmp/' . $folder_name . '/';
@@ -91,7 +99,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0007.1
+	 * UT-0004
 	 */
 	public function test__processing__non_existant_source() {
 		$zipFileName = 'sample_narratives.zip';
@@ -107,7 +115,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0007.2
+	 * UT-0005
 	 */
 	function test__processing__valid_source() {
 		$data = $this->narrative_model->process_narrative($this->data['narrative_path']);
@@ -121,7 +129,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0006.1
+	 * UT-0006
 	 */
 	function test__get_all_sorting__invalid() {
 		$narratives = $this->narrative_model->get_all("non-existent");
@@ -135,7 +143,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0006
+	 * UT-0007
 	 */
 	function test__get_all_sorting__id() {
 		$narratives = $this->narrative_model->get_all("id");
@@ -162,7 +170,9 @@ class Narrative_Model_Test extends YD_Controller
 		);
 		return $this->unit->result();
 	}
-
+	/**
+	 * UT-0008
+	 */
 	function test__get_all_sorting__agrees() {
 		$narratives = $this->narrative_model->get_all("agrees");
 		$ordered = TRUE;
@@ -183,12 +193,14 @@ class Narrative_Model_Test extends YD_Controller
 		$this->unit->run(
 			$ordered,
 			TRUE,
-			"Narrative retrieval: sort by id index",
+			"Narrative retrieval: sort by agree index",
 			"Every narrative should have a smaller or equal agree count than the following one."
 		);
 		return $this->unit->result();
 	}
-
+	/**
+	 * UT-0009
+	 */
 	function test__get_all_position__agree() {
 		$narratives = $this->narrative_model->get_all("id", NARRATIVE_POSITION_AGREE);
 		$agree_only = TRUE;
@@ -209,7 +221,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0003
+	 * UT-0010
 	 */
 	public function test__get_all__multiple_returned() {
 		$narratives = $this->narrative_model->get_all();
@@ -237,7 +249,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0001
+	 * UT-0011
 	 */
 	public function test__get__valid_id()
 	{
@@ -265,7 +277,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0002
+	 * UT-0012
 	 */
 	public function test__get__invalid_id()
 	{
@@ -280,7 +292,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0004
+	 * UT-0013
 	 */
 	public function test__insert()
 	{
@@ -312,7 +324,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0005
+	 * UT-0014
 	 */
 	public function test__delete()
 	{
@@ -328,7 +340,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0017
+	 * UT-0015
 	 */
 	function test__xml_parse__get_XML_narrative_name() {
 		$xmlRoot = new SimpleXMLElement($this->sampleNarrativeXml);
@@ -343,7 +355,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0018
+	 * UT-0016
 	 */
 	function test__xml_parse__get_XML_narrative_language() {
 		$xmlRoot = new SimpleXMLElement($this->sampleNarrativeXml);
@@ -358,7 +370,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0019
+	 * UT-0017
 	 */
 	function test__xml_parse__get_XML_narrative_submitDate() {
 		$xmlRoot = new SimpleXMLElement($this->sampleNarrativeXml);
@@ -373,7 +385,7 @@ class Narrative_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0020
+	 * UT-0018
 	 */
 	function test__xml_parse__get_XML_narrative_submitTime() {
 		$xmlRoot = new SimpleXMLElement($this->sampleNarrativeXml);
@@ -386,7 +398,9 @@ class Narrative_Model_Test extends YD_Controller
 		);
 		return $this->unit->result();
 	}
-
+	/**
+	 * UT-00019
+	 */
 	function test__is_audio() {
 		$formats = array(
 			// Make sure we accept valid formats
@@ -423,7 +437,9 @@ class Narrative_Model_Test extends YD_Controller
 		);
 		return $this->unit->result();
 	}
-
+	/**
+	 * UT-00020
+	 */
 	function test__is_image() {
 		$formats = array(
 			// Make sure we accept valid formats
