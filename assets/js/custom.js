@@ -632,7 +632,7 @@ bubbles_values = {
 	'agrees': function(d) { return parseInt(d.agrees)+1; },
 	'disagrees': function(d) { return parseInt(d.disagrees)+1; },
 	'views': function(d) { return parseInt(d.views)+1; },
-	'age': function(d) { var dcreated = dateFromString(d.created); var datenum = (dcreated.getFullYear()-2013)*1000 + dcreated.getMonth()/12*900 + dcreated.getDate()/31*50; return datenum },
+	'age': function(d) { var duploaded = dateFromString(d.uploaded); var datenum = (duploaded.getFullYear()-2013)*1000 + duploaded.getMonth()/12*900 + duploaded.getDate()/31*50; return datenum },
 	// TODO
 	'popular': function(d) { return parseInt(d.narrative_id); }
 };
@@ -650,7 +650,7 @@ bubbles_label_text_0 = {
 	'agrees': function(d) { return d.children ? null : d.agrees; },
 	'disagrees': function(d) { return d.children ? null : d.disagrees; },
 	'views': function(d) { return d.children ? null : d.views; },
-	'age': function(d) { return d.children ? null : String(d.created).split(' ')[0]; },
+	'age': function(d) { return d.children ? null : String(d.uploaded).split(' ')[0]; },
 	// TODO
 	'popular': function(d) { return d.children ? null : d.narrative_id; }
 };
@@ -773,7 +773,7 @@ function narrative_matches_filter(d) {
 		today.setDate(today.getDate() - 7);
 		var dateStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 		var todayData = {
-			created: dateStr
+			uploaded: dateStr
 		};
 		recent = bubbles_values.age(d) > bubbles_values.age(todayData);
 	}
