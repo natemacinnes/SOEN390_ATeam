@@ -33,9 +33,9 @@
 		{
 			jQuery("#default").text("Posted");
 			var narrative_id = $(this).attr('id');
-			$('.comment_wrapper').after("<div class='comment'> <p id='default'>" + text + "</p> </div>");
+			$('.comments-wrapper').after("<div class='comment'> <p id='default'>" + text + "</p> </div>");
 			var url = yd_settings.site_url + "comments/add/" + narrative_id + "/" + text;
-			$.get(url, function() { alert( "Comment was added to database. Sample: " + text); })
+			$.get(url, function() {})
 				.fail(function() { alert( "Error Comment was not Added" ); });
 		}
 		else
@@ -56,7 +56,7 @@
 			alert("Result:" + narrative_id + "," + comment_id + "," + dateCreated + "," + text);
 			$(this).parent().append("<div class='comment'> <p id='default'>" + text + "</p> </div>");
 			var url = yd_settings.site_url + "comments/reply_to_comment/" + narrative_id + "/" + comment_id + "/" + text;	
-			$.get(url, function() { alert( "Comment was added to database. Sample: " + text); })
+			$.get(url, function() {})
 				.fail(function() { alert( "Error Comment was not added" ); });
 		}
 		else
