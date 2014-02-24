@@ -26,6 +26,7 @@ class System_Message_Model_Test extends YD_Controller
 		$this->session->set_userdata('system_messages', array());
 	}
 
+	
 	private function set_messages()
 	{
 		foreach ($this->messages as $level => $messages) {
@@ -36,7 +37,7 @@ class System_Message_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0009
+	 * UT-0021
 	 */
 	public function test__set_message()
 	{
@@ -55,7 +56,7 @@ class System_Message_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0010
+	 * UT-0022
 	 */
 	public function test__get_message__equal()
 	{
@@ -74,7 +75,7 @@ class System_Message_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0011
+	 * UT-0023
 	 */
 	public function test__get_message__no_clear()
 	{
@@ -100,7 +101,7 @@ class System_Message_Model_Test extends YD_Controller
 	}
 
 	/**
-	 * UT-0012
+	 * UT-0024
 	 */
 	public function test__get_message__clear()
 	{
