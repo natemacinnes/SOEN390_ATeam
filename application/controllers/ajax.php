@@ -30,6 +30,10 @@ class Ajax extends YD_Controller
 		$result = $this->narrative_model->get_all('id', $position);
 		foreach ($result as $narrative)
 		{
+			if (!$narrative['status'])
+			{
+				continue;
+			}
 			// +1 to ensure that 0 doesn't give us NaN
 			$pie_data = array(
 				array("label" => "agrees", "value" => $narrative['agrees']+1),
