@@ -31,6 +31,7 @@ class Editing_Model extends CI_Model
 			$data['disagrees'] = $row->disagrees;
 			$data['shares'] = $row->shares;
 			$data['flags'] = $row->flags;
+			$data['status'] = $row->status;
 
 			//Getting the path and the number of tracks
 			$xml_reader = simplexml_load_file("./uploads/".$row->narrative_id."/AudioTimes.xml");

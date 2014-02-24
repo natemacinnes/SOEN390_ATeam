@@ -161,7 +161,7 @@ class Narrative_Model extends CI_Model
 		//determine the type of narrative to upload, and create an XML file
 		$startTimes = 0.0000;
 		$endTimes = 0.000;
-		$image_count = 0;
+		//$image_count = 0; Commented out to develop new way to process images
 		$audio_image = "";
 		$image_format = "jpg";
 		$unique_id = "";
@@ -186,6 +186,7 @@ class Narrative_Model extends CI_Model
 		//Scan the folder to determine the amount of pictures in a narrative
 		$xmlExistence = FALSE; //Used for handling folder uploaded with no XML file
 		$isBatchUpload = FALSE; //Used to handle batch uploading
+		$lastImage = -1;
 		$file_scan = scandir($dir);
 		foreach ($file_scan as $filecheck)
 		{
@@ -208,6 +209,12 @@ class Narrative_Model extends CI_Model
 				$fname = pathinfo($filecheck, PATHINFO_FILENAME);
 				//False variable in process_image controls whether we delete the original image or not (false = do not delete image)
 				$this->process_image($filecheck, $fname, $file_extension, $dir, false);
+				
+				//New method, to be approved by TL
+				$images[$fname] = $fname . '.' . $image_format;
+				if($fname > $lastImage) $lastImage = $fname;
+				
+				/* Following commented out to develop new way to process images
 				$image_count++;
 				
 				//Once the first image in the folder is found, stop changing audio_image
@@ -220,7 +227,7 @@ class Narrative_Model extends CI_Model
 				if(!$found_first_image)
 				{
 					$audio_image = $dir . "/" . $filecheck;
-				}
+				}*/
 			}
 			if ($file_extension == "xml")
 			{
@@ -250,12 +257,12 @@ class Narrative_Model extends CI_Model
 
 		 //This is the txt file that will combine all the txt files with ffmpeg
 		$file_concat = fopen($dir . "/audio_container.txt", "w+");
-
+		
 		if (is_dir($dir))
 		{
 			foreach (scandir($dir) as $file)
 			{
-				//get the file name plus it's extension
+				//get the file name
 				$file_name = pathinfo($file, PATHINFO_FILENAME);
 
 				//Check if the file is an mp3
@@ -296,11 +303,26 @@ class Narrative_Model extends CI_Model
 						{
 							$duration += intval($ar[2]) * 60 * 60;
 						}
-
+						
+						if(count($images) == 1) $audio_image = $images[$lastImage];
+						else if(isset($images[$file_name])) $audio_image = $images[$file_name];
+						else
+						{
+							for($i = $file_name; $i <= $lastImage; $i++)
+							{
+								if(isset($images[$i]))
+								{
+									$audio_image = $images[$i];
+									break;
+								}
+							}
+						}
+						
+						/*Following commented out to develop new way to process images
 						if (file_exists($dir . "/" . $file_name . "." . $image_format))
 						{
 							$audio_image = $file_name . "." . $image_format;
-						}
+						}*/
 
 						//Get the time that the narrative end in the concatenated narrative
 						$endTimes = $endTimes + floatval($duration);
@@ -357,6 +379,7 @@ class Narrative_Model extends CI_Model
 		$temp2 = shell_exec($command_concatenation);
 		//die("returned: " . $temp2 . "</br>");
 
+		//Only create new database row if it's a new narrative being uploaded, else update audio length
 		if ($id == null)
 		{
 			$database_data = array(
@@ -373,7 +396,8 @@ class Narrative_Model extends CI_Model
 
 			$id = $this->narrative_model->insert($database_data);
 		}
-
+		else $this->db->query('UPDATE narratives SET audio_length='.$endTimes.' WHERE narrative_id=\''.$id.'\';');
+		
 		//creating the directory on the server
 		$new_dir = "./uploads/" . $id;
 		if (!is_dir($new_dir))

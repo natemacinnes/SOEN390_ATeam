@@ -5,6 +5,7 @@
   <?php if (isset($error)): ?>
     The narrative requested does not exist.
   <?php else: ?>
+	<p>Status: <?php echo $status == 1 ? 'Published' : 'Not Published'; ?>
     <p style="display: inline-block">
       Number of views: <?php echo $views; ?><br/>
       Number of agrees: <?php echo $agrees; ?><br/>
