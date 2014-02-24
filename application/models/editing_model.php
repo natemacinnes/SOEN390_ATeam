@@ -72,18 +72,15 @@ class Editing_Model extends CI_Model
 		{
 			if ($tracksToDelete != null && $j < count($tracksToDelete) && $trackName[$i] == $tracksToDelete[$j])
 			{
-				echo 'Deleting track '.$trackName[$i].'</br>';
 				$tracksLeft--;
 				unlink($trackPath[$i]);
 				$j++;
 			}
 			else
 			{
-				echo 'Moving track '.$trackName[$i].'</br>';
 				rename($trackPath[$i], $newDir.$trackName[$i]);
 			}
 		}
-		echo 'tracksLeft: '.$tracksLeft.'</br>';
 		return $tracksLeft;
 	}
 
@@ -97,12 +94,12 @@ class Editing_Model extends CI_Model
 		{
 			if ($picsToDelete != null && $j < count($picsToDelete) && $picName[$i] == $picsToDelete[$j])
 			{
-				unlink('.' . $picPath[$i]);
+				unlink($picPath[$i]);
 				$j++;
 			}
 			else
 			{
-				rename('.' . $picPath[$i], $newDir.$picName[$i]);
+				rename($picPath[$i], $newDir.$picName[$i]);
 			}
 		}
 	}

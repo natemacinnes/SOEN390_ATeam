@@ -396,7 +396,10 @@ class Narrative_Model extends CI_Model
 
 			$id = $this->narrative_model->insert($database_data);
 		}
-		else $this->db->query('UPDATE narratives SET audio_length='.$endTimes.' WHERE narrative_id=\''.$id.'\';');
+		else
+		{
+			$this->db->query('UPDATE narratives SET audio_length='.$endTimes.' WHERE narrative_id=\''.$id.'\';');
+		}
 		
 		//creating the directory on the server
 		$new_dir = "./uploads/" . $id;

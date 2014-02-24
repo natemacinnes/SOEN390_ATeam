@@ -82,7 +82,7 @@ class Admin_Narrative extends YD_Controller
     $this->narrative_model->unpublish($id);
 
     //Creating a new folder to move for processing
-    $newDir = $this->config->item('site_data_dir') . $id . '/' . $id . '/';
+    $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
     mkdir($newDir, 0755);
 
     //Removing desired tracks and moving the rest to the new folder
