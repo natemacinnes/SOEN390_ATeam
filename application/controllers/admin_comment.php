@@ -15,6 +15,7 @@ class Admin_Comment extends YD_Controller
     $this->load->model('editing_model');
     $this->load->model('admin_model');
     $this->load->model('narrative_flag_model');
+    $this->load->model('comment_flag_model');
     $this->load->model('comment_model');
   }
 
@@ -26,6 +27,11 @@ class Admin_Comment extends YD_Controller
     $this->require_login();
 
     $comments = $this->comment_model->get_all($narrative_id);
+    foreach ($comments as &$comment)
+    {
+      $flags = $this->comment_flag_model->get_by_comment_id($comment['comment_id']);
+      $comment['flags'] = count($flags);
+    }
 
     $data = array('comments' => $comments);
     $this->view_wrapper('admin/comments/list', $data);
