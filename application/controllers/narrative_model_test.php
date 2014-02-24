@@ -230,7 +230,7 @@ class Narrative_Model_Test extends YD_Controller
 		$array_only = TRUE;
 		foreach($narratives as $narrative) {
 			// Ensure we have an array of arrays with at least 2 items.
-			if (is_array($narrative)) {
+			if (is_array($narrative) && isset($narrative['narrative_id'])) {
 				$count++;
 			}
 			else {
