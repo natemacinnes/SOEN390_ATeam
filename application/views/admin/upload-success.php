@@ -19,7 +19,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Narratives <b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><?php echo anchor('viewnarratives', 'View All'); ?></li>
+            <li><?php echo anchor('admin', 'View All'); ?></li>
             <li><?php echo anchor('admin/upload', 'Upload'); ?></li>
           </ul>
         </li>
