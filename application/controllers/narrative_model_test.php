@@ -5,6 +5,10 @@
  */
 class Narrative_Model_Test extends YD_Controller
 {
+	private $data;
+	private $sampleNarrativeXml = '<?xml version="1.0" encoding="UTF-8"?><narrative><narrativeName>2</narrativeName><language>English</language><submitDate>2013-07-11</submitDate><time>11-22-31</time></narrative>';
+	private $insert_id;
+
 	/**
 	 * Constructor: initialize required libraries.
 	 */
@@ -12,172 +16,460 @@ class Narrative_Model_Test extends YD_Controller
 	{
 		parent::__construct();
 		$this->load->library('unit_test');
+		$this->load->model('narrative_model');
+		$this->load->model('upload_model');
 	}
 
 	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 *    http://example.com/index.php/welcome
-	 *  - or -
-	 *    http://example.com/index.php/welcome/index
-	 *  - or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
+	 * UT-0001
 	 */
+	public function test__unpack__non_existant_source() {
+		$folder_name = time();
+		$path = $this->config->item('site_data_dir') . '/tmp/' . $folder_name . '/';
 
+		if(!is_dir($path))
+		{
+			mkdir($path, 0775, TRUE);
+		}
 
-	public function index()
+		$zipFileName = 'sample_narratives.zip';
+
+		$data = $this->upload_model->unzip($path, $zipFileName);
+		$this->unit->run(
+			$data['error'],
+			1,
+			"Narrative unpacking: non-existent source",
+			"An error flag should be present in the returned data."
+		);
+	}
+	/**
+	 * UT-0002
+	 */
+	public function test__unpack__non_existant_destination() {
+		$folder_name = time();
+		$path = 'non-existent';
+
+		$zipFileName = 'sample_narratives.zip';
+
+		$data = $this->upload_model->unzip($path, $zipFileName);
+		$this->unit->run(
+			$data['error'],
+			1,
+			"Narrative unpacking: non-existant destination",
+			"An error flag should be present in the returned data."
+		);
+	}
+	
+	/**
+	 * UT-0003
+	 */
+	public function test__unpack__valid_source() {
+		$folder_name = time();
+		$path = $this->config->item('site_data_dir') . '/tmp/' . $folder_name . '/';
+
+		if(!is_dir($path))
+		{
+			mkdir($path, 0775, TRUE);
+		}
+
+		$zipFileName = 'sample_narratives.zip';
+		$src = 'docs/' . $zipFileName;
+		copy($src, $path . '/' . $zipFileName);
+		$data = $this->upload_model->unzip($path, $zipFileName);
+
+		// Store the "good" results future tests.
+		// FIXME: This is ugly but will do for now.
+		$this->data = $data;
+
+		$this->unit->run(
+			$data['error'],
+			0,
+			"Narrative unpacking: valid source",
+			"No error flag should be present in the returned data."
+		);
+
+		$this->unit->run(
+			strstr($data['narrative_path'], $this->config->item('site_data_dir')),
+			0,
+			"Narrative unpacking: valid source",
+			"A narrative path should be returned."
+		);
+
+		return $this->unit->result();
+	}
+
+	/**
+	 * UT-0004
+	 */
+	public function test__processing__non_existant_source() {
+		$zipFileName = 'sample_narratives.zip';
+		$path = $this->config->item('site_data_dir') . '/';
+		$data = $this->narrative_model->process_narrative('non-existent/');
+		$this->unit->run(
+			$data['error'],
+			1,
+			"Narrative processing: non-existent source",
+			"We expect and error flag in the returned data."
+		);
+		return $this->unit->result();
+	}
+
+	/**
+	 * UT-0005
+	 */
+	function test__processing__valid_source() {
+		$data = $this->narrative_model->process_narrative($this->data['narrative_path']);
+		$this->unit->run(
+			$data['error'],
+			0,
+			"Narrative processing: valid source",
+			"No error flag should be present in the returned data."
+		);
+		return $this->unit->result();
+	}
+
+	/**
+	 * UT-0006
+	 */
+	function test__get_all_sorting__invalid() {
+		$narratives = $this->narrative_model->get_all("non-existent");
+		$this->unit->run(
+			$narratives,
+			array(),
+			"Narrative retrieval: sort by invalid index",
+			"No error flag should be present in the returned data."
+		);
+		return $this->unit->result();
+	}
+
+	/**
+	 * UT-0007
+	 */
+	function test__get_all_sorting__id() {
+		$narratives = $this->narrative_model->get_all("id");
+		$ordered = TRUE;
+		// Get the first narrative ID
+		$narrative = array_shift($narratives);
+		$last_value = $narrative['narrative_id'];
+		// Make sure each following one is smaller
+		foreach ($narratives as $narrative) {
+			if ($last_value > $narrative['narrative_id']) {
+				$last_value = $narrative['narrative_id'];
+			}
+			else {
+				$ordered = FALSE;
+				break;
+			}
+		}
+
+		$this->unit->run(
+			$ordered,
+			TRUE,
+			"Narrative retrieval: sort by id index",
+			"Every narrative should have a smaller ID than the following one."
+		);
+		return $this->unit->result();
+	}
+	/**
+	 * UT-0008
+	 */
+	function test__get_all_sorting__agrees() {
+		$narratives = $this->narrative_model->get_all("agrees");
+		$ordered = TRUE;
+		// Get the first narrative ID
+		$narrative = array_shift($narratives);
+		$last_value = $narrative['agrees'];
+		// Make sure each following one is smaller
+		foreach ($narratives as $narrative) {
+			if ($last_value >= $narrative['agrees']) {
+				$last_value = $narrative['agrees'];
+			}
+			else {
+				$ordered = FALSE;
+				break;
+			}
+		}
+
+		$this->unit->run(
+			$ordered,
+			TRUE,
+			"Narrative retrieval: sort by agree index",
+			"Every narrative should have a smaller or equal agree count than the following one."
+		);
+		return $this->unit->result();
+	}
+	/**
+	 * UT-0009
+	 */
+	function test__get_all_position__agree() {
+		$narratives = $this->narrative_model->get_all("id", NARRATIVE_POSITION_AGREE);
+		$agree_only = TRUE;
+		foreach ($narratives as $narrative) {
+			if ($narrative['position'] != NARRATIVE_POSITION_AGREE) {
+				$agree_only = FALSE;
+				break;
+			}
+		}
+
+		$this->unit->run(
+			$agree_only,
+			TRUE,
+			"Narrative retrieval: filter by 'agree' position",
+			"Retrieved narratives should only have an agree position."
+		);
+		return $this->unit->result();
+	}
+
+	/**
+	 * UT-0010
+	 */
+	public function test__get_all__multiple_returned() {
+		$narratives = $this->narrative_model->get_all();
+
+		$count = 0;
+		$array_only = TRUE;
+		foreach($narratives as $narrative) {
+			// Ensure we have an array of arrays with at least 2 items.
+			if (is_array($narrative) && isset($narrative['narrative_id'])) {
+				$count++;
+			}
+			else {
+				$array_only = FALSE;
+				break;
+			}
+		}
+
+		$this->unit->run(
+			$count > 1 && $array_only,
+			TRUE,
+			"Narrative retrieval: get all",
+			"Retrieved data should be >= 2 narratives."
+		);
+		return $this->unit->result();
+	}
+
+	/**
+	 * UT-0011
+	 */
+	public function test__get__valid_id()
 	{
-		$data['title'] = "Unit Tests";
+		// Get the first narrative ID
+		// FIXME prefill a new database with known contents for testing
+		$narratives = $this->narrative_model->get_all();
+		$first_id = $narratives[0]['narrative_id'];
 
+		$narrative = $this->narrative_model->get($first_id);
+		$properties_only = TRUE;
+		foreach($narrative as $property) {
+			// Ensure the returned data contains only a single narrative.
+			if (is_array($property) && isset($property['narrative_id'])) {
+				$properties_only = FALSE;
+			}
+		}
 
-		//system message model
-		//testing set function
-		$this->load->model('narrative_model');
+		$this->unit->run(
+			count($narrative) && $properties_only,
+			TRUE,
+			"Narrative retrieval: get valid ID",
+			"Retrieved data should be a single narrative."
+		);
+		return $this->unit->result();
+	}
 
+	/**
+	 * UT-0012
+	 */
+	public function test__get__invalid_id()
+	{
+		$narrative = $this->narrative_model->get(-234);
+		$this->unit->run(
+			$narrative,
+			array(),
+			"Narrative retrieval: get invalid ID",
+			"Retrieved data should be an empty array."
+		);
+		return $this->unit->result();
+	}
 
+	/**
+	 * UT-0013
+	 */
+	public function test__insert()
+	{
+		$narrative = array(
+			'position' => 0,
+			'audio_length' => 60,
+			'created' => "2014-01-28 01:19:27",
+			'uploaded' => "2014-01-28 01:19:28",
+			'uploaded_by' => 1,
+			'language' => "en",
+			'views' => 1,
+			'agrees' => 2,
+			'disagrees' => 3,
+			'shares' => 4,
+			'flags' => 5,
+			"status" => 1,
+		);
+		$this->insert_id = $this->narrative_model->insert($narrative);
+		$narrative['narrative_id'] = $this->insert_id;
 
-		//testing narrative process with a path to a directory that does not exist
-		$nar_model_nopath = $this->narrative_model->process_narrative("./uploads/tmp/1391131894");
+		$narrative_inserted = $this->narrative_model->get($this->insert_id);
+		$this->unit->run(
+			$narrative,
+			$narrative_inserted,
+			"Narrative insertion",
+			"Retrieved data should be an equal to stored data."
+		);
+		return $this->unit->result();
+	}
 
-		$data['narrativeModelMessage1'] = $this->unit->run($nar_model_nopath['error_message'], '', "Narrative Model Process Narrative test","Tests process_narrative using a path to a tmp folder which does not exist, test to see if we get the desired error msg, test fails if error msg is not right (This test case is expected to fail");
+	/**
+	 * UT-0014
+	 */
+	public function test__delete()
+	{
+		$this->narrative_model->delete(array('narrative_id' => $this->insert_id));
+		$narrative = $this->narrative_model->get($this->insert_id);
+		$this->unit->run(
+			$narrative,
+			array(),
+			"Narrative deletion",
+			"Retrieved data should be an empty array."
+		);
+		return $this->unit->result();
+	}
 
-		$data['narrativeModelError1'] = $this->unit->run($nar_model_nopath['error'], 0, "Narrative Model Process Narrative test","Tests process narrative using a non existent tmp path, check to see if we get error = 1, fails if error != 1  (this test case is expected to fail");
+	/**
+	 * UT-0015
+	 */
+	function test__xml_parse__get_XML_narrative_name() {
+		$xmlRoot = new SimpleXMLElement($this->sampleNarrativeXml);
+		$xml_retval = $this->narrative_model->get_XML_narrative_name($xmlRoot);
+		$this->unit->run(
+			$xml_retval,
+			2,
+			"Narrative XML processing: retrieve narrative name",
+			"Using mock XML data."
+		);
+		return $this->unit->result();
+	}
 
+	/**
+	 * UT-0016
+	 */
+	function test__xml_parse__get_XML_narrative_language() {
+		$xmlRoot = new SimpleXMLElement($this->sampleNarrativeXml);
+		$xml_retval = $this->narrative_model->get_XML_narrative_language($xmlRoot);
+		$this->unit->run(
+			$xml_retval,
+			"EN",
+			"Narrative XML processing: retrieve narrative language",
+			"Using mock XML data."
+		);
+		return $this->unit->result();
+	}
 
-		$data['narrativeModelMessage'] = $this->unit->run($nar_model_nopath['error_message'], 'Processing failed. Please attempt the upload again.', "Narrative Model Process Narrative test","Tests process_narrative using a path to a tmp folder which  exists, test to see if we get no error msg, test fails if error msg is present (this test case is expected to pass");
+	/**
+	 * UT-0017
+	 */
+	function test__xml_parse__get_XML_narrative_submitDate() {
+		$xmlRoot = new SimpleXMLElement($this->sampleNarrativeXml);
+		$xml_retval = $this->narrative_model->get_XML_narrative_submitDate($xmlRoot);
+		$this->unit->run(
+			$xml_retval,
+			"2013-07-11",
+			"Narrative XML processing: retrieve narrative submit date",
+			"Using mock XML data."
+		);
+		return $this->unit->result();
+	}
 
-		$data['narrativeModelError'] = $this->unit->run($nar_model_nopath['error'], 1, "Narrative Model Process Narrative test","Tests process narrative using a an existing tmp path, check to see if we get error = 0, fails if error != 0 (This test case is expected to pass");
+	/**
+	 * UT-0018
+	 */
+	function test__xml_parse__get_XML_narrative_submitTime() {
+		$xmlRoot = new SimpleXMLElement($this->sampleNarrativeXml);
+		$xml_retval = $this->narrative_model->get_XML_narrative_submitTime($xmlRoot);
+		$this->unit->run(
+			$xml_retval,
+			"11-22-31",
+			"Narrative XML processing: retrieve narrative submit time",
+			"Using mock XML data."
+		);
+		return $this->unit->result();
+	}
+	/**
+	 * UT-00019
+	 */
+	function test__is_audio() {
+		$formats = array(
+			// Make sure we accept valid formats
+			'mp3' => TRUE,
+			'wav' => TRUE,
+			'mp4' => TRUE,
+			'm4a' => TRUE,
+			'aac' => TRUE,
+			'avi' => TRUE,
+			'3gp' => TRUE,
+			'ogg' => TRUE,
+			'mp2' => TRUE,
+			'ac3' => TRUE,
 
-		//testing narrative process with a path that points to an existing directory
+			// Make sure we reject invalid ones
+			'zip' => FALSE,
+			'doc' => FALSE,
+			'pdf' => FALSE,
+			'pdf' => FALSE,
+		);
+		$detection = TRUE;
+		foreach ($formats as $extension => $expected) {
+			if ($this->narrative_model->is_audio($extension) !== $expected) {
+				$detection = FALSE;
+				break;
+			}
+		}
 
-		$nar_model_goodpath = $this->narrative_model->process_narrative("./uploads/tmp/1391140978");
+		$this->unit->run(
+			$detection,
+			TRUE,
+			"Narrative audio processing: format detection",
+		  "Should accept valid audio (mp3, wav, mp4, m4a, aac, avi, 3gp, ogg, mp2, ac3) extensions and reject others."
+		);
+		return $this->unit->result();
+	}
+	/**
+	 * UT-00020
+	 */
+	function test__is_image() {
+		$formats = array(
+			// Make sure we accept valid formats
+			"jpg" => TRUE,
+			"jpeg" => TRUE,
+			"gif" => TRUE,
+			"bmp" => TRUE,
+			"png" => TRUE,
+			"tif" => TRUE,
 
-		$data['narrativeModelNoError1'] = $this->unit->run($nar_model_goodpath['error'], 1, "Narrative Model Process Narrative test","Tests process_narrative using a path to a tmp folder which  exists, test to see if we get no error msg, test fails if error msg is present (this test case is expected to fail");
+			// Make sure we reject invalid ones
+			'zip' => FALSE,
+			'doc' => FALSE,
+			'pdf' => FALSE,
+			'pdf' => FALSE,
+		);
+		$detection = TRUE;
+		foreach ($formats as $extension => $expected) {
+			if ($this->narrative_model->is_image($extension) !== $expected) {
+				$detection = FALSE;
+				break;
+			}
+		}
 
-		$data['narrativeModelNoMessage1'] = $this->unit->run($nar_model_goodpath['error_message'], 'Processing failed. Please attempt the upload again.', "Narrative Model Process Narrative test","Tests process narrative using a an existing tmp path, check to see if we get error = 0, fails if error != 0 (This test case is expected to fail");
-
-		$data['narrativeModelNoError'] = $this->unit->run($nar_model_goodpath['error'], 0, "Narrative Model Process Narrative test","Tests process_narrative using a path to a tmp folder which  exists, test to see if we get no error msg, test fails if error msg is present (this test case is expected to pass");
-
-		$data['narrativeModelNoMessage'] = $this->unit->run($nar_model_goodpath['error_message'], "", "Narrative Model Process Narrative test","Tests process narrative using a an existing tmp path, check to see if we get error = 0, fails if error != 0 (This test case is expected to pass");
-
-
-
-		//testing the get_all function which helps with sorting
-		$getallTest = $this->narrative_model->get_All("id");
-
-		$data['sorting_id_fail'] = $this->unit->run($getallTest[0]['narrative_id'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  In the case of this test highest is 16, lowest is 0, Testing narrative idTest expected to fail");
-		$data['sorting_path_fail'] = $this->unit->run($getallTest[0]['xml_path'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing xml_path, In the case of this test it is null,  Test expected to fail");
-		$data['sorting_length_fail'] = $this->unit->run($getallTest[0]['audio_length'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing audio length value, In the case of this test it should be 0 (placeholder file), Test expected to fail");
-		$data['sorting_created_fail'] = $this->unit->run($getallTest[0]['created'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing created value, In the case of this test it should be 0 (placeholder file) Test expected to fail");
-		$data['sorting_uploaded_fail'] = $this->unit->run($getallTest[0]['uploaded'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing uploaded value, In the case of this test it should be 0 (placeholder file), Test expected to fail");
-		$data['sorting_uploadby_fail'] = $this->unit->run($getallTest[0]['uploaded_by'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing uploaded by value,  In the case of this test it should be 1, Test expected to fail");
-		$data['sorting_lang_fail'] = $this->unit->run($getallTest[0]['language'], "fr", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing language value, In the case of this test it should be en,  Test expected to fail");
-		$data['sorting_view_fail'] = $this->unit->run($getallTest[0]['views'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing views value, In the case of this test it should be 0, Test expected to fail");
-		$data['sorting_agree_fail'] = $this->unit->run($getallTest[0]['agrees'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing agrees value, In the case of this test it should be 0, Test expected to fail");
-		$data['sorting_disagree_fail'] = $this->unit->run($getallTest[0]['disagrees'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing disagrees value, In the case of this test it should be 0, Test expected to fail");
-		$data['sorting_shares_fail'] = $this->unit->run($getallTest[0]['shares'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing shares value, In the case of this test it should be 0, Test expected to fail");
-		$data['sorting_flags_fail'] = $this->unit->run($getallTest[0]['flags'], "-1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing flags value, In the case of this test it should be 0, Test expected to fail");
-
-		$data['sorting_id_pass'] = $this->unit->run($getallTest[0]['narrative_id'], "16", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  In the case of this test highest is 16, lowest is 0, Test expected to pass");
-		$data['sorting_path_pass'] = $this->unit->run($getallTest[0]['xml_path'], null, "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest. Testing xml_path, In the case of this test it is null,  Test expected to pass");
-		$data['sorting_length_pass'] = $this->unit->run($getallTest[0]['audio_length'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing audio length value, In the case of this test it should be 0 (placeholder file), Test expected to pass");
-		$data['sorting_created_pass'] = $this->unit->run($getallTest[0]['created'], "0000-00-00 00:00:00", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing created value, In the case of this test it should be 0 (placeholder file) Test expected to pass");
-		$data['sorting_uploaded_pass'] = $this->unit->run($getallTest[0]['uploaded'], "0000-00-00 00:00:00", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing uploaded value, In the case of this test it should be 0 (placeholder file), Test expected to pass");
-		$data['sorting_uploadby_pass'] = $this->unit->run($getallTest[0]['uploaded_by'], "1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing uploaded by value,  In the case of this test it should be 1, Test expected to pass");
-		$data['sorting_lang_pass'] = $this->unit->run($getallTest[0]['language'], "en", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing language value, In the case of this test it should be en,  Test expected to pass");
-		$data['sorting_view_pass'] = $this->unit->run($getallTest[0]['views'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing views value, In the case of this test it should be 0, Test expected to pass");
-		$data['sorting_agree_pass'] = $this->unit->run($getallTest[0]['agrees'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing agrees value, In the case of this test it should be 0, Test expected to pass");
-		$data['sorting_disagree_pass'] = $this->unit->run($getallTest[0]['disagrees'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing disagrees value, In the case of this test it should be 0, Test expected to pass");
-		$data['sorting_shares_pass'] = $this->unit->run($getallTest[0]['shares'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing shares value, In the case of this test it should be 0, Test expected to pass");
-		$data['sorting_flags_pass'] = $this->unit->run($getallTest[0]['flags'], "0", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing flags value, In the case of this test it should be 0, Test expected to pass");
-
-
-		$data['sorting_last'] = $this->unit->run($getallTest[15]['narrative_id'], "1", "Narrative Model get_all test","Tests get all function, which should sort the narratives in the database from highest narrative id to lowest.  Testing that the last file sorted has narrative_id of 1 (being the lowest value in database), Test expected to pass");
-
-
-		//testing the xml file parsing functions in narrative_model
-		$xml_parse_name = $this->narrative_model->get_XML_narrative_name(simplexml_load_file("./uploads/tmp/1391652225/1.xml"));
-		$xml_parse_lang = $this->narrative_model->get_XML_narrative_language(simplexml_load_file("./uploads/tmp/1391652225/1.xml"));
-		$xml_parse_date = $this->narrative_model->get_XML_narrative_submitDate(simplexml_load_file("./uploads/tmp/1391652225/1.xml"));
-		$xml_parse_time = $this->narrative_model->get_XML_narrative_submitTime(simplexml_load_file("./uploads/tmp/1391652225/1.xml"));
-
-
-		$data['xmlParseNameFail'] = $this->unit->run($xml_parse_name, "Hello", "Narrative Model Parse Name Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to fail by passing string");
-		$data['xmlParseLanguageFail'] = $this->unit->run($xml_parse_lang, "1", "Narrative Model Parse Language Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to fail by passing integer");
-		$data['xmlParseDateFail'] = $this->unit->run($xml_parse_date, "Date", "Narrative Model Parse Date Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to fail by passing string");
-		$data['xmlParseTimeFail'] = $this->unit->run($xml_parse_time, "Time", "Narrative Model Parse Time Test", "Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to fail by passing string");
-
-
-
-
-		$data['xmlParseNamePass'] = $this->unit->run($xml_parse_name, 1, "Narrative Model Parse Name Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to pass");
-		$data['xmlParseLanguagePass'] = $this->unit->run($xml_parse_lang, "English", "Narrative Model Parse Language Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to pass");
-		$data['xmlParseDatePass'] = $this->unit->run($xml_parse_date, "2013-05-30", "Narrative Model Parse Date Test","Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to pass");
-		$data['xmlParseTimePass'] = $this->unit->run($xml_parse_time, "20-19-33", "Narrative Model Parse Time Test", "Test run locally, uses the xml file provided by the creator when uploaded. Runs using the temporary folder path, Expected to pass");
-
-
-		//testing audio detection functions in narrative model
-
-		$audio_mp3 = $this->narrative_model->is_audio("mp3");
-		$audio_wav = $this->narrative_model->is_audio("wav");
-		$audio_mp4 = $this->narrative_model->is_audio("mp4");
-		$audio_m4a = $this->narrative_model->is_audio("m4a");
-		$audio_aac = $this->narrative_model->is_audio("aac");
-		$audio_avi = $this->narrative_model->is_audio("avi");
-		$audio_3gp = $this->narrative_model->is_audio("3gp");
-		$audio_ogg = $this->narrative_model->is_audio("ogg");
-		$audio_mp2 = $this->narrative_model->is_audio("mp2");
-		$audio_ac3 = $this->narrative_model->is_audio("ac3");
-
-		$data['audioMp3DetectFail'] = $this->unit->run($audio_mp3, false, "Mp3 Audio File Detection Test", "Expected to Fail");
-		$data['audioWavDetectFail'] = $this->unit->run($audio_wav, false, "Wav Audio File Detection Test", "Expected to Fail");
-		$data['audioMp4DetectFail'] = $this->unit->run($audio_mp4, false, "Mp4 Audio File Detection Test", "Expected to Fail");
-		$data['audioM4aDetectFail'] = $this->unit->run($audio_m4a, false, "M4a Audio File Detection Test", "Expected to Fail");
-		$data['audioAacDetectFail'] = $this->unit->run($audio_aac, false, "Aac Audio File Detection Test", "Expected to Fail");
-		$data['audioAviDetectFail'] = $this->unit->run($audio_avi, false, "Avi Audio File Detection Test", "Expected to Fail");
-		$data['audio3gpDetectFail'] = $this->unit->run($audio_3gp, false, "3gp Audio File Detection Test", "Expected to Fail");
-		$data['audioOggDetectFail'] = $this->unit->run($audio_ogg, false, "Ogg Audio File Detection Test", "Expected to Fail");
-		$data['audioMp2DetectFail'] = $this->unit->run($audio_mp2, false, "Mp2 Audio File Detection Test", "Expected to Fail");
-		$data['audioAc3DetectFail'] = $this->unit->run($audio_ac3, false, "Ac3 Audio File Detection Test", "Expected to Fail");
-
-		$data['audioMp3DetectPass'] = $this->unit->run($audio_mp3, true, "Mp3 Audio File Detection Test", "Expected to Pass");
-		$data['audioWavDetectPass'] = $this->unit->run($audio_wav, true, "Wav Audio File Detection Test", "Expected to Pass");
-		$data['audioMp4DetectPass'] = $this->unit->run($audio_mp4, true, "Mp4 Audio File Detection Test", "Expected to Pass");
-		$data['audioM4aDetectPass'] = $this->unit->run($audio_m4a, true, "M4a Audio File Detection Test", "Expected to Pass");
-		$data['audioAacDetectPass'] = $this->unit->run($audio_aac, true, "Aac Audio File Detection Test", "Expected to Pass");
-		$data['audioAviDetectPass'] = $this->unit->run($audio_avi, true, "Avi Audio File Detection Test", "Expected to Pass");
-		$data['audio3gpDetectPass'] = $this->unit->run($audio_3gp, true, "3gp Audio File Detection Test", "Expected to Pass");
-		$data['audioOggDetectPass'] = $this->unit->run($audio_ogg, true, "Ogg Audio File Detection Test", "Expected to Pass");
-		$data['audioMp2DetectPass'] = $this->unit->run($audio_mp2, true, "Mp2 Audio File Detection Test", "Expected to Pass");
-		$data['audioAc3DetectPass'] = $this->unit->run($audio_ac3, true, "Ac3 Audio File Detection Test", "Expected to Pass");
-
-		$image_jpg = $this->narrative_model->is_image("jpg");
-		$image_jpeg = $this->narrative_model->is_image("jpeg");
-		$image_gif = $this->narrative_model->is_image("gif");
-		$image_bmp = $this->narrative_model->is_image("bmp");
-		$image_png = $this->narrative_model->is_image("png");
-		$image_tif = $this->narrative_model->is_image("tif");
-
-		$data['imageJpgDetectFail'] = $this->unit->run($image_jpg, false, "Jpg Image File Detection Test", "Expected to Fail");
-		$data['imageJpegDetectFail'] = $this->unit->run($image_jpeg, false, "Jpeg Image File Detection Test", "Expected to Fail");
-		$data['imageGifDetectFail'] = $this->unit->run($image_gif, false, "Gif Image File Detection Test", "Expected to Fail");
-		$data['imageBmpDetectFail'] = $this->unit->run($image_bmp, false, "Bmp Image File Detection Test", "Expected to Fail");
-		$data['imagePngDetectFail'] = $this->unit->run($image_png, false, "Png Image File Detection Test", "Expected to Fail");
-		$data['imageTifDetectFail'] = $this->unit->run($image_tif, false, "Tif Image File Detection Test", "Expected to Fail");
-
-		$data['imageJpgDetectPass'] = $this->unit->run($image_jpg, true, "Jpg Image File Detection Test", "Expected to Pass");
-		$data['imageJpegDetectPass'] = $this->unit->run($image_jpeg, true, "Jpeg Image File Detection Test", "Expected to Pass");
-		$data['imageGifDetectPass'] = $this->unit->run($image_gif, true, "Gif Image File Detection Test", "Expected to Pass");
-		$data['imageBmpDetectPass'] = $this->unit->run($image_bmp, true, "Bmp Image File Detection Test", "Expected to Pass");
-		$data['imagePngDetectPass'] = $this->unit->run($image_png, true, "Png Image File Detection Test", "Expected to Pass");
-		$data['imageTifDetectPass'] = $this->unit->run($image_tif, true, "Tif Image File Detection Test", "Expected to Pass");
-
-		$this->view_wrapper('pages/narrative_model_test_report',$data);
+		$this->unit->run(
+			$detection,
+			TRUE,
+			"Narrative audio processing: format detection",
+			"Should accept valid image extensions (jpg, jpeg, gif, bmp, png, tif) and reject others."
+		);
+		return $this->unit->result();
 	}
 }

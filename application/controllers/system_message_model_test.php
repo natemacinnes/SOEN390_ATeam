@@ -5,6 +5,12 @@
  */
 class System_Message_Model_Test extends YD_Controller
 {
+	private $messages = array(
+		MESSAGE_NOTICE => array('notice message 1', 'notice message 2'),
+		MESSAGE_WARNING => array('warning message 1', 'warning message 2'),
+		MESSAGE_ERROR => array('error message 1', 'error message 2'),
+	);
+
 	/**
 	 * Constructor: initialize required libraries.
 	 */
@@ -12,55 +18,105 @@ class System_Message_Model_Test extends YD_Controller
 	{
 		parent::__construct();
 		$this->load->library('unit_test');
+		$this->load->model('system_message_model');
+	}
+
+	private function clear_messages()
+	{
+		$this->session->set_userdata('system_messages', array());
+	}
+
+	
+	private function set_messages()
+	{
+		foreach ($this->messages as $level => $messages) {
+			foreach ($messages as $message) {
+				$this->system_message_model->set_message($message, $level);
+			}
+		}
 	}
 
 	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 *    http://example.com/index.php/welcome
-	 *  - or -
-	 *    http://example.com/index.php/welcome/index
-	 *  - or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
+	 * UT-0021
 	 */
-
-
-	public function index()
+	public function test__set_message()
 	{
-		$data['title'] = "Unit Tests";
+		$this->clear_messages();
+		$this->set_messages();
 
+		$system_messages = $this->session->userdata('system_messages');
 
-		//system message model
-		//testing set function
-		$this->load->model('system_message_model');
-		$system_message_set = $this->system_message_model->set_message("Hello");
-
-
-		$data['system_message_model_set'] = $this->unit->run($_SESSION['system_messages'][MESSAGE_NOTICE][0], "Hello", "System Message Model Set Test","tests the system_message_model set function, passes is $_SESSION is set to our string, fails if not");
-
-
-
-		//system message model
-		//testing get function
-
-
-		$system_message_get = $this->system_message_model->get_messages(TRUE);
-
-
-		$data['system_message_model_get'] = $this->unit->run($system_message_get[MESSAGE_NOTICE][0], "Hello", "System Message Model Get Test", "tests the get function in system_message_model, it passes if the function gets the right $_SESSION, fails otherwise");
-
-
-		$data['system_message_model_get_cleararray_string'] = $this->unit->run($_SESSION['system_messages'][MESSAGE_NOTICE][0], "Hello", "System Message Model Get Test", "tests the get function in system_message_model, it fails if the array is cleared");
-		$data['system_message_model_get_cleararray_null'] = $this->unit->run($_SESSION['system_messages'][MESSAGE_NOTICE][0], "", "System Message Model Get Test", "tests the get function in system_message_model, it fails if the array is cleared");
-
-
-		$this->view_wrapper('pages/system_message_test_report',$data);
+		$this->unit->run(
+			$system_messages,
+			$this->messages,
+			"System messages: set messages",
+			"Ensures messages are stored correctly."
+		);
+		return $this->unit->result();
 	}
 
+	/**
+	 * UT-0022
+	 */
+	public function test__get_message__equal()
+	{
+		$this->clear_messages();
+		$this->set_messages();
+
+		$system_messages = $this->system_message_model->get_messages();
+
+		$this->unit->run(
+			$system_messages,
+			$this->messages,
+			"System messages: get messages",
+			"Ensures the messages retrieved are equal to the messages set."
+		);
+		return $this->unit->result();
+	}
+
+	/**
+	 * UT-0023
+	 */
+	public function test__get_message__no_clear()
+	{
+		$this->clear_messages();
+		$this->set_messages();
+
+		$system_messages = $this->system_message_model->get_messages(FALSE);
+		$system_messages_again = $this->system_message_model->get_messages();
+
+		$this->unit->run(
+			count($system_messages),
+			TRUE,
+			"System messages: get messages (preserve existing)",
+			"Ensures the retrieved messages are non-empty."
+		);
+		$this->unit->run(
+			$system_messages,
+			$system_messages_again,
+			"System messages: get messages (preserve existing)",
+			"Ensures messages can be retrieved again when the clear messages flag is not set."
+		);
+		return $this->unit->result();
+	}
+
+	/**
+	 * UT-0024
+	 */
+	public function test__get_message__clear()
+	{
+		$this->clear_messages();
+		$this->set_messages();
+
+		$system_messages = $this->system_message_model->get_messages();
+		$system_messages_again = $this->system_message_model->get_messages();
+
+		$this->unit->run(
+			$system_messages_again,
+			array(),
+			"System messages: get messages (clear existing)",
+			"Ensures the messages retrieved for a second time is empty."
+		);
+		return $this->unit->result();
+	}
 }

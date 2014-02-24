@@ -7,7 +7,7 @@ class Edit_narrative extends YD_Controller {
   public function __construct() {
     parent::__construct();
     $this->load->model('narrative_model');
-    $this->load->model('flag_model');
+    $this->load->model('narrative_flag_model');
   }
 
   /**
@@ -31,10 +31,10 @@ class Edit_narrative extends YD_Controller {
 
   public function edit($narrative_id = 1) {
     $data = array();
-  
+
     $narrative = $this->narrative_model->get($narrative_id);
-    
-    $flags = $this->flag_model->get_by_narrative_id($narrative_id);
+
+    $flags = $this->narrative_flag_model->get_by_narrative_id($narrative_id);
 
     $data['narrative_id'] = $narrative_id;
     $data['narrative'] = $narrative;

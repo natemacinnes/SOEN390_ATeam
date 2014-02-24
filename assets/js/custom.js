@@ -12,6 +12,9 @@ var debug_bubble_opacity;
 var debug_recent_sort;
 
 jQuery(document).ready(function() {
+	// Add colorbox to any items with a "colorbox" class
+	initalizeColorBox();
+
 	// This will do nothing on most pages, but prepare any audio embeds we have
 	// present on page load (i.e. on admin review narrative page)
 	loadMediaElement();
@@ -57,6 +60,13 @@ jQuery(document).ready(function() {
 		return false;
 	});
 });
+
+function initalizeColorBox() {
+	jQuery('a, area, input')
+    .filter('.colorbox:not(.initColorbox-processed)')
+    .addClass('initColorbox-processed')
+    .colorbox();
+}
 
 function reloadBubbles() {
 	jQuery('.debug input').unbind('click change');
@@ -143,19 +153,21 @@ function loadBubbles(language, position) {
 			.style("cursor", function(d) { return d.children ?  "normal" : "pointer"; });
 
 		var positionLabel = svg.append('g')
-			.attr("transform", function(d) { return 'translate(' + (260) + ',' +  25 +  ')'; })
+			.attr("transform", function(d) { return 'translate(' + 215 + ',' +  25 +  ')'; })
 			.append('text')
 				.attr("dx", 0)
-				.attr("dy", 10)
+				.attr("dy", 0)
 				.style("text-anchor", "left")
+				.style("font-size", "2em")
 				.text(position == null ? null : (position == 1 ? 'For' : 'Against'));
 
-		if (position == null || position == 1) {
+		// FIXME && false debugging
+		if ((position == null || position == 1) && false) {
 			var legend = svg.append('g')
 				.attr("x", 0)
 				.attr("y", 0)
 				.attr("class", 'legend')
-				.attr("transform", function(d) { return 'translate(' + (75) + ',' +  15 +  ')'; })
+				.attr("transform", function(d) { return 'translate(' + 100 + ',' +  450 +  ')'; })
 
 			legend.append('text')
 				.attr("dx", 0)
@@ -164,6 +176,7 @@ function loadBubbles(language, position) {
 				.text('Should GMO foods be labeled?');
 
 			d = {'position': 2};
+
 			rect1 = legend.append("rect")
 				.attr("x", 0)
 				.attr("y", 5)
@@ -262,11 +275,12 @@ function loadBubbles(language, position) {
 			.style("cursor", "pointer");
 
 		// Colorbox popup for audio player
-		$(".node-base").click(function() {
+		jQuery("g.node-base").click(function(e) {
 			// Don't open colorbox for unmatched language filter
 			if (!narrative_matches_filter(this.__data__)) {
 				return false;
 			}
+			console.log('loading');
 			var colorbox = jQuery.colorbox({
 				href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
 				left: 0,
@@ -278,6 +292,11 @@ function loadBubbles(language, position) {
 			});
 			loadMediaElement();
 			colorbox.resize();
+
+			// Stop propagation: otherwise, we'll see multiple click callbacks in
+			// quick succession on the same element
+			e.stopPropagation();
+			e.preventDefault();
 		});
 
 		jQuery('.debug-rings input[type=radio]').click(function() {
@@ -456,12 +475,20 @@ function loadBubbles(language, position) {
 			// Transparent
 			else if (debug_ring_mode == 1) {
 				jQuery(svgselect + ' g.node-base').each(function() {
-					jQuery('g.slice-grey', this).show();
+					jQuery('g.slice-grey', this).css('opacity', debug_ring_opacity).show();
 					jQuery('g.slice', this).css('opacity', debug_ring_opacity).show();
 				});
 				jQuery(svgselect + ' g.node-base').hover(
-					function() { if (narrative_matches_filter(this.__data__)) { jQuery('g.slice', this).css('opacity', 1); }},
-					function() { jQuery('g.slice', this).css('opacity', debug_ring_opacity); }
+					function() {
+						if (narrative_matches_filter(this.__data__)) {
+							jQuery('g.slice', this).css('opacity', 1);
+							jQuery('g.slice-grey', this).css('opacity', 1);
+						}
+					},
+					function() {
+						jQuery('g.slice', this).css('opacity', debug_ring_opacity);
+						jQuery('g.slice-grey', this).css('opacity', debug_ring_opacity);
+					}
 				);
 			}
 			// Always
@@ -499,9 +526,9 @@ function loadBubbles(language, position) {
 			}
 			if (debug_color_mode == 2 || debug_color_mode == 3) {
 				d = {'position': 2};
-				rect1.style("fill", bubble_fill_color(d));
+				//rect1.style("fill", bubble_fill_color(d));
 				d = {'position': 1};
-				rect2.style("fill", bubble_fill_color(d));
+				//rect2.style("fill", bubble_fill_color(d));
 				jQuery(svgselect + ' g.legend').show();
 			}
 
@@ -725,17 +752,18 @@ bubble_fill_color = function(d) {
 				return bubble_colors.red;
 		}
 	}
-	return bubble_colors.grey;
+	return bubble_colors.lightgrey;
 }
 
 bubble_colors = {
 	green: '#009933',
 	red: '#CC0000',
+	lightgrey: '#CFCFCF',
 	grey: '#eeeeee',
 	darkgrey: '#777777',
 	darkergrey: '#333333',
 	blue: '#4282D3',
-	purple: '#540EAD'
+	purple: '#743CBC'
 }
 
 function narrative_matches_filter(d) {
@@ -775,7 +803,7 @@ function loadMediaElement() {
 			var xmlhttp=new XMLHttpRequest();
 			xmlhttp.onreadystatechange=function() {
 				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-					document.getElementById("audioImage").src = xmlhttp.responseText;
+					document.getElementById("audio_image").src = xmlhttp.responseText;
 				}
 			};
 			// TODO make this jQuery using jQuery.get()
@@ -783,7 +811,7 @@ function loadMediaElement() {
 			var player = jQuery('.player-wrapper');
 			if (player.length) {
 				var narrative_id = player.attr('id').substring(10);
-				var url = yd_settings.site_url + "ajax/audioImage/" + narrative_id + "/" + myaudio.currentTime;
+				var url = yd_settings.site_url + "ajax/audio_image/" + narrative_id + "/" + myaudio.currentTime;
 				xmlhttp.open("GET", url, true);
 				xmlhttp.send();
 			}

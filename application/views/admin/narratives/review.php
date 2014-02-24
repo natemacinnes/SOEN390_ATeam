@@ -13,7 +13,7 @@
     </div>
   </div>
 
-  
+
 
 
   <div class="flag-wrapper  float-left">
@@ -43,7 +43,7 @@
       </tbody>
     </table>
   </div>
-  
+
   <div class="player-wrapper float-left" style="margin-top:60px;" id="narrative-<?php echo $narrative_id; ?>">
   <?php
     // Need to add path to narrative here and in the source of the video
@@ -51,14 +51,14 @@
 
     if (file_exists($path)):
     ?>
-    
-      <img src='' id='audioImage' alt='audio_image' height='400' width='400'>
+
+      <img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400'>
       <audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls'></audio></br>
       <span id='current-time'></span>
-    
+
     <?php else: ?>
     <div style="width:400px; height:400px; border: 1px solid #333; border-radius: 4px;"><p style="color:#333; margin: 100px;">Video does not exist.</p></div>
-    
+
   <?php endif; ?>
     <a href="#" class="btn btn-default top-margin" role="button">Save</a>
     <a href="#" class="btn btn-default top-margin" role="button">Delete</a>

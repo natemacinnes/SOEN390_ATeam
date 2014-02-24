@@ -28,6 +28,7 @@
     <thead>
       <tr>
         <th><a href="#" class="sort-btn active desc">ID</a></th>
+        <th><a href="#" class="sort-btn">Narrative ID</a></th>
         <th><a href="#" class="sort-btn">Parent ID</a></th>
         <th><a href="#" class="sort-btn">Content</a></th>
         <th><a href="#" class="sort-btn">Created</a></th>
@@ -40,6 +41,7 @@
       <?php foreach ($comments as $comment): ?>
         <tr>
           <td><?php print $comment['comment_id']; ?></td>
+          <td><?php print $comment['narrative_id']; ?></td>
           <td><?php print $comment['parent_comment']; ?></td>
           <td><?php print $comment['body']; ?></td>
           <td><?php print $comment['created']; ?></td>

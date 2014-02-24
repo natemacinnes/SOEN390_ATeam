@@ -109,7 +109,7 @@ class Admin extends YD_Controller
 		$this->require_login();
 		//Creating unique folder name
 		$folder_name = time();
-		$path = './uploads/tmp/'.$folder_name.'/';
+		$path = $this->config->item('site_data_dir') . '/tmp/' . $folder_name . '/';
 		if(!is_dir($path))
 		{
 			mkdir($path, 0775, TRUE);
@@ -151,15 +151,15 @@ class Admin extends YD_Controller
 		//Output success
 		$this->view_wrapper('admin/upload-success', $data);
 	}
-	
+
 	public function batchAction()
 	{
 		 $this->require_login();
-		
+
 		//Checking if any narratives have been checked
 		if(isset($_POST['narratives'])) $narratives = $_POST['narratives'];
 		else redirect('admin');
-		
+
 		//Perform action depending on clicked button
 		if(isset($_POST['delete']))
 		{
@@ -167,11 +167,11 @@ class Admin extends YD_Controller
 			$message = 'Narratives';
 			foreach($narratives as $id)
 			{
-				$this->editing_model->deleteDir('./uploads/' . $id . '/');
+				$this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
 				$this->narrative_model->delete(array('narrative_id' => $id));
-				$message = $message.' #'.$id.', ';
+				$message = $message . ' #' . $id . ', ';
 			}
-			$message = $message.'have all been deleted successfully.';
+			$message = $message . 'have all been deleted successfully.';
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
@@ -182,7 +182,7 @@ class Admin extends YD_Controller
 			foreach($narratives as $id)
 			{
 				$this->narrative_model->publish($id);
-				$message = $message.' #'.$id.', ';
+				$message = $message . ' #' . $id . ', ';
 			}
 			$message = $message.'have all been published successfully.';
 			$this->system_message_model->set_message($message);

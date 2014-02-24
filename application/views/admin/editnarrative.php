@@ -20,7 +20,7 @@
     if (file_exists($path)):
     ?>
     <div class="player-wrapper" id="narrative-<?php echo $narrative_id; ?>">
-      <img src='' id='audioImage' alt='audio_image' height='400' width='400'>
+      <img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400'>
       <audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls'></audio></br>
       <span id='current-time'></span>
     </div>
@@ -28,7 +28,7 @@
     Video does not exist.
   <?php endif;*/ ?>
 
-  
+
   <div class="flag-wrapper  float-left">
     <div class="page-header">
       <h2>Flags</h2>
