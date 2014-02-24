@@ -21,10 +21,11 @@
     <div id="bubble-container" class="top-margin float-left">
       <div class="sort-container">
         <div class="btn-group btn-group-vertical">
-          <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span></a>
+          <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span> Recent</a>
           <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default active" role="button">
             <span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span> /
-            <span class="glyphicon glyphicon-thumbs-down" style="color: red;">
+            <span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span>
+            Popular
           </a>
         </div>
       </div>
@@ -32,8 +33,8 @@
       <right class="svg-container svg-container-2"></right>
       <div class="filter-container">
         <div class="btn-group btn-group-vertical">
-          <a href="en" title="English&#013;Anglais" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span></a>
-          <a href="fr" title="French&#013;Fran&ccedil;ais" class="btn btn-default" role="button"><span class="flagicon flagicon-fr"></span></a>
+          <a href="en" title="English&#013;Anglais" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span> EN</a>
+          <a href="fr" title="French&#013;Fran&ccedil;ais" class="btn btn-default" role="button"><span class="flagicon flagicon-fr"></span> FR</a>
         </div>
       </div>
       <div class="help-container">
@@ -80,7 +81,7 @@
       </div>
       <div class="debug-ring-opacity">
         <label for="debug-ring-toggle-opacity">Opacity</label>
-        <input id="debug-ring-toggle-opacity" type="text" size="1" name="ring-opacity" value="0.7" />
+        <input id="debug-ring-toggle-opacity" type="text" size="1" name="ring-opacity" value="0.3" />
       </div>
 
       Text display mode:
@@ -99,9 +100,9 @@
         <label for="debug-text-content-toggle-metric">Metric</label>
         <input id="debug-text-content-toggle-glyph" type="radio" name="text-content-toggle" value="1" />
         <label for="debug-text-content-toggle-glyph">Glyph</label>
-        <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="2" checked="checked" />
+        <input id="debug-text-content-toggle-glyph-play" type="radio" name="text-content-toggle" value="2" />
         <label for="debug-text-content-toggle-glyph-play">Glyph, play on hover</label>
-        <input id="debug-text-content-toggle-glyph-playhover" type="radio" name="text-content-toggle" value="4" />
+        <input id="debug-text-content-toggle-glyph-playhover" type="radio" name="text-content-toggle" value="4"  checked="checked" />
         <label for="debug-text-content-toggle-glyph-playhover">Play, glyph+play on hover</label>
         <input id="debug-text-content-toggle-glyph-play-animate" type="radio" name="text-content-toggle" value="3" />
         <label for="debug-text-content-toggle-glyph-play-animate">Play, glyph+play animation on hover</label>
@@ -115,9 +116,9 @@
         <label for="debug-color-toggle-greys">Greys</label>
         <input id="debug-color-toggle-color" type="radio" name="color-toggle" value="2" />
         <label for="debug-color-toggle-color">Color (R/G)</label>
-        <input id="debug-color-toggle-color2" type="radio" name="color-toggle" value="3" />
+        <input id="debug-color-toggle-color2" type="radio" name="color-toggle" value="3" checked="checked" />
         <label for="debug-color-toggle-color2">Color (B/P)</label>
-        <input id="debug-color-toggle-hue" type="radio" name="color-toggle" value="4" checked="checked" />
+        <input id="debug-color-toggle-hue" type="radio" name="color-toggle" value="4" />
         <label for="debug-color-toggle-hue">Hue</label>
       </div>
       <div class="debug-bubble-opacity">

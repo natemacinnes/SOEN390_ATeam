@@ -153,19 +153,21 @@ function loadBubbles(language, position) {
 			.style("cursor", function(d) { return d.children ?  "normal" : "pointer"; });
 
 		var positionLabel = svg.append('g')
-			.attr("transform", function(d) { return 'translate(' + (260) + ',' +  25 +  ')'; })
+			.attr("transform", function(d) { return 'translate(' + 215 + ',' +  25 +  ')'; })
 			.append('text')
 				.attr("dx", 0)
-				.attr("dy", 10)
+				.attr("dy", 0)
 				.style("text-anchor", "left")
+				.style("font-size", "2em")
 				.text(position == null ? null : (position == 1 ? 'For' : 'Against'));
 
-		if (position == null || position == 1) {
+		// FIXME && false debugging
+		if ((position == null || position == 1) && false) {
 			var legend = svg.append('g')
 				.attr("x", 0)
 				.attr("y", 0)
 				.attr("class", 'legend')
-				.attr("transform", function(d) { return 'translate(' + (75) + ',' +  15 +  ')'; })
+				.attr("transform", function(d) { return 'translate(' + 100 + ',' +  450 +  ')'; })
 
 			legend.append('text')
 				.attr("dx", 0)
@@ -174,6 +176,7 @@ function loadBubbles(language, position) {
 				.text('Should GMO foods be labeled?');
 
 			d = {'position': 2};
+
 			rect1 = legend.append("rect")
 				.attr("x", 0)
 				.attr("y", 5)
@@ -472,12 +475,20 @@ function loadBubbles(language, position) {
 			// Transparent
 			else if (debug_ring_mode == 1) {
 				jQuery(svgselect + ' g.node-base').each(function() {
-					jQuery('g.slice-grey', this).show();
+					jQuery('g.slice-grey', this).css('opacity', debug_ring_opacity).show();
 					jQuery('g.slice', this).css('opacity', debug_ring_opacity).show();
 				});
 				jQuery(svgselect + ' g.node-base').hover(
-					function() { if (narrative_matches_filter(this.__data__)) { jQuery('g.slice', this).css('opacity', 1); }},
-					function() { jQuery('g.slice', this).css('opacity', debug_ring_opacity); }
+					function() {
+						if (narrative_matches_filter(this.__data__)) {
+							jQuery('g.slice', this).css('opacity', 1);
+							jQuery('g.slice-grey', this).css('opacity', 1);
+						}
+					},
+					function() {
+						jQuery('g.slice', this).css('opacity', debug_ring_opacity);
+						jQuery('g.slice-grey', this).css('opacity', debug_ring_opacity);
+					}
 				);
 			}
 			// Always
@@ -515,9 +526,9 @@ function loadBubbles(language, position) {
 			}
 			if (debug_color_mode == 2 || debug_color_mode == 3) {
 				d = {'position': 2};
-				rect1.style("fill", bubble_fill_color(d));
+				//rect1.style("fill", bubble_fill_color(d));
 				d = {'position': 1};
-				rect2.style("fill", bubble_fill_color(d));
+				//rect2.style("fill", bubble_fill_color(d));
 				jQuery(svgselect + ' g.legend').show();
 			}
 
@@ -741,17 +752,18 @@ bubble_fill_color = function(d) {
 				return bubble_colors.red;
 		}
 	}
-	return bubble_colors.grey;
+	return bubble_colors.lightgrey;
 }
 
 bubble_colors = {
 	green: '#009933',
 	red: '#CC0000',
+	lightgrey: '#CFCFCF',
 	grey: '#eeeeee',
 	darkgrey: '#777777',
 	darkergrey: '#333333',
 	blue: '#4282D3',
-	purple: '#540EAD'
+	purple: '#743CBC'
 }
 
 function narrative_matches_filter(d) {
