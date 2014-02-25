@@ -73,7 +73,7 @@ class Editing_Model extends CI_Model
 			if ($tracksToDelete != null && $j < count($tracksToDelete) && $trackName[$i] == $tracksToDelete[$j])
 			{
 				$tracksLeft--;
-				unlink($trackPath[$i]);
+				rename($trackPath[$i], $newDir.'deleted/'.$trackName[$i]);
 				$j++;
 			}
 			else
@@ -94,7 +94,7 @@ class Editing_Model extends CI_Model
 		{
 			if ($picsToDelete != null && $j < count($picsToDelete) && $picName[$i] == $picsToDelete[$j])
 			{
-				unlink($picPath[$i]);
+				rename($picPath[$i], $newDir.'deleted/'.$picName[$i]);
 				$j++;
 			}
 			else

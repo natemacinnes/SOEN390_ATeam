@@ -84,6 +84,10 @@ class Admin_Narrative extends YD_Controller
     //Creating a new folder to move for processing
     $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
     mkdir($newDir, 0755);
+	
+	//Creating a new folder (if inexistant) to store deleted files
+	$delDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/deleted/';
+    if(!is_dir($delDir)) mkdir($delDir, 0755);
 
     //Removing desired tracks and moving the rest to the new folder
     $trackName = $info['trackName'];
@@ -116,7 +120,7 @@ class Admin_Narrative extends YD_Controller
 
     //Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
     $tmpPath = $this->editing_model->moveDir($newDir, $id);
-
+	
     //Deleting old narrative folder
     $this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
 

@@ -192,7 +192,7 @@ class Narrative_Model extends CI_Model
 			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
 			
 			//Handling of batch upload, ignoring directories '.' and '..'
-			if ($file_extension == '' && $filecheck != '.' && $filecheck != '..')
+			if ($file_extension == '' && $filecheck != '.' && $filecheck != '..' && $filecheck != 'deleted')
 			{
 				$isBatchUpload = TRUE;
 				$newPath = $narrative_path.'/'.$filecheck;
