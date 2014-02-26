@@ -277,28 +277,28 @@ function loadBubbles(language, position) {
 			.style("cursor", "pointer");
 
 		// Colorbox popup for audio player
-		jQuery("g.node-base").click(function(e) {
+		jQuery(svgselect + " g.node-base").click(function(e) {
 			// Don't open colorbox for unmatched language filter
 			if (!narrative_matches_filter(this.__data__)) {
 				return false;
 			}
-			console.log('loading');
+			var image_update_timer;
 			var colorbox = jQuery.colorbox({
 				href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
 				left: 0,
 				speed: 700,
 				opacity: 0,
-				onComplete : function() {
+				onComplete: function() {
+					loadMediaElement();
+					update_play_image();
+					image_update_timer = setInterval(update_play_image, 2000);
 					$(this).colorbox.resize();
+
+				},
+				onClosed: function() {
+					clearInterval(image_update_timer);
 				}
 			});
-			loadMediaElement();
-			colorbox.resize();
-
-			// Stop propagation: otherwise, we'll see multiple click callbacks in
-			// quick succession on the same element
-			e.stopPropagation();
-			e.preventDefault();
 		});
 
 		jQuery('.debug-rings input[type=radio]').click(function() {
