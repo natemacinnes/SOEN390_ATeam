@@ -32,32 +32,32 @@ jQuery(document).ready(function() {
 	debug_recent_sort = parseFloat(jQuery('.debug-recent-sort input:checked').val());
 
 	// Toggle buttons for navigation links
-	jQuery('.filter-container .btn-group a').click(function() {
+	jQuery('.filter-container.btn-group a').click(function() {
 		jQuery(this).toggleClass('active');
-		jQuery('.filter-container .btn-group a').not(this).removeClass('active');
+		jQuery('.filter-container.btn-group a').not(this).removeClass('active');
 		if (debug_recent_sort == 0) {
-			yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+			yd_settings.sort_by = jQuery('.sort-container.btn-group a.active').attr('href').substring(1);
 		}
-		yd_settings.language_filter = jQuery('.filter-container .btn-group a.active').attr('href');
+		yd_settings.language_filter = jQuery('.filter-container.btn-group a.active').attr('href');
 		return false;
 	});
 
 	if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
-		yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+		yd_settings.sort_by = jQuery('.sort-container.btn-group a.active').attr('href').substring(1);
 		reloadBubbles();
 	}
 
 	// Radio-like toggle buttons for sort
-	jQuery('.sort-container .btn-group a').click(function () {
+	jQuery('.sort-container.btn-group a').click(function () {
 		if (debug_recent_sort == 0) {
-			jQuery('.sort-container .btn-group a').removeClass('active');
+			jQuery('.sort-container.btn-group a').removeClass('active');
 			jQuery(this).addClass('active');
 			yd_settings.recent_filter = null;
-			yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+			yd_settings.sort_by = jQuery('.sort-container.btn-group a.active').attr('href').substring(1);
 		}
 		else {
 			jQuery(this).toggleClass('active');
-			yd_settings.recent_filter = jQuery('.sort-container .btn-group a[href="#age"]').hasClass('active');
+			yd_settings.recent_filter = jQuery('.sort-container.btn-group a[href="#age"]').hasClass('active');
 		}
 		return false;
 	});
@@ -72,7 +72,7 @@ function initalizeColorBox() {
 
 function reloadBubbles() {
 	jQuery('.debug input').unbind('click change');
-	jQuery('.sort-container .btn-group a').unbind('click');
+	jQuery('.sort-container.btn-group a').unbind('click');
 	jQuery('.svg-container').html('');
 	if (debug_position_mode == 0) {
 		loadBubbles(null, null);
@@ -338,8 +338,8 @@ function loadBubbles(language, position) {
 			if (rsmode == 0) {
 				yd_settings.sort_by = 'agrees';
 				yd_settings.recent_filter = null;
-				jQuery('.sort-container .btn-group a').removeClass('active');
-				jQuery('.sort-container .btn-group a[href="#agrees"]').addClass('active');
+				jQuery('.sort-container.btn-group a').removeClass('active');
+				jQuery('.sort-container.btn-group a[href="#agrees"]').addClass('active');
 			}
 			debugRecentSortMode(rsmode);
 		});
@@ -609,13 +609,13 @@ function loadBubbles(language, position) {
 		}
 
 		// Toggle buttons for navigation links
-		jQuery('.sort-container .btn-group a').click(function() {
+		jQuery('.sort-container.btn-group a').click(function() {
 			updateVis(svgselect);
 			return false;
 		});
 
 		// Toggle buttons for navigation links
-		jQuery('.filter-container .btn-group a').click(function() {
+		jQuery('.filter-container.btn-group a').click(function() {
 			updateVis(svgselect);
 			return false;
 		});
