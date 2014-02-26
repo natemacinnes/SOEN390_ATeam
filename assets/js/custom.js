@@ -796,7 +796,7 @@ function loadMediaElement() {
 		myaudio=document.getElementById("narrative_audio");
 		myaudio.addEventListener('canplay', function() {
 			// Player is ready
-			myaudio.play();
+			//myaudio.play();
 		}, false);
 		myaudio.addEventListener("timeupdate", function(e) {
 			//document.getElementById('current-time').innerHTML = myaudio.currentTime;
