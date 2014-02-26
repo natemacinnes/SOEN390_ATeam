@@ -8,6 +8,7 @@ var debug_text_content_mode;
 var debug_color_mode;
 var debug_position_mode;
 var debug_ring_opacity;
+var debug_ring_radius;
 var debug_bubble_opacity;
 var debug_recent_sort;
 
@@ -26,6 +27,7 @@ jQuery(document).ready(function() {
 	debug_color_mode = parseInt(jQuery('.debug-color input:checked').val());
 	debug_position_mode = parseInt(jQuery('.debug-position input:checked').val());
 	debug_ring_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+	debug_ring_radius = parseFloat(jQuery('#debug-ring-toggle-radius').val());
 	debug_bubble_opacity = parseFloat(jQuery('#debug-bubble-toggle-opacity').val());
 	debug_recent_sort = parseFloat(jQuery('.debug-recent-sort input:checked').val());
 
@@ -210,7 +212,7 @@ function loadBubbles(language, position) {
 		// This computes the SVG path data required to form an arc.
 		var arc = d3.svg.arc()
 			.outerRadius(function(d) { return d.r; })
-			.innerRadius(function(d) { return d.r*.90; });
+			.innerRadius(function(d) { return d.r*debug_ring_radius; });
 
 		// This transforms simple data objects into a arc values from 0 to 2*pi
 		var pie = d3.layout.pie()
@@ -303,9 +305,10 @@ function loadBubbles(language, position) {
 			var lmode = jQuery(this).val();
 			debugRingMode(lmode);
 		});
-		jQuery('#debug-ring-toggle-opacity').change(function() {
+		jQuery('#debug-ring-toggle-opacity,#debug-ring-toggle-radius').change(function() {
 			var lmode = jQuery('.debug-rings input[type=radio]:checked').val();
-			debug_ring_opacity = parseFloat(jQuery(this).val());
+			debug_ring_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+			debug_ring_radius = parseFloat(jQuery('#debug-ring-toggle-radius').val());
 			debugRingMode(lmode);
 		});
 		jQuery('#debug-bubble-toggle-opacity').change(function() {
@@ -450,6 +453,7 @@ function loadBubbles(language, position) {
 
 			// Normalize
 			debug_ring_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+			debug_ring_radius = parseFloat(jQuery('#debug-ring-toggle-radius').val());
 			debug_bubble_opacity = parseFloat(jQuery('#debug-bubble-toggle-opacity').val());
 			jQuery(svgselect + ' g.node-base').unbind('mouseenter mouseleave');
 			jQuery(svgselect + ' g.node-base').each(function() {

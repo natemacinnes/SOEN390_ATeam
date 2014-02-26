@@ -93,6 +93,10 @@
               <label for="debug-ring-toggle-opacity">Opacity</label>
               <input id="debug-ring-toggle-opacity" type="text" size="1" name="ring-opacity" value="0.3" />
             </div>
+            <div class="debug-ring-radius">
+              <label for="debug-ring-toggle-radius">Inner Radius</label>
+              <input id="debug-ring-toggle-radius" type="text" size="1" name="ring-radius" value="0.9" />
+            </div>
 
             Text display mode:
             <div class="debug-text">
