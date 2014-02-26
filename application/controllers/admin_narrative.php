@@ -38,12 +38,20 @@ class Admin_Narrative extends YD_Controller
     if($id == NULL) {
       redirect('admin/narratives');
     }
-    //Getting info on the narrative and opening the page
+	
+    //Getting info on the narrative
     $data = $this->editing_model->gatherInfo($id);
+	
+	//Getting deleted items
+	$path = $this->config->item('site_data_dir') . '/' . $id . '/deleted/';
+	if(is_dir($path)) $data['deleted'] = $this->editing_model->gatherDeleted($path);
+	
     //Handling error when input id doesn't exist
     if($data == null) {
       $data['error'] = 1;
     }
+	
+	//Loading the page
     $this->view_wrapper('admin/narratives/edit', $data);
   }
 
@@ -71,7 +79,7 @@ class Admin_Narrative extends YD_Controller
   /**
    * Process the submission of the edit narrative form.
    */
-  public function process($id = NULL)
+  public function process($id)
   {
     $this->require_login();
 
@@ -84,8 +92,12 @@ class Admin_Narrative extends YD_Controller
     //Creating a new folder to move for processing
     $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
     mkdir($newDir, 0755);
+	
+	//Creating a new folder to store deleted files
+	$delDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/deleted/';
+    mkdir($delDir, 0755);
 
-    //Removing desired tracks and moving the rest to the new folder
+    //Archiving desired tracks and moving the rest to the new folder
     $trackName = $info['trackName'];
     $trackPath = $info['trackPath'];
     if(isset($_POST['tracks']))
@@ -98,7 +110,7 @@ class Admin_Narrative extends YD_Controller
       $this->editing_model->deleteTracks($trackName, $trackPath, $newDir);
     }
 
-    //Removing desired images and moving the rest to the new folder
+    //Archiving desired images and moving the rest to the new folder
     $picName = $info['picName'];
     $picPath = $info['picPath'];
     if(isset($_POST['pics']))
@@ -110,13 +122,16 @@ class Admin_Narrative extends YD_Controller
     {
       $this->editing_model->deletePics($picName, $picPath, $newDir);
     }
-
+	
     //Moving XML file to the new folder
     $this->editing_model->moveXML($id, $newDir);
+	
+	//Moving files from the old to the new deleted folder
+	$this->editing_model->moveFiles($this->config->item('site_data_dir') . '/' . $id . '/deleted/', $delDir);
 
     //Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
     $tmpPath = $this->editing_model->moveDir($newDir, $id);
-
+	
     //Deleting old narrative folder
     $this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
 
@@ -126,6 +141,85 @@ class Admin_Narrative extends YD_Controller
     //Republishing the narrative before announcing success
     $this->narrative_model->publish($id);
 
+    //Output success
+    $this->system_message_model->set_message('Narrative #' . $id . ' was edited successfully.', MESSAGE_NOTICE);
+    redirect('admin/narratives/' . $id . '/edit');
+  }
+  
+  public function restore($id)
+  {
+	$this->require_login();
+	
+	//Getting info on the narrative to edit the narrative
+    $info = $this->editing_model->gatherInfo($id);
+	
+	//Getting files previously removed
+	$path = $this->config->item('site_data_dir') . '/' . $id . '/deleted/';
+	$deleted = $this->editing_model->gatherDeleted($path);
+
+    //Unpublishing the narrative before reprocessing
+    $this->narrative_model->unpublish($id);
+
+    //Creating a new folder to move for processing
+    $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
+    mkdir($newDir, 0755);
+	
+	//Creating a new folder to store deleted files
+	$delDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/deleted/';
+    mkdir($delDir, 0755);
+
+    //Keeping files already in the narrative
+    $trackName = $info['trackName'];
+    $trackPath = $info['trackPath'];
+    $this->editing_model->deleteTracks($trackName, $trackPath, $newDir);
+    $picName = $info['picName'];
+    $picPath = $info['picPath'];
+    $this->editing_model->deletePics($picName, $picPath, $newDir);
+	
+	//Restoring desired tracks and moving the rest to the new deleted folder
+    $trackName = $deleted['deletedAudio'];
+    $trackPath = $deleted['deletedAudioPath'];
+    if(isset($_POST['tracks']))
+    {
+      $tracksToRestore = $_POST['tracks'];
+      $this->editing_model->restoreTracks($trackName, $trackPath, $newDir, $tracksToRestore);
+    }
+    else
+    {
+      $this->editing_model->restoreTracks($trackName, $trackPath, $newDir);
+    }
+
+    //Restoring desired images and moving the rest to the new deleted folder
+    $picName = $deleted['deletedImage'];
+    $picPath = $deleted['deletedImagePath'];
+    if(isset($_POST['pics']))
+    {
+      $picsToRestore = $_POST['pics'];
+      $this->editing_model->restorePics($picName, $picPath, $newDir, $picsToRestore);
+    }
+    else
+    {
+      $this->editing_model->restorePics($picName, $picPath, $newDir);
+    }
+	
+    //Moving XML file to the new folder
+    $this->editing_model->moveXML($id, $newDir);
+	
+	//Moving files from the old to the new deleted folder
+	$this->editing_model->moveFiles($this->config->item('site_data_dir') . '/' . $id . '/deleted/', $delDir);
+
+    //Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
+    $tmpPath = $this->editing_model->moveDir($newDir, $id);
+	
+    //Deleting old narrative folder
+    $this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
+
+    //Calling processing on the new folder
+    $this->narrative_model->process_narrative($tmpPath, $id);
+
+    //Republishing the narrative before announcing success
+    $this->narrative_model->publish($id);
+	
     //Output success
     $this->system_message_model->set_message('Narrative #' . $id . ' was edited successfully.', MESSAGE_NOTICE);
     redirect('admin/narratives/' . $id . '/edit');

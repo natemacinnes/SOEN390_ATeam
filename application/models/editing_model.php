@@ -60,9 +60,43 @@ class Editing_Model extends CI_Model
 			return $data;
 		}
 	}
+	
+	/**
+	*	Gathering deleted files
+	*/
+	public function gatherDeleted($path)
+	{
+		//Finding audio and images and storing their name and paths
+		$audioCtr = 0;
+		$imageCtr = 0;
+		$file_scan = scandir($path);
+		foreach ($file_scan as $filecheck)
+		{
+			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
+			
+			if($filecheck != '.' && $filecheck != '..')
+			{
+				if($file_extension == 'mp3')
+				{
+					$audioCtr++;
+					$data['deletedAudio'][$audioCtr] = $filecheck;
+					$data['deletedAudioPath'][$audioCtr] = $path.$filecheck;
+				}
+				else
+				{
+					$imageCtr++;
+					$data['deletedImage'][$imageCtr] = $filecheck;
+					$data['deletedImagePath'][$imageCtr] = $path.$filecheck;
+				}
+			}
+		}
+		$data['audioCtr'] = $audioCtr;
+		$data['imageCtr'] = $imageCtr;
+		return $data;
+	}
 
 	/**
-	*	Deleting the tracks that are meant to be deleted
+	*	Archiving the tracks that are meant to be archived
 	*/
 	public function deleteTracks($trackName, $trackPath, $newDir, $tracksToDelete = null)
 	{
@@ -73,7 +107,7 @@ class Editing_Model extends CI_Model
 			if ($tracksToDelete != null && $j < count($tracksToDelete) && $trackName[$i] == $tracksToDelete[$j])
 			{
 				$tracksLeft--;
-				unlink($trackPath[$i]);
+				rename($trackPath[$i], $newDir.'deleted/'.$trackName[$i]);
 				$j++;
 			}
 			else
@@ -83,9 +117,29 @@ class Editing_Model extends CI_Model
 		}
 		return $tracksLeft;
 	}
+	
+	/**
+	*	Restoring the tracks that are meant to be restored
+	*/
+	public function restoreTracks($trackName, $trackPath, $newDir, $tracksToRestore = null)
+	{
+		$j = 0;
+		for ($i = 1; $i <= count($trackName); $i++)
+		{
+			if ($tracksToRestore != null && $j < count($tracksToRestore) && $trackName[$i] == $tracksToRestore[$j])
+			{
+				rename($trackPath[$i], $newDir.$trackName[$i]);
+				$j++;
+			}
+			else
+			{
+				rename($trackPath[$i], $newDir.'deleted/'.$trackName[$i]);
+			}
+		}
+	}
 
 	/**
-	*	Deleting the pics that are meant to be deleted
+	*	Archiving the pics that are meant to be archived
 	*/
 	public function deletePics($picName, $picPath, $newDir, $picsToDelete = null)
 	{
@@ -94,12 +148,32 @@ class Editing_Model extends CI_Model
 		{
 			if ($picsToDelete != null && $j < count($picsToDelete) && $picName[$i] == $picsToDelete[$j])
 			{
-				unlink($picPath[$i]);
+				rename($picPath[$i], $newDir.'deleted/'.$picName[$i]);
 				$j++;
 			}
 			else
 			{
 				rename($picPath[$i], $newDir.$picName[$i]);
+			}
+		}
+	}
+	
+	/**
+	*	Restoring the pics that are meant to be restored
+	*/
+	public function restorePics($picName, $picPath, $newDir, $picsToRestore = null)
+	{
+		$j = 0;
+		for ($i = 1; $i <= count($picName); $i++)
+		{
+			if ($picsToRestore != null && $j < count($picsToRestore) && $picName[$i] == $picsToRestore[$j])
+			{
+				rename($picPath[$i], $newDir.$picName[$i]);
+				$j++;
+			}
+			else
+			{
+				rename($picPath[$i], $newDir.'deleted/'.$picName[$i]);
 			}
 		}
 	}
@@ -119,6 +193,18 @@ class Editing_Model extends CI_Model
 			{
 				rename($baseDir.$filecheck, $newDir.$filecheck);
 			}
+		}
+	}
+	
+	/**
+	*	Moving deleted files from old to new deleted directory
+	*/
+	public function moveFiles($oldDir, $delDir)
+	{
+		$file_scan = scandir($oldDir);
+		foreach ($file_scan as $filecheck)
+		{
+			if($filecheck != '.' && $filecheck != '..') rename($oldDir . $filecheck, $delDir . $filecheck);
 		}
 	}
 
