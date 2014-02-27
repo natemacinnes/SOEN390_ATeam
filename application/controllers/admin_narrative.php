@@ -177,8 +177,11 @@ class Admin_Narrative extends YD_Controller
     $this->editing_model->deletePics($picName, $picPath, $newDir);
 	
 	//Restoring desired tracks and moving the rest to the new deleted folder
-    $trackName = $deleted['deletedAudio'];
-    $trackPath = $deleted['deletedAudioPath'];
+    if(isset($deleted['deletedAudio']))
+	{
+		$trackName = $deleted['deletedAudio'];
+		$trackPath = $deleted['deletedAudioPath'];
+	}
     if(isset($_POST['tracks']))
     {
       $tracksToRestore = $_POST['tracks'];
@@ -190,8 +193,11 @@ class Admin_Narrative extends YD_Controller
     }
 
     //Restoring desired images and moving the rest to the new deleted folder
-    $picName = $deleted['deletedImage'];
-    $picPath = $deleted['deletedImagePath'];
+    if(isset($deleted['deletedImage']))
+	{
+		$picName = $deleted['deletedImage'];
+		$picPath = $deleted['deletedImagePath'];
+	}
     if(isset($_POST['pics']))
     {
       $picsToRestore = $_POST['pics'];
@@ -208,8 +214,8 @@ class Admin_Narrative extends YD_Controller
 	//Moving files from the old to the new deleted folder
 	$this->editing_model->moveFiles($this->config->item('site_data_dir') . '/' . $id . '/deleted/', $delDir);
 	
-	//Moving files from the uploads folder to the tmp folder to handle error of disappearing jpg
-	$this->editing_model->moveFiles($this->config->item('site_data_dir') . '/' . $id . '/', $newDir);
+	//Purging files from the uploads folder to the tmp folder to handle error of disappearing jpg
+	$this->editing_model->purge($this->config->item('site_data_dir') . '/' . $id . '/', $newDir);
 
     //Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
     $tmpPath = $this->editing_model->moveDir($newDir, $id);
