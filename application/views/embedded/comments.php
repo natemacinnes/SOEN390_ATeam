@@ -9,8 +9,8 @@
 	</div>
 	<div class="comments-wrapper">
 	<?php if($comments == NULL): ?>
-		<div class="comment">
-			<p id="default">No comments have been added yet, be the first to respond!</p>
+		<div class="comment remove-me">
+			<p>No comments have been added yet, be the first to respond!</p>
 		</div>
 	<?php else: ?>
 		<?php echo $comments; ?>
@@ -25,6 +25,9 @@
 		var formdata = jQuery("#new-comment-form").serialize();
 		$.post(url, formdata)
 			.success(function(data) {
+				// Remove the 'no comment' message if it exists
+				jQuery('.comments-wrapper .remove-me').remove();
+				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
 				jQuery("#new-comment").val('');
 			})
@@ -40,6 +43,9 @@
 		var formdata = jQuery("#new-comment-form").serialize();
 		$.post(url, formdata)
 			.success(function(data) {
+				// Remove the 'no comment' message if it exists
+				jQuery('.comments-wrapper .remove-me').remove();
+				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
 				jQuery("#new-comment").val('');
 			})
