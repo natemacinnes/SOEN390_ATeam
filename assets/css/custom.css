@@ -199,8 +199,9 @@ body {
 	background-color: #eeeeee;
 }
 
-#recent-container { position: relative;
-	height: 498px;
+#recent-container {
+	position: relative;
+	height: 983px;
 	width: 15%;
 	border: 1px solid #ccc;
 	border-radius: 6px;
