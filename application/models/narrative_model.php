@@ -39,7 +39,7 @@ class Narrative_Model extends CI_Model
 
 
 		$query = $this->db->from($this->table);
-		if ($position)
+		if (!is_null($position))
 		{
 			$this->db->where('position', $position);
 		}

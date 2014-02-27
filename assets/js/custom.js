@@ -78,6 +78,7 @@ function reloadBubbles() {
 		loadBubbles(null, null);
 	}
 	else {
+		loadBubbles(null, 0);
 		loadBubbles(null, 1);
 		loadBubbles(null, 2);
 	}
@@ -105,6 +106,7 @@ function loadBubbles(language, position) {
 	}
 	yd_settings.recent_filter = null;
 
+	var num_parent_bubbles = jQuery('.svg-container').length;
 	var diameter = (document.getElementById("bubble-container").offsetWidth);
 	var format = d3.format(",.0f");
 	var color = d3.scale.category20c();
@@ -112,14 +114,14 @@ function loadBubbles(language, position) {
 	// Accepts nodes and computes the position of them for use by .data()
 	var pack = d3.layout.pack()
 		.sort(null)
-		.size([debug_position_mode == 0 ? diameter : diameter/2-4, diameter/2])
+		.size([debug_position_mode == 0 ? diameter : diameter/num_parent_bubbles-4, diameter/num_parent_bubbles])
 		.value(bubbles_values[yd_settings.sort_by])
 		.padding(5);
 
 	// Create the SVG bubble structure
 	var svg = d3.select(svgselect).html('').append("svg")
-		.attr("width", debug_position_mode == 0 ? diameter : diameter/2-4)
-		.attr("height", diameter/2)
+		.attr("width", debug_position_mode == 0 ? diameter : diameter/num_parent_bubbles-4)
+		.attr("height", diameter/num_parent_bubbles)
 		.attr("class", "bubble");
 
 	// Retrieve JSON from AJAX controller, but only once upon initial load
@@ -161,7 +163,7 @@ function loadBubbles(language, position) {
 				.attr("dy", 0)
 				.style("text-anchor", "left")
 				.style("font-size", "2em")
-				.text(position == null ? null : (position == 1 ? 'For' : 'Against'));
+				.text(position_label_text(position));
 
 		// FIXME && false debugging
 		if ((position == null || position == 1) && false) {
@@ -655,6 +657,19 @@ bubbles_label_text_0 = {
 	// TODO
 	'popular': function(d) { return d.children ? null : d.narrative_id; }
 };
+
+function position_label_text(position) {
+	switch (position) {
+		case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
+			return 'Neutral';
+		case yd_settings.constants.NARRATIVE_POSITION_AGREE:
+			return 'For';
+		case yd_settings.constants.NARRATIVE_POSITION_DISAGREE:
+			return 'Against';
+		default:
+			return null;
+	}
+}
 
 function bubble_get_multiplier(d) {
 	if (d.children) {
