@@ -8,7 +8,7 @@ class Comments extends YD_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('commenting_model');
+		$this->load->model('comment_model');
 	}
 
 	/**
@@ -28,25 +28,31 @@ class Comments extends YD_Controller
 	 */
 	public function index($narrative_id = 1)
 	{
-		$comments = $this->commenting_model->get_by_narrative_id($narrative_id);
-		//$this->view_wrapper('pages/comments', $data);
-		//Not sure if view_wrapper will cause errors so I commented it out for now
+		$comments = $this->comment_model->get_by_narrative_id($narrative_id);
 		$data = array('comments' => $comments, 'narrative_id' => $narrative_id);
 		$this->view_wrapper('embedded/comments', $data);
 	}
 
+	public function view($comment_id) {
+		$comment = $this->comment_model
+	}
+
 	public function gui($narrative_id = 1)
 	{
-		$comments = $this->commenting_model->get_by_narrative_id($narrative_id);
-		//$this->view_wrapper('pages/comments', $data);
-		//Not sure if view_wrapper will cause errors so I commented it out for now
+		$comments = $this->comment_model->get_by_narrative_id($narrative_id);
 		$data = array('comments' => $comments, 'narrative_id' => $narrative_id);
 		$this->view_wrapper('pages/comments', $data);
 	}
 
-	public function add($narrative_id, $body_of_text, $parent_comment = NULL)
+	public function add($narrative_id, $body_of_text, $parent_id = NULL)
 	{
-		$this->commenting_model->add_comment($narrative_id, $body_of_text, $parent_comment);
+		$comment = array(
+      'narrative_id' => $narrative_id,
+      'parent_comment' => $parent_id,
+      'body' => $body_of_text,
+      'status' => 1,
+    );
+		$this->comment_model->insert($comment);
 	}
 
 	public function flag($comment_id)
@@ -54,8 +60,14 @@ class Comments extends YD_Controller
 		$this->comment_flag_model->insert($comment_id);
 	}
 
-	public function reply($narrative_id, $body_of_text, $parent_comment = NULL)
+	public function reply($narrative_id, $body_of_text, $parent_id = NULL)
 	{
-		$this->commenting_model->add_comment($narrative_id, $body_of_text, $parent_comment);
+		$comment = array(
+      'narrative_id' => $narrative_id,
+      'parent_comment' => $parent_id,
+      'body' => $body_of_text,
+      'status' => 1,
+    );
+		$this->comment_model->insert($comment);
 	}
 }

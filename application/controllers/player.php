@@ -12,7 +12,7 @@ class Player extends YD_Controller
 	{
 		parent::__construct();
 		$this->load->model('narrative_model');
-		$this->load->model('commenting_model');
+		$this->load->model('comment_model');
 	}
 
 	/**
@@ -23,10 +23,14 @@ class Player extends YD_Controller
 		$narrative = $this->narrative_model->get($narrative_id);
 		$data = array('narrative_id' => $narrative_id, 'narrative' => $narrative);
 		$this->load->view('embedded/player', $data);
-		$comments = $this->commenting_model->get_by_narrative_id($narrative_id);
-		//$this->view_wrapper('pages/comments', $data);
-		//Not sure if view_wrapper will cause errors so I commented it out for now
-		$data = array('comments' => $comments, 'narrative_id' => $narrative_id);
+		$comments = $this->comment_model->get_by_narrative_id($narrative_id);
+
+		$rendered_comments = '';
+		foreach ($comments as $comment) {
+			// Render the comments into the variable
+			$rendered_comments .= $this->load->view('embedded/comment', array('comment' => $comment), TRUE);
+		}
+		$data = array('comments' => $rendered_comments, 'narrative_id' => $narrative_id);
 		$this->load->view('embedded/comments', $data);
 	}
 }

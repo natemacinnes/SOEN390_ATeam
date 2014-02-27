@@ -117,10 +117,10 @@ class Narrative_Model extends CI_Model
 				return false;
 		}
 	}
-	
+
 	function process_image($original_image, $original_image_name, $original_image_extension, $directory, $image_destroy) {
 		$image_container = null;
-		//getimagesize will determine the type of image 
+		//getimagesize will determine the type of image
 		$image_size = getimagesize($directory . '/' . $original_image);
 		switch($image_size[2])
 		{
@@ -138,16 +138,16 @@ class Narrative_Model extends CI_Model
 				return false;
 				break;
 		}
-		
+
 		//deletes original image
 		if($image_destroy)
 		{
 			unlink($directory . '/' . $original_image);
 		}
-		
+
 		imagejpeg($image_container, $directory . '/' . $original_image_name . ".jpg", 100);
 		imagedestroy($image_container);
-		
+
 		return true;
 	}
 
@@ -168,7 +168,7 @@ class Narrative_Model extends CI_Model
 		$narrative_submit_date = "";
 		$narrative_submit_time = "";
 		$found_first_image = false;
-		
+
 		$xml = new DOMDocument();
 		$xml->formatOutput = true;
 		$root = $xml->createElement("data");
@@ -190,7 +190,7 @@ class Narrative_Model extends CI_Model
 		foreach ($file_scan as $filecheck)
 		{
 			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
-			
+
 			//Handling of batch upload, ignoring directories '.' and '..'
 			if ($file_extension == '' && $filecheck != '.' && $filecheck != '..' && $filecheck != 'deleted')
 			{
@@ -208,7 +208,7 @@ class Narrative_Model extends CI_Model
 				$fname = pathinfo($filecheck, PATHINFO_FILENAME);
 				//False variable in process_image controls whether we delete the original image or not (false = do not delete image)
 				$this->process_image($filecheck, $fname, $file_extension, $dir, false);
-				
+
 				//New method, to be approved by TL
 				$images[$fname] = $fname . '.' . $image_format;
 				if($fname > $lastImage) $lastImage = $fname;
@@ -241,7 +241,7 @@ class Narrative_Model extends CI_Model
 
 		 //This is the txt file that will combine all the txt files with ffmpeg
 		$file_concat = fopen($dir . "/audio_container.txt", "w+");
-		
+
 		if (is_dir($dir))
 		{
 			foreach (scandir($dir) as $file)
@@ -287,7 +287,7 @@ class Narrative_Model extends CI_Model
 						{
 							$duration += intval($ar[2]) * 60 * 60;
 						}
-						
+
 						if(count($images) == 1) $audio_image = $images[$lastImage];
 						else if(isset($images[$file_name])) $audio_image = $images[$file_name];
 						else
@@ -378,7 +378,7 @@ class Narrative_Model extends CI_Model
 		{
 			$this->db->query('UPDATE narratives SET audio_length='.$endTimes.' WHERE narrative_id=\''.$id.'\';');
 		}
-		
+
 		//creating the directory on the server
 		$new_dir = "./uploads/" . $id;
 		if (!is_dir($new_dir))
@@ -394,7 +394,7 @@ class Narrative_Model extends CI_Model
 	 */
 	public function insert($narrative)
 	{
-		// TODO does this actuallreturn anything
+		// TODO does this actually return anything
 		$this->db->insert($this->table, $narrative);
 		return $this->db->insert_id();
 	}
