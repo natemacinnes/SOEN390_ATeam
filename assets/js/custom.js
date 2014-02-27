@@ -833,11 +833,9 @@ function narrative_player_update_image(timecode) {
 		// No narrative player was loaded.
 		return;
 	}
-	console.log('start update for timecode ' + timecode);
 	var narrative_id = player.attr('id').substring(10);
 	var url = yd_settings.site_url + "ajax/audio_image/" + narrative_id + "/" + timecode;
 	jQuery.get(url, function(data) {
 		jQuery("#audio_image").attr('src', data);
-		console.log('done update for timecode ' + timecode, data);
 	});
 }

@@ -251,19 +251,52 @@ body {
 									Comments
 
  *****************************************************************************/
-.filler{ height: 400px; width: 400px; background: black;}
+.filler {
+	height: 400px;
+	width: 400px;
+	background: black;
+}
 
-.form-control{ resize: vertical;}
+.form-control {
+	resize: vertical;
+}
 
-.comments-container{ height: 400px; overflow-y: scroll; overflow-x: hidden;}
-.comments-wrapper{ display: inline-block; }
+.comments-wrapper {
+	margin-top: 1em;
+	height: 308px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
 
-.comment{ position:relative; min-height: 80px; width: 400px; border: 1px solid #fff; border-top: none; background: #EDEFF4; color: #333; padding: 15px;}
-.comment:first-child { border-top: 0px solid #fff;}
+.comment {
+	position: relative;
+	min-height: 80px;
+	width: 400px;
+	border: 1px solid #fff;
+	border-top: none;
+	background: #EDEFF4;
+	color: #333;
+	padding: 15px;
+}
+.comment:first-child  {
+	border-top: 0px solid #fff;
+}
 
-.quote{ margin: 10px; background: #DDDFE4; color: #333; padding: 10px; }
-.quote:hover{ background: #D3D4DD; }
+.quote {
+	margin: 10px;
+	background: #DDDFE4;
+	color: #333;
+	padding: 10px;
+}
 
-.reply{ position: absolute; bottom: 5px; right: 5px;}
-.report{ position: absolute; top: 5px; right: 5px;}
-.report2{ position: absolute; bottom: 5px; right: 45px;}
+.quote:hover {
+	background: #D3D4DD;
+}
+
+.comment .actions {
+	float: right;
+}
+
+.comment .actions a {
+	margin-left: 1em;
+}

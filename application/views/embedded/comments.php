@@ -1,10 +1,13 @@
 <div class="comments-container float-left">
-	<div class="comments-wrapper">
-		<div class="comment">
-			<textarea class="form-control" rows="3" placeholder="Enter your comment..."></textarea>
-			<a href="#" class="btn btn-primary btn-sm top-margin float-right" id="<?php echo $narrative_id; ?>" role="button">Post</a>
+	<div class="new-comment">
+		<form method="POST" name="new-comment-form" id="new-comment-form">
+			<input type="hidden" name="narrative_id" value="<?php echo $narrative_id; ?>" />
+			<textarea class="form-control" rows="3" placeholder="Enter your comment..." id="new-comment" name="comment-text"></textarea>
+			<a href="#" class="btn btn-primary btn-sm top-margin float-right action-comment-post" id="<?php echo $narrative_id; ?>" role="button">Post</a>
 			<div class="clear"></div>
-		</div>
+		</form>
+	</div>
+	<div class="comments-wrapper">
 	<?php if($comments == NULL): ?>
 		<div class="comment">
 			<p id="default">No comments have been added yet, be the first to respond!</p>
@@ -14,46 +17,48 @@
 	<?php endif; ?>
 	</div>
 </div>
-
 <script type="text/javascript">
-	//Post Comment
-	jQuery(".btn.btn-primary.btn-sm.top-margin.float-right").click(function()
-	{
-		var text = jQuery('.form-control').val();
-		//Verify that the comments section is not Empty
-		if(text != "")
-		{
-			jQuery("#default").text("Posted");
-			var narrative_id = $(this).attr('id');
-			$('.comments-wrapper').after("<div class='comment'> <p id='default'>" + text + "</p> </div>");
-			var url = yd_settings.site_url + "comments/add/" + narrative_id + "/" + text;
-			$.get(url, function() {})
-				.fail(function() { alert( "Error Comment was not Added" ); });
-		}
-		else
-		{
-			alert("Error: No text was typed in the comments. Cannot post an empty comment.");
-		}
+	// Click handler: Comment (root level)
+	jQuery(".action-comment-post").not('.comment-processed').addClass('comment-processed').click(function() {
+		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
+		var url = yd_settings.site_url + "comments/reply/" + narrative_id;
+		var formdata = jQuery("#new-comment-form").serialize();
+		$.post(url, formdata)
+			.success(function(data) {
+				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
+				jQuery("#new-comment").val('');
+			})
+			.fail(function() {
+				alert("An error occurred while adding your comment. Please try again.");
+			});
 	});
-
-	//Reply and Post Reply Handling
-	jQuery(".btn.reply").click(function()
-	{
-		var text = jQuery(this).siblings('textarea').val();
-		jQuery(this).siblings('textarea').val('');
-		if(text != "")
-		{
-			var comment_id = $(this).siblings('.reply').attr('id');
-			var narrative_id = $(this).parent().attr('id');
-			alert("Result:" + narrative_id + "," + comment_id + "," + dateCreated + "," + text);
-			$(this).parent().append("<div class='comment'> <p id='default'>" + text + "</p> </div>");
-			var url = yd_settings.site_url + "comments/reply_to_comment/" + narrative_id + "/" + comment_id + "/" + text;
-			$.get(url, function() {})
-				.fail(function() { alert( "Error Comment was not added" ); });
-		}
-		else
-		{
-			alert("Error: No text was typed in the comments. Cannot post an empty comment.");
-		}
+	// Click handler: Comment (on comment)
+	jQuery(".action-comment-reply").not('.comment-processed').addClass('comment-processed').click(function() {
+		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
+		var parent_comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
+		var url = yd_settings.site_url + "comments/reply/" + narrative_id + '/' + parent_comment_id;
+		var formdata = jQuery("#new-comment-form").serialize();
+		$.post(url, formdata)
+			.success(function(data) {
+				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
+				jQuery("#new-comment").val('');
+			})
+			.fail(function() {
+				alert("An error occurred while adding your comment. Please try again.");
+			});
+	});
+	// Click handler: Flag (on comment)
+	jQuery(".action-comment-report").not('.comment-processed').addClass('comment-processed').click(function() {
+		var comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
+		var url = yd_settings.site_url + "comments/flag/" + comment_id;
+		var formdata = jQuery("#new-comment-form").serialize();
+		$.post(url, formdata)
+			.success(function(data) {
+				jQuery("#new-comment").val('');
+				alert("Thank you, this comment has been reported.");
+			})
+			.fail(function() {
+				alert("An error occurred while reporting the comment. Please try again.");
+			});
 	});
 </script>

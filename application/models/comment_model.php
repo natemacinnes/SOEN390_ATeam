@@ -32,9 +32,10 @@ class Comment_Model extends CI_Model {
    */
   public function get_by_narrative_id($narrative_id)
   {
-    $this->db->from($this->table);
-    $this->db->where('narrative_id', $narrative_id);
-    $query = $this->db->get();
+    $query = $this->db->from($this->table)
+      ->where('narrative_id', $narrative_id)
+      ->order_by('created', 'desc')
+      ->get();
     $comments = array();
     foreach ($query->result_array() as $comment) {
       $comments[$comment['comment_id']] = $comment;
@@ -42,14 +43,12 @@ class Comment_Model extends CI_Model {
     return $comments;
   }
 
-  public function insert($narrative_id, $body_of_text, $parent_id = NULL)
+  /**
+   * Inserts a narrative structure into the database.
+   */
+  public function insert($comment)
   {
-    $data = array(
-      'narrative_id' => $narrative_id,
-      'parent_comment' => $parent_id,
-      'body' => $body_of_text,
-      'status' => 1,
-    );
-    $this->db->insert('comments', $data);
+    $this->db->insert($this->table, $comment);
+    return $this->db->insert_id();
   }
 }

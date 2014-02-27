@@ -394,7 +394,6 @@ class Narrative_Model extends CI_Model
 	 */
 	public function insert($narrative)
 	{
-		// TODO does this actually return anything
 		$this->db->insert($this->table, $narrative);
 		return $this->db->insert_id();
 	}
