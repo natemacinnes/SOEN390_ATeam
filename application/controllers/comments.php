@@ -21,16 +21,6 @@ class Comments extends YD_Controller
 	}
 
 	/**
-	 * TODO: cleanup?
-	 */
-	public function gui($narrative_id = 1)
-	{
-		$comments = $this->comment_model->get_by_narrative_id($narrative_id);
-		$data = array('comments' => $comments, 'narrative_id' => $narrative_id);
-		$this->view_wrapper('pages/comments', $data);
-	}
-
-	/**
 	 * Stores a reply to a comment (submitted via AJAX POST) and returns the
 	 * rendered comment.
 	 */
