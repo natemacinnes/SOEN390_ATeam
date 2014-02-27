@@ -14,7 +14,7 @@ var debug_recent_sort;
 
 jQuery(document).ready(function() {
 	// Add colorbox to any items with a "colorbox" class
-	initalizeColorBox();
+	initialize_color_box();
 
 	// This will do nothing on most pages, but prepare any audio embeds we have
 	// present on page load (i.e. on admin review narrative page)
@@ -63,7 +63,7 @@ jQuery(document).ready(function() {
 	});
 });
 
-function initalizeColorBox() {
+function initialize_color_box() {
 	jQuery('a, area, input')
     .filter('.colorbox:not(.initColorbox-processed)')
     .addClass('initColorbox-processed')
@@ -837,5 +837,59 @@ function narrative_player_update_image(timecode) {
 	var url = yd_settings.site_url + "ajax/audio_image/" + narrative_id + "/" + timecode;
 	jQuery.get(url, function(data) {
 		jQuery("#audio_image").attr('src', data);
+	});
+}
+
+function initialize_commenting() {
+	// Click handler: Comment (root level)
+	jQuery(".action-comment-post").not('.comment-processed').addClass('comment-processed').click(function() {
+		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
+		var url = yd_settings.site_url + "comments/reply/" + narrative_id;
+		var formdata = jQuery("#new-comment-form").serialize();
+		$.post(url, formdata)
+			.success(function(data) {
+				// Remove the 'no comment' message if it exists
+				jQuery('.comments-wrapper .remove-me').remove();
+				// Add the new comment, pre-rendered by the controller
+				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
+				jQuery("#new-comment").val('');
+				initialize_commenting();
+			})
+			.fail(function() {
+				alert("An error occurred while adding your comment. Please try again.");
+			});
+	});
+	// Click handler: Comment (on comment)
+	jQuery(".action-comment-reply").not('.comment-processed').addClass('comment-processed').click(function() {
+		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
+		var parent_comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
+		var url = yd_settings.site_url + "comments/reply/" + narrative_id + '/' + parent_comment_id;
+		var formdata = jQuery("#new-comment-form").serialize();
+		$.post(url, formdata)
+			.success(function(data) {
+				// Remove the 'no comment' message if it exists
+				jQuery('.comments-wrapper .remove-me').remove();
+				// Add the new comment, pre-rendered by the controller
+				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
+				jQuery("#new-comment").val('');
+				initialize_commenting();
+			})
+			.fail(function() {
+				alert("An error occurred while adding your comment. Please try again.");
+			});
+	});
+	// Click handler: Flag (on comment)
+	jQuery(".action-comment-report").not('.comment-processed').addClass('comment-processed').click(function() {
+		var comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
+		var url = yd_settings.site_url + "comments/flag/" + comment_id;
+		var formdata = jQuery("#new-comment-form").serialize();
+		$.post(url, formdata)
+			.success(function(data) {
+				jQuery("#new-comment").val('');
+				alert("Thank you, this comment has been reported.");
+			})
+			.fail(function() {
+				alert("An error occurred while reporting the comment. Please try again.");
+			});
 	});
 }
