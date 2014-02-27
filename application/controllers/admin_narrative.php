@@ -207,6 +207,9 @@ class Admin_Narrative extends YD_Controller
 	
 	//Moving files from the old to the new deleted folder
 	$this->editing_model->moveFiles($this->config->item('site_data_dir') . '/' . $id . '/deleted/', $delDir);
+	
+	//Moving files from the uploads folder to the tmp folder to handle error of disappearing jpg
+	$this->editing_model->moveFiles($this->config->item('site_data_dir') . '/' . $id . '/', $newDir);
 
     //Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
     $tmpPath = $this->editing_model->moveDir($newDir, $id);
@@ -225,13 +228,20 @@ class Admin_Narrative extends YD_Controller
     redirect('admin/narratives/' . $id . '/edit');
   }
 
-  public function delete($id = NULL)
+  public function delete($id)
   {
-    // FIXME maybe we should confirm?
+    $data['narrative_id'] = $id;
+	
+	
+  }
+  
+  public function processDelete($id)
+  {
     $this->require_login();
-
+	
     $this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
     $this->narrative_model->delete(array('narrative_id' => $id));
+	
     $this->system_message_model->set_message('Narrative #' . $id . ' was deleted successfully.');
     redirect('admin/narratives');
   }
