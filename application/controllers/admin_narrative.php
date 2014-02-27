@@ -228,13 +228,20 @@ class Admin_Narrative extends YD_Controller
     redirect('admin/narratives/' . $id . '/edit');
   }
 
-  public function delete($id = NULL)
+  public function delete($id)
   {
-    // FIXME maybe we should confirm?
+    $data['narrative_id'] = $id;
+	
+	
+  }
+  
+  public function processDelete($id)
+  {
     $this->require_login();
-
+	
     $this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
     $this->narrative_model->delete(array('narrative_id' => $id));
+	
     $this->system_message_model->set_message('Narrative #' . $id . ' was deleted successfully.');
     redirect('admin/narratives');
   }
