@@ -149,7 +149,8 @@ class Admin extends YD_Controller
 		}
 
 		//Output success
-		$this->view_wrapper('admin/upload-success', $data);
+		$this->system_message_model->set_message('Narrative(s) uploaded successfully.', MESSAGE_NOTICE);
+		redirect('admin');
 	}
 
 	public function batchAction()
