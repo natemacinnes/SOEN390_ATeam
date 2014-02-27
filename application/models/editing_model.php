@@ -204,7 +204,8 @@ class Editing_Model extends CI_Model
 		$file_scan = scandir($oldDir);
 		foreach ($file_scan as $filecheck)
 		{
-			if($filecheck != '.' && $filecheck != '..') rename($oldDir . $filecheck, $delDir . $filecheck);
+			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
+			if($filecheck != '.' && $filecheck != '..' && ($file_extension == 'mp3' || $file_extension == 'jpg')) rename($oldDir . $filecheck, $delDir . $filecheck);
 		}
 	}
 
