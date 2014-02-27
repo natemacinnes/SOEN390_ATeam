@@ -40,9 +40,7 @@
     </div>
 
     <div id="bubble-container" class="top-margin float-left">
-      <div class="svg-container svg-container-1 float-left"></div>
       <div class="svg-container svg-container-0 float-left"></div>
-      <div class="svg-container svg-container-2 float-left"></div>
     </div>
     <div id="recent-container" class="top-margin float-left">
     </div>

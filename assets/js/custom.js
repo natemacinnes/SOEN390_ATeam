@@ -79,8 +79,6 @@ function reloadBubbles() {
 	}
 	else {
 		loadBubbles(null, 0);
-		loadBubbles(null, 1);
-		loadBubbles(null, 2);
 	}
 }
 
