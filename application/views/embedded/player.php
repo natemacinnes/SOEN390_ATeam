@@ -8,16 +8,11 @@
 	if (file_exists($path)):
 	?>
 		<div class="player-wrapper float-left right-margin" id="narrative-<?php echo $narrative_id; ?>">
-			<img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400'>
-			<audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls' autoplay=''></audio></br>
+			<img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400' >
+			<br />
+			<audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls'></audio></br>
 			<span id='current-time'></span>
 		</div>
 	<?php else: ?>
 		Video does not exist.
 	<?php endif; ?>
-
-<script type="text/javascript">
-	jQuery(document).ready(function() {
-		loadMediaElement();
-	});
-</script>

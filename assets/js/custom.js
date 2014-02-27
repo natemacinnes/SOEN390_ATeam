@@ -18,7 +18,7 @@ jQuery(document).ready(function() {
 
 	// This will do nothing on most pages, but prepare any audio embeds we have
 	// present on page load (i.e. on admin review narrative page)
-	loadMediaElement();
+	narrative_player_load();
 
 	// Process bubbles
 	debug_ring_mode = parseInt(jQuery('.debug-rings input:checked').val());
@@ -289,11 +289,8 @@ function loadBubbles(language, position) {
 				speed: 700,
 				opacity: 0,
 				onComplete: function() {
-					loadMediaElement();
-					update_play_image();
-					image_update_timer = setInterval(update_play_image, 2000);
-					$(this).colorbox.resize();
-
+					narrative_player_load();
+					jQuery(this).colorbox.resize();
 				},
 				onClosed: function() {
 					clearInterval(image_update_timer);
@@ -784,41 +781,48 @@ function narrative_matches_filter(d) {
 	return (yd_settings.language_filter == null || yd_settings.language_filter == d.language) && recent;
 }
 
-function loadMediaElement() {
+function narrative_player_load() {
 	var player_wrappers = jQuery('.player-wrapper').not('player-processed')
 	if (player_wrappers.length) {
 		player_wrappers.addClass('player-processed')
 		jQuery('audio,video', player_wrappers).mediaelementplayer({
 			// the order of controls you want on the control bar (and other plugins below)
-			features: ['playpause','current','progress','duration','tracks','volume'],
+			features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume'],
 			// show framecount in timecode (##:00:00:00)
 			showTimecodeFrameCount: false
 		 });
 
 		//AJAX function that changes the picture according to the time of the
 		//the audio.
-		myaudio=document.getElementById("narrative_audio");
-		myaudio.addEventListener('canplay', function() {
-			// Player is ready
+		var player_last_update = (new Date).getTime();
+		var myaudio = document.getElementById("narrative_audio");
+		// Update when the audio is ready to play (at load or after seeking)
+		myaudio.addEventListener('canplay', function(e) {
+			player_last_update = e.timeStamp;
+			narrative_player_update_image(myaudio.currentTime);
 			//myaudio.play();
 		}, false);
-		myaudio.addEventListener("timeupdate", function(e) {
-			//document.getElementById('current-time').innerHTML = myaudio.currentTime;
-			var xmlhttp=new XMLHttpRequest();
-			xmlhttp.onreadystatechange=function() {
-				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-					document.getElementById("audio_image").src = xmlhttp.responseText;
-				}
-			};
-			// TODO make this jQuery using jQuery.get()
-			// TODO make this a real controller method
-			var player = jQuery('.player-wrapper');
-			if (player.length) {
-				var narrative_id = player.attr('id').substring(10);
-				var url = yd_settings.site_url + "ajax/audio_image/" + narrative_id + "/" + myaudio.currentTime;
-				xmlhttp.open("GET", url, true);
-				xmlhttp.send();
+		// Update as the audio continues to play.
+		myaudio.addEventListener('timeupdate', function(e) {
+			if (e.timeStamp - player_last_update > yd_settings.NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL) {
+				player_last_update = e.timeStamp;
+				narrative_player_update_image(myaudio.currentTime);
 			}
 		}, false);
 	}
+}
+
+function narrative_player_update_image(timecode) {
+	var player = jQuery('.player-wrapper');
+	if (!player.length) {
+		// No narrative player was loaded.
+		return;
+	}
+	console.log('start update for timecode ' + timecode);
+	var narrative_id = player.attr('id').substring(10);
+	var url = yd_settings.site_url + "ajax/audio_image/" + narrative_id + "/" + timecode;
+	jQuery.get(url, function(data) {
+		jQuery("#audio_image").attr('src', data);
+		console.log('done update for timecode ' + timecode, data);
+	});
 }

@@ -21,15 +21,16 @@
        base_url: "<?php echo base_url(); ?>",
        site_url: "<?php echo site_url(); ?>",
        constants: {
-        'NARRATIVE_POSITION_NEUTRAL': 0,
-        'NARRATIVE_POSITION_AGREE': 1,
-        'NARRATIVE_POSITION_DISAGREE': 2,
-        'METRIC_EVENT_LISTEN_START': 1,
-        'METRIC_EVENT_LISTEN_END': 2,
-        'METRIC_EVENT_BOOKMARK': 3,
-        'METRIC_EVENT_SHARE': 4,
-        'METRIC_EVENT_LIKE': 5,
-        'METRIC_EVENT_DISLIKE': 6
+        'NARRATIVE_POSITION_NEUTRAL': <?php echo NARRATIVE_POSITION_NEUTRAL; ?>,
+        'NARRATIVE_POSITION_AGREE': <?php echo NARRATIVE_POSITION_AGREE; ?>,
+        'NARRATIVE_POSITION_DISAGREE': <?php echo NARRATIVE_POSITION_DISAGREE; ?>,
+        'METRIC_EVENT_LISTEN_START': <?php echo METRIC_EVENT_LISTEN_START; ?>,
+        'METRIC_EVENT_LISTEN_END': <?php echo METRIC_EVENT_LISTEN_END; ?>,
+        'METRIC_EVENT_BOOKMARK': <?php echo METRIC_EVENT_BOOKMARK; ?>,
+        'METRIC_EVENT_SHARE': <?php echo METRIC_EVENT_SHARE; ?>,
+        'METRIC_EVENT_LIKE': <?php echo METRIC_EVENT_LIKE; ?>,
+        'METRIC_EVENT_DISLIKE': <?php echo METRIC_EVENT_DISLIKE; ?>,
+        'NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL': <?php echo NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL; ?>
        }
      };
   </script>

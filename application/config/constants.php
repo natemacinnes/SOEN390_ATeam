@@ -63,5 +63,15 @@ define('NARRATIVE_POSITION_NEUTRAL', 0);
 define('NARRATIVE_POSITION_AGREE', 1);
 define('NARRATIVE_POSITION_DISAGREE', 2);
 
+/*
+|--------------------------------------------------------------------------
+| UI constants
+|--------------------------------------------------------------------------
+|
+| Embedded in JavaScript.
+|
+*/
+define('NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL', 2000);
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
