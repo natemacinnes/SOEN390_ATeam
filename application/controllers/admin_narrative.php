@@ -87,7 +87,7 @@ class Admin_Narrative extends YD_Controller
     $info = $this->editing_model->gatherInfo($id);
 
     //Unpublishing the narrative before reprocessing
-    $this->narrative_model->unpublish($id);
+    $previousStatus = $this->narrative_model->unpublish($id);
 
     //Creating a new folder to move for processing
     $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
@@ -139,7 +139,7 @@ class Admin_Narrative extends YD_Controller
     $this->narrative_model->process_narrative($tmpPath, $id);
 
     //Republishing the narrative before announcing success
-    $this->narrative_model->publish($id);
+    if($previousStatus == 1) $this->narrative_model->publish($id);
 
     //Output success
     $this->system_message_model->set_message('Narrative #' . $id . ' was edited successfully.', MESSAGE_NOTICE);
@@ -158,7 +158,7 @@ class Admin_Narrative extends YD_Controller
 	$deleted = $this->editing_model->gatherDeleted($path);
 
     //Unpublishing the narrative before reprocessing
-    $this->narrative_model->unpublish($id);
+    $previousStatus = $this->narrative_model->unpublish($id);
 
     //Creating a new folder to move for processing
     $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
@@ -227,7 +227,7 @@ class Admin_Narrative extends YD_Controller
     $this->narrative_model->process_narrative($tmpPath, $id);
 
     //Republishing the narrative before announcing success
-    $this->narrative_model->publish($id);
+    if($previousStatus == 1) $this->narrative_model->publish($id);
 	
     //Output success
     $this->system_message_model->set_message('Narrative #' . $id . ' was edited successfully.', MESSAGE_NOTICE);

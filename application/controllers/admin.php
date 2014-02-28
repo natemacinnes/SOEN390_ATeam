@@ -160,45 +160,48 @@ class Admin extends YD_Controller
 		//Checking if any narratives have been checked
 		if(isset($_POST['narratives'])) $narratives = $_POST['narratives'];
 		else redirect('admin');
+		
+		if(count($narratives) == 1) $message = 'Narrative';
+		else $message = 'Narratives';
 
 		//Perform action depending on clicked button
 		if(isset($_POST['delete']))
 		{
 			//Delete selected narratives and then remove them from the database
-			$message = 'Narratives';
 			foreach($narratives as $id)
 			{
 				$this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
 				$this->narrative_model->delete(array('narrative_id' => $id));
 				$message = $message . ' #' . $id . ', ';
 			}
-			$message = $message . 'have all been deleted successfully.';
+			if(count($narratives)) $message = $message . 'has been deleted successfully.';
+			else $message = $message . 'have all been deleted successfully.';
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
 		else if(isset($_POST['publish']))
 		{
 			//Publish selected narratives
-			$message = 'Narratives';
 			foreach($narratives as $id)
 			{
 				$this->narrative_model->publish($id);
 				$message = $message . ' #' . $id . ', ';
 			}
-			$message = $message.'have all been published successfully.';
+			if(count($narratives)) $message = $message . 'has been published successfully.';
+			else $message = $message . 'have all been published successfully.';
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
 		else if(isset($_POST['unpublish']))
 		{
 			//Unpublish selected narratives
-			$message = 'Narratives';
 			foreach($narratives as $id)
 			{
 				$this->narrative_model->unpublish($id);
 				$message = $message.' #'.$id.', ';
 			}
-			$message = $message.'have all been unpublished successfully.';
+			if(count($narratives)) $message = $message . 'has been unpublished successfully.';
+			else $message = $message . 'have all been unpublished successfully.';
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
