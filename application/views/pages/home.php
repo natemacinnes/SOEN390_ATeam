@@ -39,12 +39,19 @@
       </div>
     </div>
 
-    <div id="bubble-container" class="top-margin float-left">
-      <div class="svg-container svg-container-1 float-left"></div>
-      <div class="svg-container svg-container-0 float-left"></div>
-      <div class="svg-container svg-container-2 float-left"></div>
-    </div>
-    <div id="recent-container" class="top-margin float-left">
+    <!-- this sets the width available & corners -->
+    <div id="homepage-content-wrapper" class="clearfix">
+    <!-- this sets the background color (must match recent-container) -->
+      <div class="inner clearfix">
+        <!-- right column that appears to expand to meet left column -->
+        <div id="recent-container"></div>
+        <!-- left column -->
+        <div id="bubble-container" class="float-left">
+          <div class="svg-container svg-container-1 float-left"></div>
+          <div class="svg-container svg-container-0 float-left"></div>
+          <div class="svg-container svg-container-2 float-left"></div>
+        </div>
+      </div>
     </div>
 
     <div class="clear"></div>

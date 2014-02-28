@@ -147,6 +147,35 @@ body {
 	color: white; text-shadow: 1px 1px #000000, -1px -1px #000000;
 }
 
+#homepage-content-wrapper {
+	width: 100%;
+	margin-bottom: 30px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	line-height: 2.1428571435;
+}
+
+#homepage-content-wrapper .inner {
+	width: 100%;
+	position: relative;
+	line-height: 2.1428571435;
+	color: inherit;
+	background-color: #ccc;
+}
+
+#bubble-container {
+	position: relative;
+	width: 85%;
+	color: inherit;
+	background-color: #eeeeee;
+}
+
+#recent-container {
+	float: right;
+	width: 15%;
+	padding: 0.5em;
+}
+
 /*****************************************************************************
 
 									Controls
@@ -191,33 +220,6 @@ body {
 									Bubbles
 
  *****************************************************************************/
-#bubble-container {
-	position: relative;
-	width: 85%;
-	border: 1px solid #ccc;
-	border-radius: 6px;
-	border-top-right-radius:0;
-	border-bottom-right-radius:0;
-	padding: 1px;
-	margin-bottom: 30px;
-	line-height: 2.1428571435;
-	color: inherit;
-	background-color: #eeeeee;
-}
-
-#recent-container { position: relative;
-	height: 337px;
-	width: 15%;
-	border: 1px solid #ccc;
-	border-radius: 6px;
-	border-bottom-left-radius:0;
-	border-top-left-radius:0;
-	padding: 1px;
-	margin-bottom: 30px;
-	line-height: 2.1428571435;
-	color: inherit;
-	background-color: #eeeeee;
-}
 
 .node:hover{background: #000;}
 
