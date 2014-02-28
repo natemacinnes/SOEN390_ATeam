@@ -100,7 +100,7 @@
             </div>
             <div class="debug-ring-radius">
               <label for="debug-ring-toggle-radius">Inner Radius</label>
-              <input id="debug-ring-toggle-radius" type="text" size="1" name="ring-radius" value="0.9" />
+              <input id="debug-ring-toggle-radius" type="text" size="1" name="ring-radius" value="0.8" />
             </div>
 
             Text display mode:
