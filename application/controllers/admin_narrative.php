@@ -233,12 +233,27 @@ class Admin_Narrative extends YD_Controller
     $this->system_message_model->set_message('Narrative #' . $id . ' was edited successfully.', MESSAGE_NOTICE);
     redirect('admin/narratives/' . $id . '/edit');
   }
+  
+  public function download($id)
+  {
+	$this->require_login();
+	
+	$this->load->library('zip');
+	
+	//Zip narrative directory
+	$path = $this->config->item('site_data_dir') . '/' . $id . '/';
+	$this->zip->read_dir($path, FALSE);
+
+	// Download the zip file to the administrators desktop
+	$this->zip->download($id . '.zip');
+  }
 
   public function delete($id)
   {
+	$this->require_login();
+	
     $data['narrative_id'] = $id;
-	
-	
+	$this->view_wrapper('admin/narratives/delete', $data);
   }
   
   public function processDelete($id)
