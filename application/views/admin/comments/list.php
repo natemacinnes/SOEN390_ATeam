@@ -45,7 +45,7 @@
           <td><?php print $comment['parent_comment']; ?></td>
           <td><?php print $comment['body']; ?></td>
           <td><?php print $comment['created']; ?></td>
-          <td><?php echo anchor('admin/comment/' . $comment['comment_id'] . '/review', 0/*$comment['flags']*/); ?></td>
+          <td><?php echo anchor('admin/comments/' . $comment['comment_id'] . '/review', $comment['flags']); ?></td>
           <td>Published</td>
           <td>
             <a href="#" title="Delete" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a>

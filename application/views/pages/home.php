@@ -2,6 +2,7 @@
   <div class="container">
     <div class="page-header">
       <h1><span id="page-header-you">You</span><span id="page-header-deliberate">Deliberate</span></h1>
+      <h4>Should GMO foods be labeled? / Est-ce que les aliments GMO devraient être étiquetés comme tels?</h4>
     </div>
 
 
@@ -17,25 +18,18 @@
     </div>
     <div class="clear"></div>-->
 
-    Should GMO foods be labelled?
-    <div id="bubble-container" class="top-margin float-left">
-      <div class="sort-container">
-        <div class="btn-group btn-group-vertical">
-          <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span> Recent</a>
-          <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default active" role="button">
-            <span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span> /
-            <span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span>
-            Popular
-          </a>
-        </div>
+    <div class="controls-container btn-toolbar">
+      <div class="btn-group btn-group-horizontal sort-container">
+        <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span> Recent</a>
+        <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default active" role="button">
+          <span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span> /
+          <span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span>
+          Popular
+        </a>
       </div>
-      <left class="svg-container svg-container-1"></left>
-      <right class="svg-container svg-container-2"></right>
-      <div class="filter-container">
-        <div class="btn-group btn-group-vertical">
-          <a href="en" title="English&#013;Anglais" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span> EN</a>
-          <a href="fr" title="French&#013;Fran&ccedil;ais" class="btn btn-default" role="button"><span class="flagicon flagicon-fr"></span> FR</a>
-        </div>
+      <div class="btn-group btn-group-horizontal filter-container">
+        <a href="en" title="English&#013;Anglais" class="btn btn-default" role="button"><span class="flagicon flagicon-en"></span> EN</a>
+        <a href="fr" title="French&#013;Fran&ccedil;ais" class="btn btn-default" role="button"><span class="flagicon flagicon-fr"></span> FR</a>
       </div>
       <div class="help-container">
         <!--<a href=blah class="btn btn-default colorbox"><a href="www.youtube.com" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help colorbox"><span class="glyphicon glyphicon-question-sign"></span></a>
@@ -45,8 +39,19 @@
       </div>
     </div>
 
-
-    <div id="recent-container" class="top-margin float-left">
+    <!-- this sets the width available & corners -->
+    <div id="homepage-content-wrapper" class="clearfix">
+    <!-- this sets the background color (must match recent-container) -->
+      <div class="inner clearfix">
+        <!-- right column that appears to expand to meet left column -->
+        <div id="recent-container"></div>
+        <!-- left column -->
+        <div id="bubble-container" class="float-left">
+          <div class="svg-container svg-container-1 float-left"></div>
+          <div class="svg-container svg-container-0 float-left"></div>
+          <div class="svg-container svg-container-2 float-left"></div>
+        </div>
+      </div>
     </div>
 
     <div class="clear"></div>
@@ -92,6 +97,10 @@
             <div class="debug-ring-opacity">
               <label for="debug-ring-toggle-opacity">Opacity</label>
               <input id="debug-ring-toggle-opacity" type="text" size="1" name="ring-opacity" value="0.3" />
+            </div>
+            <div class="debug-ring-radius">
+              <label for="debug-ring-toggle-radius">Inner Radius</label>
+              <input id="debug-ring-toggle-radius" type="text" size="1" name="ring-radius" value="0.8" />
             </div>
 
             Text display mode:

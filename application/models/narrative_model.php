@@ -39,7 +39,7 @@ class Narrative_Model extends CI_Model
 
 
 		$query = $this->db->from($this->table);
-		if ($position)
+		if (!is_null($position))
 		{
 			$this->db->where('position', $position);
 		}
@@ -117,10 +117,10 @@ class Narrative_Model extends CI_Model
 				return false;
 		}
 	}
-	
+
 	function process_image($original_image, $original_image_name, $original_image_extension, $directory, $image_destroy) {
 		$image_container = null;
-		//getimagesize will determine the type of image 
+		//getimagesize will determine the type of image
 		$image_size = getimagesize($directory . '/' . $original_image);
 		switch($image_size[2])
 		{
@@ -138,16 +138,16 @@ class Narrative_Model extends CI_Model
 				return false;
 				break;
 		}
-		
+
 		//deletes original image
 		if($image_destroy)
 		{
 			unlink($directory . '/' . $original_image);
 		}
-		
+
 		imagejpeg($image_container, $directory . '/' . $original_image_name . ".jpg", 100);
 		imagedestroy($image_container);
-		
+
 		return true;
 	}
 
@@ -168,7 +168,7 @@ class Narrative_Model extends CI_Model
 		$narrative_submit_date = "";
 		$narrative_submit_time = "";
 		$found_first_image = false;
-		
+
 		$xml = new DOMDocument();
 		$xml->formatOutput = true;
 		$root = $xml->createElement("data");
@@ -189,11 +189,18 @@ class Narrative_Model extends CI_Model
 		$file_scan = scandir($dir);
 		foreach ($file_scan as $filecheck)
 		{
+<<<<<<< HEAD
 			//Handling upload of preciously downloaded narrative
 			if($filecheck == 'audio_container.txt') unlink($narrative_path . '/audio_container.txt');
 			else if($filecheck == 'AudioTimes.xml') unlink($narrative_path . '/AudioTimes.xml');
 			else if($filecheck == 'combined.mp3') unlink($narrative_path . '/combined.mp3');
 			else
+=======
+			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
+
+			//Handling of batch upload, ignoring directories '.' and '..'
+			if ($file_extension == '' && $filecheck != '.' && $filecheck != '..' && $filecheck != 'deleted')
+>>>>>>> f86ce76fb5bae448d5360a0e0dcec92670bd95e7
 			{
 				$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
 				
@@ -230,6 +237,30 @@ class Narrative_Model extends CI_Model
 					$narrative_submit_time = $this->get_XML_narrative_submitTime($xml_reader); //check that time format is correct
 					str_replace("-", ":", $narrative_submit_time);
 				}
+<<<<<<< HEAD
+=======
+			}
+			if($this->is_image($file_extension))
+			{
+				$fname = pathinfo($filecheck, PATHINFO_FILENAME);
+				//False variable in process_image controls whether we delete the original image or not (false = do not delete image)
+				$this->process_image($filecheck, $fname, $file_extension, $dir, false);
+
+				//New method, to be approved by TL
+				$images[$fname] = $fname . '.' . $image_format;
+				if($fname > $lastImage) $lastImage = $fname;
+			}
+			if ($file_extension == "xml")
+			{
+				$xmlExistence = TRUE;
+				//read uploaded xml here and hash unique id
+				$xml_reader = simplexml_load_file($dir . "/" . $filecheck);
+				$narrative_name = $this->get_XML_narrative_name($xml_reader); //check if integer, check if RIGHT integer
+				$narrative_language = $this->get_XML_narrative_language($xml_reader); //check if right language (string format)
+				$narrative_submit_date = $this->get_XML_narrative_submitDate($xml_reader); //check if it is a date, check that it is in right format
+				$narrative_submit_time = $this->get_XML_narrative_submitTime($xml_reader); //check that time format is correct
+				str_replace("-", ":", $narrative_submit_time);
+>>>>>>> f86ce76fb5bae448d5360a0e0dcec92670bd95e7
 			}
 		}
 		
@@ -249,7 +280,7 @@ class Narrative_Model extends CI_Model
 
 		 //This is the txt file that will combine all the txt files with ffmpeg
 		$file_concat = fopen($dir . "/audio_container.txt", "w+");
-		
+
 		if (is_dir($dir))
 		{
 			foreach (scandir($dir) as $file)
@@ -295,7 +326,7 @@ class Narrative_Model extends CI_Model
 						{
 							$duration += intval($ar[2]) * 60 * 60;
 						}
-						
+
 						if(count($images) == 1) $audio_image = $images[$lastImage];
 						else if(isset($images[$file_name])) $audio_image = $images[$file_name];
 						else
@@ -386,7 +417,7 @@ class Narrative_Model extends CI_Model
 		{
 			$this->db->query('UPDATE narratives SET audio_length='.$endTimes.' WHERE narrative_id=\''.$id.'\';');
 		}
-		
+
 		//creating the directory on the server
 		$new_dir = "./uploads/" . $id;
 		if (!is_dir($new_dir))
@@ -402,7 +433,6 @@ class Narrative_Model extends CI_Model
 	 */
 	public function insert($narrative)
 	{
-		// TODO does this actuallreturn anything
 		$this->db->insert($this->table, $narrative);
 		return $this->db->insert_id();
 	}

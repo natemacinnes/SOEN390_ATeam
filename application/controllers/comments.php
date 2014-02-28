@@ -8,54 +8,47 @@ class Comments extends YD_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('commenting_model');
+		$this->load->model('comment_model');
+		$this->load->model('comment_flag_model');
 	}
 
 	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 *    http://example.com/index.php/welcome
-	 *  - or -
-	 *    http://example.com/index.php/welcome/index
-	 *  - or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see http://codeigniter.com/user_guide/general/urls.html
+   * The default method called, if none is provided.
+   */
+	public function index()
+	{
+		return;
+	}
+
+	/**
+	 * Stores a reply to a comment (submitted via AJAX POST) and returns the
+	 * rendered comment.
 	 */
-	public function index($narrative_id = 1)
+	public function reply($narrative_id, $parent_id = NULL)
 	{
-		$comments = $this->commenting_model->get_by_narrative_id($narrative_id);
-		//$this->view_wrapper('pages/comments', $data);
-		//Not sure if view_wrapper will cause errors so I commented it out for now
-		$data = array('comments' => $comments, 'narrative_id' => $narrative_id);
-		$this->view_wrapper('embedded/comments', $data);
+		$text = $this->input->post('comment-text');
+		if (strlen($text)) {
+			$comment = array(
+	      'narrative_id' => $narrative_id,
+	      'parent_comment' => $parent_id,
+	      'body' => $text,
+	      'status' => 1,
+	    );
+			$comment['comment_id'] = $this->comment_model->insert($comment);
+			$this->load->view('embedded/comment', array('comment' => $comment));
+		}
+		else {
+			// Set header: 400 Bad response
+			$this->output->set_status_header('400');
+		}
 	}
 
-	public function gui($narrative_id = 1)
-	{
-		$comments = $this->commenting_model->get_by_narrative_id($narrative_id);
-		//$this->view_wrapper('pages/comments', $data);
-		//Not sure if view_wrapper will cause errors so I commented it out for now
-		$data = array('comments' => $comments, 'narrative_id' => $narrative_id);
-		$this->view_wrapper('pages/comments', $data);
-	}
-
-	public function add($narrative_id, $body_of_text, $parent_comment = NULL)
-	{
-		$this->commenting_model->add_comment($narrative_id, $body_of_text, $parent_comment);
-	}
-
+	/**
+	 * Store a flag on a comment.
+	 */
 	public function flag($comment_id)
 	{
-		$this->comment_flag_model->insert($comment_id);
-	}
-
-	public function reply($narrative_id, $body_of_text, $parent_comment = NULL)
-	{
-		$this->commenting_model->add_comment($narrative_id, $body_of_text, $parent_comment);
+		$text = $this->input->post('comment-text');
+		$this->comment_flag_model->insert($comment_id, $text);
 	}
 }

@@ -8,16 +8,17 @@ var debug_text_content_mode;
 var debug_color_mode;
 var debug_position_mode;
 var debug_ring_opacity;
+var debug_ring_radius;
 var debug_bubble_opacity;
 var debug_recent_sort;
 
 jQuery(document).ready(function() {
 	// Add colorbox to any items with a "colorbox" class
-	initalizeColorBox();
+	initialize_color_box();
 
 	// This will do nothing on most pages, but prepare any audio embeds we have
 	// present on page load (i.e. on admin review narrative page)
-	loadMediaElement();
+	narrative_player_load();
 
 	// Process bubbles
 	debug_ring_mode = parseInt(jQuery('.debug-rings input:checked').val());
@@ -26,42 +27,43 @@ jQuery(document).ready(function() {
 	debug_color_mode = parseInt(jQuery('.debug-color input:checked').val());
 	debug_position_mode = parseInt(jQuery('.debug-position input:checked').val());
 	debug_ring_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+	debug_ring_radius = parseFloat(jQuery('#debug-ring-toggle-radius').val());
 	debug_bubble_opacity = parseFloat(jQuery('#debug-bubble-toggle-opacity').val());
 	debug_recent_sort = parseFloat(jQuery('.debug-recent-sort input:checked').val());
 
 	// Toggle buttons for navigation links
-	jQuery('.filter-container .btn-group a').click(function() {
+	jQuery('.filter-container.btn-group a').click(function() {
 		jQuery(this).toggleClass('active');
-		jQuery('.filter-container .btn-group a').not(this).removeClass('active');
+		jQuery('.filter-container.btn-group a').not(this).removeClass('active');
 		if (debug_recent_sort == 0) {
-			yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+			yd_settings.sort_by = jQuery('.sort-container.btn-group a.active').attr('href').substring(1);
 		}
-		yd_settings.language_filter = jQuery('.filter-container .btn-group a.active').attr('href');
+		yd_settings.language_filter = jQuery('.filter-container.btn-group a.active').attr('href');
 		return false;
 	});
 
 	if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
-		yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+		yd_settings.sort_by = jQuery('.sort-container.btn-group a.active').attr('href').substring(1);
 		reloadBubbles();
 	}
 
 	// Radio-like toggle buttons for sort
-	jQuery('.sort-container .btn-group a').click(function () {
+	jQuery('.sort-container.btn-group a').click(function () {
 		if (debug_recent_sort == 0) {
-			jQuery('.sort-container .btn-group a').removeClass('active');
+			jQuery('.sort-container.btn-group a').removeClass('active');
 			jQuery(this).addClass('active');
 			yd_settings.recent_filter = null;
-			yd_settings.sort_by = jQuery('.sort-container .btn-group a.active').attr('href').substring(1);
+			yd_settings.sort_by = jQuery('.sort-container.btn-group a.active').attr('href').substring(1);
 		}
 		else {
 			jQuery(this).toggleClass('active');
-			yd_settings.recent_filter = jQuery('.sort-container .btn-group a[href="#age"]').hasClass('active');
+			yd_settings.recent_filter = jQuery('.sort-container.btn-group a[href="#age"]').hasClass('active');
 		}
 		return false;
 	});
 });
 
-function initalizeColorBox() {
+function initialize_color_box() {
 	jQuery('a, area, input')
     .filter('.colorbox:not(.initColorbox-processed)')
     .addClass('initColorbox-processed')
@@ -70,12 +72,13 @@ function initalizeColorBox() {
 
 function reloadBubbles() {
 	jQuery('.debug input').unbind('click change');
-	jQuery('.sort-container .btn-group a').unbind('click');
+	jQuery('.sort-container.btn-group a').unbind('click');
 	jQuery('.svg-container').html('');
 	if (debug_position_mode == 0) {
 		loadBubbles(null, null);
 	}
 	else {
+		loadBubbles(null, 0);
 		loadBubbles(null, 1);
 		loadBubbles(null, 2);
 	}
@@ -103,6 +106,7 @@ function loadBubbles(language, position) {
 	}
 	yd_settings.recent_filter = null;
 
+	var num_parent_bubbles = jQuery('.svg-container').length;
 	var diameter = (document.getElementById("bubble-container").offsetWidth);
 	var format = d3.format(",.0f");
 	var color = d3.scale.category20c();
@@ -110,14 +114,14 @@ function loadBubbles(language, position) {
 	// Accepts nodes and computes the position of them for use by .data()
 	var pack = d3.layout.pack()
 		.sort(null)
-		.size([debug_position_mode == 0 ? diameter : diameter/2-4, diameter/2])
+		.size([debug_position_mode == 0 ? diameter : diameter/num_parent_bubbles-4, diameter/num_parent_bubbles])
 		.value(bubbles_values[yd_settings.sort_by])
 		.padding(5);
 
 	// Create the SVG bubble structure
 	var svg = d3.select(svgselect).html('').append("svg")
-		.attr("width", debug_position_mode == 0 ? diameter : diameter/2-4)
-		.attr("height", diameter/2)
+		.attr("width", debug_position_mode == 0 ? diameter : diameter/num_parent_bubbles-4)
+		.attr("height", diameter/num_parent_bubbles)
 		.attr("class", "bubble");
 
 	// Retrieve JSON from AJAX controller, but only once upon initial load
@@ -159,7 +163,7 @@ function loadBubbles(language, position) {
 				.attr("dy", 0)
 				.style("text-anchor", "left")
 				.style("font-size", "2em")
-				.text(position == null ? null : (position == 1 ? 'For' : 'Against'));
+				.text(position_label_text(position));
 
 		// FIXME && false debugging
 		if ((position == null || position == 1) && false) {
@@ -210,7 +214,7 @@ function loadBubbles(language, position) {
 		// This computes the SVG path data required to form an arc.
 		var arc = d3.svg.arc()
 			.outerRadius(function(d) { return d.r; })
-			.innerRadius(function(d) { return d.r*.90; });
+			.innerRadius(function(d) { return d.r*debug_ring_radius; });
 
 		// This transforms simple data objects into a arc values from 0 to 2*pi
 		var pie = d3.layout.pie()
@@ -275,37 +279,35 @@ function loadBubbles(language, position) {
 			.style("cursor", "pointer");
 
 		// Colorbox popup for audio player
-		jQuery("g.node-base").click(function(e) {
+		jQuery(svgselect + " g.node-base").click(function(e) {
 			// Don't open colorbox for unmatched language filter
 			if (!narrative_matches_filter(this.__data__)) {
 				return false;
 			}
-			console.log('loading');
+			var image_update_timer;
 			var colorbox = jQuery.colorbox({
 				href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
 				left: 0,
 				speed: 700,
 				opacity: 0,
-				onComplete : function() {
-					$(this).colorbox.resize();
+				onComplete: function() {
+					narrative_player_load();
+					jQuery(this).colorbox.resize();
+				},
+				onClosed: function() {
+					clearInterval(image_update_timer);
 				}
 			});
-			loadMediaElement();
-			colorbox.resize();
-
-			// Stop propagation: otherwise, we'll see multiple click callbacks in
-			// quick succession on the same element
-			e.stopPropagation();
-			e.preventDefault();
 		});
 
 		jQuery('.debug-rings input[type=radio]').click(function() {
 			var lmode = jQuery(this).val();
 			debugRingMode(lmode);
 		});
-		jQuery('#debug-ring-toggle-opacity').change(function() {
+		jQuery('#debug-ring-toggle-opacity,#debug-ring-toggle-radius').change(function() {
 			var lmode = jQuery('.debug-rings input[type=radio]:checked').val();
-			debug_ring_opacity = parseFloat(jQuery(this).val());
+			debug_ring_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+			debug_ring_radius = parseFloat(jQuery('#debug-ring-toggle-radius').val());
 			debugRingMode(lmode);
 		});
 		jQuery('#debug-bubble-toggle-opacity').change(function() {
@@ -335,8 +337,8 @@ function loadBubbles(language, position) {
 			if (rsmode == 0) {
 				yd_settings.sort_by = 'agrees';
 				yd_settings.recent_filter = null;
-				jQuery('.sort-container .btn-group a').removeClass('active');
-				jQuery('.sort-container .btn-group a[href="#agrees"]').addClass('active');
+				jQuery('.sort-container.btn-group a').removeClass('active');
+				jQuery('.sort-container.btn-group a[href="#agrees"]').addClass('active');
 			}
 			debugRecentSortMode(rsmode);
 		});
@@ -450,6 +452,7 @@ function loadBubbles(language, position) {
 
 			// Normalize
 			debug_ring_opacity = parseFloat(jQuery('#debug-ring-toggle-opacity').val());
+			debug_ring_radius = parseFloat(jQuery('#debug-ring-toggle-radius').val());
 			debug_bubble_opacity = parseFloat(jQuery('#debug-bubble-toggle-opacity').val());
 			jQuery(svgselect + ' g.node-base').unbind('mouseenter mouseleave');
 			jQuery(svgselect + ' g.node-base').each(function() {
@@ -605,13 +608,13 @@ function loadBubbles(language, position) {
 		}
 
 		// Toggle buttons for navigation links
-		jQuery('.sort-container .btn-group a').click(function() {
+		jQuery('.sort-container.btn-group a').click(function() {
 			updateVis(svgselect);
 			return false;
 		});
 
 		// Toggle buttons for navigation links
-		jQuery('.filter-container .btn-group a').click(function() {
+		jQuery('.filter-container.btn-group a').click(function() {
 			updateVis(svgselect);
 			return false;
 		});
@@ -632,7 +635,7 @@ bubbles_values = {
 	'agrees': function(d) { return parseInt(d.agrees)+1; },
 	'disagrees': function(d) { return parseInt(d.disagrees)+1; },
 	'views': function(d) { return parseInt(d.views)+1; },
-	'age': function(d) { var dcreated = dateFromString(d.created); var datenum = (dcreated.getFullYear()-2013)*1000 + dcreated.getMonth()/12*900 + dcreated.getDate()/31*50; return datenum },
+	'age': function(d) { var duploaded = dateFromString(d.uploaded); var datenum = (duploaded.getFullYear()-2013)*1000 + duploaded.getMonth()/12*900 + duploaded.getDate()/31*50; return datenum },
 	// TODO
 	'popular': function(d) { return parseInt(d.narrative_id); }
 };
@@ -650,10 +653,23 @@ bubbles_label_text_0 = {
 	'agrees': function(d) { return d.children ? null : d.agrees; },
 	'disagrees': function(d) { return d.children ? null : d.disagrees; },
 	'views': function(d) { return d.children ? null : d.views; },
-	'age': function(d) { return d.children ? null : String(d.created).split(' ')[0]; },
+	'age': function(d) { return d.children ? null : String(d.uploaded).split(' ')[0]; },
 	// TODO
 	'popular': function(d) { return d.children ? null : d.narrative_id; }
 };
+
+function position_label_text(position) {
+	switch (position) {
+		case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
+			return 'Neutral';
+		case yd_settings.constants.NARRATIVE_POSITION_AGREE:
+			return 'For';
+		case yd_settings.constants.NARRATIVE_POSITION_DISAGREE:
+			return 'Against';
+		default:
+			return null;
+	}
+}
 
 function bubble_get_multiplier(d) {
 	if (d.children) {
@@ -773,48 +789,107 @@ function narrative_matches_filter(d) {
 		today.setDate(today.getDate() - 7);
 		var dateStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 		var todayData = {
-			created: dateStr
+			uploaded: dateStr
 		};
 		recent = bubbles_values.age(d) > bubbles_values.age(todayData);
 	}
 	return (yd_settings.language_filter == null || yd_settings.language_filter == d.language) && recent;
 }
 
-function loadMediaElement() {
+function narrative_player_load() {
 	var player_wrappers = jQuery('.player-wrapper').not('player-processed')
 	if (player_wrappers.length) {
 		player_wrappers.addClass('player-processed')
 		jQuery('audio,video', player_wrappers).mediaelementplayer({
 			// the order of controls you want on the control bar (and other plugins below)
-			features: ['playpause','current','progress','duration','tracks','volume'],
+			features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume'],
 			// show framecount in timecode (##:00:00:00)
 			showTimecodeFrameCount: false
 		 });
 
 		//AJAX function that changes the picture according to the time of the
 		//the audio.
-		myaudio=document.getElementById("narrative_audio");
-		myaudio.addEventListener('canplay', function() {
-			// Player is ready
-			myaudio.play();
+		var player_last_update = (new Date).getTime();
+		var myaudio = document.getElementById("narrative_audio");
+		// Update when the audio is ready to play (at load or after seeking)
+		myaudio.addEventListener('canplay', function(e) {
+			player_last_update = e.timeStamp;
+			narrative_player_update_image(myaudio.currentTime);
+			//myaudio.play();
 		}, false);
-		myaudio.addEventListener("timeupdate", function(e) {
-			//document.getElementById('current-time').innerHTML = myaudio.currentTime;
-			var xmlhttp=new XMLHttpRequest();
-			xmlhttp.onreadystatechange=function() {
-				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-					document.getElementById("audio_image").src = xmlhttp.responseText;
-				}
-			};
-			// TODO make this jQuery using jQuery.get()
-			// TODO make this a real controller method
-			var player = jQuery('.player-wrapper');
-			if (player.length) {
-				var narrative_id = player.attr('id').substring(10);
-				var url = yd_settings.site_url + "ajax/audio_image/" + narrative_id + "/" + myaudio.currentTime;
-				xmlhttp.open("GET", url, true);
-				xmlhttp.send();
+		// Update as the audio continues to play.
+		myaudio.addEventListener('timeupdate', function(e) {
+			if (e.timeStamp - player_last_update > yd_settings.NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL) {
+				player_last_update = e.timeStamp;
+				narrative_player_update_image(myaudio.currentTime);
 			}
 		}, false);
 	}
+}
+
+function narrative_player_update_image(timecode) {
+	var player = jQuery('.player-wrapper');
+	if (!player.length) {
+		// No narrative player was loaded.
+		return;
+	}
+	var narrative_id = player.attr('id').substring(10);
+	var url = yd_settings.site_url + "ajax/audio_image/" + narrative_id + "/" + timecode;
+	jQuery.get(url, function(data) {
+		jQuery("#audio_image").attr('src', data);
+	});
+}
+
+function initialize_commenting() {
+	// Click handler: Comment (root level)
+	jQuery(".action-comment-post").not('.comment-processed').addClass('comment-processed').click(function() {
+		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
+		var url = yd_settings.site_url + "comments/reply/" + narrative_id;
+		var formdata = jQuery("#new-comment-form").serialize();
+		$.post(url, formdata)
+			.success(function(data) {
+				// Remove the 'no comment' message if it exists
+				jQuery('.comments-wrapper .remove-me').remove();
+				// Add the new comment, pre-rendered by the controller
+				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
+				jQuery("#new-comment").val('');
+				initialize_commenting();
+			})
+			.fail(function() {
+				alert("An error occurred while adding your comment. Please try again.");
+			});
+	});
+	// Click handler: Comment (on comment)
+	jQuery(".action-comment-reply").not('.comment-processed').addClass('comment-processed').click(function() {
+		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
+		var parent_comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
+		var url = yd_settings.site_url + "comments/reply/" + narrative_id + '/' + parent_comment_id;
+		var formdata = jQuery("#new-comment-form").serialize();
+		$.post(url, formdata)
+			.success(function(data) {
+				// Remove the 'no comment' message if it exists
+				jQuery('.comments-wrapper .remove-me').remove();
+				// Add the new comment, pre-rendered by the controller
+				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
+				jQuery("#new-comment").val('');
+				initialize_commenting();
+			})
+			.fail(function() {
+				alert("An error occurred while adding your comment. Please try again.");
+			});
+	});
+	// Click handler: Flag (on comment)
+	jQuery(".action-comment-report").not('.comment-processed').addClass('comment-processed').click(function() {
+		var comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
+		var url = yd_settings.site_url + "comments/flag/" + comment_id;
+		var formdata = jQuery("#new-comment-form").serialize();
+		$.post(url, formdata)
+			.success(function(data) {
+				jQuery("#new-comment").val('');
+				alert("Thank you, this comment has been reported.");
+			})
+			.fail(function() {
+				alert("An error occurred while reporting the comment. Please try again.");
+			});
+	});
 }
