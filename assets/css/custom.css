@@ -153,6 +153,7 @@ body {
 	border: 1px solid #ccc;
 	border-radius: 6px;
 	line-height: 2.1428571435;
+	margin-top: 0.5em;
 }
 
 #homepage-content-wrapper .inner {
@@ -187,8 +188,8 @@ body {
 
 .help-container {
   position: absolute;
-  bottom: -1px;
-  right: 20px;
+  bottom: -0.5em; /* matches margin-top of #homepage-content-wrapper */
+  right: 64px;
 }
 
 .flagicon {
