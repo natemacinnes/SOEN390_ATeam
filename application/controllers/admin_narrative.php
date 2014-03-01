@@ -252,7 +252,7 @@ class Admin_Narrative extends YD_Controller
   {
 	$this->require_login();
 	
-    $data['narrative_id'] = $id;
+    $data['narratives'][0] = $id;
 	$this->view_wrapper('admin/narratives/delete', $data);
   }
   
