@@ -60,6 +60,92 @@ class Editing_Model extends CI_Model
 			return $data;
 		}
 	}
+
+		public function gatherInfoNew($id)
+	{
+		$query = $this->db->query('SELECT * FROM narratives, admins WHERE uploaded_by = admin_id AND narrative_id=\''.$id.'\';');
+		if($query -> num_rows() > 0)
+		{
+			$data = $query->row_array();
+		}
+		else
+		{
+			return false;
+		}
+
+		//Getting the path and the number of tracks
+		$xml_reader = simplexml_load_file($this->config->item('site_data_dir') . '/' . $data['narrative_id'] . "/AudioTimes.xml");
+		$trackCtr = 0;
+		$picCtr = 0;
+		$lastPic = '';
+		foreach ($xml_reader->Narrative as $narrative)
+		{
+			//Getting track
+			$trackCtr++;
+			$data['trackName'][$trackCtr] = (string) $narrative->Mp3Name;
+			$data['trackPath'][$trackCtr] = (string) ($this->config->item('site_data_dir') . '/' . $data['narrative_id'] . '/' . $narrative->Mp3Name);
+
+			//Getting picture
+			if (strcmp($lastPic, $narrative->Image))
+			{
+				$picCtr++;
+				$lastPic = $narrative->Image;
+				$data['picName'][$picCtr] = (string) $narrative->Image;
+				$data['picPath'][$picCtr] = ($this->config->item('site_data_dir') . '/' . $data['narrative_id'] . '/' . $narrative->Image);
+			}
+		}
+		$data['trackCtr'] = $trackCtr;
+		$data['picCtr'] = $picCtr;
+
+		return $data;
+
+		/*foreach ($query->result() as $row)
+		{
+			//Getting info on the narrative
+			$data['narrative_id'] = $row->narrative_id;
+			$data['created'] = $row->created;
+			$data['uploaded'] = $row->uploaded;
+			$data['length'] = $row->audio_length;
+			$admin = $this->db->query('SELECT * FROM admins WHERE admin_id="'.$row->uploaded_by.'";');
+			foreach ($admin->result() as $item)
+			{
+				$data['uploaded_by'] = $item->login;
+			}
+			$data['language'] = $row->language;
+			$data['views'] = $row->views;
+			$data['agrees'] = $row->agrees;
+			$data['disagrees'] = $row->disagrees;
+			$data['shares'] = $row->shares;
+			$data['flags'] = $row->flags;
+			$data['status'] = $row->status;
+
+			//Getting the path and the number of tracks
+			$xml_reader = simplexml_load_file($this->config->item('site_data_dir') . '/' . $row->narrative_id . "/AudioTimes.xml");
+			$trackCtr = 0;
+			$picCtr = 0;
+			$lastPic = '';
+			foreach ($xml_reader->Narrative as $narrative)
+			{
+				//Getting track
+				$trackCtr++;
+				$data['trackName'][$trackCtr] = (string) $narrative->Mp3Name;
+				$data['trackPath'][$trackCtr] = (string) ($this->config->item('site_data_dir') . '/' . $row->narrative_id . '/' . $narrative->Mp3Name);
+
+				//Getting picture
+				if (strcmp($lastPic, $narrative->Image))
+				{
+					$picCtr++;
+					$lastPic = $narrative->Image;
+					$data['picName'][$picCtr] = (string) $narrative->Image;
+					$data['picPath'][$picCtr] = ($this->config->item('site_data_dir') . '/' . $row->narrative_id . '/' . $narrative->Image);
+				}
+			}
+			$data['trackCtr'] = $trackCtr;
+			$data['picCtr'] = $picCtr;
+
+			return $data;
+		}*/
+	}
 	
 	/**
 	*	Gathering deleted files

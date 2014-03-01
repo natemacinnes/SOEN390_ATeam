@@ -15,6 +15,8 @@ class Admin_Narrative extends YD_Controller
     $this->load->model('editing_model');
     $this->load->model('admin_model');
     $this->load->model('narrative_flag_model');
+    $this->load->model('comment_flag_model');
+    $this->load->model('comment_model');
     // Used to pass admin ID between methods during validation
     $admin_id = null;
   }
@@ -34,25 +36,46 @@ class Admin_Narrative extends YD_Controller
   {
     $this->require_login();
 
-    //Handling error when method gets called by it's URL without an input
-    if($id == NULL) {
-      redirect('admin/narratives');
-    }
-	
     //Getting info on the narrative
-    $data = $this->editing_model->gatherInfo($id);
-	
-	//Getting deleted items
-	$path = $this->config->item('site_data_dir') . '/' . $id . '/deleted/';
-	if(is_dir($path)) $data['deleted'] = $this->editing_model->gatherDeleted($path);
+    $data = $this->editing_model->gatherInfoNew($id);
+	  if(!$data) {
+      $this->system_message_model->set_message('Invalid Narrative ID.', MESSAGE_ERROR);
+      redirect('admin/narratives/');
+    }
+	  //Getting deleted items
+	  $path = $this->config->item('site_data_dir') . '/' . $id . '/deleted/';
+	  if(is_dir($path)) $data['deleted'] = $this->editing_model->gatherDeleted($path);
 	
     //Handling error when input id doesn't exist
-    if($data == null) {
-      $data['error'] = 1;
-    }
+    
 	
-	//Loading the page
+	  //Loading the page
     $this->view_wrapper('admin/narratives/edit', $data);
+  }
+
+  /**
+   * Displays the edit page for a narrative.
+   */
+  public function newedit($narrative_id = NULL)
+  {
+    $this->require_login();
+    $data['narrative_id'] = $narrative_id;
+
+    //Getting info on the narrative
+    $data['narrative'] = $this->editing_model->gatherInfoNew($narrative_id);
+    if(!$data['narrative']) {
+      $this->system_message_model->set_message('Invalid Narrative ID.', MESSAGE_ERROR);
+      redirect('admin/narratives/');
+    }
+
+    $data['flags'] = $this->narrative_flag_model->get_by_narrative_id($narrative_id);
+  
+    //Getting deleted items
+    $path = $this->config->item('site_data_dir') . '/' . $narrative_id . '/deleted/';
+    if(is_dir($path)) $data['deleted'] = $this->editing_model->gatherDeleted($path);
+  
+    //Loading the page
+    $this->view_wrapper('admin/narratives/newedit', $data);
   }
 
   /**
@@ -93,8 +116,8 @@ class Admin_Narrative extends YD_Controller
     $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
     mkdir($newDir, 0755);
 	
-	//Creating a new folder to store deleted files
-	$delDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/deleted/';
+	  //Creating a new folder to store deleted files
+	  $delDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/deleted/';
     mkdir($delDir, 0755);
 
     //Archiving desired tracks and moving the rest to the new folder

@@ -5,7 +5,7 @@
   <?php if (isset($error)): ?>
     The narrative requested does not exist.
   <?php else: ?>
-	<p>Status: <?php echo $status == 1 ? 'Published' : 'Not Published'; ?>
+	<p>Status: <?php echo $status == 1 ? 'Published' : 'Not Published'; ?></p>
     <p style="display: inline-block">
       Number of views: <?php echo $views; ?><br/>
       Number of agrees: <?php echo $agrees; ?><br/>
@@ -14,10 +14,10 @@
       Number of flags: <?php echo $flags; ?><br/>
     </p>
     <p style="display: inline-block">
-      Audio length (seconds): <?php echo $length; ?><br/>
+      Audio length (seconds): <?php echo $audio_length; ?><br/>
       Created on: <?php echo $created; ?><br/>
       Uploaded on: <?php echo $uploaded; ?><br/>
-      Uploaded by: <?php echo $uploaded_by; ?><br/>
+      Uploaded by: <?php echo $login; ?><br/>
       Language: <?php echo $language; ?><br/>
     </p>
     </br>
@@ -31,7 +31,7 @@
       		echo form_checkbox('tracks[]', $trackName[$i], FALSE);
       		echo '<h4 class="display-inline left-margin">'.$trackName[$i].'</h4>';
       		echo '<audio class="display-inline left-margin" controls><source src="'.base_url().$trackPath[$i].'" type="audio/mpeg"></audio>';
-			echo '</div>';
+          echo '</div>';
       	}
         ?>
       </div>
