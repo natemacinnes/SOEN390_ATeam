@@ -15,6 +15,7 @@ class Admin extends YD_Controller
 		$this->load->model('narrative_model');
 		$this->load->model('editing_model');
 		$this->load->model('admin_model');
+		$this->load->model('topic_model');
 		// Used to pass admin ID between methods during validation
 		$admin_id = null;
 	}
@@ -90,6 +91,26 @@ class Admin extends YD_Controller
 
 		$data = array('narratives' => $narratives);
 		$this->view_wrapper('admin/narratives/list', $data);
+	}
+	//display admin topic change page
+	public function topic()
+	{
+		$this->require_login();
+		$this->view_wrapper('admin/topic');
+	}
+	
+	
+	//TODO topic change functionality
+	public function changeTopic()
+	{
+		$this->require_login();	
+		$topic = $this->input->post("topic");
+		$this->topic_model->changeTopic();
+		
+		
+		$this->system_message_model->set_message('Portal Topic Successfully Changed.', MESSAGE_NOTICE);
+		redirect('admin/topic');
+		
 	}
 
 	/**
