@@ -101,16 +101,15 @@ class Admin extends YD_Controller
 	
 	
 	//TODO topic change functionality
+	//might not need this
 	public function changeTopic()
 	{
 		$this->require_login();	
 		$topic = $this->input->post("topic");
-		$this->topic_model->changeTopic();
-		
-		
+		$this->topic_model->change_topic();
+	
 		$this->system_message_model->set_message('Portal Topic Successfully Changed.', MESSAGE_NOTICE);
 		redirect('admin/topic');
-		
 	}
 
 	/**

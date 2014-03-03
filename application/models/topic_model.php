@@ -8,9 +8,11 @@ class Topic_Model extends CI_Model
 		
 	}
 
-	public function changeTopic()
+	public function change_topic($new_topic)
 	{
-		
+		$data = array('value' => $new_topic);
+		$this->db->where('key', "portal_topic");
+		$this->db->update('variables', $data);
 	}
 	
 }
