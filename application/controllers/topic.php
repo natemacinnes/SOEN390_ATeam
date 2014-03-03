@@ -1,9 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-/**
- * Used for providing static/view-only pages.
- */
-class Pages extends YD_Controller
+class Topic extends YD_Controller
 {
 	/**
 	 * Constructor: initialize required libraries.
@@ -13,14 +10,28 @@ class Pages extends YD_Controller
 		parent::__construct();
 		$this->load->model('topic_model');
 	}
-
+	
 	/**
    * The default method called, if none is provided.
    */
 	public function index()
 	{
-		$topic = $this->topic_model->get_topic();
-		$data = array('topic' => $topic);
-		$this->view_wrapper('pages/home', $data);
+		return;
 	}
-}
+
+	/**
+   * Change the Topic of the Website.
+   */
+	public function change($new_topic)
+	{
+		if (strlen($new_topic)) 
+		{
+			$this->topic_model->change_topic($new_topic);
+		}
+		else
+		{
+			// Set header: 400 Bad response
+			$this->output->set_status_header('400');
+		}
+	}
+?>

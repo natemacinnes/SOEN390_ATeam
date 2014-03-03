@@ -3,10 +3,7 @@
     <h1>Change Portal Topic</h1>
   </div>
  
- 
-  
-  
-  <?php echo form_open('admin/changeTopic', array('class' => 'form-horizontal')); ?>
+  <?php echo form_open('admin/change_topic', array('class' => 'form-horizontal')); ?>
 	<div class="form-group">
 		<label for="topic" class="col-sm-2 control-label">Enter New Portal Topic:</label>
 		<div class="col-sm-10">
@@ -21,8 +18,4 @@
 	</div>
 	<?php echo form_close(); ?>
       
-
-
-
- 
 </div>
