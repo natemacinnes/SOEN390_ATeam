@@ -108,7 +108,7 @@ class Admin extends YD_Controller
 		
 		if(strlen($topic))
 		{
-			$this->topic_model->change_topic();
+			$this->topic_model->change_topic($topic);
 			$this->system_message_model->set_message('Portal Topic Successfully Changed.', MESSAGE_NOTICE);
 			redirect('admin/topic');
 		}
