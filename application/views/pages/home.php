@@ -2,7 +2,7 @@
   <div class="container">
     <div class="page-header">
       <h1><span id="page-header-you">You</span><span id="page-header-deliberate">Deliberate</span></h1>
-	  <h4>Topic: <?php echo $topic; ?></h4>
+	  <h4><?php echo $topic; ?></h4>
       <h4>Should GMO foods be labeled? / Est-ce que les aliments GMO devraient être étiquetés comme tels?</h4>
     </div>
 
