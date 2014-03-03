@@ -114,7 +114,8 @@ class Admin extends YD_Controller
 		}
 		else
 		{
-			$this->system_message_model->set_message('Portal Topic Error. Please try again.', MESSAGE_NOTICE);
+			$this->system_message_model->set_message('Portal Topic Error. Please try again.', MESSAGE_WARNING);
+			redirect('admin/topic');
 		} 
 
 	}

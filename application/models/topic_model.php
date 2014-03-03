@@ -7,6 +7,14 @@ class Topic_Model extends CI_Model
 		parent::__construct();
 		
 	}
+	
+	public function get_topic()
+	{	
+		$this->db->select('value');
+		$this->db->where('key', "portal_topic");
+		$query = $this->db->get('variables'); 
+		return $query;
+	}
 
 	public function change_topic($new_topic)
 	{
