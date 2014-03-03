@@ -13,7 +13,7 @@ class Topic_Model extends CI_Model
 		$this->db->select('value');
 		$this->db->where('key', "portal_topic");
 		$query = $this->db->get('variables'); 
-		return $query;
+		return (string)$query;
 	}
 
 	public function change_topic($new_topic)
