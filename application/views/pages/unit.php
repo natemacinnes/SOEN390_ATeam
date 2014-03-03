@@ -1,9 +1,9 @@
 <table width="100%" class="table table-striped table-bordered">
   <thead>
     <tr>
-      <th width="25%">Name</th>
-      <th width="50%">Description</th>
-      <th width="25%">Passed?</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Passed?</th>
     </tr>
   </thead>
 
