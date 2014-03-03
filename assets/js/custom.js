@@ -398,7 +398,7 @@ function narrative_player_load() {
 		}, false);
 		// Update as the audio continues to play.
 		myaudio.addEventListener('timeupdate', function(e) {
-			if (e.timeStamp - player_last_update > yd_settings.NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL) {
+			if (e.timeStamp - player_last_update > yd_settings.constants.NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL) {
 				player_last_update = e.timeStamp;
 				narrative_player_update_image(myaudio.currentTime);
 			}
@@ -477,7 +477,7 @@ function change_topic() {
 	//Click handler: Submit a new topic.
 	jQuery(".btn .btn-default").click(function() {
 		var new_topic = jQuery(".form-control").val();
-		var url = yd_settings.site_url + "topic_change/change/" + new_topic; 
+		var url = yd_settings.site_url + "topic_change/change/" + new_topic;
 		$.post(url, formdata)
 			.success(function(data) {
 				jQuery(".form-control").val('');
