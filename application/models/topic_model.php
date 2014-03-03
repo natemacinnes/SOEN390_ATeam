@@ -16,8 +16,8 @@ class Topic_Model extends CI_Model
 		{
 			$topic = (string)$row['value'];
 		}
-		
 		return $topic;
+	}
 
 	public function change_topic($new_topic)
 	{
