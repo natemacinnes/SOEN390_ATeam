@@ -10,11 +10,13 @@ class Topic_Model extends CI_Model
 	
 	public function get_topic()
 	{	
-		$this->db->where('key', "portal_topic");
-		$query = $this->db->get('variables'); 
-		foreach ($query->result() as $row)
+		$topic = "";
+		$query = $this->db->from("variables")
+					->where('key', "portal_topic")
+					->get();
+		foreach ($query->result_array() as $row)
 		{
-			$topic = (string)$row['value'];
+			$topic = $row['value'];
 		}
 		return $topic;
 	}
