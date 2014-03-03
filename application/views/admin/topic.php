@@ -3,11 +3,11 @@
     <h1>Change Portal Topic</h1>
   </div>
  
-  <?php //echo form_open('admin/changeTopic', array('class' => 'form-horizontal')); ?>
+  <?php echo form_open('admin/change_topic', array('class' => 'form-horizontal')); ?>
 	<div class="form-group">
 		<label for="topic" class="col-sm-2 control-label">Enter New Portal Topic:</label>
 		<div class="col-sm-10">
-			<input type="text" class="form-control" name="topic" placeholder="Topic" value="<?php //echo set_value('topic'); ?>">
+			<input type="text" class="form-control" name="topic" placeholder="Topic" value="<?php echo set_value('topic'); ?>">
 		</div>
 	</div>
 	
@@ -16,12 +16,6 @@
 			<button type="submit" class="btn btn-default">Submit Topic</button>
 		</div>
 	</div>
-	<?php //echo form_close(); ?>
+	<?php echo form_close(); ?>
       
-<script type="text/javascript">
-	change_topic();
-</script>
-
-
- 
 </div>
