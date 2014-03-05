@@ -2,6 +2,7 @@
 application/cache
 application/logs
 application/config/database.php
+application/config/testing/database.php
 
 uploads/*
 
@@ -15,3 +16,4 @@ Thumbs.db
 .htaccess
 audio_container.txt
 *.sql
+
