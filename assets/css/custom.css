@@ -121,6 +121,12 @@ body {
 	padding-left: 0.1em;
 }
 
+span.red { color: #c23b22; }
+span.green { color: #03c03c; }
+span.blue { color: #0198e1; }
+span.yellow { color: #ffbf00; }
+
+
 /*****************************************************************************
 
 									Homepage
@@ -176,6 +182,9 @@ body {
 	width: 15%;
 	padding: 0.5em;
 }
+
+.controls-container .btn{ box-shadow: 0 1px 0 #bbb; }
+.filter-container .btn{ box-shadow: 0 1px 0 #bbb; }
 
 /*****************************************************************************
 
@@ -255,6 +264,17 @@ body {
 .flag-wrapper td:nth-child(2){ max-width: 200px;}
 .flag-wrapper td:nth-child(3){ min-width: 150px;}
 
+/*****************************************************************************
+
+									Player
+
+ *****************************************************************************/
+ 
+.player-wrapper{ position: relative;}
+
+.player-buttons .btn{ box-shadow: 0 1px 0 #bbb; }
+ 
+ 
 /*****************************************************************************
 
 									Comments
