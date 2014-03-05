@@ -6,25 +6,42 @@
 
 class Ajax_Test extends CIUnit_TestCase
 {
-    public function setUp()
-    {
-        // Set the tested controller
-        $this->CI = set_controller('ajax');
-    }
+	/**
+	 * Setup PHPUnit & load any required dependencies
+	 */
+	public function setUp()
+	{
+		// Set the tested controller
+		$this->CI = set_controller('ajax');
+	}
 
-    public function test__audio_image__valid_folder()
-    {
-        // Call the controllers method
-        $this->CI->audio_image(3, 1);
+	/**
+	 * Call native CI unit tests here.
+	 */
+	public function index() {
+	}
 
-        // Fetch the buffered output
-        $out = output();
+	/**
+	 * UT-0025
+	 * @covers Ajax::audio_image
+	 *
+	 */
+	public function test__audio_image__valid_folder()
+	{
+		$narrative_id = 3;
+		$this->CI->audio_image($narrative_id, 1);
 
-        $prefix = base_url() . $this->CI->config->item('site_data_dir') . '/' . $first_id . '/';
-        $matches = array();
-        preg_match("|^(" . $prefix . ")(\d+).jpg$|", $out, $matches);
+		$prefix = base_url() . $this->CI->config->item('site_data_dir') . '/' . $narrative_id . '/';
+		$this->expectOutputRegex("|^(" . $prefix . ")(\d+).jpg$|");
+	}
 
-        // Check if the content is OK
-        $this->assertEquals(3, count($matches));
-    }
+	/**
+	 * UT-0026
+	 * @covers Ajax::audio_image
+	 */
+	public function test__audio_image__invalid_folder()
+	{
+		$this->CI->audio_image(-14, 450);
+		$this->expectOutputString("");
+	}
 }

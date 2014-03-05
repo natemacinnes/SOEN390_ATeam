@@ -348,7 +348,8 @@ class CI_Input {
 		}
 		else
 		{
-			$this->ip_address = $_SERVER['REMOTE_ADDR'];
+			// http://stackoverflow.com/questions/18082618/php-error-encountered-when-running-command-line-using-codeigniter-2-xx
+			$this->ip_address = $this->server('remote_addr');
 		}
 
 		if ( ! $this->valid_ip($this->ip_address))

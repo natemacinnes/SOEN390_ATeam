@@ -23,39 +23,28 @@ class Ajax extends YD_Controller
 	{
 		$data = array();
 		$data['name'] = 'flare';
-
 		// Clusters are groups of nodes
-		$clusters = array();
+		$nodes = array();
 
-		$positions = array(NARRATIVE_POSITION_NEUTRAL, NARRATIVE_POSITION_AGREE, NARRATIVE_POSITION_DISAGREE);
-		foreach ($positions as $position) {
-			$cluster = array();
-			$nodes = array();
-
-			$cluster['name'] = 'position-' . $position;
-
-			// Load nodes into the active cluster
-			$result = $this->narrative_model->get_all('id', $position);
-			foreach ($result as $narrative)
+		// Load nodes into the active cluster
+		$result = $this->narrative_model->get_all('id', $position);
+		foreach ($result as $narrative)
+		{
+			if (!$narrative['status'])
 			{
-				if (!$narrative['status'])
-				{
-					continue;
-				}
-				// +1 to ensure that 0 doesn't give us NaN
-				$pie_data = array(
-					array("label" => "agrees", "value" => $narrative['agrees']+1),
-					array("label" => "disagrees", "value" => $narrative['disagrees']+1),
-				);
-				$narrative['pie_data'] = $pie_data;
-				//$narrative['created'] = strtotime($narrative['created']);
-				$nodes[] = $narrative;
+				continue;
 			}
-			$cluster['children'] = $nodes;
-			$clusters[] = $cluster;
+			// +1 to ensure that 0 doesn't give us NaN
+			$pie_data = array(
+				array("label" => "agrees", "value" => $narrative['agrees']+1),
+				array("label" => "disagrees", "value" => $narrative['disagrees']+1),
+			);
+			$narrative['pie_data'] = $pie_data;
+			//$narrative['created'] = strtotime($narrative['created']);
+			$nodes[] = $narrative;
 		}
 
-		$data['children'] = $clusters;
+		$data['children'] = $nodes;
 
 		print json_encode($data);
 	}

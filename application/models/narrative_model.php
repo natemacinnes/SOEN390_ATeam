@@ -155,7 +155,7 @@ class Narrative_Model extends CI_Model
 	public function process_narrative($narrative_path, $id = null)
 	{
 		// Get the absolute path
-		$dir = realpath(FCPATH . $narrative_path);
+		$dir = realpath($narrative_path);
 
 		//Variables we need to concatenate the audio file,
 		//determine the type of narrative to upload, and create an XML file
@@ -189,42 +189,50 @@ class Narrative_Model extends CI_Model
 		$file_scan = scandir($dir);
 		foreach ($file_scan as $filecheck)
 		{
-			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
-
-			//Handling of batch upload, ignoring directories '.' and '..'
-			if ($file_extension == '' && $filecheck != '.' && $filecheck != '..' && $filecheck != 'deleted')
+			//Handling upload of preciously downloaded narrative
+			if($filecheck == 'audio_container.txt') unlink($narrative_path . '/audio_container.txt');
+			else if($filecheck == 'AudioTimes.xml') unlink($narrative_path . '/AudioTimes.xml');
+			else if($filecheck == 'combined.mp3') unlink($narrative_path . '/combined.mp3');
+			else
 			{
-				$isBatchUpload = TRUE;
-				$newPath = $narrative_path.'/'.$filecheck;
-				$data = $this->process_narrative($newPath);
-				if ($data['error'] === 1)
+				$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
+
+				//Handling of batch upload, ignoring directories '.' and '..'
+				if ($file_extension == '' && $filecheck != '.' && $filecheck != '..' && $filecheck != 'deleted')
 				{
-					$data['error_message'] = 'Processing failed, one of the narrative folders uploaded does not contain an XML file. Please attempt the upload again.';
-					return $data;
+					$isBatchUpload = TRUE;
+					$newPath = $narrative_path.'/'.$filecheck;
+					$data = $this->process_narrative($newPath);
+					if ($data['error'] === 1)
+					{
+						$data['error_message'] = 'Processing failed, one of the narrative folders uploaded does not contain an XML file. Please attempt the upload again.';
+						return $data;
+					}
+				}
+				if($this->is_image($file_extension))
+				{
+					$fname = pathinfo($filecheck, PATHINFO_FILENAME);
+					//False variable in process_image controls whether we delete the original image or not (false = do not delete image)
+					$this->process_image($filecheck, $fname, $file_extension, $dir, false);
+
+					//New method, to be approved by TL
+					$images[$fname] = $fname . '.' . $image_format;
+					if($fname > $lastImage) $lastImage = $fname;
+				}
+				if ($file_extension == "xml")
+				{
+					$xmlExistence = TRUE;
+					//read uploaded xml here and hash unique id
+					$xml_reader = simplexml_load_file($dir . "/" . $filecheck);
+					$narrative_name = $this->get_XML_narrative_name($xml_reader); //check if integer, check if RIGHT integer
+					$narrative_language = $this->get_XML_narrative_language($xml_reader); //check if right language (string format)
+					$narrative_submit_date = $this->get_XML_narrative_submitDate($xml_reader); //check if it is a date, check that it is in right format
+					$narrative_submit_time = $this->get_XML_narrative_submitTime($xml_reader); //check that time format is correct
+					str_replace("-", ":", $narrative_submit_time);
 				}
 			}
-			if($this->is_image($file_extension))
-			{
-				$fname = pathinfo($filecheck, PATHINFO_FILENAME);
-				//False variable in process_image controls whether we delete the original image or not (false = do not delete image)
-				$this->process_image($filecheck, $fname, $file_extension, $dir, false);
-
-				//New method, to be approved by TL
-				$images[$fname] = $fname . '.' . $image_format;
-				if($fname > $lastImage) $lastImage = $fname;
-			}
-			if ($file_extension == "xml")
-			{
-				$xmlExistence = TRUE;
-				//read uploaded xml here and hash unique id
-				$xml_reader = simplexml_load_file($dir . "/" . $filecheck);
-				$narrative_name = $this->get_XML_narrative_name($xml_reader); //check if integer, check if RIGHT integer
-				$narrative_language = $this->get_XML_narrative_language($xml_reader); //check if right language (string format)
-				$narrative_submit_date = $this->get_XML_narrative_submitDate($xml_reader); //check if it is a date, check that it is in right format
-				$narrative_submit_time = $this->get_XML_narrative_submitTime($xml_reader); //check that time format is correct
-				str_replace("-", ":", $narrative_submit_time);
-			}
 		}
+
 		//Handling error when folder does not contain XML file
 		if ($xmlExistence == FALSE && $isBatchUpload == FALSE)
 		{
@@ -422,6 +430,12 @@ class Narrative_Model extends CI_Model
 	*/
 	public function unpublish($id)
 	{
+		$query = $this->db->query('SELECT * FROM narratives WHERE narrative_id=\''.$id.'\';');
+		foreach ($query->result() as $row)
+		{
+			$status = $row->status;
+		}
 		$this->db->query('UPDATE narratives SET status=0 WHERE narrative_id='.$id.';');
+		return $status;
 	}
 }

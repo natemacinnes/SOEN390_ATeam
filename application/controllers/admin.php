@@ -15,6 +15,7 @@ class Admin extends YD_Controller
 		$this->load->model('narrative_model');
 		$this->load->model('editing_model');
 		$this->load->model('admin_model');
+		$this->load->model('topic_model');
 		// Used to pass admin ID between methods during validation
 		$admin_id = null;
 	}
@@ -91,6 +92,33 @@ class Admin extends YD_Controller
 		$data = array('narratives' => $narratives);
 		$this->view_wrapper('admin/narratives/list', $data);
 	}
+	//display admin topic change page
+	public function topic()
+	{
+		$this->require_login();
+		$this->view_wrapper('admin/topic');
+	}
+	
+	
+	//TODO topic change functionality
+	public function change_topic()
+	{
+		$this->require_login();	
+		$topic = $this->input->post("topic");
+		
+		if(strlen($topic))
+		{
+			$this->topic_model->change_topic($topic);
+			$this->system_message_model->set_message('Portal Topic Successfully Changed.', MESSAGE_NOTICE);
+			redirect('admin/topic');
+		}
+		else
+		{
+			$this->system_message_model->set_message('Portal Topic Error. Please try again.', MESSAGE_WARNING);
+			redirect('admin/topic');
+		} 
+
+	}
 
 	/**
  	 * Display narrative upload form.
@@ -149,7 +177,8 @@ class Admin extends YD_Controller
 		}
 
 		//Output success
-		$this->view_wrapper('admin/upload-success', $data);
+		$this->system_message_model->set_message('Narrative(s) uploaded successfully.', MESSAGE_NOTICE);
+		redirect('admin');
 	}
 
 	public function batchAction()
@@ -159,47 +188,83 @@ class Admin extends YD_Controller
 		//Checking if any narratives have been checked
 		if(isset($_POST['narratives'])) $narratives = $_POST['narratives'];
 		else redirect('admin');
+		
+		if(count($narratives) == 1) $message = 'Narrative';
+		else $message = 'Narratives';
 
 		//Perform action depending on clicked button
 		if(isset($_POST['delete']))
 		{
-			//Delete selected narratives and then remove them from the database
-			$message = 'Narratives';
-			foreach($narratives as $id)
-			{
-				$this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
-				$this->narrative_model->delete(array('narrative_id' => $id));
-				$message = $message . ' #' . $id . ', ';
-			}
-			$message = $message . 'have all been deleted successfully.';
-			$this->system_message_model->set_message($message);
-			redirect('admin/narratives');
+			//Displaying deletion confirmation and downloads page
+			$data['narratives'] = $narratives;
+			$this->view_wrapper('admin/narratives/delete', $data);
+			
 		}
 		else if(isset($_POST['publish']))
 		{
 			//Publish selected narratives
-			$message = 'Narratives';
 			foreach($narratives as $id)
 			{
 				$this->narrative_model->publish($id);
 				$message = $message . ' #' . $id . ', ';
 			}
-			$message = $message.'have all been published successfully.';
+			if(count($narratives)) $message = $message . 'has been published successfully.';
+			else $message = $message . 'have all been published successfully.';
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
 		else if(isset($_POST['unpublish']))
 		{
 			//Unpublish selected narratives
-			$message = 'Narratives';
 			foreach($narratives as $id)
 			{
 				$this->narrative_model->unpublish($id);
 				$message = $message.' #'.$id.', ';
 			}
-			$message = $message.'have all been unpublished successfully.';
+			if(count($narratives)) $message = $message . 'has been unpublished successfully.';
+			else $message = $message . 'have all been unpublished successfully.';
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
+	}
+	
+	public function downloadAll()
+	{
+		$this->require_login();
+		
+		//Input
+		$narratives = unserialize($_POST['narratives']);
+	
+		$this->load->library('zip');
+		
+		foreach($narratives as $id)
+		{
+			//Zip narrative directory
+			$path = $this->config->item('site_data_dir') . '/' . $id . '/';
+			$this->zip->read_dir($path, FALSE);
+		}
+
+		// Download the zip file to the administrators desktop
+		$this->zip->download('all.zip');
+	}
+	
+	public function deleteAll()
+	{
+		$this->require_login();
+	
+		//Input
+		$narratives = unserialize($_POST['narratives']);
+		
+		//Delete selected narratives and then remove them from the database
+		$message = 'Narratives';
+		foreach($narratives as $id)
+		{
+			$this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
+			$this->narrative_model->delete(array('narrative_id' => $id));
+			$message = $message . ' #' . $id . ', ';
+		}
+		$message = $message . 'have all been deleted successfully.';
+		$this->system_message_model->set_message($message);
+		redirect('admin/narratives');
 	}
 }

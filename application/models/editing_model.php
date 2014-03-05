@@ -207,6 +207,26 @@ class Editing_Model extends CI_Model
 			if($filecheck != '.' && $filecheck != '..') rename($oldDir . $filecheck, $delDir . $filecheck);
 		}
 	}
+	
+	/**
+	*	Handling error of disappearing jpg
+	*/
+	public function purge($oldDir, $newDir)
+	{
+		echo 'Old dir: ' . $oldDir . '</br>';
+		echo 'New dir: ' . $newDir . '</br>';
+		$file_scan = scandir($oldDir);
+		foreach ($file_scan as $filecheck)
+		{
+			echo 'Filecheck: ' . $filecheck . '</br>';
+			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
+			if($file_extension == 'jpg')
+			{
+				echo 'This is being moved: ' . $filecheck . '</br>';
+				rename($oldDir . $filecheck, $newDir . $filecheck);
+			}
+		}
+	}
 
 	/**
 	*	Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it

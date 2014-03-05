@@ -87,7 +87,7 @@ class Admin_Narrative extends YD_Controller
     $info = $this->editing_model->gatherInfo($id);
 
     //Unpublishing the narrative before reprocessing
-    $this->narrative_model->unpublish($id);
+    $previousStatus = $this->narrative_model->unpublish($id);
 
     //Creating a new folder to move for processing
     $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
@@ -139,7 +139,7 @@ class Admin_Narrative extends YD_Controller
     $this->narrative_model->process_narrative($tmpPath, $id);
 
     //Republishing the narrative before announcing success
-    $this->narrative_model->publish($id);
+    if($previousStatus == 1) $this->narrative_model->publish($id);
 
     //Output success
     $this->system_message_model->set_message('Narrative #' . $id . ' was edited successfully.', MESSAGE_NOTICE);
@@ -158,7 +158,7 @@ class Admin_Narrative extends YD_Controller
 	$deleted = $this->editing_model->gatherDeleted($path);
 
     //Unpublishing the narrative before reprocessing
-    $this->narrative_model->unpublish($id);
+    $previousStatus = $this->narrative_model->unpublish($id);
 
     //Creating a new folder to move for processing
     $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
@@ -177,8 +177,11 @@ class Admin_Narrative extends YD_Controller
     $this->editing_model->deletePics($picName, $picPath, $newDir);
 	
 	//Restoring desired tracks and moving the rest to the new deleted folder
-    $trackName = $deleted['deletedAudio'];
-    $trackPath = $deleted['deletedAudioPath'];
+    if(isset($deleted['deletedAudio']))
+	{
+		$trackName = $deleted['deletedAudio'];
+		$trackPath = $deleted['deletedAudioPath'];
+	}
     if(isset($_POST['tracks']))
     {
       $tracksToRestore = $_POST['tracks'];
@@ -190,8 +193,11 @@ class Admin_Narrative extends YD_Controller
     }
 
     //Restoring desired images and moving the rest to the new deleted folder
-    $picName = $deleted['deletedImage'];
-    $picPath = $deleted['deletedImagePath'];
+    if(isset($deleted['deletedImage']))
+	{
+		$picName = $deleted['deletedImage'];
+		$picPath = $deleted['deletedImagePath'];
+	}
     if(isset($_POST['pics']))
     {
       $picsToRestore = $_POST['pics'];
@@ -207,6 +213,9 @@ class Admin_Narrative extends YD_Controller
 	
 	//Moving files from the old to the new deleted folder
 	$this->editing_model->moveFiles($this->config->item('site_data_dir') . '/' . $id . '/deleted/', $delDir);
+	
+	//Purging files from the uploads folder to the tmp folder to handle error of disappearing jpg
+	$this->editing_model->purge($this->config->item('site_data_dir') . '/' . $id . '/', $newDir);
 
     //Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
     $tmpPath = $this->editing_model->moveDir($newDir, $id);
@@ -218,20 +227,42 @@ class Admin_Narrative extends YD_Controller
     $this->narrative_model->process_narrative($tmpPath, $id);
 
     //Republishing the narrative before announcing success
-    $this->narrative_model->publish($id);
+    if($previousStatus == 1) $this->narrative_model->publish($id);
 	
     //Output success
     $this->system_message_model->set_message('Narrative #' . $id . ' was edited successfully.', MESSAGE_NOTICE);
     redirect('admin/narratives/' . $id . '/edit');
   }
-
-  public function delete($id = NULL)
+  
+  public function download($id)
   {
-    // FIXME maybe we should confirm?
-    $this->require_login();
+	$this->require_login();
+	
+	$this->load->library('zip');
+	
+	//Zip narrative directory
+	$path = $this->config->item('site_data_dir') . '/' . $id . '/';
+	$this->zip->read_dir($path, FALSE);
 
+	// Download the zip file to the administrators desktop
+	$this->zip->download($id . '.zip');
+  }
+
+  public function delete($id)
+  {
+	$this->require_login();
+	
+    $data['narratives'][0] = $id;
+	$this->view_wrapper('admin/narratives/delete', $data);
+  }
+  
+  public function processDelete($id)
+  {
+    $this->require_login();
+	
     $this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
     $this->narrative_model->delete(array('narrative_id' => $id));
+	
     $this->system_message_model->set_message('Narrative #' . $id . ' was deleted successfully.');
     redirect('admin/narratives');
   }

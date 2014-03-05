@@ -11,6 +11,7 @@ class Pages extends YD_Controller
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('topic_model');
 	}
 
 	/**
@@ -18,6 +19,8 @@ class Pages extends YD_Controller
    */
 	public function index()
 	{
-		$this->view_wrapper('pages/home');
+		$topic = $this->topic_model->get_topic();
+		$data = array('topic' => $topic);
+		$this->view_wrapper('pages/home', $data);
 	}
 }
