@@ -472,20 +472,3 @@ function initialize_commenting() {
 			});
 	});
 }
-
-function change_topic() {
-	//Click handler: Submit a new topic.
-	jQuery(".btn .btn-default").click(function() {
-		var new_topic = jQuery(".form-control").val();
-		var url = yd_settings.site_url + "topic_change/change/" + new_topic;
-		$.post(url, formdata)
-			.success(function(data) {
-				jQuery(".form-control").val('');
-				alert("Success. The topic has been changed.");
-			})
-			.fail(function() {
-				alert("An error occurred while trying to change the topic. Please try again.");
-			});
-	});
-
-}
