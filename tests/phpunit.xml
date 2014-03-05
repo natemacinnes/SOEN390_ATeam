@@ -25,15 +25,27 @@
         </testsuite>
     </testsuites>
     <filter>
-      <whitelist>
-        <directory suffix=".php">../application</directory>
-        <exclude>
-            <directory suffix=".php">../application/config</directory>
-            <directory suffix=".php">../application/core</directory>
-            <directory suffix=".php">../application/errors</directory>
-            <directory suffix=".php">../application/helpers</directory>
-            <directory suffix=".php">../application/third_party</directory>
-        </exclude>
+        <whitelist>
+            <directory suffix=".php">../application</directory>
+            <exclude>
+                <directory suffix=".php">../application/config</directory>
+                <directory suffix=".php">../application/core</directory>
+                <directory suffix=".php">../application/errors</directory>
+                <directory suffix=".php">../application/helpers</directory>
+                <directory suffix=".php">../application/third_party</directory>
+                <directory suffix=".php">../application/views</directory>
+                <file>../application/controllers/admin.php</file>
+                <file>../application/controllers/admin_comment.php</file>
+                <file>../application/controllers/admin_narrative.php</file>
+                <file>../application/controllers/comments.php</file>
+                <file>../application/controllers/edit_narrative.php</file>
+                <file>../application/controllers/index.html</file>
+                <file>../application/controllers/pages.php</file>
+                <file>../application/controllers/player.php</file>
+                <file>../application/controllers/topic.php</file>
+                <file>../application/controllers/tutorialPlayer.php</file>
+                <file>../application/controllers/unit_test.php</file>
+            </exclude>
       </whitelist>
     </filter>
 </phpunit>
