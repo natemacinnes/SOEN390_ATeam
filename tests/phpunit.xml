@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<phpunit 
-    colors="true" 
-    stopOnFailure="false" 
+<phpunit
+    colors="true"
+    stopOnFailure="false"
     bootstrap="../application/third_party/CIUnit/bootstrap_phpunit.php">
     <php>
         <server name="SERVER_NAME" value="http://example.com" />
@@ -24,4 +24,16 @@
             <directory suffix=".php">system</directory>
         </testsuite>
     </testsuites>
+    <filter>
+      <whitelist>
+        <directory suffix=".php">../application</directory>
+        <exclude>
+            <directory suffix=".php">../application/config</directory>
+            <directory suffix=".php">../application/core</directory>
+            <directory suffix=".php">../application/errors</directory>
+            <directory suffix=".php">../application/helpers</directory>
+            <directory suffix=".php">../application/third_party</directory>
+        </exclude>
+      </whitelist>
+    </filter>
 </phpunit>
