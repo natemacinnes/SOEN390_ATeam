@@ -4,6 +4,9 @@ application/logs
 application/config/database.php
 application/config/testing/database.php
 
+tests/report.html
+tests/report
+
 uploads/*
 
 # OS Thumbnails
