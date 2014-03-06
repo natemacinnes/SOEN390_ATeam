@@ -1,0 +1,9 @@
+
+row1:
+  id: 1
+  language: "english"
+  url: "http://www.youtube.com/embed/WjeskPsP7qY?rel=0&autoplay=1"
+row2:
+  id: 2
+  language: "french"
+  url: "http://www.youtube.com/embed/vPcfXD_GAmo?rel=0&autoplay=1"

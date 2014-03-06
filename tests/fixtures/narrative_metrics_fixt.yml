@@ -1,0 +1,25 @@
+
+row1: 
+  metric_id: 1
+  narrative_id: 1
+  time: 2014-03-05 19:34:57
+  session_id: 120456
+  event: 0
+row2: 
+  metric_id: 2
+  narrative_id: 1
+  time: 2014-03-05 19:35:02
+  session_id: 120456
+  event: 1
+row3: 
+  metric_id: 3
+  narrative_id: 1
+  time: 2014-03-05 19:35:09
+  session_id: 111222
+  event: 0
+row4: 
+  metric_id: 4
+  narrative_id: 2
+  time: 2014-03-05 19:35:15
+  session_id: 111222
+  event: 0
