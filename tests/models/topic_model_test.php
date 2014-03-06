@@ -19,6 +19,7 @@ class Topic_Model_Test extends CIUnit_TestCase
 
   /**
    * Setup PHPUnit & load any required dependencies
+   * @covers Topic_Model::__construct
    */
   public function setUp()
   {

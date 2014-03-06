@@ -20,13 +20,14 @@ class Admin_Model_Test extends CIUnit_TestCase
 
   /**
    * Setup PHPUnit & load any required dependencies
+   * @covers Admin_Model::__construct
    */
   public function setUp()
   {
     parent::tearDown();
     parent::setUp();
 
-    $this->CI->load->model('admin_model');
+    $this->CI->load->model('admin_model', TRUE);
   }
 
   /**
@@ -37,7 +38,7 @@ class Admin_Model_Test extends CIUnit_TestCase
 
   /**
    * UT-0033
-   * @covers admin_model::get
+   * @covers Admin_Model::get
    */
   public function test__get__invalid_admin_id()
   {
@@ -47,7 +48,7 @@ class Admin_Model_Test extends CIUnit_TestCase
   }
   /**
    * UT-0034
-   * @covers admin_model::get
+   * @covers Admin_Model::get
    */
   public function test__get__valid_admin_id()
   {
@@ -68,7 +69,7 @@ class Admin_Model_Test extends CIUnit_TestCase
 
   /**
    * UT-0035
-   * @covers admin_model::valid_admin()
+   * @covers Admin_Model::valid_admin()
    */
   public function test__valid_admin__invalid_email()
   {
@@ -78,7 +79,7 @@ class Admin_Model_Test extends CIUnit_TestCase
 
   /**
    * UT-0036
-   * @covers admin_model::valid_admin()
+   * @covers Admin_Model::valid_admin()
    */
   function test__valid_admin__invalid_password()
   {
@@ -88,7 +89,7 @@ class Admin_Model_Test extends CIUnit_TestCase
 
   /**
    * UT-0037
-   * @covers admin_model::valid_admin()
+   * @covers Admin_Model::valid_admin()
    */
   public function test__valid_admin__valid_credentials()
   {

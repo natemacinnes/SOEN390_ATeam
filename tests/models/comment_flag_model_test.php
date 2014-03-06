@@ -22,6 +22,7 @@ class Comment_Flag_Model_Test extends CIUnit_TestCase
 
 	/**
 	 * Setup PHPUnit & load any required dependencies
+	 * @covers Comment_Flag_Model::__construct
 	 */
 	public function setUp()
 	{

@@ -31,13 +31,14 @@ class System_Message_Model_Test extends CIUnit_TestCase
 
 	/**
 	 * Setup PHPUnit & load any required dependencies
+	 * @covers System_Message_Model::__construct
 	 */
 	public function setUp()
 	{
 		parent::tearDown();
 		parent::setUp();
 
-		$this->CI->load->model('system_message_model');
+		$this->CI->load->model('system_message_model', TRUE);
 	}
 
 	/**

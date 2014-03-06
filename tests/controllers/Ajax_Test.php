@@ -16,6 +16,7 @@ class Ajax_Test extends CIUnit_TestCase
 
 	/**
 	 * Setup PHPUnit & load any required dependencies
+	 * @covers Ajax::__construct
 	 */
 	public function setUp()
 	{

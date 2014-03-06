@@ -19,6 +19,7 @@ class Tutorial_Model_Test extends CIUnit_TestCase
 
   /**
    * Setup PHPUnit & load any required dependencies
+   * @covers Tutorial_Model::__construct
    */
   public function setUp()
   {

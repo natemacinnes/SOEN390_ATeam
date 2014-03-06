@@ -21,6 +21,8 @@ class Narrative_Model_Test extends CIUnit_TestCase
 
 	/**
 	 * Setup PHPUnit & load any required dependencies
+	 * @covers Narrative_Model::__construct
+	 * @covers Upload_Model::__construct
 	 */
 	public function setUp()
 	{
@@ -29,7 +31,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 
 		$this->sampleNarrativeXml = '<?xml version="1.0" encoding="UTF-8"?><narrative><narrativeName>2</narrativeName><language>English</language><submitDate>2013-07-11</submitDate><time>11-22-31</time></narrative>';
 
-		$this->CI->load->model('narrative_model');
+		$this->CI->load->model('narrative_model', TRUE);
 		$this->CI->load->model('upload_model');
 	}
 
