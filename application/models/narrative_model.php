@@ -155,7 +155,7 @@ class Narrative_Model extends CI_Model
 	public function process_narrative($narrative_path, $id = null)
 	{
 		// Get the absolute path
-		$dir = realpath(FCPATH . $narrative_path);
+		$dir = realpath($narrative_path);
 
 		//Variables we need to concatenate the audio file,
 		//determine the type of narrative to upload, and create an XML file
@@ -214,7 +214,7 @@ class Narrative_Model extends CI_Model
 					$fname = pathinfo($filecheck, PATHINFO_FILENAME);
 					//False variable in process_image controls whether we delete the original image or not (false = do not delete image)
 					$this->process_image($filecheck, $fname, $file_extension, $dir, false);
-					
+
 					//New method, to be approved by TL
 					$images[$fname] = $fname . '.' . $image_format;
 					if($fname > $lastImage) $lastImage = $fname;
@@ -232,7 +232,7 @@ class Narrative_Model extends CI_Model
 				}
 			}
 		}
-		
+
 		//Handling error when folder does not contain XML file
 		if ($xmlExistence == FALSE && $isBatchUpload == FALSE)
 		{
