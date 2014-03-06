@@ -4,8 +4,15 @@
  */
 class Narrative_Flag_Model_Test extends CIUnit_TestCase
 {
-	private $sampleNarrativeXml = '<?xml version="1.0" encoding="UTF-8"?><narrative><narrativeName>2</narrativeName><language>English</language><submitDate>2013-07-11</submitDate><time>11-22-31</time></narrative>';
-	private $insert_id;
+	/**
+	 * Loads sample data into test tables.
+	 * Key = table, value = fixture filename prefix.
+	 */
+	protected $tables = array(
+		'admins' => 'admins',
+		'narratives' => 'narratives',
+		'narrative_flags' => 'narrative_flags',
+  );
 
 	public function __contruct($name = NULL, array $data = array(), $dataName = '')
 	{
@@ -35,9 +42,7 @@ class Narrative_Flag_Model_Test extends CIUnit_TestCase
 	 */
 	public function test__get_by_narrative_id__non_existant_id()
 	{
-
-			$this->assertEquals(array(), $this->CI->narrative_flag_model->get_by_narrative_id(-1));
-
+		$this->assertEquals(array(), $this->CI->narrative_flag_model->get_by_narrative_id(-1));
 	}
 
 	/**
@@ -46,19 +51,9 @@ class Narrative_Flag_Model_Test extends CIUnit_TestCase
 	 */
 	public function test__get_by_narrative_id__valid_id()
 	{
-
-			//$Expected = $this->CI->narrative_flag_model->get_by_narrative_id(3);
-			//die(print_r($Expected, true));
-			$expected = array(
-				'nflag_id' => 1,
-				'narrative_id'=> 3,
-				'description' => "inappropriate sexual sounds",
-				'date_created' => "2014-03-05 14:30:15"
-			);
-
-			$actual = $this->CI->narrative_flag_model->get_by_narrative_id(3);
-			$this->assertEquals($expected, $actual[0]);
-
+		$actual = $this->CI->narrative_flag_model->get_by_narrative_id(1);
+		$this->assertEquals(2, count($actual));
+		$this->assertEquals(1, $actual[0]['nflag_id']);
+		$this->assertEquals(2, $actual[1]['nflag_id']);
 	}
-
 }

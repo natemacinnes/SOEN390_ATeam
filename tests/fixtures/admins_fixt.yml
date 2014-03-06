@@ -1,0 +1,11 @@
+
+row1: 
+  admin_id: 1
+  login: "admin"
+  password: "admin"
+  created: 2014-01-28 01:20:51
+row2: 
+  admin_id: 2
+  login: "admin@youdeliberate.com"
+  password: "Moderator"
+  created: 2014-02-13 18:06:02

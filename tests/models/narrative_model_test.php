@@ -4,8 +4,15 @@
  */
 class Narrative_Model_Test extends CIUnit_TestCase
 {
-	private $sampleNarrativeXml = '<?xml version="1.0" encoding="UTF-8"?><narrative><narrativeName>2</narrativeName><language>English</language><submitDate>2013-07-11</submitDate><time>11-22-31</time></narrative>';
-	private $insert_id;
+	/**
+	 * Loads sample data into test tables.
+	 * Key = table, value = fixture filename prefix.
+	 */
+	protected $tables = array(
+		'admins' => 'admins',
+		'narratives' => 'narratives',
+  );
+	protected $sampleNarrativeXml;
 
 	public function __contruct($name = NULL, array $data = array(), $dataName = '')
 	{
@@ -19,6 +26,8 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	{
 		parent::tearDown();
 		parent::setUp();
+
+		$this->sampleNarrativeXml = '<?xml version="1.0" encoding="UTF-8"?><narrative><narrativeName>2</narrativeName><language>English</language><submitDate>2013-07-11</submitDate><time>11-22-31</time></narrative>';
 
 		$this->CI->load->model('narrative_model');
 		$this->CI->load->model('upload_model');
@@ -258,10 +267,9 @@ class Narrative_Model_Test extends CIUnit_TestCase
 			'flags' => 5,
 			"status" => 1,
 		);
-		$this->insert_id = $this->CI->narrative_model->insert($narrative);
-		$narrative['narrative_id'] = $this->insert_id;
+		$narrative['narrative_id'] = $this->CI->narrative_model->insert($narrative);
 
-		$narrative_inserted = $this->CI->narrative_model->get($this->insert_id);
+		$narrative_inserted = $this->CI->narrative_model->get($narrative['narrative_id']);
 		$this->assertEquals($narrative_inserted, $narrative);
 	}
 
@@ -271,8 +279,9 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 */
 	public function test__delete()
 	{
-		$this->CI->narrative_model->delete(array('narrative_id' => $this->insert_id));
-		$narrative = $this->CI->narrative_model->get($this->insert_id);
+		$narrative_id = 2;
+		$this->CI->narrative_model->delete(array('narrative_id' => $narrative_id));
+		$narrative = $this->CI->narrative_model->get($narrative_id);
 		$this->assertEquals(array(), $narrative);
 	}
 

@@ -25,5 +25,6 @@ class Comment_Flag_Model extends CI_Model {
       'description' => $description,
     );
     $this->db->insert($this->table, $comment_flag);
+    return $this->db->insert_id();
   }
 }

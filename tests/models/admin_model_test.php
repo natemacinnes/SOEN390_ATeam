@@ -4,8 +4,14 @@
  */
 class Admin_Model_Test extends CIUnit_TestCase
 {
-  private $sampleNarrativeXml = '<?xml version="1.0" encoding="UTF-8"?><narrative><narrativeName>2</narrativeName><language>English</language><submitDate>2013-07-11</submitDate><time>11-22-31</time></narrative>';
-  private $insert_id;
+  /**
+   * Loads sample data into test tables.
+   * Key = table, value = fixture filename prefix.
+   */
+  protected $tables = array(
+    'admins' => 'admins',
+    'narratives' => 'narratives',
+  );
 
   public function __contruct($name = NULL, array $data = array(), $dataName = '')
   {
@@ -66,13 +72,8 @@ class Admin_Model_Test extends CIUnit_TestCase
    */
   public function test__valid_admin__invalid_email()
   {
-    
-
-    $actual = $this->CI->admin_model->valid_admin(gawd, admin);
-
-    $this->assertEquals(False, $actual);
-    
-
+    $actual = $this->CI->admin_model->valid_admin('invalid', 'admin');
+    $this->assertFalse($actual);
   }
 
   /**
@@ -81,12 +82,8 @@ class Admin_Model_Test extends CIUnit_TestCase
    */
   function test__valid_admin__invalid_password()
   {
-    
-    $actual = $this->CI->admin_model->valid_admin(admin, gawd);
-
-    $this->assertEquals(False, $actual);
-    
-
+    $actual = $this->CI->admin_model->valid_admin('admin', 'invalid');
+    $this->assertFalse($actual);
   }
 
   /**
@@ -95,12 +92,8 @@ class Admin_Model_Test extends CIUnit_TestCase
    */
   public function test__valid_admin__valid_credentials()
   {
-
-     // $Expected = $this->CI->tutorial_model->get_by_language("English");
-      //die(print_r($Expected, true));
-
-      $actual = $this->CI->admin_model->valid_admin(admin, admin);
-      $this->assertEquals(1, $actual);
-
+      $actual = $this->CI->admin_model->valid_admin('admin@youdeliberate.com', 'Moderator');
+      // This is the admin_id from sample data
+      $this->assertEquals(2, $actual);
   }
 }

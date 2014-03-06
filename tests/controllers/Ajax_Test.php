@@ -7,6 +7,14 @@
 class Ajax_Test extends CIUnit_TestCase
 {
 	/**
+	 * Loads sample data into test tables.
+	 * Key = table, value = fixture filename prefix.
+	 */
+	protected $tables = array(
+    'narratives' => 'narratives',
+  );
+
+	/**
 	 * Setup PHPUnit & load any required dependencies
 	 */
 	public function setUp()
@@ -28,7 +36,7 @@ class Ajax_Test extends CIUnit_TestCase
 	 */
 	public function test__audio_image__valid_folder()
 	{
-		$narrative_id = 3;
+		$narrative_id = 1;
 		$this->CI->audio_image($narrative_id, 1);
 
 		$prefix = base_url() . $this->CI->config->item('site_data_dir') . '/' . $narrative_id . '/';
