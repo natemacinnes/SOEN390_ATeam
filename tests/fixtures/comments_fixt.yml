@@ -1,0 +1,22 @@
+
+row1: 
+  comment_id: 1
+  narrative_id: 1
+  created: 2014-03-05 19:31:41
+  parent_comment: 
+  body: "top-level comment"
+  status: 1
+row2: 
+  comment_id: 2
+  narrative_id: 1
+  created: 2014-03-05 19:32:00
+  parent_comment: 1
+  body: "reply to comment ID 1"
+  status: 1
+row3: 
+  comment_id: 3
+  narrative_id: 2
+  created: 2014-03-05 19:32:11
+  parent_comment: 
+  body: "you\'re mean"
+  status: 1
