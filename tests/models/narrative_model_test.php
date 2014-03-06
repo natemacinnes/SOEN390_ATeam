@@ -202,7 +202,6 @@ class Narrative_Model_Test extends CIUnit_TestCase
 				break;
 			}
 		}
-
 		$this->assertEquals(TRUE, $count > 1 && $array_only);
 	}
 
