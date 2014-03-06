@@ -8,6 +8,7 @@ tests/report.html
 tests/report
 
 uploads/*
+test/*
 
 # OS Thumbnails
 Thumbs.db
