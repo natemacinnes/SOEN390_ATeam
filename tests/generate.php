@@ -2,6 +2,10 @@
 
 //echo 'with php'; die();
 
+require_once 'phar://../phpunit.phar/phpunit/Framework/Assert.php';
+require_once 'phar://../phpunit.phar/phpunit/Framework/Test.php';
+require_once 'phar://../phpunit.phar/phpunit/Framework/SelfDescribing.php';
+require_once 'phar://../phpunit.phar/phpunit/Framework/TestCase.php';
 require_once dirname(__FILE__) . '/../application/third_party/CIUnit/bootstrap_phpunit.php';
 include_once dirname(__FILE__) . '/getops.php';
 
@@ -84,33 +88,33 @@ class Generate
 		   die("\nSorry, the name of your test database must end on '_test'.\n".
 		   "This prevents deleting important data by accident.\n");
 		}
-		
+
 		//$this->CI->db->database = preg_replace("#_test$#", "_development", $this->CI->db->database);
 		if (!$this->CI->db->db_select())
 		{
-			die("\nCould not select development database.\n");   
-		}		
-	   
+			die("\nCould not select development database.\n");
+		}
+
 		$opts = getopts(array(
 			'rows'	 => array('switch' => 'n', 'type' => GETOPT_VAL, 'default' => 5),
 			'fixtures' => array('switch' => 'f', 'type' => GETOPT_MULTIVAL),
 			'output'   => array('switch' => 'o', 'type' => GETOPT_VAL, 'default' => '/fixtures')
 		), $args);
-		
-		
+
+
 		$rows	 = $opts['rows'];
 		$fixtures = $opts['fixtures'];
 		$output   = rtrim(str_replace('\\','/',$opts['output']), '/') . '/';
 		if (!@chdir(dirname(__FILE__) . '/' . $output))
 		{
-			die("\nOutput directory '$output' does not exist.\n");   
+			die("\nOutput directory '$output' does not exist.\n");
 		}
-							   
-		
+
+
 		$tables = $this->CI->db->list_tables();
 		if (count($fixtures) == 0)
 		{
-			$fixtures = $tables;	
+			$fixtures = $tables;
 		}
 		else
 		{
@@ -120,21 +124,21 @@ class Generate
 				if (!in_array($fixture, $tables))
 				{
 					die("\nTable `$fixture` does not exist.\n");
-				}   
-			}	   
+				}
+			}
 		}
-		
-		
+
+
 		foreach ($fixtures as $fixture)
 		{
 			$filename = $fixture . '_fixt.yml';
 			$data = $this->get_table_data($fixture, $rows);
 			$yaml_data = CIUnit::$spyc->dump($data);
-			
+
 			$yaml_data = preg_replace('#^\-\-\-#', '', $yaml_data);
-			
+
 			/* don't check if the file already exists */
-			file_put_contents($filename, $yaml_data);	
+			file_put_contents($filename, $yaml_data);
 		}
 	}
 }
@@ -158,5 +162,5 @@ Options:
 }
 else
 {
-	$generate->$generate_what($_SERVER['argv']);   
+	$generate->$generate_what($_SERVER['argv']);
 }
