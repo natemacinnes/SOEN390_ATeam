@@ -11,6 +11,7 @@ class Ajax_Test extends CIUnit_TestCase
 	 * Key = table, value = fixture filename prefix.
 	 */
 	protected $tables = array(
+		'admins' => 'admins',
     'narratives' => 'narratives',
   );
 
@@ -22,6 +23,9 @@ class Ajax_Test extends CIUnit_TestCase
 	{
 		// Set the tested controller
 		$this->CI = set_controller('ajax');
+
+		parent::tearDown();
+		parent::setUp();
 	}
 
 	/**
@@ -45,12 +49,53 @@ class Ajax_Test extends CIUnit_TestCase
 	}
 
 	/**
-	 * UT-0026
+	 * UT-FIXME
 	 * @covers Ajax::audio_image
+	 *
 	 */
-	public function test__audio_image__invalid_folder()
+	public function test__bubbles__invalid_position()
 	{
-		$this->CI->audio_image(-14, 450);
-		$this->expectOutputString("");
+		ob_start();
+		$this->CI->bubbles(-1);
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		$bubbles = json_decode(trim($output));
+
+		$this->assertEquals(0, count($bubbles->children));
 	}
+
+	/**
+	 * UT-FIXME
+	 * @covers Ajax::bubbles
+	 */
+	public function test__bubbles__valid_position()
+	{
+		ob_start();
+		$this->CI->bubbles(NARRATIVE_POSITION_NEUTRAL);
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		$bubbles = json_decode(trim($output));
+
+		$this->assertGreaterThan(0, count($bubbles->children));
+	}
+
+	/**
+	 * UT-FIXME
+	 * @covers Ajax::bubbles
+	 */
+	public function test__bubbles__no_position()
+	{
+		ob_start();
+		$this->CI->bubbles();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		$bubbles = json_decode(trim($output));
+
+		$this->assertGreaterThan(0, count($bubbles->children));
+	}
+
+
 }
