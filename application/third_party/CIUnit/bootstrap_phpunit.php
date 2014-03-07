@@ -274,5 +274,18 @@ require_once(CIUPATH . 'libraries/Fixture.php');
 $CI->fixture = new Fixture();
 CIUnit::$fixture =& $CI->fixture;
 
+// Cleanup uploads folder
+function cleanup_uploads(&$CI) {
+	if (is_dir($CI->config->item('site_data_dir'))) {
+		foreach (new DirectoryIterator($CI->config->item('site_data_dir')) as $fileInfo) {
+			if(!$fileInfo->isDot()) {
+				unlink($fileInfo->getPathname());
+			}
+		}
+	}
+}
+cleanup_uploads($CI);
+
+
 /* End of file bootstrap_phpunit.php */
 /* Location: ./application/third_party/CIUnit/bootstrap_phpunit.php */
