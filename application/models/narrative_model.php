@@ -400,7 +400,7 @@ class Narrative_Model extends CI_Model
 		}
 
 		//creating the directory on the server
-		$new_dir = "./uploads/" . $id;
+		$new_dir = $this->config->item('site_data_dir') . '/' . $id;
 		if (!is_dir($new_dir))
 		{
 			rename($dir, $new_dir);

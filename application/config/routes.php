@@ -52,7 +52,7 @@ $route['404_override'] = '';
  * Only define routes for paths where the arguments are out of order or the URL path doesn't match the controller/method names.
  */
 $route['home'] = "pages";
-$route['tutorial/(:any)'] = "tutorialPlayer/index/$1";
+$route['tutorial/(:any)'] = "pages/tutorial/$1";
 $route['narratives/(:num)'] = "player/index/$1";
 $route['admin/narratives/(:num)/(:any)'] = "admin_narrative/$2/$1";
 $route['admin/narratives/(:num)'] = "admin_narrative/index/$1";

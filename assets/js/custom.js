@@ -194,7 +194,7 @@ function loadBubbles(language, position) {
 			.attr('dy', '0.6em')
 			.style("text-anchor", "middle")
 			.style("cursor", "pointer")
-			.style("display", function(d) {console.log(d); return null});
+			.style("display", function(d) { return null; });
 		nodes2.append('svg:tspan')
 			.text(function(d) { return d.disagrees; })
 			.style("dominant-baseline", "central")
@@ -381,7 +381,8 @@ function narrative_matches_filter(d) {
 		var dateStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 		recent = date_from_string(d.uploaded) > date_from_string(dateStr);
 	}
-	return (yd_settings.language_filter == null || yd_settings.language_filter == d.language) && recent;
+	// FIXME case sensitivity
+	return (d.children || yd_settings.language_filter == null || yd_settings.language_filter == d.language.toLowerCase()) && recent;
 }
 
 function narrative_player_load() {
@@ -403,7 +404,7 @@ function narrative_player_load() {
 		myaudio.addEventListener('canplay', function(e) {
 			player_last_update = e.timeStamp;
 			narrative_player_update_image(myaudio.currentTime);
-			//myaudio.play();
+			myaudio.play();
 		}, false);
 		// Update as the audio continues to play.
 		myaudio.addEventListener('timeupdate', function(e) {

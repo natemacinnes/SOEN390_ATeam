@@ -61,7 +61,7 @@ class Editing_Model extends CI_Model
 		}
 	}
 
-		public function gatherInfoNew($id)
+	public function gatherInfoNew($id)
 	{
 		$query = $this->db->query('SELECT * FROM narratives, admins WHERE uploaded_by = admin_id AND narrative_id=\''.$id.'\';');
 		if($query -> num_rows() > 0)
@@ -146,7 +146,7 @@ class Editing_Model extends CI_Model
 			return $data;
 		}*/
 	}
-	
+
 	/**
 	*	Gathering deleted files
 	*/
@@ -159,7 +159,7 @@ class Editing_Model extends CI_Model
 		foreach ($file_scan as $filecheck)
 		{
 			$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
-			
+
 			if($filecheck != '.' && $filecheck != '..')
 			{
 				if($file_extension == 'mp3')
@@ -203,7 +203,7 @@ class Editing_Model extends CI_Model
 		}
 		return $tracksLeft;
 	}
-	
+
 	/**
 	*	Restoring the tracks that are meant to be restored
 	*/
@@ -243,7 +243,7 @@ class Editing_Model extends CI_Model
 			}
 		}
 	}
-	
+
 	/**
 	*	Restoring the pics that are meant to be restored
 	*/
@@ -281,7 +281,7 @@ class Editing_Model extends CI_Model
 			}
 		}
 	}
-	
+
 	/**
 	*	Moving deleted files from old to new deleted directory
 	*/
@@ -293,7 +293,7 @@ class Editing_Model extends CI_Model
 			if($filecheck != '.' && $filecheck != '..') rename($oldDir . $filecheck, $delDir . $filecheck);
 		}
 	}
-	
+
 	/**
 	*	Handling error of disappearing jpg
 	*/
@@ -358,4 +358,3 @@ class Editing_Model extends CI_Model
 		rmdir($path);
 	}
 }
-?>

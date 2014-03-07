@@ -9,3 +9,5 @@ It also includes the following custom modifications:
 * Edits to prevent IP address warnings: http://stackoverflow.com/questions/18082618/php-error-encountered-when-running-command-line-using-codeigniter-2-xx
 * Removes include reference to PHPUnit/Autoload.php in the bootstrap loader
 * Adds manual inclusions of PHPUnit classes to generate.php for generating fixtures
+* Add cleanup_uploads() function to cleanup the mock test folder
+* Add 'site_data_dir' config variables to the CIUnit config.php pointing to uploads/tests

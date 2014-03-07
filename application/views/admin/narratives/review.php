@@ -47,7 +47,7 @@
   <div class="player-wrapper float-left" style="margin-top:60px;" id="narrative-<?php echo $narrative_id; ?>">
   <?php
     // Need to add path to narrative here and in the source of the video
-    $path = 'uploads/' . $narrative_id . '/combined.mp3';
+    $path = $this->config->item('site_data_dir') . '/' . $narrative_id . '/combined.mp3';
 
     if (file_exists($path)):
     ?>

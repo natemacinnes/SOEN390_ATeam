@@ -4,7 +4,7 @@
 
 	<?php
 	// Need to add path to narrative here and in the source of the video
-	$path = 'uploads/' . $narrative_id . '/combined.mp3';
+	$path = $this->config->item('site_data_dir') . '/' . $narrative_id . '/combined.mp3';
 	$total_votes = (float)$narrative['agrees'] + (float)$narrative['disagrees'];
 	if (file_exists($path)):
 	?>
@@ -13,7 +13,7 @@
 			<br />
 			<audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls'></audio></br>
 			<span id='current-time'></span>
-			
+
 			<div class="player-stats">
 				<div class="float-left">
 					<p><span class="glyphicon glyphicon-eye-open"></span> <?php echo $narrative['views']; ?></p>
@@ -31,7 +31,7 @@
 				  </div>
 				</div>
 			</div>
-			
+
 			<div class="player-buttons bottom-margin">
 				<div class="float-left">
 					<div class="btn-group">
@@ -51,7 +51,7 @@
 	<?php else: ?>
 		Video does not exist.
 	<?php endif; ?>
-	
+
 <script type="text/javascript">
 	player_buttons();
 </script>
