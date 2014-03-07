@@ -21,7 +21,8 @@
 				<div class="float-right">
 					<p><span class="green glyphicon glyphicon-thumbs-up"></span> <?php echo $narrative['agrees']; ?> <span class="red glyphicon glyphicon-thumbs-down"></span> <?php echo $narrative['disagrees']; ?></p>
 				</div>
-				<div class="progress row">
+				<div class="clear"></div>
+				<div class="progress">
 				  <div class="progress-bar progress-bar-success" style="width: <?php echo round($narrative['agrees']/$total_votes * 100); ?>%">
 					<span class="sr-only"><?php echo round($narrative['agrees']/$total_votes * 100); ?>% Complete (success)</span>
 				  </div>

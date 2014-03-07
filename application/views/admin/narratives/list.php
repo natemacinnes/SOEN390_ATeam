@@ -15,11 +15,13 @@
 	
 	<!-- FIXME needs work for bulk actions and no form close -->
 	<?php echo form_open('admin/batchAction'); ?>
-	<ul class="pagination float-left">
-		<li><?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?></li>
-		<li><?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?></li>
-		<li><?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?></li>
-	</ul>
+		<div class="btn-group big-top-margin float-left">
+			<button type="button" class="btn btn-default" disabled="disabled">Batch Actions:</button>
+			<?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?>
+			<?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?>
+			<?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?>
+		</div>
+	<!-- WHY DOES THIS ONLY WORK WITHOUT FORM CLOSE? -->
 
 	<ul class="pagination float-right">
 		<li><a href="#">&laquo;</a></li>
@@ -70,11 +72,14 @@
 	
 	<!-- FIXME should be button anchor links and use JS to trigger submit buttons above -->
 	<?php echo form_open('admin/batchAction'); ?>
-	<ul class="pagination float-left">
-		<li><?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?></li>
-		<li><?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?></li>
-		<li><?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?></li>
-	</ul>
+		<div class="btn-group big-top-margin float-left">
+			<button type="button" class="btn btn-default" disabled="disabled">Batch Actions:</button>
+			<?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?>
+			<?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?>
+			<?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?>
+		</div>
+	<!-- WHY DOES THIS ONLY WORK WITHOUT FORM CLOSE? -->
+
 	<ul class="pagination float-right">
 		<li><a href="#">&laquo;</a></li>
 		<li><a href="#">1</a></li>

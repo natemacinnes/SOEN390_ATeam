@@ -44,10 +44,7 @@ class Admin_Narrative extends YD_Controller
     }
 	  //Getting deleted items
 	  $path = $this->config->item('site_data_dir') . '/' . $id . '/deleted/';
-	  if(is_dir($path)) $data['deleted'] = $this->editing_model->gatherDeleted($path);
-	
-    //Handling error when input id doesn't exist
-    
+	  if(is_dir($path)) $data['deleted'] = $this->editing_model->gatherDeleted($path);    
 	
 	  //Loading the page
     $this->view_wrapper('admin/narratives/edit', $data);
@@ -69,6 +66,22 @@ class Admin_Narrative extends YD_Controller
     }
 
     $data['flags'] = $this->narrative_flag_model->get_by_narrative_id($narrative_id);
+
+    $comments = $this->comment_model->get_all($narrative_id);
+    foreach ($comments as &$comment)
+    {
+      $flags = $this->comment_flag_model->get_by_comment_id($comment['comment_id']);
+      $comment['flags'] = count($flags);
+    }
+
+    function commentsFlagSort($item1,$item2)
+    {
+        if ($item1['flags'] == $item2['flags']) return 0;
+        return ($item1['flags'] < $item2['flags']) ? 1 : -1;
+    }
+    usort($comments,'commentsFlagSort');
+
+    $data['comments'] = $comments;
   
     //Getting deleted items
     $path = $this->config->item('site_data_dir') . '/' . $narrative_id . '/deleted/';
@@ -166,7 +179,7 @@ class Admin_Narrative extends YD_Controller
 
     //Output success
     $this->system_message_model->set_message('Narrative #' . $id . ' was edited successfully.', MESSAGE_NOTICE);
-    redirect('admin/narratives/' . $id . '/edit');
+    redirect('admin/narratives/' . $id . '/newedit');
   }
   
   public function restore($id)
