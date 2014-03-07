@@ -194,7 +194,7 @@ function loadBubbles(language, position) {
 			.attr('dy', '0.6em')
 			.style("text-anchor", "middle")
 			.style("cursor", "pointer")
-			.style("display", function(d) {console.log(d); return null});
+			.style("display", function(d) { return null; });
 		nodes2.append('svg:tspan')
 			.text(function(d) { return d.disagrees; })
 			.style("dominant-baseline", "central")
@@ -394,7 +394,7 @@ function narrative_player_load() {
 		myaudio.addEventListener('canplay', function(e) {
 			player_last_update = e.timeStamp;
 			narrative_player_update_image(myaudio.currentTime);
-			//myaudio.play();
+			myaudio.play();
 		}, false);
 		// Update as the audio continues to play.
 		myaudio.addEventListener('timeupdate', function(e) {
