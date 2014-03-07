@@ -78,4 +78,39 @@ class Ajax extends YD_Controller
 			print $return;
 		}
 	}
+	
+	/**
+	 * Increment the amount of views on a narrative.
+	 */
+	public function increment_views($narrative_id)
+	{
+		$this->narrative_model->increment_views($narrative_id);
+	}
+	
+	/**
+	 * Increment the agree/disagree of a narrative.
+	 */
+	public function increment_agrees_disagrees($narrative_id, $decision)
+	{
+		if($decision == "Agree")
+		{
+			$this->narrative_model->increment_agrees($narrative_id);
+		}
+		else if($decision == "Disagree")
+		{
+			$this->narrative_model->increment_disagrees($narrative_id);
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	/**
+	 * Increment the agree/disagree of a narrative.
+	 */
+	public function toggle_concensus($incrementing, $decrementing, $narrative_id)
+	{
+		$this->narrative_model->toggle($incrementing, $decrementing, $narrative_id);
+	}
 }

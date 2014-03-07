@@ -50,3 +50,7 @@
 	<?php else: ?>
 		Video does not exist.
 	<?php endif; ?>
+	
+<script type="text/javascript">
+	player_buttons();
+</script>
