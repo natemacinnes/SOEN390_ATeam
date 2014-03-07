@@ -372,7 +372,8 @@ function narrative_matches_filter(d) {
 		var dateStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 		recent = date_from_string(d.uploaded) > date_from_string(dateStr);
 	}
-	return (yd_settings.language_filter == null || yd_settings.language_filter == d.language) && recent;
+	// FIXME case sensitivity
+	return (d.children || yd_settings.language_filter == null || yd_settings.language_filter == d.language.toLowerCase()) && recent;
 }
 
 function narrative_player_load() {
