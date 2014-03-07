@@ -84,12 +84,42 @@ class Admin extends YD_Controller
 	/**
 	 * Displays a list of all narratives on the portal with management links.
 	 */
-	public function narratives()
+	public function narratives($sort_by = "id", $sort_order = "asc", $offset = 0)
 	{
 		$this->require_login();
-		$narratives = $this->narrative_model->get_all();
 
-		$data = array('narratives' => $narratives);
+		// Pagination initialization
+		$this->load->library('pagination');
+
+		$data['sort_by'] = $sort_by;
+		$data['sort_order'] = $sort_order;
+		$data['offset'] = $offset;
+		$data['limit'] = 20;
+
+
+		$narratives = $this->narrative_model->get_all($sort_by, $sort_order, $offset, $data['limit']);
+		$total_narratives = $this->narrative_model->get_total_count();
+
+		$config['base_url'] = site_url("admin/narratives/$sort_by/$sort_order");
+		$config['total_rows'] = $total_narratives['count'];
+		$config['per_page'] = $data['limit'];
+		$config['uri_segment'] = 5;
+		$config['first_link'] = 'First';
+		$config['last_link'] = 'Last';
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = '&gt;';
+		$config['next_tag_close'] = '</li>';
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = '&lt;';
+		$config['prev_tag_close'] = '</li>';
+		$config['full_tag_open'] = '<ul class="pagination float-right">';
+		$config['full_tag_close'] = '</ul>';
+
+		$this->pagination->initialize($config);
+		$data["links"] = $this->pagination->create_links();
+
+
+		$data['narratives'] = $narratives;
 		$this->view_wrapper('admin/narratives/list', $data);
 	}
 	//display admin topic change page

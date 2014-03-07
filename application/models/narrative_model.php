@@ -21,21 +21,26 @@ class Narrative_Model extends CI_Model
 	/**
 	 * Retrieve a narrative data structure by ID, or FALSE upon failure.
 	 */
-	public function get_all($sortby = 'id', $position = NULL)
+	public function get_all($sort_by = 'id', $sort_order = 'asc', $offset = 0, $limit = 20,$position = NULL)
 	{
 		// Get the sort column
 		$sort_cols = array(
 			'id' => 'narrative_id',
+			'length' => 'audio_length',
+			'language' => 'language',
 			'age' => 'created',
+			'uploaded' => 'uploaded',
+			'flags' => 'flags',
+			'status' => 'status',
 			'agrees' => 'agrees',
-			'disagrees' => 'disagrees',
+			'disagrees' => 'disagrees'
 		);
-		if (!isset($sort_cols[$sortby]))
+		if (!isset($sort_cols[$sort_by]))
 		{
 			// TODO: Error handling
 			return array();
 		}
-		$sort_col = $sort_cols[$sortby];
+		$sort_col = $sort_cols[$sort_by];
 
 
 		$query = $this->db->from($this->table);
@@ -44,10 +49,17 @@ class Narrative_Model extends CI_Model
 			$this->db->where('position', $position);
 		}
 		$query = $this->db
-			->order_by($sort_col, 'desc')
+			->limit($limit, $offset)
+			->order_by($sort_col, $sort_order)
 			->get();
 		$narratives = $query->result_array();
 		return $narratives;
+	}
+
+	public function get_total_count()
+	{
+		$query = $this->db->query('SELECT count(*) as count FROM narratives;');
+		return $query->row_array();
 	}
 
 	//following is for xml parsing
