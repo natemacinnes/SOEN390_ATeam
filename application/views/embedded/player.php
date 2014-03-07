@@ -19,7 +19,7 @@
 					<p><span class="glyphicon glyphicon-eye-open"></span> <?php echo $narrative['views']; ?></p>
 				</div>
 				<div class="float-right">
-					<p><span class="green glyphicon glyphicon-thumbs-up"></span> <?php echo $narrative['agrees']; ?> <span class="red glyphicon glyphicon-thumbs-down"></span> <?php echo $narrative['disagrees']; ?></p>
+					<p><span class="green glyphicon glyphicon-thumbs-up"></span> <span class="green text"><?php echo $narrative['agrees']; ?> </span><span class="red glyphicon glyphicon-thumbs-down"></span> <span class="red text"><?php echo $narrative['disagrees']; ?></span></p>
 				</div>
 				<div class="clear"></div>
 				<div class="progress">

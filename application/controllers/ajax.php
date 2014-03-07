@@ -95,14 +95,16 @@ class Ajax extends YD_Controller
 		if($decision == "Agree")
 		{
 			$this->narrative_model->increment_agrees($narrative_id);
+			echo "green";
 		}
 		else if($decision == "Disagree")
 		{
 			$this->narrative_model->increment_disagrees($narrative_id);
+			echo "red";
 		}
 		else
 		{
-			return false;
+			echo "";
 		}
 	}
 	

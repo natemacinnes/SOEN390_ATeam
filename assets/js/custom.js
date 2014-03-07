@@ -497,6 +497,8 @@ function player_buttons()
 			var url = yd_settings.site_url + "ajax/toggle_concensus/agrees/disagrees/" + nar_id;
 			$.post(url)
 			.success(function(data) {
+				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) + 1 + " ");
+				jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) - 1 + " ");
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
@@ -512,6 +514,8 @@ function player_buttons()
 			var url = yd_settings.site_url + "ajax/toggle_concensus/disagrees/agrees/" + nar_id;
 			$.post(url)
 			.success(function(data) {
+				jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) + 1 + " ");
+				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) - 1 + " ");
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
@@ -529,6 +533,7 @@ function player_buttons()
 			var url = yd_settings.site_url + "ajax/increment_agrees_disagrees/" + nar_id + "/" + last_concensus;
 			$.post(url)
 			.success(function(data) {
+				jQuery(".player-stats .float-right ." + data + ".text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right ." + data + ".text").text())) + 1 + " ");
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
