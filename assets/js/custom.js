@@ -225,6 +225,15 @@ function loadBubbles(language, position) {
 					clearInterval(image_update_timer);
 				}
 			});
+			//increment the number of views in the database
+			var url = yd_settings.site_url + "ajax/increment_views/" + this.__data__.narrative_id;
+			$.post(url)
+				.success(function(data) {
+	
+				})
+				.fail(function() {
+					alert("Error. Narrative does not exists.");
+				});
 		});
 
 		// Maps initial data to bubble pack
@@ -470,5 +479,66 @@ function initialize_commenting() {
 			.fail(function() {
 				alert("An error occurred while reporting the comment. Please try again.");
 			});
+	});
+}
+
+function player_buttons()
+{
+	//local var to decide agree/disagree
+	var last_concensus = "";
+	//get narrative ID
+	var nar_id = jQuery(".page-header small").text();
+	//If agree or disagree button is pressed
+	jQuery(".player-buttons .float-right .btn-group .btn").click(function() {
+		
+		//Increment the agrees, decrement the disagrees
+		if(last_concensus == "Agree" && jQuery.trim(jQuery(this).text()) == "Disagree")
+		{
+			var url = yd_settings.site_url + "ajax/toggle_concensus/agrees/disagrees/" + nar_id;
+			$.post(url)
+			.success(function(data) {
+			})
+			.fail(function() {
+				alert("An error occurred while voting.");
+			});
+			//set the last user choice to disagree
+			last_concensus = jQuery.trim(jQuery(this).text());
+			jQuery(this).toggleClass('active');
+			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active');
+		}
+		//Increment the disagrees, decrement the agrees
+		else if(last_concensus == "Disagree" && jQuery.trim(jQuery(this).text()) == "Agree")
+		{
+			var url = yd_settings.site_url + "ajax/toggle_concensus/disagrees/agrees/" + nar_id;
+			$.post(url)
+			.success(function(data) {
+			})
+			.fail(function() {
+				alert("An error occurred while voting.");
+			});
+			//set the last user choice to agree
+			last_concensus = jQuery.trim(jQuery(this).text());
+			jQuery(this).toggleClass('active');
+			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active');
+		}
+		//Increment the disagrees or agrees
+		else if(last_concensus == "")
+		{
+			//set last_concensus according to the button pressed (agree/disagree)
+			last_concensus = jQuery.trim(jQuery(this).text());
+			var url = yd_settings.site_url + "ajax/increment_agrees_disagrees/" + nar_id + "/" + last_concensus;
+			$.post(url)
+			.success(function(data) {
+			})
+			.fail(function() {
+				alert("An error occurred while voting.");
+			});
+			jQuery(this).toggleClass('active');
+			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active');
+		}
+		//If the user clicks the same button twice, do nothing
+		else if( last_concensus == jQuery.trim(jQuery(this).text()) )
+		{}
+		
 	});
 }

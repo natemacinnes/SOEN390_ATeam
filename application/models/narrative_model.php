@@ -450,4 +450,45 @@ class Narrative_Model extends CI_Model
 		$this->db->query('UPDATE narratives SET status=0 WHERE narrative_id='.$id.';');
 		return $status;
 	}
+	
+	/**
+	*	increment views of a narrative
+	*/
+	public function increment_views($narrative_id)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+		$this->db->set('views', 'views+1', FALSE);
+		$this->db->update('narratives');
+	}
+	
+	/**
+	*	increment agree of a narrative
+	*/
+	public function increment_agrees($narrative_id)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+		$this->db->set('agrees', 'agrees+1', FALSE);
+		$this->db->update('narratives');
+	}
+	
+	/**
+	*	increment disagree of a narrative
+	*/
+	public function increment_disagrees($narrative_id)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+		$this->db->set('disagrees', 'disagrees+1', FALSE);
+		$this->db->update('narratives');
+	}
+	
+	/**
+	*	toggle disagree or agree of a narrative
+	*/
+	public function toggle($incrementing, $decrementing, $narrative_id)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+		$this->db->set( $incrementing, $incrementing . '+1', FALSE);
+		$this->db->set( $decrementing, $decrementing . '-1', FALSE);
+		$this->db->update('narratives');
+	}
 }
