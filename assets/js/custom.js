@@ -207,6 +207,9 @@ function loadBubbles(language, position) {
 
 		// Colorbox popup for audio player
 		jQuery(svgselect + " g.node-base").click(function(e) {
+			// Call method to add narrative to history
+			add_to_history(this.__data__);
+		
 			// Don't open colorbox for unmatched language filter
 			if (!narrative_matches_filter(this.__data__)) {
 				return false;
@@ -287,6 +290,32 @@ function loadBubbles(language, position) {
 
 		d3.select(self.frameElement).style("height", diameter + "px");
 	});
+}
+
+/**
+*	Function that allows us to add items to history on the SESSION variable
+*/
+function add_to_history(data)
+{
+	//Creating AJAX call
+	var request = new XMLHttpRequest();
+
+	//Handling return of data
+	request.onreadystatechange=function()
+	{
+		if(request.readyState == 4 && request.status == 200)
+		{
+			document.getElementById("recent-container").innerHTML = request.responseText;
+		}
+	}
+
+	//Sending the request
+	request.open("POST", "history/add_to_history", true);
+	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	request.send("id=" + data.narrative_id);
+
+	console.log('Added to session variable: ');
+	console.log(data);
 }
 
 function date_from_string(str) {
