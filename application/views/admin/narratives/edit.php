@@ -22,6 +22,7 @@
     </p>
     </br>
     <?php echo form_open('admin/narratives/' . $narrative_id . '/process', 'class="big-bottom-margin"'); ?>
+      <?php echo form_hidden('modified', $modified); ?>
       <div class="float-left right-margin">
         <h3>Soundtracks:</h3>
         <?php
@@ -55,6 +56,7 @@
     <?php echo form_close(); ?>
 	<?php if(isset($deleted) && ($deleted['audioCtr'] != 0 || $deleted['imageCtr'] != 0)): ?>
 		<?php echo form_open('admin/narratives/' . $narrative_id . '/restore', 'class="big-bottom-margin"'); ?>
+      <?php echo form_hidden('modified', $modified); ?>
 			<?php if(isset($deleted['audioCtr']) && $deleted['audioCtr'] != 0): ?>
 				<div class="float-left right-margin">
 					<h3>Deleted Soundtracks:</h3>

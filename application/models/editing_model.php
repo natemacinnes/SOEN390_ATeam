@@ -25,6 +25,7 @@ class Editing_Model extends CI_Model
 			{
 				$data['uploaded_by'] = $item->login;
 			}
+			$data['modified'] = $row->modified;
 			$data['language'] = $row->language;
 			$data['views'] = $row->views;
 			$data['agrees'] = $row->agrees;
@@ -270,6 +271,11 @@ class Editing_Model extends CI_Model
 			}
 		}
 		rmdir($path);
+	}
+
+	public function updateModified($id)
+	{
+		$this->db->query('UPDATE narratives SET modified=CURRENT_TIMESTAMP WHERE narrative_id=' . $id . ';');
 	}
 }
 ?>
