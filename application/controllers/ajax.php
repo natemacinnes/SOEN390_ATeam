@@ -107,7 +107,7 @@ class Ajax extends YD_Controller
 			echo "";
 		}
 	}
-	
+
 	/**
 	 * decrement the agree/disagree of a narrative.
 	 */

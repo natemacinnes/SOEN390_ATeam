@@ -9,47 +9,64 @@
         <option>Published</option>
         <option>Unpublished</option>
       </select>
+	  <a href="#" class="btn btn-default top-margin" role="button">Save</a>
     </div>
   </div>
-  <div class="player-wrapper float-left big-top-margin" id="narrative-<?php echo $narrative_id; ?>">
+
+  <div class="float-left big-left-margin big-right-margin">
+		<h2>Narrative Info:</h2>
+		<table class="table table-condensed table-striped  table-bordered">
+			<tr>
+				<td><h4>Number of views:</h4></td> <td><h4><?php echo $narrative['views']; ?></h4></td>
+			</tr>
+			<tr>
+				<td><h4>Number of agrees:</h4></td> <td><h4><?php echo $narrative['agrees']; ?></h4></td>
+			</tr>
+			<tr>
+				<td><h4>Number of disagrees:</h4></td> <td><h4><?php echo $narrative['disagrees']; ?></h4></td>
+			</tr>
+			<tr>	
+				<td><h4>Number of shares:</h4></td> <td><h4><?php echo $narrative['shares']; ?></h4></td>
+			</tr>
+			<tr>
+				<td><h4>Number of flags:</h4></td> <td><h4><?php echo $narrative['flags']; ?></h4></td>
+			</tr>
+			<tr>
+				<td><h4>Audio length (seconds):</h4></td> <td><h4><?php echo $narrative['audio_length']; ?></h4></td>
+			</tr>
+			<tr>
+				<td><h4>Created on:</h4></td> <td><h4><?php echo $narrative['created']; ?></h4></td>
+			</tr>
+			<tr>
+				<td><h4>Uploaded on:</h4></td> <td><h4><?php echo $narrative['uploaded']; ?></h4></td>
+			</tr>
+			<tr>
+				<td><h4>Uploaded by:</h4></td> <td><h4><?php echo $narrative['login']; ?></h4></td>
+			</tr>
+			<tr>
+				<td><h4>Language:</h4></td><td><h4><?php echo $narrative['language']; ?></h4></td>
+			</tr>
+		</table>
+  </div>
+  <div class="player-wrapper big-top-margin big-left-margin float-left" id="narrative-<?php echo $narrative_id; ?>">
   <?php
     // Need to add path to narrative here and in the source of the video
     $path = 'uploads/' . $narrative_id . '/combined.mp3';
 
     if (file_exists($path)):
-    ?>
-
-      <img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400'>
+    ?>	
+      <img src='' id='audio_image' alt='Audio image to accompany narrative' height='510' width='400'>
       <audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls'></audio></br>
       <span id='current-time'></span>
-
     <?php else: ?>
     <div style="width:400px; height:400px; border: 1px solid #333; border-radius: 4px;"><p style="color:#333; margin: 100px;">Video does not exist.</p></div>
 
   <?php endif; ?>
 
-    <a href="#" class="btn btn-default top-margin" role="button">Save</a>
-    <a href="#" class="btn btn-default top-margin" role="button">Delete</a>
-    <a href="#" class="btn btn-default top-margin" role="button">Back</a>
   </div>
-  <div class="float-left big-left-margin">
-  	<h2>Narrative Info:</h2>
-  	<p>
-      Number of views: <?php echo $narrative['views']; ?><br/>
-      Number of agrees: <?php echo $narrative['agrees']; ?><br/>
-      Number of disagrees: <?php echo $narrative['disagrees']; ?><br/>
-      Number of shares: <?php echo $narrative['shares']; ?><br/>
-      Number of flags: <?php echo $narrative['flags']; ?><br/>
-      Audio length (seconds): <?php echo $narrative['audio_length']; ?><br/>
-      Created on: <?php echo $narrative['created']; ?><br/>
-      Uploaded on: <?php echo $narrative['uploaded']; ?><br/>
-      Uploaded by: <?php echo $narrative['login']; ?><br/>
-      Language: <?php echo $narrative['language']; ?><br/>
-    </p>
-  </div>
+  
   <div class="clear"></div>
-
-
+  
   <!-- Nav tabs -->
   <ul class="nav nav-tabs big-top-margin top-border top-padding">
     <li class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
@@ -64,7 +81,7 @@
 	      <h2>Edit</h2>
 	    </div>
     	<?php echo form_open('admin/narratives/' . $narrative_id . '/process', 'class="big-bottom-margin"'); ?>
-	      <div class="float-left right-margin">
+	      <div class="float-left big-right-margin">
 	        <h3>Soundtracks:</h3>
 	        <?php
 	      	for($i = 1; $i <= $narrative['trackCtr']; $i++)
@@ -77,7 +94,7 @@
 	      	}
 	        ?>
 	      </div>
-	      <div class="float-left">
+	      <div class="float-left big-left-margin">
 	        <h3>Pictures:</h3>
 	        <?php
 	      	for($i = 1; $i <= $narrative['picCtr']; $i++)
