@@ -2,14 +2,48 @@ String.prototype.repeat = function(num) {
 	return new Array(num + 1).join(this);
 }
 
+/**
+ * Perform initializations, but only after DOM has completely loaded.
+ */
 jQuery(document).ready(function() {
 	yd_settings.ui = {
 		transition_duration: 1500,
 		ring_inner_radius: 0.8,
-		filtered_opacity: 0.2
+		filtered_opacity: 0.2,
+		system_colors: {
+			green: '#009933',
+			darkgreen: '#007a28',
+			red: '#CC0000',
+			darkred: '#a30000',
+			lightgrey: '#CFCFCF',
+			grey: '#eeeeee',
+			darkgrey: '#777777',
+			darkergrey: '#333333',
+			blue: '#4282D3',
+			darkblue: '#3468a8',
+			purple: '#743CBC',
+			darkpurple: '#5c3096'
+		},
+		// glyphicons are a font, so to update this create a span glyphicon,
+		// inspect its CSS to get the UTF-8 escape code. Next, use character
+		// viewer (OSX) to insert it here.
+		glyphicon_map: {
+			// object properties here are the sort keys, not the glyphicon keys
+			'agrees': '', // thumbs-up glyphicon
+			'disagrees': '', // thumbs-down glyphicon
+			'views': '', // headphones glyphicon
+			//'views': '', // eye-open glyphicon
+			'age': '', // time glyphicon
+			//'popular': '', // fire glyphicon
+			'popular': '', // star glyphicon
+			'play': '', // play glyphicon
+			'volume_down': '', // volume_up glyphicon
+			'volume_up': '' // volume_down glyphicon
+		}
 	}
+
 	// Add colorbox to any items with a "colorbox" class
-	initialize_color_box();
+	colorbox_initialize();
 
 	// This will do nothing on most pages, but prepare any audio embeds we have
 	// present on page load (i.e. on admin review narrative page)
@@ -23,9 +57,12 @@ jQuery(document).ready(function() {
 		return false;
 	});
 
+	// This design pattern uses CSS classes to ensure that items aren't processed
+	// twice by the same callback handler. It allows new DOM elements to be bound,
+	// leaving existing ones untouched.
 	if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
 		yd_settings.sort_by = jQuery('.sort-container.btn-group a.active').attr('href').substring(1);
-		reload_bubbles();
+		narrative_display_initialize();
 	}
 
 	// Radio-like toggle buttons for sort
@@ -36,36 +73,39 @@ jQuery(document).ready(function() {
 	});
 });
 
-function initialize_color_box() {
-	jQuery('a, area, input')
-    .filter('.colorbox:not(.initColorbox-processed)')
-    .addClass('initColorbox-processed')
+/**
+ * Binds a colorbox callback to links with a 'colorbox' class. Result is magic
+ * so that simply adding the class to a link makes it open in in a popup.
+ */
+function colorbox_initialize() {
+	jQuery('a')
+    .filter('.colorbox:not(.colorbox-processed)')
+    .addClass('colorbox-processed')
     .colorbox();
 }
 
-function reload_bubbles() {
+/**
+ * (Re)initialize the narrative homepage display, to include bubble areas
+ * and history bar.
+ */
+function narrative_display_initialize() {
 	jQuery('.sort-container.btn-group a').unbind('click');
 	jQuery('.svg-container').html('');
 
-	loadBubbles(null, yd_settings.constants.NARRATIVE_POSITION_NEUTRAL);
-	loadBubbles(null, yd_settings.constants.NARRATIVE_POSITION_AGREE);
-	loadBubbles(null, yd_settings.constants.NARRATIVE_POSITION_DISAGREE);
+	narrative_bubbles_load(yd_settings.constants.NARRATIVE_POSITION_NEUTRAL);
+	narrative_bubbles_load(yd_settings.constants.NARRATIVE_POSITION_AGREE);
+	narrative_bubbles_load(yd_settings.constants.NARRATIVE_POSITION_DISAGREE);
 	narrative_history_load();
 }
 
-function loadBubbles(language, position) {
+/**
+ * Loads bubbles for the indicated language & position.
+ */
+function narrative_bubbles_load(position) {
 	var svgselect;
 
 	// yd_settings.sort_by may be undefined. If so, don't call ajax/bubbles/undefined -_-
 	var url = yd_settings.site_url + "ajax/bubbles";
-	if (typeof(language) === 'undefined' || language === null) {
-		yd_settings.language_filter = null;
-	}
-	else {
-		// Deprecated - to remove later once new filtering passes UAT
-		//url += '/' + language;
-		yd_settings.language_filter = language;
-	}
 	if (typeof(position) === 'undefined' || position === null) {
 		svgselect = ".svg-container-1";
 	}
@@ -100,106 +140,37 @@ function loadBubbles(language, position) {
 
 		// Select elements, even if they do not exist yet. enter() creates them and
 		// appends them to the selection object. Then, we operate on them.
-		var vis = svg.datum(data).selectAll('.node')
+		var vis = svg.datum(data).selectAll('g.node')
 			.data(pack.nodes)
 			.enter()
 				.append('g')
-				.attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
+				.attr("class", function(d) { return 'node ' + (!d.children ? 'node-base' : 'node-parent'); })
 				.attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
 				.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
 				.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : debug_bubble_opacity; });
 				// ^ the root g container is transformed, so for all children x and y is
 				//   relative to 0
 
-		narrative_draw_bubbles(vis);
-
 		var positionLabel = svg.append('text')
-				.attr("dx", 230)
-				.attr("dy", 25)
-				.style("text-anchor", "middle")
-				.style("font-size", "2em")
-				.text(position_label_text(position));
+			.attr("dx", 230)
+			.attr("dy", 25)
+			.style("text-anchor", "middle")
+			.style("font-size", "2em")
+			.text(position_label_text(position));
 
-		// Colorbox popup for audio player
-		jQuery(svgselect + " g.node-base").click(function(e) {
-			// Call method to add narrative to history
-			narrative_history_add(this.__data__);
-
-			// Don't open colorbox for unmatched language filter
-			if (!narrative_matches_filter(this.__data__)) {
-				return false;
-			}
-			var image_update_timer;
-			var colorbox = jQuery.colorbox({
-				href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
-				left: 0,
-				speed: 700,
-				opacity: 0,
-				onComplete: function() {
-					narrative_player_load();
-					jQuery(this).colorbox.resize();
-				},
-				onClosed: function() {
-					clearInterval(image_update_timer);
-				}
-			});
-			//increment the number of views in the database
-			var url = yd_settings.site_url + "ajax/increment_views/" + this.__data__.narrative_id;
-			jQuery.post(url)
-				.done(function(data) {
-
-				})
-				.fail(function() {
-					alert("Error. Narrative does not exists.");
-				});
-		});
-
-		// Maps initial data to bubble pack
-		updateVis(svgselect);
-
-		/**
-		 * Binds actual data to the DOM and provides a transition if a new ordering
-		 * is preferred by user.
-		 */
-		function updateVis(svgselect) {
-			var format = d3.format(",.0f");
-			console.log('updating bubbles for SVG ' + svgselect + ' sorted by ' + yd_settings.sort_by);
-			//to update pack values, use: pack.value(function() { return metric; });
-			//to update data, use: pack.nodes(data)
-
-			vis.transition().duration(yd_settings.ui.transition_duration)
-				.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
-				.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; });
-
-			vis.selectAll('title')
-				.attr("x", function(d) { return 0; })
-				.attr("y", function(d) { return 0; })
-				.text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
-
-			vis.selectAll('circle')
-				.transition().duration(yd_settings.ui.transition_duration)
-				.style("fill", bubble_fill_color)
-				.attr("r", function(d) { return d.r; });
-
-			var arcs = vis.selectAll('g.slice')
-				.data(narrative_data_radiusmapper)
-
-			// Ring hover
-			jQuery(svgselect + ' g.node-base').hover(
-				function() { if (narrative_matches_filter(this.__data__)) { jQuery('circle', this).css('opacity', 0.7); }},
-				function() { jQuery('circle', this).css('opacity', 0.5); }
-			);
-		}
+		narrative_draw_bubbles(vis);
+		narrative_bind_player(svgselect);
+		narrative_bubbles_update(svgselect);		
 
 		// Toggle buttons for navigation links
 		jQuery('.sort-container.btn-group a').click(function() {
-			updateVis(svgselect);
+			narrative_bubbles_update(svgselect);
 			return false;
 		});
 
 		// Toggle buttons for navigation links
 		jQuery('.filter-container.btn-group a').click(function() {
-			updateVis(svgselect);
+			narrative_bubbles_update(svgselect);
 			return false;
 		});
 
@@ -208,30 +179,73 @@ function loadBubbles(language, position) {
 }
 
 /**
-	 * FIXME HACKY but works
-	 * The arc generator above needs to know about the bubble radius, but it is
-	 * only aware of what .data() has bound to it;
-	 * namely, the arc segments calculated for us by the pie layout generator.
-	 * So, let's just copy the data 'r' property into the pie data segments.
-	 */
-	function narrative_data_radiusmapper(d) {
-		// This transforms simple data objects into a arc values from 0 to 2*pi
-		var pie = d3.layout.pie()
-			.sort(null)
-			.value(function(d) { return d.value; });
+ * Alter any bubble attributes necessary and transition their attribute or
+ * styling changes.
+ */
+function narrative_bubbles_update(svgselect) {
+	console.log('updating bubbles for SVG ' + svgselect + ' sorted by ' + yd_settings.sort_by);
 
-		if (d.children) {
-			return [];
-		}
+	var format = d3.format(",.0f");
+	var svg = d3.select(svgselect).select('svg');
+	var vis = svg.selectAll('g.node');
 
-		var pie_data = pie(d.pie_data);
-		pie_data.forEach(function(slice, i) {
-			slice.r = d.r;
-		});
+	//to update pack values, use: pack.value(function() { return metric; });
+	//to update data, use: pack.nodes(data)
 
-		return pie_data;
+	vis.transition().duration(yd_settings.ui.transition_duration)
+		.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
+		.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; });
+
+	vis.selectAll('title')
+		.attr("x", function(d) { return 0; })
+		.attr("y", function(d) { return 0; })
+		.text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
+
+	vis.selectAll('circle')
+		.transition().duration(yd_settings.ui.transition_duration)
+		.style("fill", bubble_fill_color)
+		.attr("r", function(d) { return d.r; });
+
+	var arcs = vis.selectAll('g.slice')
+		.data(narrative_data_radiusmapper)
+
+	// Ring hover
+	jQuery(svgselect + ' g.node-base').hover(
+		function() { if (narrative_matches_filter(this.__data__)) { jQuery('circle', this).css('opacity', 0.7); }},
+		function() { jQuery('circle', this).css('opacity', 0.5); }
+	);
+}
+
+/**
+ * The arc generator needs to know about the bubble radius, but it is only aware
+ * of what .data() has bound to it; namely, the arc segments calculated for us
+ * by the pie layout generator. It doesn't have access to the "parent" data
+ * (i.e. the full narrative), which is what it needs to grab the circle radius.
+ * So, let's just copy the data 'r' property into the pie data segments for use
+ * later. Ugly, but works.
+ */
+function narrative_data_radiusmapper(d) {
+	// This transforms simple data objects into a arc values from 0 to 2*pi
+	var pie = d3.layout.pie()
+		.sort(null)
+		.value(function(d) { return d.value; });
+
+	if (d.children) {
+		return [];
 	}
 
+	var pie_data = pie(d.pie_data);
+	pie_data.forEach(function(slice, i) {
+		slice.r = d.r;
+	});
+
+	return pie_data;
+}
+
+/**
+ * Draw bubbles on the provided vis (SVG). vis should already have its d3 data
+ * bound to it.
+ */
 function narrative_draw_bubbles(vis) {
 	var format = d3.format(",.0f");
 
@@ -263,7 +277,7 @@ function narrative_draw_bubbles(vis) {
 
 	// In the container, write a path based on the generated arc data
 	var paths = arcs.append("svg:path")
-		.attr("fill", function(d, i) { return d.data.label == 'agrees' ? bubble_colors.green : bubble_colors.red; } )
+		.attr("fill", function(d, i) { return d.data.label == 'agrees' ? yd_settings.ui.system_colors.green : yd_settings.ui.system_colors.red; } )
 		.attr("d", arc);
 
 	// This comes after the paths so that the text doesn't get covered by the
@@ -276,11 +290,11 @@ function narrative_draw_bubbles(vis) {
 		.text(function(d) { return d.agrees; })
 		.style("dominant-baseline", "central")
 	label_agree.append('svg:tspan')
-		.text(glyphicon_map.agrees)
+		.text(yd_settings.ui.glyphicon_map.agrees)
 		.attr('dx', '0.3em')
 		.style("dominant-baseline", "central")
 		.style('font-family', "'Glyphicons Halflings")
-		.style('fill', bubble_colors.green);
+		.style('fill', yd_settings.ui.system_colors.green);
 
 	var label_disagree = vis.filter(function(d, i) { return !d.children && d.r > 35 }).append("text")
 		.attr('dy', '0.6em')
@@ -291,16 +305,17 @@ function narrative_draw_bubbles(vis) {
 		.text(function(d) { return d.disagrees; })
 		.style("dominant-baseline", "central")
 	label_disagree.append('svg:tspan')
-		.text(glyphicon_map.disagrees)
+		.text(yd_settings.ui.glyphicon_map.disagrees)
 		.attr('dx', '0.3em')
 		.style("dominant-baseline", "central")
 		.style('font-family', "'Glyphicons Halflings")
-		.style('fill', bubble_colors.red);
+		.style('fill', yd_settings.ui.system_colors.red);
 }
 
 /**
-*	Function that allows us to add items to history on the SESSION variable
-*/
+ * Make the API call to add narrative to the user's history given a narrative
+ * data object.
+ */
 function narrative_history_add(data)
 {
 	var url = yd_settings.site_url + 'ajax/add_history/' + data.narrative_id;
@@ -313,6 +328,10 @@ function narrative_history_add(data)
 		});
 }
 
+/**
+ * Callback for d3's .data() which populates the x, y, and r attributes.
+ * Effectively, this is a custom d3 layout callback.
+ */
 function narrative_history_data(data, i)
 {
 	var num_parent_bubbles = jQuery('#bubble-container .svg-container').length;
@@ -330,6 +349,9 @@ function narrative_history_data(data, i)
 	return data;
 }
 
+/**
+ * Retrieves the user's history and loads the history bar.
+ */
 function narrative_history_load()
 {
 	var url = yd_settings.site_url + 'ajax/get_history';
@@ -351,11 +373,11 @@ function narrative_history_load()
 				.attr("height", height)
 				.attr("class", "bubble");
 
-			var vis = svg.datum(data).selectAll('.node')
+			var vis = svg.datum(data).selectAll('g.node')
 				.data(narrative_history_data)
 				.enter()
 					.append('g')
-					.attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
+					.attr("class", function(d) { return 'node ' + (!d.children ? 'node-base' : 'node-parent'); })
 					.attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
 					.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
 					.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : debug_bubble_opacity; });
@@ -366,11 +388,54 @@ function narrative_history_load()
 		});
 }
 
+/**
+ * Setup DOM bindings so that the narrative player can be initialized when
+ * clicking a node under the SVG specified in 'svgselect'.
+ */
+function narrative_bind_player(svgselect) {
+	// Colorbox popup for audio player
+	jQuery(svgselect + " g.node-base").click(function(e) {
+		// Call method to add narrative to history
+		narrative_history_add(this.__data__);
+
+		// Don't open colorbox for unmatched language filter
+		if (!narrative_matches_filter(this.__data__)) {
+			return false;
+		}
+		var image_update_timer;
+		var colorbox = jQuery.colorbox({
+			href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
+			left: 0,
+			speed: 700,
+			opacity: 0,
+			onComplete: function() {
+				narrative_player_load();
+				jQuery(this).colorbox.resize();
+			},
+			onClosed: function() {
+				clearInterval(image_update_timer);
+			}
+		});
+		//increment the number of views in the database
+		var url = yd_settings.site_url + "ajax/increment_views/" + this.__data__.narrative_id;
+		jQuery.post(url)
+			.fail(function() {
+				alert("Error. Narrative does not exists.");
+			});
+	});
+}
+
+/**
+ * Converts the DB date string into a JS date object.
+ */
 function date_from_string(str) {
 	var a = jQuery.map(str.split(/[^0-9]/), function(s) { return parseInt(s, 10); });
 	return new Date(a[0], a[1]-1 || 0, a[2] || 1, a[3] || 0, a[4] || 0, a[5] || 0, a[6] || 0);
 }
 
+/**
+ * Returns text label for the position constants.
+ */
 function position_label_text(position) {
 	switch (position) {
 		case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
@@ -384,76 +449,32 @@ function position_label_text(position) {
 	}
 }
 
-function bubble_get_multiplier(d) {
-	if (d.children) {
-		return null;
-	}
-
-	var multiplier = 1;
-	if (d.r > 20 && d.r <= 30) {
-		multiplier = 2;
-	}
-	else if (d.r > 30 && d.r <= 40) {
-		multiplier = 3;
-	}
-	else if (d.r > 40 && d.r <= 50) {
-		multiplier = 4;
-	}
-	else if (d.r > 50) {
-		multiplier = 5;
-	}
-
-	return multiplier;
-}
-
-// object properties here are the sort keys, not the glyphicon keys
-glyphicon_map = {
-	'agrees': '', // thumbs-up
-	'disagrees': '', // thumbs-down
-	'views': '', // headphones
-	//'views': '', // eye-open
-	'age': '', // time
-	//'popular': '', // fire
-	'popular': '', // star
-	'play': '', // play
-	'volume_down': '', // volume_up
-	'volume_up': '' // volume_down
-};
-
-bubble_colors = {
-	green: '#009933',
-	darkgreen: '#007a28',
-	red: '#CC0000',
-	darkred: '#a30000',
-	lightgrey: '#CFCFCF',
-	grey: '#eeeeee',
-	darkgrey: '#777777',
-	darkergrey: '#333333',
-	blue: '#4282D3',
-	darkblue: '#3468a8',
-	purple: '#743CBC',
-	darkpurple: '#5c3096'
-}
-
+/**
+ * Maps a narrative object to its fill color.
+ */
 bubble_fill_color = function(d) {
 	if (d.children) {
-		return bubble_colors.lightgrey;
+		return yd_settings.ui.system_colors.lightgrey;
 	}
 	switch (parseInt(d.position)) {
 		case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
-			return bubble_colors.darkgrey;
+			return yd_settings.ui.system_colors.darkgrey;
 
 		case yd_settings.constants.NARRATIVE_POSITION_AGREE:
-			return bubble_colors.purple;
+			return yd_settings.ui.system_colors.purple;
 
 		case yd_settings.constants.NARRATIVE_POSITION_DISAGREE:
-			return bubble_colors.blue;
+			return yd_settings.ui.system_colors.blue;
 
 		default:
-		  return bubble_colors.lightgrey;
+		  return yd_settings.ui.system_colors.lightgrey;
 	}
 }
 
+/**
+ * Examines the current filter settings stored in yd_settings and determines if
+ * the provided narrative object matches the filter or not.
+ */
 function narrative_matches_filter(d) {
 	var recent = true;
 	if (!d.children && yd_settings.recent_filter) {
@@ -466,6 +487,9 @@ function narrative_matches_filter(d) {
 	return (d.children || yd_settings.language_filter == null || yd_settings.language_filter == d.language.toLowerCase()) && recent;
 }
 
+/**
+ * Loads the narrative player once the popup page with audio is ready.
+ */
 function narrative_player_load() {
 	var player_wrappers = jQuery('.player-wrapper').not('player-processed')
 	if (player_wrappers.length) {
@@ -497,6 +521,9 @@ function narrative_player_load() {
 	}
 }
 
+/**
+ * Updates the narrative player's image given a timecode.
+ */
 function narrative_player_update_image(timecode) {
 	var player = jQuery('.player-wrapper');
 	if (!player.length) {
@@ -510,6 +537,9 @@ function narrative_player_update_image(timecode) {
 	});
 }
 
+/**
+ * Bind the necessary callbacks to enable AJAX commenting.
+ */
 function initialize_commenting() {
 	// Click handler: Comment (root level)
 	jQuery(".action-comment-post").not('.comment-processed').addClass('comment-processed').click(function() {
@@ -564,7 +594,10 @@ function initialize_commenting() {
 	});
 }
 
-function player_buttons()
+/**
+ * Binds callbacks to the narrative player's buttons (voting, sharing, etc).
+ */
+function narrative_player_buttons_initialize()
 {
 	//local var to decide agree/disagree
 	var last_concensus = "";

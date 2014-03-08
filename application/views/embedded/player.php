@@ -53,5 +53,5 @@
 	<?php endif; ?>
 
 <script type="text/javascript">
-	player_buttons();
+	narrative_player_buttons_initialize();
 </script>
