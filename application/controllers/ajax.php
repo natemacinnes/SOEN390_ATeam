@@ -94,12 +94,33 @@ class Ajax extends YD_Controller
 	{
 		if($decision == "Agree")
 		{
-			$this->narrative_model->increment_agrees($narrative_id);
+			$this->narrative_model->toggle_agrees($narrative_id, "+");
 			echo "green";
 		}
 		else if($decision == "Disagree")
 		{
-			$this->narrative_model->increment_disagrees($narrative_id);
+			$this->narrative_model->toggle_disagrees($narrative_id, "+");
+			echo "red";
+		}
+		else
+		{
+			echo "";
+		}
+	}
+	
+	/**
+	 * decrement the agree/disagree of a narrative.
+	 */
+	public function decrement_agrees_disagrees($narrative_id, $decision)
+	{
+		if($decision == "Agree")
+		{
+			$this->narrative_model->toggle_agrees($narrative_id, "-");
+			echo "green";
+		}
+		else if($decision == "Disagree")
+		{
+			$this->narrative_model->toggle_disagrees($narrative_id, "-");
 			echo "red";
 		}
 		else

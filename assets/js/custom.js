@@ -499,6 +499,7 @@ function player_buttons()
 			.success(function(data) {
 				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) + 1 + " ");
 				jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) - 1 + " ");
+				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
@@ -516,6 +517,8 @@ function player_buttons()
 			.success(function(data) {
 				jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) + 1 + " ");
 				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) - 1 + " ");
+				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
+
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
@@ -534,6 +537,7 @@ function player_buttons()
 			$.post(url)
 			.success(function(data) {
 				jQuery(".player-stats .float-right ." + data + ".text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right ." + data + ".text").text())) + 1 + " ");
+				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
@@ -541,9 +545,32 @@ function player_buttons()
 			jQuery(this).toggleClass('active');
 			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active');
 		}
-		//If the user clicks the same button twice, do nothing
+		//If the user clicks the same button twice, undo voting
 		else if( last_concensus == jQuery.trim(jQuery(this).text()) )
-		{}
+		{
+			var url = yd_settings.site_url + "ajax/decrement_agrees_disagrees/" + nar_id + "/" + last_concensus;
+			$.post(url)
+			.success(function(data) {
+				jQuery(".player-stats .float-right ." + data + ".text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right ." + data + ".text").text())) - 1 + " ");
+				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
+
+			})
+			.fail(function() {
+				alert("An error occurred while voting.");
+			});
+			//set last_concensus to an empty string.
+			last_concensus = "";
+			jQuery('.player-buttons .float-right .btn-group .btn').removeClass('active');
+		}
 		
 	});
+	
+	function update_concensus_bar(agrees, disagrees)
+	{
+		var total_votes = agrees + disagrees;
+		var new_agrees = Math.round(agrees/total_votes) * 100;
+		var new_disagrees = Math.round(disagrees/total_votes) * 100;
+		jQuery(".progress-bar progress-bar-success").width(new_agrees);
+		jQuery(".progress-bar progress-bar-danger").width(new_disagrees);
+	}
 }

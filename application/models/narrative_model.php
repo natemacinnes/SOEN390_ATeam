@@ -464,20 +464,20 @@ class Narrative_Model extends CI_Model
 	/**
 	*	increment agree of a narrative
 	*/
-	public function increment_agrees($narrative_id)
+	public function toggle_agrees($narrative_id, $operator)
 	{
 		$this->db->where('narrative_id', $narrative_id);
-		$this->db->set('agrees', 'agrees+1', FALSE);
+		$this->db->set('agrees', 'agrees' . $operator . '1', FALSE);
 		$this->db->update('narratives');
 	}
 	
 	/**
 	*	increment disagree of a narrative
 	*/
-	public function increment_disagrees($narrative_id)
+	public function toggle_disagrees($narrative_id, $operator)
 	{
 		$this->db->where('narrative_id', $narrative_id);
-		$this->db->set('disagrees', 'disagrees+1', FALSE);
+		$this->db->set('disagrees', 'disagrees' . $operator . '1', FALSE);
 		$this->db->update('narratives');
 	}
 	
@@ -487,8 +487,14 @@ class Narrative_Model extends CI_Model
 	public function toggle($incrementing, $decrementing, $narrative_id)
 	{
 		$this->db->where('narrative_id', $narrative_id);
-		$this->db->set( $incrementing, $incrementing . '+1', FALSE);
-		$this->db->set( $decrementing, $decrementing . '-1', FALSE);
+		if(strlen($incrementing))
+		{
+			$this->db->set( $incrementing, $incrementing . '+1', FALSE);
+		}
+		if(strlen($decrementing))
+		{
+			$this->db->set( $decrementing, $decrementing . '-1', FALSE);
+		}
 		$this->db->update('narratives');
 	}
 }
