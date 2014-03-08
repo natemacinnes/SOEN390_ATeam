@@ -142,7 +142,7 @@ class Ajax extends YD_Controller
 		}
 		// Handling case where the same narrative is replayed, to avoid duplicates in the history
 		$key = array_search($narrative_id, $history);
-		if ($key !== NULL)
+		if ($key !== FALSE)
 		{
 			unset($history[$key]);
 		}
