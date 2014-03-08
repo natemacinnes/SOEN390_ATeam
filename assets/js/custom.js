@@ -50,7 +50,7 @@ function reload_bubbles() {
 	loadBubbles(null, yd_settings.constants.NARRATIVE_POSITION_NEUTRAL);
 	loadBubbles(null, yd_settings.constants.NARRATIVE_POSITION_AGREE);
 	loadBubbles(null, yd_settings.constants.NARRATIVE_POSITION_DISAGREE);
-	narrative_load_history();
+	narrative_history_load();
 }
 
 function loadBubbles(language, position) {
@@ -75,11 +75,10 @@ function loadBubbles(language, position) {
 	}
 	yd_settings.recent_filter = null;
 
-	var num_parent_bubbles = jQuery('.svg-container').length;
-	var diameter = (document.getElementById("bubble-container").offsetWidth);
+	var num_parent_bubbles = jQuery('#bubble-container .svg-container').length;
+	var diameter = jQuery("#bubble-container").width();
 	var width = diameter/num_parent_bubbles-4;
 	var height = diameter/num_parent_bubbles;
-	var format = d3.format(",.0f");
 	var color = d3.scale.category20c();
 
 	// Accepts nodes and computes the position of them for use by .data()
@@ -89,7 +88,6 @@ function loadBubbles(language, position) {
 		.value(function(d) { return d.agrees + d.disagrees; })
 		.padding(5);
 
-
 	// Create the SVG bubble structure
 	var svg = d3.select(svgselect).html('').append("svg")
 		.attr("width", width)
@@ -98,7 +96,7 @@ function loadBubbles(language, position) {
 
 	// Retrieve JSON from AJAX controller, but only once upon initial load
 	d3.json(url, function(error, data) {
-		console.log('creating bubbles sorted by ' + yd_settings.sort_by);
+		console.log('creating bubbles for SVG ' + svgselect +' sorted by ' + yd_settings.sort_by);
 
 		// Select elements, even if they do not exist yet. enter() creates them and
 		// appends them to the selection object. Then, we operate on them.
@@ -113,19 +111,7 @@ function loadBubbles(language, position) {
 				// ^ the root g container is transformed, so for all children x and y is
 				//   relative to 0
 
-		// Title (text tooltip on hover)
-		var titles = vis.append('title')
-			.attr("x", function(d) { return d.x; })
-			.attr("y", function(d) { return d.y; })
-			.text(function(d) { return (d.children ? d.name : 'Narrative ' + d.narrative_id + ": " + format(d.value)); });
-
-		var circles = vis.append("circle")
-			.attr("r", function(d) { return d.r; })
-			.attr("id", function(d) { return 'narrative-' + d.narrative_id; })
-			.attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
-			.style("fill", bubble_fill_color)
-			.style("opacity", function(d) { return !d.children ?  0.5: 1; })
-			.style("cursor", function(d) { return d.children ?  "normal" : "pointer"; });
+		narrative_draw_bubbles(vis);
 
 		var positionLabel = svg.append('text')
 				.attr("dx", 230)
@@ -134,82 +120,10 @@ function loadBubbles(language, position) {
 				.style("font-size", "2em")
 				.text(position_label_text(position));
 
-		// This computes the SVG path data required to form an arc.
-		var arc = d3.svg.arc()
-			.outerRadius(function(d) { return d.r; })
-			.innerRadius(function(d) { return d.r*yd_settings.ui.ring_inner_radius; });
-
-		// This transforms simple data objects into a arc values from 0 to 2*pi
-		var pie = d3.layout.pie()
-			.sort(null)
-			.value(function(d) { return d.value; })
-
-		/**
-		 * FIXME HACKY but works
-		 * The arc generator above needs to know about the bubble radius, but it is
-		 * only aware of what .data() has bound to it;
-		 * namely, the arc segments calculated for us by the pie layout generator.
-		 * So, let's just copy the data 'r' property into the pie data segments.
-		 */
-		function radiusmapper(d) {
-			if (d.children) {
-				return [];
-			}
-			var pie_data = pie(d.pie_data);
-			pie_data.forEach(function(slice, i) {
-				slice.r = d.r;
-			});
-
-			return pie_data;
-		}
-
-		// One SVG g container per pie chart slice
-		var arcs = vis.selectAll("g.slice")
-			.data(radiusmapper)
-			.enter()
-			.append("svg:g")
-			.attr("class", "slice")
-
-		// In the container, write a path based on the generated arc data
-		var paths = arcs.append("svg:path")
-			.attr("fill", function(d, i) { return d.data.label == 'agrees' ? bubble_colors.green : bubble_colors.red; } )
-			.attr("d", arc);
-
-		// This comes after the paths so that the text doesn't get covered by the
-		// path rendering
-		var nodes = vis.filter(function(d, i) { return !d.children && d.r > 35 }).append("text")
-			.attr('dy', '-0.6em')
-			.style("text-anchor", "middle")
-			.style("cursor", "pointer");
-		nodes.append('svg:tspan')
-			.text(function(d) { return d.agrees; })
-			.style("dominant-baseline", "central")
-		nodes.append('svg:tspan')
-			.text(glyphicon_map.agrees)
-			.attr('dx', '0.3em')
-			.style("dominant-baseline", "central")
-			.style('font-family', "'Glyphicons Halflings")
-			.style('fill', bubble_colors.green);
-
-		var nodes2 = vis.filter(function(d, i) { return !d.children && d.r > 35 }).append("text")
-			.attr('dy', '0.6em')
-			.style("text-anchor", "middle")
-			.style("cursor", "pointer")
-			.style("display", function(d) { return null; });
-		nodes2.append('svg:tspan')
-			.text(function(d) { return d.disagrees; })
-			.style("dominant-baseline", "central")
-		nodes2.append('svg:tspan')
-			.text(glyphicon_map.disagrees)
-			.attr('dx', '0.3em')
-			.style("dominant-baseline", "central")
-			.style('font-family', "'Glyphicons Halflings")
-			.style('fill', bubble_colors.red);
-
 		// Colorbox popup for audio player
 		jQuery(svgselect + " g.node-base").click(function(e) {
 			// Call method to add narrative to history
-			narrative_add_history(this.__data__);
+			narrative_history_add(this.__data__);
 
 			// Don't open colorbox for unmatched language filter
 			if (!narrative_matches_filter(this.__data__)) {
@@ -248,7 +162,8 @@ function loadBubbles(language, position) {
 		 * is preferred by user.
 		 */
 		function updateVis(svgselect) {
-			console.log('updating bubbles to be sorted by ' + yd_settings.sort_by);
+			var format = d3.format(",.0f");
+			console.log('updating bubbles for SVG ' + svgselect + ' sorted by ' + yd_settings.sort_by);
 			//to update pack values, use: pack.value(function() { return metric; });
 			//to update data, use: pack.nodes(data)
 
@@ -256,19 +171,18 @@ function loadBubbles(language, position) {
 				.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
 				.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; });
 
-			titles.attr("x", function(d) { return 0; })
+			vis.selectAll('title')
+				.attr("x", function(d) { return 0; })
 				.attr("y", function(d) { return 0; })
 				.text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
 
-			circles.transition().duration(yd_settings.ui.transition_duration)
-					.style("fill", bubble_fill_color)
-					.attr("r", function(d) { return d.r; });
+			vis.selectAll('circle')
+				.transition().duration(yd_settings.ui.transition_duration)
+				.style("fill", bubble_fill_color)
+				.attr("r", function(d) { return d.r; });
 
-			arcs.data(radiusmapper)
-
-			paths.data(radiusmapper)
-			paths.transition().duration(yd_settings.ui.transition_duration)
-				.attr("d", function(d) { return arc(d); });
+			var arcs = vis.selectAll('g.slice')
+				.data(narrative_data_radiusmapper)
 
 			// Ring hover
 			jQuery(svgselect + ' g.node-base').hover(
@@ -294,27 +208,135 @@ function loadBubbles(language, position) {
 }
 
 /**
+	 * FIXME HACKY but works
+	 * The arc generator above needs to know about the bubble radius, but it is
+	 * only aware of what .data() has bound to it;
+	 * namely, the arc segments calculated for us by the pie layout generator.
+	 * So, let's just copy the data 'r' property into the pie data segments.
+	 */
+	function narrative_data_radiusmapper(d) {
+		// This transforms simple data objects into a arc values from 0 to 2*pi
+		var pie = d3.layout.pie()
+			.sort(null)
+			.value(function(d) { return d.value; });
+
+		if (d.children) {
+			return [];
+		}
+
+		var pie_data = pie(d.pie_data);
+		pie_data.forEach(function(slice, i) {
+			slice.r = d.r;
+		});
+
+		return pie_data;
+	}
+
+function narrative_draw_bubbles(vis) {
+	var format = d3.format(",.0f");
+
+	// Title (text tooltip on hover)
+	var titles = vis.append('title')
+		.attr("x", function(d) { return d.x; })
+		.attr("y", function(d) { return d.y; })
+		.text(function(d) { return (d.children ? d.name : 'Narrative ' + d.narrative_id + ": " + format(d.value)); });
+
+	var circles = vis.append("circle")
+		.attr("r", function(d) { return d.r; })
+		.attr("id", function(d) { return 'narrative-' + d.narrative_id; })
+		.attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
+		.style("fill", bubble_fill_color)
+		.style("opacity", function(d) { return !d.children ?  0.5: 1; })
+		.style("cursor", function(d) { return d.children ?  "normal" : "pointer"; });
+
+		// This computes the SVG path data required to form an arc.
+	var arc = d3.svg.arc()
+		.outerRadius(function(d) { return d.r; })
+		.innerRadius(function(d) { return d.r*yd_settings.ui.ring_inner_radius; });
+
+	// One SVG g container per pie chart slice
+	var arcs = vis.selectAll("g.slice")
+		.data(narrative_data_radiusmapper)
+		.enter()
+		.append("svg:g")
+		.attr("class", "slice")
+
+	// In the container, write a path based on the generated arc data
+	var paths = arcs.append("svg:path")
+		.attr("fill", function(d, i) { return d.data.label == 'agrees' ? bubble_colors.green : bubble_colors.red; } )
+		.attr("d", arc);
+
+	// This comes after the paths so that the text doesn't get covered by the
+	// path rendering
+	var label_agree = vis.filter(function(d, i) { return !d.children && d.r > 35 }).append("text")
+		.attr('dy', '-0.6em')
+		.style("text-anchor", "middle")
+		.style("cursor", "pointer");
+	label_agree.append('svg:tspan')
+		.text(function(d) { return d.agrees; })
+		.style("dominant-baseline", "central")
+	label_agree.append('svg:tspan')
+		.text(glyphicon_map.agrees)
+		.attr('dx', '0.3em')
+		.style("dominant-baseline", "central")
+		.style('font-family', "'Glyphicons Halflings")
+		.style('fill', bubble_colors.green);
+
+	var label_disagree = vis.filter(function(d, i) { return !d.children && d.r > 35 }).append("text")
+		.attr('dy', '0.6em')
+		.style("text-anchor", "middle")
+		.style("cursor", "pointer")
+		.style("display", function(d) { return null; });
+	label_disagree.append('svg:tspan')
+		.text(function(d) { return d.disagrees; })
+		.style("dominant-baseline", "central")
+	label_disagree.append('svg:tspan')
+		.text(glyphicon_map.disagrees)
+		.attr('dx', '0.3em')
+		.style("dominant-baseline", "central")
+		.style('font-family', "'Glyphicons Halflings")
+		.style('fill', bubble_colors.red);
+}
+
+/**
 *	Function that allows us to add items to history on the SESSION variable
 */
-function narrative_add_history(data)
+function narrative_history_add(data)
 {
 	var url = yd_settings.site_url + 'ajax/add_history/' + data.narrative_id;
 	jQuery.get(url)
 		.done(function(data) {
-			narrative_load_history();
+			narrative_history_load();
 		})
 		.fail(function() {
 			alert("Error. Narrative does not exists.");
 		});
 }
 
-function narrative_load_history()
+function narrative_history_data(data, i)
+{
+	var num_parent_bubbles = jQuery('#bubble-container .svg-container').length;
+	var diameter = jQuery("#bubble-container").width();
+	var width = jQuery("#recent-container").width();
+	var height = diameter/num_parent_bubbles;
+	var padding = yd_settings.constants.NARRATIVE_HISTORY_LIMIT;
+	var radius = Math.min(width, (height - 2*yd_settings.constants.NARRATIVE_HISTORY_LIMIT*padding) / yd_settings.constants.NARRATIVE_HISTORY_LIMIT) / 2;
+	var radius_padding = radius + padding;
+	data.forEach(function(d, i) {
+		d.x = (width-radius*2)/2 + radius;
+		d.y = i*radius_padding*2 + radius_padding;
+		d.r = radius
+	});
+	return data;
+}
+
+function narrative_history_load()
 {
 	var url = yd_settings.site_url + 'ajax/get_history';
 	jQuery.getJSON(url)
 		.done(function(data) {
-			var num_parent_bubbles = jQuery('.svg-container').length;
-			var diameter = (document.getElementById("bubble-container").offsetWidth);
+			var num_parent_bubbles = jQuery('#bubble-container .svg-container').length;
+			var diameter = jQuery("#bubble-container").width();
 			var width = jQuery("#recent-container").width();
 			var height = diameter/num_parent_bubbles;
 			// Get the limiting dimension (width or height), subtract desired padding,
@@ -323,25 +345,24 @@ function narrative_load_history()
 			var radius = Math.min(width, (height - 2*yd_settings.constants.NARRATIVE_HISTORY_LIMIT*padding) / yd_settings.constants.NARRATIVE_HISTORY_LIMIT) / 2;
 			var radius_padding = radius + padding;
 			var svgselect = '#recent-container .svg-container';
+			console.log('loading history bubbles for SVG ' + svgselect);
 			var svg = d3.select(svgselect).html('').append("svg")
 				.attr("width", width)
 				.attr("height", height)
 				.attr("class", "bubble");
 
-			var vis = svg.selectAll('.node')
-				.data(data)
+			var vis = svg.datum(data).selectAll('.node')
+				.data(narrative_history_data)
 				.enter()
-					.append('circle')
-						.attr("transform", function(d, i) {
-							d.x = (width-radius*2)/2 + radius;
-							d.y = i*radius_padding*2 + radius_padding;
-							return 'translate(' + d.x +',' + d.y + ')';
-						})
-						.attr("r", radius)
-						.attr("id", function(d) { return 'history-narrative-' + d.narrative_id; })
-						.attr("class", 'history node-base')
-						.style("fill", bubble_fill_color)
-						.style("opacity", function(d) { return !d.children ?  0.5: 1; })
+					.append('g')
+					.attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
+					.attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
+					.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
+					.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : debug_bubble_opacity; });
+					// ^ the root g container is transformed, so for all children x and y is
+					//   relative to 0
+
+			narrative_draw_bubbles(vis);
 		});
 }
 
@@ -401,13 +422,17 @@ glyphicon_map = {
 
 bubble_colors = {
 	green: '#009933',
+	darkgreen: '#007a28',
 	red: '#CC0000',
+	darkred: '#a30000',
 	lightgrey: '#CFCFCF',
 	grey: '#eeeeee',
 	darkgrey: '#777777',
 	darkergrey: '#333333',
 	blue: '#4282D3',
-	purple: '#743CBC'
+	darkblue: '#3468a8',
+	purple: '#743CBC',
+	darkpurple: '#5c3096'
 }
 
 bubble_fill_color = function(d) {
@@ -621,7 +646,7 @@ function player_buttons()
 		}
 		{}
 	});
-	
+
 	function update_concensus_bar(agrees, disagrees)
 	{
 		var total_votes = agrees + disagrees;

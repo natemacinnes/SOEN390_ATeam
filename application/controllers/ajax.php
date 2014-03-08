@@ -34,13 +34,7 @@ class Ajax extends YD_Controller
 			{
 				continue;
 			}
-			// +1 to ensure that 0 doesn't give us NaN
-			$pie_data = array(
-				array("label" => "agrees", "value" => $narrative['agrees']+1),
-				array("label" => "disagrees", "value" => $narrative['disagrees']+1),
-			);
-			$narrative['pie_data'] = $pie_data;
-			//$narrative['created'] = strtotime($narrative['created']);
+      $this->process_narrative_bubble($narrative);
 			$nodes[] = $narrative;
 		}
 
@@ -48,6 +42,20 @@ class Ajax extends YD_Controller
 
 		print json_encode($data);
 	}
+
+  /**
+   * Accepts a narrative array and processes some options in preparation for use
+   * with D3.
+   */
+  private function process_narrative_bubble(&$narrative)
+  {
+    // +1 to ensure that 0 doesn't give us NaN
+    $pie_data = array(
+      array("label" => "agrees", "value" => $narrative['agrees']+1),
+      array("label" => "disagrees", "value" => $narrative['disagrees']+1),
+    );
+    $narrative['pie_data'] = $pie_data;
+  }
 
 	/**
 	 * Return the image URL given a narrative & timecode.
@@ -147,7 +155,9 @@ class Ajax extends YD_Controller
 		}
 		$narratives = array();
 		foreach($history as $narrative_id) {
-			$narratives[] = $this->narrative_model->get($narrative_id);
+      $narrative = $this->narrative_model->get($narrative_id);
+      $this->process_narrative_bubble($narrative);
+			$narratives[] = $narrative;
 		}
 		print json_encode($narratives);
 	}
