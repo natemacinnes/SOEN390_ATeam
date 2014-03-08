@@ -50,6 +50,7 @@ function reload_bubbles() {
 	loadBubbles(null, yd_settings.constants.NARRATIVE_POSITION_NEUTRAL);
 	loadBubbles(null, yd_settings.constants.NARRATIVE_POSITION_AGREE);
 	loadBubbles(null, yd_settings.constants.NARRATIVE_POSITION_DISAGREE);
+	narrative_load_history();
 }
 
 function loadBubbles(language, position) {
@@ -208,8 +209,8 @@ function loadBubbles(language, position) {
 		// Colorbox popup for audio player
 		jQuery(svgselect + " g.node-base").click(function(e) {
 			// Call method to add narrative to history
-			add_to_history(this.__data__);
-		
+			narrative_add_history(this.__data__);
+
 			// Don't open colorbox for unmatched language filter
 			if (!narrative_matches_filter(this.__data__)) {
 				return false;
@@ -230,9 +231,9 @@ function loadBubbles(language, position) {
 			});
 			//increment the number of views in the database
 			var url = yd_settings.site_url + "ajax/increment_views/" + this.__data__.narrative_id;
-			$.post(url)
-				.success(function(data) {
-	
+			jQuery.post(url)
+				.done(function(data) {
+
 				})
 				.fail(function() {
 					alert("Error. Narrative does not exists.");
@@ -295,31 +296,57 @@ function loadBubbles(language, position) {
 /**
 *	Function that allows us to add items to history on the SESSION variable
 */
-function add_to_history(data)
+function narrative_add_history(data)
 {
-	//Creating AJAX call
-	var request = new XMLHttpRequest();
+	var url = yd_settings.site_url + 'ajax/add_history/' + data.narrative_id;
+	jQuery.get(url)
+		.done(function(data) {
+			narrative_load_history();
+		})
+		.fail(function() {
+			alert("Error. Narrative does not exists.");
+		});
+}
 
-	//Handling return of data
-	request.onreadystatechange=function()
-	{
-		if(request.readyState == 4 && request.status == 200)
-		{
-			document.getElementById("recent-container").innerHTML = request.responseText;
-		}
-	}
+function narrative_load_history()
+{
+	var url = yd_settings.site_url + 'ajax/get_history';
+	jQuery.getJSON(url)
+		.done(function(data) {
+			var num_parent_bubbles = jQuery('.svg-container').length;
+			var diameter = (document.getElementById("bubble-container").offsetWidth);
+			var width = jQuery("#recent-container").width();
+			var height = diameter/num_parent_bubbles;
+			// Get the limiting dimension (width or height), subtract desired padding,
+			// then divide by 5 to get history circle radius
+			var padding = yd_settings.constants.NARRATIVE_HISTORY_LIMIT;
+			var radius = Math.min(width, (height - 2*yd_settings.constants.NARRATIVE_HISTORY_LIMIT*padding) / yd_settings.constants.NARRATIVE_HISTORY_LIMIT) / 2;
+			var radius_padding = radius + padding;
+			var svgselect = '#recent-container .svg-container';
+			var svg = d3.select(svgselect).html('').append("svg")
+				.attr("width", width)
+				.attr("height", height)
+				.attr("class", "bubble");
 
-	//Sending the request
-	request.open("POST", "history/add_to_history", true);
-	request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	request.send("id=" + data.narrative_id);
-
-	console.log('Added to session variable: ');
-	console.log(data);
+			var vis = svg.selectAll('.node')
+				.data(data)
+				.enter()
+					.append('circle')
+						.attr("transform", function(d, i) {
+							d.x = (width-radius*2)/2 + radius;
+							d.y = i*radius_padding*2 + radius_padding;
+							return 'translate(' + d.x +',' + d.y + ')';
+						})
+						.attr("r", radius)
+						.attr("id", function(d) { return 'history-narrative-' + d.narrative_id; })
+						.attr("class", 'history node-base')
+						.style("fill", bubble_fill_color)
+						.style("opacity", function(d) { return !d.children ?  0.5: 1; })
+		});
 }
 
 function date_from_string(str) {
-	var a = $.map(str.split(/[^0-9]/), function(s) { return parseInt(s, 10); });
+	var a = jQuery.map(str.split(/[^0-9]/), function(s) { return parseInt(s, 10); });
 	return new Date(a[0], a[1]-1 || 0, a[2] || 1, a[3] || 0, a[4] || 0, a[5] || 0, a[6] || 0);
 }
 
@@ -464,8 +491,8 @@ function initialize_commenting() {
 		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
 		var url = yd_settings.site_url + "comments/reply/" + narrative_id;
 		var formdata = jQuery("#new-comment-form").serialize();
-		$.post(url, formdata)
-			.success(function(data) {
+		jQuery.post(url, formdata)
+			.done(function(data) {
 				// Remove the 'no comment' message if it exists
 				jQuery('.comments-wrapper .remove-me').remove();
 				// Add the new comment, pre-rendered by the controller
@@ -483,8 +510,8 @@ function initialize_commenting() {
 		var parent_comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
 		var url = yd_settings.site_url + "comments/reply/" + narrative_id + '/' + parent_comment_id;
 		var formdata = jQuery("#new-comment-form").serialize();
-		$.post(url, formdata)
-			.success(function(data) {
+		jQuery.post(url, formdata)
+			.done(function(data) {
 				// Remove the 'no comment' message if it exists
 				jQuery('.comments-wrapper .remove-me').remove();
 				// Add the new comment, pre-rendered by the controller
@@ -501,8 +528,8 @@ function initialize_commenting() {
 		var comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
 		var url = yd_settings.site_url + "comments/flag/" + comment_id;
 		var formdata = jQuery("#new-comment-form").serialize();
-		$.post(url, formdata)
-			.success(function(data) {
+		jQuery.post(url, formdata)
+			.done(function(data) {
 				jQuery("#new-comment").val('');
 				alert("Thank you, this comment has been reported.");
 			})
@@ -520,13 +547,13 @@ function player_buttons()
 	var nar_id = jQuery(".page-header small").text();
 	//If agree or disagree button is pressed
 	jQuery(".player-buttons .float-right .btn-group .btn").click(function() {
-		
+
 		//Increment the agrees, decrement the disagrees
 		if(last_concensus == "Agree" && jQuery.trim(jQuery(this).text()) == "Disagree")
 		{
 			var url = yd_settings.site_url + "ajax/toggle_concensus/agrees/disagrees/" + nar_id;
-			$.post(url)
-			.success(function(data) {
+			jQuery.post(url)
+			.done(function(data) {
 				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) + 1 + " ");
 				jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) - 1 + " ");
 			})
@@ -542,8 +569,8 @@ function player_buttons()
 		else if(last_concensus == "Disagree" && jQuery.trim(jQuery(this).text()) == "Agree")
 		{
 			var url = yd_settings.site_url + "ajax/toggle_concensus/disagrees/agrees/" + nar_id;
-			$.post(url)
-			.success(function(data) {
+			jQuery.post(url)
+			.done(function(data) {
 				jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) + 1 + " ");
 				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) - 1 + " ");
 			})
@@ -561,8 +588,8 @@ function player_buttons()
 			//set last_concensus according to the button pressed (agree/disagree)
 			last_concensus = jQuery.trim(jQuery(this).text());
 			var url = yd_settings.site_url + "ajax/increment_agrees_disagrees/" + nar_id + "/" + last_concensus;
-			$.post(url)
-			.success(function(data) {
+			jQuery.post(url)
+			.done(function(data) {
 				jQuery(".player-stats .float-right ." + data + ".text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right ." + data + ".text").text())) + 1 + " ");
 			})
 			.fail(function() {
@@ -574,6 +601,6 @@ function player_buttons()
 		//If the user clicks the same button twice, do nothing
 		else if( last_concensus == jQuery.trim(jQuery(this).text()) )
 		{}
-		
+
 	});
 }
