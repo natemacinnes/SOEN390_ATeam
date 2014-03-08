@@ -21,21 +21,27 @@ class Narrative_Model extends CI_Model
 	/**
 	 * Retrieve a narrative data structure by ID, or FALSE upon failure.
 	 */
-	public function get_all($sortby = 'id', $position = NULL)
+	// FIXME this needs refactoring for parameter order
+	public function get_all($sort_by = 'id', $position = NULL, $sort_order = 'asc', $offset = 0, $limit = NULL)
 	{
 		// Get the sort column
 		$sort_cols = array(
 			'id' => 'narrative_id',
+			'length' => 'audio_length',
+			'language' => 'language',
 			'age' => 'created',
+			'uploaded' => 'uploaded',
+			'flags' => 'flags',
+			'status' => 'status',
 			'agrees' => 'agrees',
-			'disagrees' => 'disagrees',
+			'disagrees' => 'disagrees'
 		);
-		if (!isset($sort_cols[$sortby]))
+		if (!isset($sort_cols[$sort_by]))
 		{
 			// TODO: Error handling
 			return array();
 		}
-		$sort_col = $sort_cols[$sortby];
+		$sort_col = $sort_cols[$sort_by];
 
 
 		$query = $this->db->from($this->table);
@@ -43,11 +49,20 @@ class Narrative_Model extends CI_Model
 		{
 			$this->db->where('position', $position);
 		}
+		if ($limit) {
+			$query->limit($limit, $offset);
+		}
 		$query = $this->db
-			->order_by($sort_col, 'desc')
+			->order_by($sort_col, $sort_order)
 			->get();
 		$narratives = $query->result_array();
 		return $narratives;
+	}
+
+	public function get_total_count()
+	{
+		$query = $this->db->query('SELECT count(*) as count FROM narratives;');
+		return $query->row_array();
 	}
 
 	//following is for xml parsing
@@ -277,7 +292,7 @@ class Narrative_Model extends CI_Model
 						$temp = shell_exec($command);
 
 						//write the file name to audio_container.txt
-						$file_input = "file " . "'" . $dir . "/" .$file_name .".mp3'\r\n";
+						$file_input = "file " . "'" . $dir . "\\" .$file_name .".mp3'\r\n";
 						fwrite($file_concat, $file_input);
 
 						preg_match("/Duration: (.*?),/", $temp, $matches);
@@ -437,5 +452,52 @@ class Narrative_Model extends CI_Model
 		}
 		$this->db->query('UPDATE narratives SET status=0 WHERE narrative_id='.$id.';');
 		return $status;
+	}
+
+	/**
+	*	increment views of a narrative
+	*/
+	public function increment_views($narrative_id)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+		$this->db->set('views', 'views+1', FALSE);
+		$this->db->update('narratives');
+	}
+
+	/**
+	*	increment agree of a narrative
+	*/
+	public function toggle_agrees($narrative_id, $operator)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+		$this->db->set('agrees', 'agrees' . $operator . '1', FALSE);
+		$this->db->update('narratives');
+	}
+
+	/**
+	*	increment disagree of a narrative
+	*/
+	public function toggle_disagrees($narrative_id, $operator)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+		$this->db->set('disagrees', 'disagrees' . $operator . '1', FALSE);
+		$this->db->update('narratives');
+	}
+
+	/**
+	*	toggle disagree or agree of a narrative
+	*/
+	public function toggle($incrementing, $decrementing, $narrative_id)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+		if(strlen($incrementing))
+		{
+			$this->db->set( $incrementing, $incrementing . '+1', FALSE);
+		}
+		if(strlen($decrementing))
+		{
+			$this->db->set( $decrementing, $decrementing . '-1', FALSE);
+		}
+		$this->db->update('narratives');
 	}
 }

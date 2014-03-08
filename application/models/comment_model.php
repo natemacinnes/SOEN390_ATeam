@@ -8,13 +8,18 @@ class Comment_Model extends CI_Model {
 
 
   /**
-   * Retrieve get all comments for for a given narrative
+   * Retrieve get all comments for for a given narrative (used for admin side)
    */
-  public function get_all()
+  public function get_all($narrative_id = NULL)
   {
-    $query = $this->db->from($this->table)->get();
-    $narratives = $query->result_array();
-    return $narratives;
+    $this->db->from($this->table);
+    if($narrative_id)
+    {
+      $this->db->where('narrative_id', $narrative_id);
+    }
+    $query = $this->db->get();
+    $comments = $query->result_array();
+    return $comments;
   }
 
   /**
@@ -28,7 +33,7 @@ class Comment_Model extends CI_Model {
   }
 
   /**
-   * Retrieve comments for a given narrative
+   * Retrieve comments for a given narrative (used client side)
    */
   public function get_by_narrative_id($narrative_id)
   {

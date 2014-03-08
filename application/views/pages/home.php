@@ -45,7 +45,9 @@
     <!-- this sets the background color (must match recent-container) -->
       <div class="inner clearfix">
         <!-- right column that appears to expand to meet left column -->
-        <div id="recent-container"></div>
+        <div id="recent-container">
+          <div class="svg-container svg-container-history"></div>
+        </div>
         <!-- left column -->
         <div id="bubble-container" class="float-left">
           <div class="svg-container svg-container-1 float-left"></div>

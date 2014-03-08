@@ -78,4 +78,101 @@ class Ajax extends YD_Controller
 			print $return;
 		}
 	}
+
+	/**
+	 * Increment the amount of views on a narrative.
+	 */
+	public function increment_views($narrative_id)
+	{
+		$this->narrative_model->increment_views($narrative_id);
+	}
+
+	/**
+	 * Increment the agree/disagree of a narrative.
+	 */
+	public function increment_agrees_disagrees($narrative_id, $decision)
+	{
+		if($decision == "Agree")
+		{
+			$this->narrative_model->toggle_agrees($narrative_id, "+");
+			echo "green";
+		}
+		else if($decision == "Disagree")
+		{
+			$this->narrative_model->toggle_disagrees($narrative_id, "+");
+			echo "red";
+		}
+		else
+		{
+			echo "";
+		}
+	}
+
+	/**
+	 * decrement the agree/disagree of a narrative.
+	 */
+	public function decrement_agrees_disagrees($narrative_id, $decision)
+	{
+		if($decision == "Agree")
+		{
+			$this->narrative_model->toggle_agrees($narrative_id, "-");
+			echo "green";
+		}
+		else if($decision == "Disagree")
+		{
+			$this->narrative_model->toggle_disagrees($narrative_id, "-");
+			echo "red";
+		}
+		else
+		{
+			echo "";
+		}
+	}
+
+	/**
+	 * Increment the agree/disagree of a narrative.
+	 */
+	public function toggle_concensus($incrementing, $decrementing, $narrative_id)
+	{
+		$this->narrative_model->toggle($incrementing, $decrementing, $narrative_id);
+	}
+
+	/**
+	 * Outputs JSON for the history bar without modifying it.
+	 */
+	public function get_history() {
+		$history = $this->session->userdata('history');
+		if ($history === FALSE) {
+			$history = array();
+		}
+		$narratives = array();
+		foreach($history as $narrative_id) {
+			$narratives[] = $this->narrative_model->get($narrative_id);
+		}
+		print json_encode($narratives);
+		return json_encode($narratives);
+	}
+
+	/**
+	 * Adds a narrative to the history, then outputs get_history().
+	 */
+	public function add_history($narrative_id) {
+		// Modifying session data to add the currently requested session id
+		$history = $this->session->userdata('history');
+		if ($history === FALSE) {
+			$history = array();
+		}
+		// Handling case where the same narrative is replayed, to avoid duplicates in the history
+		$key = array_search($narrative_id, $history);
+		if ($key !== FALSE)
+		{
+			unset($history[$key]);
+		}
+		array_unshift($history, $narrative_id);
+		array_slice($history, 0, NARRATIVE_HISTORY_LIMIT);
+		$this->session->set_userdata('history', $history);
+
+		print $this->get_history();
+		return ($this->get_history());
+	}
 }

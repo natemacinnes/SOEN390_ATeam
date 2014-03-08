@@ -15,34 +15,33 @@
 	
 	<!-- FIXME needs work for bulk actions and no form close -->
 	<?php echo form_open('admin/batchAction'); ?>
-	<ul class="pagination float-left">
-		<li><?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?></li>
-		<li><?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?></li>
-		<li><?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?></li>
-	</ul>
+		<div class="btn-group big-top-margin float-left">
+			<button type="button" class="btn btn-default" disabled="disabled">Batch Actions:</button>
+			<?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?>
+			<?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?>
+			<?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?>
+		</div>
+	<!-- WHY DOES THIS ONLY WORK WITHOUT FORM CLOSE? -->
 
-	<ul class="pagination float-right">
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
+	<!--THIS GENERATES PAGINATION-->
+	<?php 
+		if (strlen($links)){
+			echo $links; 
+		}
+	?>
 	<div class="clear"></div>
 
 	<table class="table table-hover">
 		<thead>
 			<tr>
 				<th></th>
-				<th><a href="#" class="sort-btn active desc">ID</a></th>
-				<th><a href="#" class="sort-btn">Length</a></th>
-				<th><a href="#" class="sort-btn">Language</a></th>
-				<th><a href="#" class="sort-btn">Created</a></th>
-				<th><a href="#" class="sort-btn">Uploaded</a></th>
-				<th><a href="#" class="sort-btn">Flags</a></th>
-				<th><a href="#" class="sort-btn">Status</a></th>
+				<th><a href="<?php echo site_url("admin/narratives/id/".(($sort_order == "asc" && $sort_by == "id") ? "desc" : "asc")."/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "id") ? " active $sort_order" : ""; ?>">ID</a></th>
+				<th><a href="<?php echo site_url("admin/narratives/length/".(($sort_order == "asc" && $sort_by == "length") ? "desc" : "asc")."/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "length") ? " active $sort_order" : ""; ?>">Length</a></th>
+				<th><a href="<?php echo site_url("admin/narratives/language/".(($sort_order == "asc" && $sort_by == "language") ? "desc" : "asc")."/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "language") ? " active $sort_order" : ""; ?>">Language</a></th>
+				<th><a href="<?php echo site_url("admin/narratives/age/".(($sort_order == "asc" && $sort_by == "age") ? "desc" : "asc")."/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "age") ? " active $sort_order" : ""; ?>">Created</a></th>
+				<th><a href="<?php echo site_url("admin/narratives/uploaded/".(($sort_order == "asc" && $sort_by == "uploaded") ? "desc" : "asc")."/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "uploaded") ? " active $sort_order" : ""; ?>">Uploaded</a></th>
+				<th><a href="<?php echo site_url("admin/narratives/flags/".(($sort_order == "asc" && $sort_by == "flags") ? "desc" : "asc")."/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "flags") ? " active $sort_order" : ""; ?>">Flags</a></th>
+				<th><a href="<?php echo site_url("admin/narratives/status/".(($sort_order == "asc" && $sort_by == "status") ? "desc" : "asc")."/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "status") ? " active $sort_order" : ""; ?>">Status</a></th>
 				<th>Actions</th>
 			</tr>
 		</thead>
@@ -70,20 +69,20 @@
 	
 	<!-- FIXME should be button anchor links and use JS to trigger submit buttons above -->
 	<?php echo form_open('admin/batchAction'); ?>
-	<ul class="pagination float-left">
-		<li><?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?></li>
-		<li><?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?></li>
-		<li><?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?></li>
-	</ul>
-	<ul class="pagination float-right">
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
+		<div class="btn-group big-top-margin float-left">
+			<button type="button" class="btn btn-default" disabled="disabled">Batch Actions:</button>
+			<?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?>
+			<?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?>
+			<?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?>
+		</div>
+	<!-- WHY DOES THIS ONLY WORK WITHOUT FORM CLOSE? -->
+
+	<!--THIS GENERATES PAGINATION-->
+	<?php 
+		if (strlen($links)){
+			echo $links; 
+		}
+	?>
 	<div class="clear"></div>
 
 </div>
