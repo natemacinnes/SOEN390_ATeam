@@ -21,7 +21,8 @@ class Narrative_Model extends CI_Model
 	/**
 	 * Retrieve a narrative data structure by ID, or FALSE upon failure.
 	 */
-	public function get_all($sort_by = 'id', $sort_order = 'asc', $offset = 0, $limit = 20,$position = NULL)
+	// FIXME this needs refactoring for parameter order
+	public function get_all($sort_by = 'id', $position = NULL, $sort_order = 'asc', $offset = 0, $limit = NULL)
 	{
 		// Get the sort column
 		$sort_cols = array(
@@ -48,8 +49,10 @@ class Narrative_Model extends CI_Model
 		{
 			$this->db->where('position', $position);
 		}
+		if ($limit) {
+			$query->limit($limit, $offset);
+		}
 		$query = $this->db
-			->limit($limit, $offset)
 			->order_by($sort_col, $sort_order)
 			->get();
 		$narratives = $query->result_array();
@@ -400,7 +403,7 @@ class Narrative_Model extends CI_Model
 		}
 
 		//creating the directory on the server
-		$new_dir = "./uploads/" . $id;
+		$new_dir = $this->config->item('site_data_dir') . '/' . $id;
 		if (!is_dir($new_dir))
 		{
 			rename($dir, $new_dir);
@@ -450,7 +453,7 @@ class Narrative_Model extends CI_Model
 		$this->db->query('UPDATE narratives SET status=0 WHERE narrative_id='.$id.';');
 		return $status;
 	}
-	
+
 	/**
 	*	increment views of a narrative
 	*/
@@ -460,7 +463,7 @@ class Narrative_Model extends CI_Model
 		$this->db->set('views', 'views+1', FALSE);
 		$this->db->update('narratives');
 	}
-	
+
 	/**
 	*	increment agree of a narrative
 	*/
@@ -470,7 +473,7 @@ class Narrative_Model extends CI_Model
 		$this->db->set('agrees', 'agrees' . $operator . '1', FALSE);
 		$this->db->update('narratives');
 	}
-	
+
 	/**
 	*	increment disagree of a narrative
 	*/
@@ -480,7 +483,7 @@ class Narrative_Model extends CI_Model
 		$this->db->set('disagrees', 'disagrees' . $operator . '1', FALSE);
 		$this->db->update('narratives');
 	}
-	
+
 	/**
 	*	toggle disagree or agree of a narrative
 	*/

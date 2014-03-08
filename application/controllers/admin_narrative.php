@@ -122,6 +122,17 @@ class Admin_Narrative extends YD_Controller
     //Getting info on the narrative to edit the narrative
     $info = $this->editing_model->gatherInfo($id);
 
+    //Handle exception when narrative has been modified by another admin while the current admin was on the page. Else update the last modification date and time in database
+    if($info['modified'] !== $_POST['modified'])
+    {
+      $this->system_message_model->set_message('Narrative #' . $id . ' has been modified since you loaded this page. Changes are discarded and the page is refreshed so you can see the latest version of the narrative before editing.', MESSAGE_NOTICE);
+      redirect('admin/narratives/' . $id . '/edit');
+    }
+    else
+    {
+      $this->editing_model->updateModified($id);
+    }
+
     //Unpublishing the narrative before reprocessing
     $previousStatus = $this->narrative_model->unpublish($id);
 
@@ -187,46 +198,57 @@ class Admin_Narrative extends YD_Controller
 	$this->require_login();
 	
 	//Getting info on the narrative to edit the narrative
-    $info = $this->editing_model->gatherInfo($id);
+  $info = $this->editing_model->gatherInfo($id);
+
+  //Handle exception when narrative has been modified by another admin while the current admin was on the page. Else update the last modification date and time in database
+  if($info['modified'] !== $_POST['modified'])
+  {
+    $this->system_message_model->set_message('Narrative #' . $id . ' has been modified since you loaded this page. Changes are discarded and the page is refreshed so you can see the latest version of the narrative before editing.', MESSAGE_NOTICE);
+    redirect('admin/narratives/' . $id . '/edit');
+  }
+  else
+  {
+    $this->editing_model->updateModified($id);
+  }
 	
 	//Getting files previously removed
 	$path = $this->config->item('site_data_dir') . '/' . $id . '/deleted/';
 	$deleted = $this->editing_model->gatherDeleted($path);
 
-    //Unpublishing the narrative before reprocessing
-    $previousStatus = $this->narrative_model->unpublish($id);
+  //Unpublishing the narrative before reprocessing
+  $previousStatus = $this->narrative_model->unpublish($id);
 
-    //Creating a new folder to move for processing
-    $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
-    mkdir($newDir, 0755);
+  //Creating a new folder to move for processing
+  $newDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
+  mkdir($newDir, 0755);
 	
 	//Creating a new folder to store deleted files
 	$delDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/deleted/';
     mkdir($delDir, 0755);
 
     //Keeping files already in the narrative
-    $trackName = $info['trackName'];
-    $trackPath = $info['trackPath'];
-    $this->editing_model->deleteTracks($trackName, $trackPath, $newDir);
-    $picName = $info['picName'];
-    $picPath = $info['picPath'];
-    $this->editing_model->deletePics($picName, $picPath, $newDir);
+  $trackName = $info['trackName'];
+  $trackPath = $info['trackPath'];
+  $this->editing_model->deleteTracks($trackName, $trackPath, $newDir);
+  $picName = $info['picName'];
+  $picPath = $info['picPath'];
+  $this->editing_model->deletePics($picName, $picPath, $newDir);
 	
 	//Restoring desired tracks and moving the rest to the new deleted folder
-    if(isset($deleted['deletedAudio']))
+  if(isset($deleted['deletedAudio']))
 	{
 		$trackName = $deleted['deletedAudio'];
 		$trackPath = $deleted['deletedAudioPath'];
 	}
-    if(isset($_POST['tracks']))
-    {
+  if(isset($_POST['tracks']))
+  {
       $tracksToRestore = $_POST['tracks'];
       $this->editing_model->restoreTracks($trackName, $trackPath, $newDir, $tracksToRestore);
-    }
-    else
-    {
-      $this->editing_model->restoreTracks($trackName, $trackPath, $newDir);
-    }
+  }
+  else
+  {
+    $this->editing_model->restoreTracks($trackName, $trackPath, $newDir);
+  }
 
     //Restoring desired images and moving the rest to the new deleted folder
     if(isset($deleted['deletedImage']))

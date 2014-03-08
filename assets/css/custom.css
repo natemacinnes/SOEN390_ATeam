@@ -119,7 +119,7 @@ body {
 .bottom-border{
 	border-bottom: 1px solid #ddd;
 }
-.top-border{ 
+.top-border{
 	border-top: 1px solid #ddd;
 }
 
@@ -196,7 +196,6 @@ span.yellow { color: #ffbf00; }
 #recent-container {
 	float: right;
 	width: 15%;
-	padding: 0.5em;
 }
 
 .controls-container .btn{ box-shadow: 0 1px 0 #bbb; }
@@ -285,12 +284,12 @@ span.yellow { color: #ffbf00; }
 									Player
 
  *****************************************************************************/
- 
+
 .player-wrapper{ position: relative;}
 
 .player-buttons .btn{ box-shadow: 0 1px 0 #bbb; }
- 
- 
+
+
 /*****************************************************************************
 
 									Comments

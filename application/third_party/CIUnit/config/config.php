@@ -9,5 +9,7 @@
 
 $config['ciu_subclass_prefix'] = 'CIU_';
 
+$config['site_data_dir'] = 'uploads/tests';
+
 /* End of file config.php */
 /* Location ./application/third_party/CIUnit/config/config.php */
