@@ -63,5 +63,16 @@ class Editing_Model_Test extends CIUnit_TestCase
 		$info = $this->CI->editing_model->gatherInfo(-1);
 		$this->assertEquals($info, null);
 	}
-
+	
+	/**
+	 * UT-0051
+	 * @covers Editing_Model::gatherDeleted
+	 */
+	 
+/*	 public function test__gatherDeleted__path()
+	 {
+		$deleted = $this->editing_model->gatherDeleted("../../uploads/5");
+		die(print_r($deleted, true));
+	 }
+*/
 }
