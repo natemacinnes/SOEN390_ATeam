@@ -64,4 +64,30 @@ class Editing_Model_Test extends CIUnit_TestCase
 		$this->assertEquals($info, null);
 	}
 
+	/**
+	*	UT-0051
+	*	@covers Editing_Model::gatherDeleted
+	*/
+	public function test__gatherDeleted__valid_id()
+	{
+		$info = $this->CI->editing_model->gatherDeleted(1);
+
+		$check = false;
+		if(isset($info['narrative_id']))
+		{
+			$check = true;
+		}
+
+		$this->assertEquals(true, $check);
+	}
+
+	/**
+	 * UT-0052
+	 * @covers Editing_Model::gatherDeleted
+	 */
+	public function test__gatherDeleted__invalid_id()
+	{
+		$info = $this->CI->editing_model->gatherDeleted(-1);
+		$this->assertEquals($info, null);
+	}
 }
