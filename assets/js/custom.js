@@ -10,6 +10,8 @@ jQuery(document).ready(function() {
 		transition_duration: 700,
 		ring_inner_radius: 0.8,
 		filtered_opacity: 0.2,
+		bubble_fill_normal_mask: 0.5,
+		bubble_fill_hover_mask: 0.8,
 		system_colors: {
 			green: '#009933',
 			darkgreen: '#007a28',
@@ -20,9 +22,10 @@ jQuery(document).ready(function() {
 			darkgrey: '#777777',
 			darkdarkgrey: '#333333',
 			blue: '#4282D3',
-			darkblue: '#3468a8',
+			darkblue: '#274e7e',
 			purple: '#743CBC',
-			darkpurple: '#5c3096'
+			darkpurple: '#452470',
+			yellow: '#FFFF00'
 		},
 		// glyphicons are a font, so to update this create a span glyphicon,
 		// inspect its CSS to get the UTF-8 escape code. Next, use character
@@ -147,7 +150,7 @@ function narrative_bubbles_load(position) {
 				.attr("class", function(d) { return 'node ' + (!d.children ? 'node-base' : 'node-parent'); })
 				.attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
 				.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
-				.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : debug_bubble_opacity; });
+				.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; });
 				// ^ the root g container is transformed, so for all children x and y is
 				//   relative to 0
 
@@ -160,7 +163,7 @@ function narrative_bubbles_load(position) {
 
 		narrative_draw_bubbles(vis);
 		narrative_bind_player(svgselect);
-		narrative_bubbles_update(svgselect);		
+		narrative_bubbles_update(svgselect);
 
 		// Toggle buttons for navigation links
 		jQuery('.sort-container.btn-group a').click(function() {
@@ -204,10 +207,10 @@ function narrative_bubbles_update(svgselect) {
 	var arcs = vis.selectAll('g.slice')
 		.data(narrative_data_radiusmapper)
 
-	// Ring hover
+	// Circle fill hover
 	jQuery(svgselect + ' g.node-base').hover(
 		function() { if (narrative_matches_filter(this.__data__)) { jQuery('circle', this).css('opacity', 0.7); }},
-		function() { jQuery('circle', this).css('opacity', 0.5); }
+		function() { jQuery('circle', this).css('opacity', yd_settings.ui.bubble_fill_normal_mask); }
 	);
 }
 
@@ -255,7 +258,7 @@ function narrative_draw_bubbles(vis) {
 		.attr("id", function(d) { return 'narrative-' + d.narrative_id; })
 		.attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
 		.style("fill", bubble_fill_color)
-		.style("opacity", function(d) { return !d.children ?  0.5: 1; })
+		.style("opacity", function(d) { return !d.children ? yd_settings.ui.bubble_fill_normal_mask : 1; })
 		.style("cursor", function(d) { return d.children ?  "normal" : "pointer"; });
 
 		// This computes the SVG path data required to form an arc.
@@ -376,7 +379,6 @@ function narrative_history_load()
 					.attr("class", function(d) { return 'node ' + (!d.children ? 'node-base' : 'node-parent'); })
 					.attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
 					.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
-					.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : debug_bubble_opacity; });
 					// ^ the root g container is transformed, so for all children x and y is
 					//   relative to 0
 
@@ -453,6 +455,7 @@ function position_label_text(position) {
  */
 bubble_fill_color = function(d) {
 	color = d.viewed ? 'dark' : '';
+	color = ''
 	if (d.children) {
 		return yd_settings.ui.system_colors.lightgrey;
 	}
