@@ -336,7 +336,7 @@ function narrative_history_add(d)
 			narrative_history_load();
 		})
 		.fail(function() {
-			alert("Error. Narrative does not exists.");
+			alert("There was an error adding this narrative to your history list.");
 		});
 }
 
@@ -458,7 +458,7 @@ function narrative_bind_player(svgselect) {
 		var url = yd_settings.site_url + "ajax/increment_views/" + this.__data__.narrative_id;
 		jQuery.post(url)
 			.fail(function() {
-				alert("Error. Narrative does not exists.");
+				alert("There was an registering your vote on this narrative.");
 			});
 	});
 }

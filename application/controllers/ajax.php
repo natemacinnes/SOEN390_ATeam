@@ -153,9 +153,10 @@ class Ajax extends YD_Controller
 		$display_history = array_slice($_SESSION['history'], 0, NARRATIVE_HISTORY_LIMIT);
 		$narratives = array();
 		foreach ($display_history as $narrative_id) {
-			$narrative = $this->narrative_model->get($narrative_id);
-			$this->process_narrative_bubble($narrative);
-			$narratives[] = $narrative;
+			if ($narrative = $this->narrative_model->get($narrative_id)) {
+				$this->process_narrative_bubble($narrative);
+				$narratives[] = $narrative;
+			}
 		}
 		print json_encode($narratives);
 	}
