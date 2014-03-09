@@ -423,6 +423,20 @@ class Narrative_Model extends CI_Model
 		return $this->db->insert_id();
 	}
 
+	public function update($narrative)
+	{
+		// Don't attempt to set the ID in the update string.
+		$narrative_id = $narrative['narrative_id'];
+		unset($narrative['narrative_id']);
+
+		$this->db->where('narrative_id', $narrative_id);
+		$this->set_modified_date($narrative_id);
+	}
+
+	private function set_modified_date($narrative_id) {
+		$this->db->query('UPDATE narratives SET modified=CURRENT_TIMESTAMP WHERE narrative_id=?;', array($narrative_id));
+	}
+
 	/**
 	 * Deletes an narrative based on the conditions passed.
 	 *
@@ -435,25 +449,20 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	*	publishing the narrative
-	*/
+	 *	publishing the narrative
+	 */
 	public function publish($id)
 	{
-		$this->db->query('UPDATE narratives SET status=1 WHERE narrative_id='.$id.';');
+		$this->db->query('UPDATE narratives SET status=1 WHERE narrative_id=?;', array($id));
+		$this->set_modified_date($narrative_id);
 	}
 
 	/**
-	*	unpublishing the narrative
-	*/
+	 *	Unpublishing the narrative
+	 */
 	public function unpublish($id)
 	{
-		$query = $this->db->query('SELECT * FROM narratives WHERE narrative_id=\''.$id.'\';');
-		foreach ($query->result() as $row)
-		{
-			$status = $row->status;
-		}
-		$this->db->query('UPDATE narratives SET status=0 WHERE narrative_id='.$id.';');
-		return $status;
+		$this->db->query('UPDATE narratives SET status=0 WHERE narrative_id=?;', array($id));
 	}
 
 	/**

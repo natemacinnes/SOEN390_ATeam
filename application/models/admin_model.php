@@ -14,6 +14,10 @@ class Admin_Model extends CI_Model {
 	{
 		$query = $this->db->get_where($this->table, array('admin_id' => $admin_id));
 		$admin = $query->row_array();
+
+		// Security: don't let controllers or views grab the password
+		unset($admin['password']);
+
 		return $admin;
 	}
 

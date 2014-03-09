@@ -11,10 +11,6 @@ class Admin_Comment extends YD_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model('narrative_model');
-    $this->load->model('editing_model');
-    $this->load->model('admin_model');
-    $this->load->model('narrative_flag_model');
     $this->load->model('comment_flag_model');
     $this->load->model('comment_model');
   }

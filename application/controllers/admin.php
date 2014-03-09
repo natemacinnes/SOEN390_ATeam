@@ -13,7 +13,6 @@ class Admin extends YD_Controller
 		parent::__construct();
 		$this->load->model('upload_model');
 		$this->load->model('narrative_model');
-		$this->load->model('editing_model');
 		$this->load->model('admin_model');
 		$this->load->model('topic_model');
 		// Used to pass admin ID between methods during validation
@@ -289,7 +288,7 @@ class Admin extends YD_Controller
 		$message = 'Narratives';
 		foreach($narratives as $id)
 		{
-			$this->editing_model->deleteDir($this->config->item('site_data_dir') . '/' . $id . '/');
+			delete_dir($this->config->item('site_data_dir') . '/' . $id . '/');
 			$this->narrative_model->delete(array('narrative_id' => $id));
 			$message = $message . ' #' . $id . ', ';
 		}

@@ -361,3 +361,7 @@ span.yellow { color: #ffbf00; }
 .pictures .picture label {
 	display: block;
 }
+
+.narrative-info td.data-label {
+  font-weight: bold;
+}
