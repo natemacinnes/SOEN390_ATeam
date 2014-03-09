@@ -198,6 +198,10 @@ span.yellow { color: #ffbf00; }
 	width: 15%;
 }
 
+#recent-container .svg-container {
+  overflow-y: scroll;
+}
+
 .controls-container .btn{ box-shadow: 0 1px 0 #bbb; }
 .filter-container .btn{ box-shadow: 0 1px 0 #bbb; }
 

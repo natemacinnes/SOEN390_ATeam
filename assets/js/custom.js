@@ -7,7 +7,7 @@ String.prototype.repeat = function(num) {
  */
 jQuery(document).ready(function() {
 	yd_settings.ui = {
-		transition_duration: 1500,
+		transition_duration: 700,
 		ring_inner_radius: 0.8,
 		filtered_opacity: 0.2,
 		system_colors: {
@@ -18,7 +18,7 @@ jQuery(document).ready(function() {
 			lightgrey: '#CFCFCF',
 			grey: '#eeeeee',
 			darkgrey: '#777777',
-			darkergrey: '#333333',
+			darkdarkgrey: '#333333',
 			blue: '#4282D3',
 			darkblue: '#3468a8',
 			purple: '#743CBC',
@@ -196,11 +196,6 @@ function narrative_bubbles_update(svgselect) {
 		.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
 		.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; });
 
-	vis.selectAll('title')
-		.attr("x", function(d) { return 0; })
-		.attr("y", function(d) { return 0; })
-		.text(function(d) { return (d.children ? d.name : 'Narrative ' + d['narrative_id'] + ": " + format(d.value)); });
-
 	vis.selectAll('circle')
 		.transition().duration(yd_settings.ui.transition_duration)
 		.style("fill", bubble_fill_color)
@@ -253,7 +248,7 @@ function narrative_draw_bubbles(vis) {
 	var titles = vis.append('title')
 		.attr("x", function(d) { return d.x; })
 		.attr("y", function(d) { return d.y; })
-		.text(function(d) { return (d.children ? d.name : 'Narrative ' + d.narrative_id + ": " + format(d.value)); });
+		.text(function(d) { return (d.children ? d.name : 'Narrative ' + d.narrative_id); });
 
 	var circles = vis.append("circle")
 		.attr("r", function(d) { return d.r; })
@@ -334,17 +329,17 @@ function narrative_history_add(data)
  */
 function narrative_history_data(data, i)
 {
+	var width = jQuery("#recent-container").width();
 	var num_parent_bubbles = jQuery('#bubble-container .svg-container').length;
 	var diameter = jQuery("#bubble-container").width();
-	var width = jQuery("#recent-container").width();
 	var height = diameter/num_parent_bubbles;
-	var padding = yd_settings.constants.NARRATIVE_HISTORY_LIMIT;
-	var radius = Math.min(width, (height - 2*yd_settings.constants.NARRATIVE_HISTORY_LIMIT*padding) / yd_settings.constants.NARRATIVE_HISTORY_LIMIT) / 2;
+	var padding = 5;
+	var radius = Math.min(width, (height - 2*yd_settings.constants.NARRATIVE_HISTORY_VISIBLE*padding) / yd_settings.constants.NARRATIVE_HISTORY_VISIBLE) / 2;
 	var radius_padding = radius + padding;
 	data.forEach(function(d, i) {
 		d.x = (width-radius*2)/2 + radius;
 		d.y = i*radius_padding*2 + radius_padding;
-		d.r = radius
+		d.r = radius;
 	});
 	return data;
 }
@@ -359,18 +354,19 @@ function narrative_history_load()
 		.done(function(data) {
 			var num_parent_bubbles = jQuery('#bubble-container .svg-container').length;
 			var diameter = jQuery("#bubble-container").width();
-			var width = jQuery("#recent-container").width();
+			var width = jQuery("#recent-container").width() - 20; // for scrollbar width
 			var height = diameter/num_parent_bubbles;
 			// Get the limiting dimension (width or height), subtract desired padding,
 			// then divide by 5 to get history circle radius
-			var padding = yd_settings.constants.NARRATIVE_HISTORY_LIMIT;
-			var radius = Math.min(width, (height - 2*yd_settings.constants.NARRATIVE_HISTORY_LIMIT*padding) / yd_settings.constants.NARRATIVE_HISTORY_LIMIT) / 2;
+			var padding = 5;
+			var radius = Math.min(width, (height - 2*yd_settings.constants.NARRATIVE_HISTORY_VISIBLE*padding) / yd_settings.constants.NARRATIVE_HISTORY_VISIBLE) / 2;
 			var radius_padding = radius + padding;
 			var svgselect = '#recent-container .svg-container';
 			console.log('loading history bubbles for SVG ' + svgselect);
+			jQuery(svgselect).height(height);
 			var svg = d3.select(svgselect).html('').append("svg")
 				.attr("width", width)
-				.attr("height", height)
+				.attr("height", radius_padding * 2*data.length)
 				.attr("class", "bubble");
 
 			var vis = svg.datum(data).selectAll('g.node')
@@ -397,6 +393,9 @@ function narrative_bind_player(svgselect) {
 	jQuery(svgselect + " g.node-base").click(function(e) {
 		// Call method to add narrative to history
 		narrative_history_add(this.__data__);
+
+		this.__data__.viewed = 1;
+		d3.select(this).select('circle').style("fill", bubble_fill_color);
 
 		// Don't open colorbox for unmatched language filter
 		if (!narrative_matches_filter(this.__data__)) {
@@ -453,22 +452,28 @@ function position_label_text(position) {
  * Maps a narrative object to its fill color.
  */
 bubble_fill_color = function(d) {
+	color = d.viewed ? 'dark' : '';
 	if (d.children) {
 		return yd_settings.ui.system_colors.lightgrey;
 	}
 	switch (parseInt(d.position)) {
 		case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
-			return yd_settings.ui.system_colors.darkgrey;
+			color += 'darkgrey';
+			break;
 
 		case yd_settings.constants.NARRATIVE_POSITION_AGREE:
-			return yd_settings.ui.system_colors.purple;
+			color += 'purple';
+			break;
 
 		case yd_settings.constants.NARRATIVE_POSITION_DISAGREE:
-			return yd_settings.ui.system_colors.blue;
+			color += 'blue';
+			break;
 
 		default:
-		  return yd_settings.ui.system_colors.lightgrey;
+		  color = 'lightgrey';
+		  break;
 	}
+	return yd_settings.ui.system_colors[color];
 }
 
 /**

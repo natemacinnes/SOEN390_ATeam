@@ -49,6 +49,13 @@ class Ajax extends YD_Controller
    */
   private function process_narrative_bubble(&$narrative)
   {
+    $history = $this->session->userdata('history');
+    if ($history === FALSE) {
+      $history = array();
+    }
+
+    $narrative['viewed'] = in_array($narrative['narrative_id'], $history);
+
     // +1 to ensure that 0 doesn't give us NaN
     $pie_data = array(
       array("label" => "agrees", "value" => $narrative['agrees']+1),
@@ -153,6 +160,7 @@ class Ajax extends YD_Controller
 		if ($history === FALSE) {
 			$history = array();
 		}
+    array_slice($history, 0, NARRATIVE_HISTORY_LIMIT);
 		$narratives = array();
 		foreach($history as $narrative_id) {
       $narrative = $this->narrative_model->get($narrative_id);
@@ -178,9 +186,15 @@ class Ajax extends YD_Controller
 			unset($history[$key]);
 		}
 		array_unshift($history, $narrative_id);
-		array_slice($history, 0, NARRATIVE_HISTORY_LIMIT);
 		$this->session->set_userdata('history', $history);
 
 		print $this->get_history();
 	}
+
+  /**
+   * Clears history
+   */
+  public function clear_history() {
+    $history = $this->session->set_userdata('history', array());
+  }
 }
