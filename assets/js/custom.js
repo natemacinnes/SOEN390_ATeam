@@ -420,7 +420,8 @@ function narrative_history_load()
 function narrative_bind_player(svgselect) {
 	// Don't open colorbox for unmatched language filter
 	jQuery(svgselect + " g.node-base").click(function(e) {
-		if (!narrative_matches_filter(this.__data__)) {
+		// Only allow popup if (a) narrative matches filter or (b) is in history bar
+		if (! (narrative_matches_filter(this.__data__) || jQuery(this).attr('id').indexOf('history-') === 0)) {
 			return false;
 		}
 
