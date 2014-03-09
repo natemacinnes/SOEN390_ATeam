@@ -255,7 +255,6 @@ function narrative_draw_bubbles(vis) {
 
 	var circles = vis.append("circle")
 		.attr("r", function(d) { return d.r; })
-		.attr("id", function(d) { return 'narrative-' + d.narrative_id; })
 		.attr("class", function(d) { return !d.children ? 'node-base' : 'node-parent'; })
 		.style("fill", bubble_fill_color)
 		.style("opacity", function(d) { return !d.children ? yd_settings.ui.bubble_fill_normal_mask : 1; })
@@ -272,6 +271,7 @@ function narrative_draw_bubbles(vis) {
 		.enter()
 		.append("svg:g")
 		.attr("class", "slice")
+		.style("cursor", function(d) { return d.children ?  "normal" : "pointer"; });
 
 	// In the container, write a path based on the generated arc data
 	var paths = arcs.append("svg:path")
@@ -377,12 +377,25 @@ function narrative_history_load()
 				.enter()
 					.append('g')
 					.attr("class", function(d) { return 'node ' + (!d.children ? 'node-base' : 'node-parent'); })
-					.attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
+					.attr("id", function(d) { return !d.children ? 'history-narrative-' + d.narrative_id : null; })
 					.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
 					// ^ the root g container is transformed, so for all children x and y is
 					//   relative to 0
 
 			narrative_draw_bubbles(vis);
+			narrative_bind_player(svgselect);
+
+			jQuery(svgselect + " g.node-base").hover(
+				function() {
+					d3.select(this).select('circle').style('fill', yd_settings.ui.system_colors.yellow);
+					d3.select('#narrative-' + this.__data__.narrative_id).select('circle').style('fill', yd_settings.ui.system_colors.yellow);
+				},
+				function() {
+					d3.select(this).select('circle').style('fill', bubble_fill_color);
+					d3.select('#narrative-' + this.__data__.narrative_id).select('circle').style('fill', bubble_fill_color);
+				}
+			);
+
 		});
 }
 
@@ -397,7 +410,11 @@ function narrative_bind_player(svgselect) {
 		narrative_history_add(this.__data__);
 
 		this.__data__.viewed = 1;
+		// Both are here because we need to reset the fill style for both the
+		// clicked bubble (which could be in the history bar) and the actual
+		// narrative bubble in the main display
 		d3.select(this).select('circle').style("fill", bubble_fill_color);
+		d3.select('#narrative-' + this.__data__.narrative_id).select('circle').style('fill', bubble_fill_color);
 
 		// Don't open colorbox for unmatched language filter
 		if (!narrative_matches_filter(this.__data__)) {
