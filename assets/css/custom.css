@@ -348,3 +348,16 @@ span.yellow { color: #ffbf00; }
 .comment .actions a {
 	margin-left: 1em;
 }
+
+.soundtracks .soundtrack-wrapper {
+	margin-bottom: 15px;
+}
+.soundtracks label {
+	margin-top: 0.3em;
+}
+.soundtracks .soundtrack {
+	display: inline-block;
+}
+.pictures .picture label {
+	display: block;
+}
