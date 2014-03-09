@@ -432,6 +432,9 @@ class Narrative_Model extends CI_Model
 		$this->set_modified_date($narrative_id);
 	}
 
+	/**
+	 * Sets the modified date to the current timestamp.
+	 */
 	private function set_modified_date($narrative_id) {
 		$this->db->query('UPDATE narratives SET modified=CURRENT_TIMESTAMP WHERE narrative_id=?;', array($narrative_id));
 	}
@@ -453,7 +456,7 @@ class Narrative_Model extends CI_Model
 	public function publish($id)
 	{
 		$this->db->query('UPDATE narratives SET status=1 WHERE narrative_id=?;', array($id));
-		$this->set_modified_date($narrative_id);
+		$this->set_modified_date($id);
 	}
 
 	/**
@@ -462,6 +465,7 @@ class Narrative_Model extends CI_Model
 	public function unpublish($id)
 	{
 		$this->db->query('UPDATE narratives SET status=0 WHERE narrative_id=?;', array($id));
+		$this->set_modified_date($id);
 	}
 
 	/**

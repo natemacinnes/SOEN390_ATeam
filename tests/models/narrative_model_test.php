@@ -33,7 +33,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 		$this->sampleNarrativeXml = '<?xml version="1.0" encoding="UTF-8"?><narrative><narrativeName>2</narrativeName><language>English</language><submitDate>2013-07-11</submitDate><time>11-22-31</time></narrative>';
 		$this->sampleNarrativeXmlFR = '<?xml version="1.0" encoding="UTF-8"?><narrative><narrativeName>2</narrativeName><language>French</language><submitDate>2013-07-11</submitDate><time>11-22-31</time></narrative>';
 
-		$this->CI->load->model('narrative_model', TRUE);
+		$this->CI->load->model('narrative_model');
 		$this->CI->load->model('upload_model');
 	}
 
@@ -107,8 +107,8 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 */
 	public function test__processing__non_existant_source() {
 		$zipFileName = 'sample_narratives.zip';
-		$path = $this->CI->config->item('site_data_dir') . '/';
-		$data = $this->CI->narrative_model->process_narrative('non-existent/');
+		$path = $this->CI->config->item('site_data_dir') . '/non-existent/';
+		$data = $this->CI->narrative_model->process_narrative($path);
 		$this->assertEquals(1, $data['error']);
 	}
 
@@ -143,7 +143,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 		$last_value = $narrative['narrative_id'];
 		// Make sure each following one is smaller
 		foreach ($narratives as $narrative) {
-			if ($last_value > $narrative['narrative_id']) {
+			if ($last_value <= $narrative['narrative_id']) {
 				$last_value = $narrative['narrative_id'];
 			}
 			else {
@@ -152,7 +152,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 			}
 		}
 
-		$this->assertEquals(TRUE, $ordered);
+		$this->assertTrue($ordered);
 	}
 
 	/**
@@ -167,7 +167,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 		$last_value = $narrative['agrees'];
 		// Make sure each following one is smaller
 		foreach ($narratives as $narrative) {
-			if ($last_value >= $narrative['agrees']) {
+			if ($last_value <= $narrative['agrees']) {
 				$last_value = $narrative['agrees'];
 			}
 			else {
@@ -176,7 +176,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 			}
 		}
 
-		$this->assertEquals(TRUE, $ordered);
+		$this->assertTrue($ordered);
 	}
 
 	/**
@@ -193,7 +193,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 			}
 		}
 
-		$this->assertEquals(TRUE, $agree_only);
+		$this->assertTrue($agree_only);
 	}
 
 	/**
@@ -215,7 +215,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 				break;
 			}
 		}
-		$this->assertEquals(TRUE, $count > 1 && $array_only);
+		$this->assertTrue($count > 1 && $array_only);
 	}
 
 	/**
@@ -238,7 +238,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 			}
 		}
 
-		$this->assertEquals(TRUE, count($narrative) > 0 && $properties_only);
+		$this->assertTrue(count($narrative) > 0 && $properties_only);
 	}
 
 	/**
@@ -258,23 +258,25 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	public function test__insert()
 	{
 		$narrative = array(
-			'position' => 0,
-			'audio_length' => 60,
+			'position' => '0',
+			'audio_length' => '60',
 			'created' => "2014-01-28 01:19:27",
 			'uploaded' => "2014-01-28 01:19:28",
-			'uploaded_by' => 1,
+			'uploaded_by' => '1',
+			'modified' => '0000-00-00 00:00:00',
 			'language' => "en",
-			'views' => 1,
-			'agrees' => 2,
-			'disagrees' => 3,
-			'shares' => 4,
-			'flags' => 5,
-			"status" => 1,
+			'views' => '1',
+			'agrees' => '2',
+			'disagrees' => '3',
+			'shares' => '4',
+			'flags' => '5',
+			"status" => '1',
 		);
-		$narrative['narrative_id'] = $this->CI->narrative_model->insert($narrative);
+		// MySQL returns all fields as strings -_-
+		$narrative['narrative_id'] = (string)$this->CI->narrative_model->insert($narrative);
 
 		$narrative_inserted = $this->CI->narrative_model->get($narrative['narrative_id']);
-		$this->assertEquals($narrative_inserted, $narrative);
+		$this->assertEquals($narrative, $narrative_inserted);
 	}
 
 	/**
@@ -361,7 +363,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 			}
 		}
 
-		$this->assertEquals(TRUE, $detection);
+		$this->assertTrue($detection);
 	}
 
 	/**
@@ -392,19 +394,19 @@ class Narrative_Model_Test extends CIUnit_TestCase
 			}
 		}
 
-		$this->assertEquals(TRUE, $detection);
+		$this->assertTrue($detection);
 	}
-	
+
 	/**
 	 * UT-0064
 	 * @covers Narrative_Model::get_total_count
-	 */	
-	 
+	 */
+
 	function test__get_total_count()
 	{
 		$count = $this->CI->narrative_model->get_total_count();
 		$count_arr = array('count' => 4);
-		
+
 		$this->assertEquals($count, $count_arr);
 	}
 
@@ -417,36 +419,36 @@ class Narrative_Model_Test extends CIUnit_TestCase
 		$xml_retval = $this->CI->narrative_model->get_XML_narrative_language($xmlRoot);
 		$this->assertEquals("FR", $xml_retval);
 	}
-	
+
 	/**
 	 * UT-0066
 	 * @covers Narrative_Model::publish
 	 */
-	 
+
 	function test__publish()
 	{
 		$this->CI->narrative_model->publish(1);
 		$narr_array = $this->CI->narrative_model->get(1);
 		$this->assertEquals($narr_array["status"], 1);
 	}
-	
+
 	/**
 	 * UT-0067
 	 * @covers Narrative_Model::unpublish
 	 */
-	 
+
 	function test__unpublish()
 	{
 		$this->CI->narrative_model->unpublish(1);
 		$narr_array = $this->CI->narrative_model->get(1);
 		$this->assertEquals($narr_array["status"], 0);
 	}
-	
+
 	/**
 	 * UT-0068
 	 * @covers Narrative_Model::increment_views
 	 */
-	
+
 	function test__increment_views()
 	{
 		$narr_array_before = $this->CI->narrative_model->get(1);
@@ -454,12 +456,12 @@ class Narrative_Model_Test extends CIUnit_TestCase
 		$narr_array_after = $this->CI->narrative_model->get(1);
 		$this->assertEquals($narr_array_before["views"], $narr_array_after["views"]-1);
 	}
-	
+
 	/**
 	 * UT-0069
 	 * @covers Narrative_Model::toggle_agrees
 	 */
-	
+
 	function test__toggle_agrees()
 	{
 		$narr_array_before = $this->CI->narrative_model->get(1);
@@ -472,7 +474,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 * UT-0070
 	 * @covers Narrative_Model::toggle_disagrees
 	 */
-	
+
 	function test__toggle_disagrees()
 	{
 		$narr_array_before = $this->CI->narrative_model->get(1);

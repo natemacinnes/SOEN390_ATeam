@@ -21,7 +21,6 @@ class Narrative_Editing_Helper_Test extends CIUnit_TestCase
 
 	/**
 	 * Setup PHPUnit & load any required dependencies
-	 * @covers Comment_Model::__construct
 	 */
 	public function setUp()
 	{
@@ -39,29 +38,23 @@ class Narrative_Editing_Helper_Test extends CIUnit_TestCase
 
 	/**
 	 * UT-0049
-	 * @covers narrative_track_data
+	 * @covers ::narrative_track_data
 	 */
 	public function test__narrative_track_data__valid_id()
 	{
-		$info = narrative_track_data(1);
-
-		$check = false;
-		if(isset($info['narrative_id']))
-		{
-			$check = true;
-		}
-
-		$this->assertEquals(true, $check);
+		$paths = narrative_track_data(5);
+		$this->assertGreaterThan(0, count($paths['tracks']));
+		$this->assertGreaterThan(0, count($paths['pictures']));
 	}
 
 	/**
 	 * UT-0050
-	 * @covers Editing_Model::narrative_track_data
+	 * @covers ::narrative_track_data
 	 */
 	public function test__narrative_track_data__invalid_id()
 	{
-		$info = narrative_track_data(-1);
-		$this->assertEquals($info, null);
+		$paths = narrative_track_data(-1);
+		$this->assertFalse($paths);
 	}
 
 }

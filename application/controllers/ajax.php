@@ -69,11 +69,6 @@ class Ajax extends YD_Controller
 	 */
 	public function audio_image($narrative_id, $time)
 	{
-		$narrative = $this->narrative_model->get($narrative_id);
-		if (!$narrative)
-		{
-			return;
-		}
 		$current_time = floatval($time);
 		$path =  $this->config->item('site_data_dir') . "/$narrative_id/AudioTimes.xml";
 		$return = "";
@@ -83,15 +78,12 @@ class Ajax extends YD_Controller
 			{
 				if ($current_time >= $element->Start && $current_time < $element->End)
 				{
-					print base_url() . $this->config->item('site_data_dir') . '/' . $narrative_id . '/' .  $element->Image;
+					$return = base_url() . $this->config->item('site_data_dir') . '/' . $narrative_id . '/' .  $element->Image;
 					break;
 				}
 			}
 		}
-		else
-		{
-			print $return;
-		}
+		print $return;
 	}
 
 	/**
@@ -168,7 +160,6 @@ class Ajax extends YD_Controller
 			$narratives[] = $narrative;
 		}
 		print json_encode($narratives);
-		return json_encode($narratives);
 	}
 
 	/**
@@ -190,7 +181,6 @@ class Ajax extends YD_Controller
 		$this->session->set_userdata('history', $history);
 
 		print $this->get_history();
-		return ($this->get_history());
 	}
 
   /**

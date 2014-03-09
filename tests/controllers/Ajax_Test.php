@@ -37,11 +37,10 @@ class Ajax_Test extends CIUnit_TestCase
 	/**
 	 * UT-0025
 	 * @covers Ajax::audio_image
-	 *
 	 */
 	public function test__audio_image__valid_folder()
 	{
-		$narrative_id = 1;
+		$narrative_id = 5;
 		$this->CI->audio_image($narrative_id, 1);
 
 		$prefix = base_url() . $this->CI->config->item('site_data_dir') . '/' . $narrative_id . '/';
@@ -96,146 +95,185 @@ class Ajax_Test extends CIUnit_TestCase
 
 		$this->assertGreaterThan(0, count($bubbles->children));
 	}
-	
+
 	/**
 	 * UT-0053
 	 * @covers Ajax::increment_views
 	 */
-	 
+
 	 public function test__increment_views__valid_id()
 	 {
 		$current_views = $this->CI->narrative_model->get(1);
+		ob_start();
 		$this->CI->increment_views(1);
+		ob_end_clean();
 		$after_inc = $this->CI->narrative_model->get(1);
-		
+
 		$this->assertGreaterThan($current_views, $after_inc);
 	 }
-	 
+
 	/**
 	 * UT-0054
 	 * @covers Ajax::increment_agrees_disagrees
-	 */	 
+	 */
 	 public function test__increment_agrees_disagrees__increment_agree()
 	 {
 		$current_agrees = $this->CI->narrative_model->get(1);
+		ob_start();
 		$this->CI->increment_agrees_disagrees(1, "Agree");
+		ob_end_clean();
 		$after_agrees = $this->CI->narrative_model->get(1);
-		
+
 		$this->assertGreaterThan($current_agrees, $after_agrees);
 	 }
-	 
+
 	 /**
 	 * UT-0055
 	 * @covers Ajax::increment_agrees_disagrees
-	 */	 
-	 
+	 */
+
 	 public function test__increment_agrees_disagrees__increment_disagree()
 	 {
 		$current_disagrees = $this->CI->narrative_model->get(1);
+		ob_start();
 		$this->CI->increment_agrees_disagrees(1, "Disagree");
+		ob_end_clean();
 		$after_disagrees = $this->CI->narrative_model->get(1);
-		
+
 		$this->assertGreaterThan($current_disagrees, $after_disagrees);
 	 }
 
-	
+
 	 /**
 	 * UT-0056
 	 * @covers Ajax::increment_agrees_disagrees
-	 */	 
-	 
+	 */
+
 	 public function test__increment_agrees_disagrees__increment_other()
 	 {
 		$current = $this->CI->narrative_model->get(1);
+		ob_start();
 		$this->CI->increment_agrees_disagrees(1, "else");
+		ob_end_clean();
 		$after = $this->CI->narrative_model->get(1);
-		
+
 		$this->assertEquals($current, $after);
 	 }
-	 
+
 	/**
 	 * UT-0057
 	 * @covers Ajax::decrement_agrees_disagrees
-	 */	 
+	 */
 	 public function test__decrement_agrees_disagrees__increment_agree()
 	 {
 		$current_agrees = $this->CI->narrative_model->get(1);
+		ob_start();
 		$this->CI->decrement_agrees_disagrees(1, "Agree");
+		ob_end_clean();
 		$after_agrees = $this->CI->narrative_model->get(1);
-		
+
 		$this->assertLessThan($current_agrees, $after_agrees);
 	 }
-	 
+
 	 /**
 	 * UT-0058
 	 * @covers Ajax::decrement_agrees_disagrees
-	 */	 
-	 
+	 */
+
 	 public function test__decrement_agrees_disagrees__increment_disagree()
 	 {
 		$current_disagrees = $this->CI->narrative_model->get(1);
+		ob_start();
 		$this->CI->decrement_agrees_disagrees(1, "Disagree");
+		ob_end_clean();
 		$after_disagrees = $this->CI->narrative_model->get(1);
-		
+
 		$this->assertLessThan($current_disagrees, $after_disagrees);
 	 }
 
-	
+
 	 /**
 	 * UT-0059
 	 * @covers Ajax::decrement_agrees_disagrees
-	 */	 
-	 
+	 */
+
 	 public function test__decrement_agrees_disagrees__increment_other()
 	 {
 		$current = $this->CI->narrative_model->get(1);
+		ob_start();
 		$this->CI->decrement_agrees_disagrees(1, "else");
+		ob_end_clean();
 		$after = $this->CI->narrative_model->get(1);
-		
+
 		$this->assertEquals($current, $after);
 	 }
-	 
+
 	 /**
 	 * UT-0060
 	 * @covers Ajax::toggle_concensus
 	 */
-	 
+
 	 /*public function test__toggle_concensus__incremental()
 	 {
 		$this->assertEquals(true,false);
 	 }*/
 
-	 
+
 	 /**
 	 * UT-0062
 	 * @covers Ajax::get_history
 	 */
-	 
 	 public function test__get_history__false_history()
 	 {
-		$this->assertNotNull($this->CI->get_history());
+	 	$this->CI->clear_history();
+
+	 	ob_start();
+		$this->CI->get_history();
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		$history = json_decode(trim($output));
+
+		$this->assertEquals(0, count($history));
 	 }
-	 
-	 /**
-	 * UT-0061
-	 * @covers Ajax::add_history
-	 */
-	 
-	 public function test__add_history__valid_id()
-	 {
-		$this->CI->add_history(1);
-		$this->CI->add_history(1); //doing this a second time to make sure it passes through the duplicate check if statement
-		$this->assertNotNull($this->CI->get_history());
-	 }
-	 
+
 	 /**
 	 * UT-0063
 	 * @covers Ajax::get_history
 	 */
-	 
+
 	 public function test__get_history__contains_history()
 	 {
-		$this->assertNotNull($this->CI->get_history());
+	 	ob_start();
+		$this->CI->add_history(1);
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		$history = json_decode(trim($output));
+		$this->assertGreaterThan(0, count($history));
+	 }
+
+	 /**
+	 * UT-0061
+	 * @covers Ajax::add_history
+	 */
+	 public function test__add_history__valid_id()
+	 {
+	 	$this->CI->clear_history();
+
+	 	ob_start();
+		// doing this a second time to make sure it passes through the duplicate check if statement
+		$this->CI->add_history(1);
+		$this->CI->add_history(2);
+		ob_clean();
+
+		$this->CI->add_history(1);
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		$history = json_decode(trim($output));
+
+		$this->assertGreaterThan(0, count($history));
 	 }
 
 }

@@ -275,16 +275,22 @@ $CI->fixture = new Fixture();
 CIUnit::$fixture =& $CI->fixture;
 
 // Cleanup uploads folder
-function cleanup_uploads(&$CI) {
-	if (is_dir($CI->config->item('site_data_dir'))) {
-		foreach (new DirectoryIterator($CI->config->item('site_data_dir')) as $fileInfo) {
+function cleanup_uploads($dir) {
+	if (is_dir($dir)) {
+		foreach (new DirectoryIterator($dir) as $fileInfo) {
 			if(!$fileInfo->isDot()) {
-				unlink($fileInfo->getPathname());
+				if ($fileInfo->isDir()) {
+					cleanup_uploads($fileInfo->getPathname());
+					rmdir($fileInfo->getPathname());
+				}
+				else {
+					unlink($fileInfo->getPathname());
+				}
 			}
 		}
 	}
 }
-cleanup_uploads($CI);
+cleanup_uploads($CI->config->item('site_data_dir'));
 
 
 /* End of file bootstrap_phpunit.php */

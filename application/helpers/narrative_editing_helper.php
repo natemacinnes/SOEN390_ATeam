@@ -44,8 +44,12 @@ function delete_dir($path)
 function narrative_track_data($narrative_id)
 {
   $CI =& get_instance();
-  $path = $CI->config->item('site_data_dir') . '/' . $narrative_id;
-  $xml_reader = simplexml_load_file($path . "/AudioTimes.xml");
+  $base_dir = $CI->config->item('site_data_dir') . '/' . $narrative_id;
+  $path = $base_dir . "/AudioTimes.xml";
+  if (!file_exists($path)) {
+    return FALSE;
+  }
+  $xml_reader = simplexml_load_file($path);
   $paths = array('tracks' => array(), 'pictures' => array());
   $last_picture = '';
 

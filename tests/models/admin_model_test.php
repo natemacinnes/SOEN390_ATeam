@@ -52,13 +52,9 @@ class Admin_Model_Test extends CIUnit_TestCase
    */
   public function test__get__valid_admin_id()
   {
-
-     // $Expected = $this->CI->tutorial_model->get_by_language("English");
-      //die(print_r($Expected, true));
       $expected = array(
-        'admin_id' => 1,
+        'admin_id' => '1',
         'login'=> "admin",
-        'password' => "admin",
         'created' => "2014-01-28 01:20:51"
       );
 
