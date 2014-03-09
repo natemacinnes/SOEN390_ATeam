@@ -27,7 +27,7 @@ class Admin_Model_Test extends CIUnit_TestCase
     parent::tearDown();
     parent::setUp();
 
-    $this->CI->load->model('admin_model', TRUE);
+    $this->CI->load->model('admin_model', 'admin_model_constructor_hack');
   }
 
   /**

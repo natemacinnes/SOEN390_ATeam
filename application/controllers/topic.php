@@ -8,9 +8,9 @@ class Topic extends YD_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('topic_model');
+		$this->load->model('variable_model');
 	}
-	
+
 	/**
    * The default method called, if none is provided.
    */
@@ -24,9 +24,9 @@ class Topic extends YD_Controller
    */
 	public function change($new_topic)
 	{
-		if (strlen($new_topic)) 
+		if (strlen($new_topic))
 		{
-			$this->topic_model->change_topic($new_topic);
+			$this->variable_model->set('portal_topic', $new_topic);
 		}
 		else
 		{

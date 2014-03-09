@@ -19,7 +19,7 @@ class System_Message_Model extends CI_Model
 	{
 		parent::__construct();
 		$messages = $this->session->userdata('system_messages');
-		if (!isset($messages))
+		if (!$messages)
 		{
 			$this->session->set_userdata('system_messages', array());
 		}

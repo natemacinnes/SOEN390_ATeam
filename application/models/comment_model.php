@@ -53,6 +53,11 @@ class Comment_Model extends CI_Model {
    */
   public function insert($comment)
   {
+    $comment = array(
+      'narrative_id' => 1,
+      'body' => "comment text here",
+      'status' => 1,
+    );
     $this->db->insert($this->table, $comment);
     return $this->db->insert_id();
   }

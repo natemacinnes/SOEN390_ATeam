@@ -12,7 +12,7 @@ class Comment_Model_Test extends CIUnit_TestCase
 		'admins' => 'admins',
 		'narratives' => 'narratives',
 		'comments' => 'comments',
-  );
+	);
 
 	public function __contruct($name = NULL, array $data = array(), $dataName = '')
 	{
@@ -69,7 +69,7 @@ class Comment_Model_Test extends CIUnit_TestCase
 
 	 public function test__get__valid_id()
 	 {
-	 	$comment_id = 1;
+		$comment_id = 1;
 		$comment = $this->CI->comment_model->get($comment_id);
 		$this->assertTrue(is_array($comment) && isset($comment['comment_id']));
 		$this->assertEquals($comment_id, $comment['comment_id']);
@@ -87,7 +87,7 @@ class Comment_Model_Test extends CIUnit_TestCase
 		$this->assertEquals($comment, array());
 	 }
 
-	 /**
+	/**
 	 * UT-0047
 	 * @covers Comment_Model::get_by_narrative_id
 	 */
@@ -100,7 +100,7 @@ class Comment_Model_Test extends CIUnit_TestCase
 		$this->assertEquals(2, $comments[2]['comment_id']);
 	 }
 
-	 /**
+	/**
 	 * UT-0048
 	 * @covers Comment_Model::get_by_narrative_id
 	 */
@@ -110,5 +110,20 @@ class Comment_Model_Test extends CIUnit_TestCase
 		$retrieved_comments = $this->CI->comment_model->get_by_narrative_id(-1);
 
 		$this->assertEquals($retrieved_comments, array());
+	 }
+
+	 /**
+	 * UT-0071
+	 * @covers Comment_Model::insert
+	 */
+
+	 public function test__insert()
+	 {
+	 	$comment = array(
+	 		'' => ''
+	 	);
+		$last_id = $this->CI->comment_model->insert($comment);
+
+		$this->assertGreaterThan(0, $last_id);
 	 }
 }

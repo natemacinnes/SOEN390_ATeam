@@ -126,7 +126,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 * UT-0006
 	 * @covers Narrative_Model::get_all
 	 */
-	function test__get_all_sorting__invalid() {
+	function test__get_all__sorting_invalid() {
 		$narratives = $this->CI->narrative_model->get_all("non-existent");
 		$this->assertEquals(array(), $narratives);
 	}
@@ -135,7 +135,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 * UT-0007
 	 * @covers Narrative_Model::get_all
 	 */
-	function test__get_all_sorting__id() {
+	function test__get_all__sorting_id() {
 		$narratives = $this->CI->narrative_model->get_all("id");
 		$ordered = TRUE;
 		// Get the first narrative ID
@@ -159,7 +159,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 * UT-0008
 	 * @covers Narrative_Model::get_all
 	 */
-	function test__get_all_sorting__agrees() {
+	function test__get_all__sorting_agrees() {
 		$narratives = $this->CI->narrative_model->get_all("agrees");
 		$ordered = TRUE;
 		// Get the first narrative ID
@@ -180,10 +180,19 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	}
 
 	/**
+	 * UT-0075
+	 * @covers Narrative_Model::get_all
+	 */
+	function test__get_all__limit() {
+		$narratives = $this->CI->narrative_model->get_all("id", NULL, 'asc', 0, 2);
+		$this->assertEquals(2, count($narratives));
+	}
+
+	/**
 	 * UT-0009
 	 * @covers Narrative_Model::get_all
 	 */
-	function test__get_all_position__agree() {
+	function test__get_all__position_agree() {
 		$narratives = $this->CI->narrative_model->get_all("id", NARRATIVE_POSITION_AGREE);
 		$agree_only = TRUE;
 		foreach ($narratives as $narrative) {
@@ -401,7 +410,6 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 * UT-0064
 	 * @covers Narrative_Model::get_total_count
 	 */
-
 	function test__get_total_count()
 	{
 		$count = $this->CI->narrative_model->get_total_count();
@@ -423,8 +431,8 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	/**
 	 * UT-0066
 	 * @covers Narrative_Model::publish
+	 * @covers Narrative_Model::set_modified_date
 	 */
-
 	function test__publish()
 	{
 		$this->CI->narrative_model->publish(1);
@@ -435,8 +443,8 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	/**
 	 * UT-0067
 	 * @covers Narrative_Model::unpublish
+	 * @covers Narrative_Model::set_modified_date
 	 */
-
 	function test__unpublish()
 	{
 		$this->CI->narrative_model->unpublish(1);
@@ -448,7 +456,6 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 * UT-0068
 	 * @covers Narrative_Model::increment_views
 	 */
-
 	function test__increment_views()
 	{
 		$narr_array_before = $this->CI->narrative_model->get(1);
@@ -461,7 +468,6 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 * UT-0069
 	 * @covers Narrative_Model::toggle_agrees
 	 */
-
 	function test__toggle_agrees()
 	{
 		$narr_array_before = $this->CI->narrative_model->get(1);
@@ -474,12 +480,43 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 * UT-0070
 	 * @covers Narrative_Model::toggle_disagrees
 	 */
-
 	function test__toggle_disagrees()
 	{
 		$narr_array_before = $this->CI->narrative_model->get(1);
 		$this->CI->narrative_model->toggle_disagrees(1, "+");
 		$narr_array_after = $this->CI->narrative_model->get(1);
 		$this->assertEquals($narr_array_before["disagrees"], $narr_array_after["disagrees"]-1);
+	}
+
+	/**
+	 * UT-0076
+	 * @covers Narrative_Model::process_image
+	 */
+	function test__process_image() {
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	/**
+	 * UT-0077
+	 * @covers Narrative_Model::toggle
+	 */
+	function test__toggle() {
+		$narrative_id = 1;
+	 	$old = $this->CI->narrative_model->get($narrative_id);
+		$this->CI->narrative_model->toggle('agrees', 'disagrees', $narrative_id);
+		$new = $this->CI->narrative_model->get($narrative_id);
+
+		$this->assertEquals($new['agrees'], $old['agrees']+1);
+		$this->assertEquals($new['disagrees'], $old['disagrees']-1);
+	}
+
+	/**
+	 * UT-0078
+	 * @covers Narrative_Model::update
+	 * @covers Narrative_Model::set_modified_date
+	 */
+	function test__update() {
+		$narrative = $this->CI->narrative_model->get(1);
+		$this->CI->narrative_model->update($narrative);
 	}
 }

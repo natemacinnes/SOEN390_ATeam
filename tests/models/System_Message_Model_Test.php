@@ -39,7 +39,7 @@ class System_Message_Model_Test extends CIUnit_TestCase
 		parent::setUp();
 
 		$this->CI->session->unset_userdata('system_messages');
-		$this->CI->load->model('system_message_model', TRUE);
+		$this->CI->load->model('system_message_model', 'system_message_model_constructor_hack');
 	}
 
 	/**

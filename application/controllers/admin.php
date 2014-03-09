@@ -14,7 +14,7 @@ class Admin extends YD_Controller
 		$this->load->model('upload_model');
 		$this->load->model('narrative_model');
 		$this->load->model('admin_model');
-		$this->load->model('topic_model');
+		$this->load->model('variable_model');
 		// Used to pass admin ID between methods during validation
 		$admin_id = null;
 	}
@@ -137,7 +137,7 @@ class Admin extends YD_Controller
 
 		if(strlen($topic))
 		{
-			$this->topic_model->change_topic($topic);
+			$this->variable_model->set('portal_topic', $topic);
 			$this->system_message_model->set_message('Portal Topic Successfully Changed.', MESSAGE_NOTICE);
 			redirect('admin/topic');
 		}

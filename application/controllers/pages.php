@@ -11,8 +11,8 @@ class Pages extends YD_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('topic_model');
 		$this->load->model('tutorial_model');
+		$this->load->model('variable_model');
 	}
 
 	/**
@@ -20,7 +20,7 @@ class Pages extends YD_Controller
    */
 	public function index()
 	{
-		$topic = $this->topic_model->get_topic();
+		$topic = $this->variable_model->get('portal_topic');
 		$data = array('topic' => $topic);
 		$this->view_wrapper('pages/home', $data);
 	}
