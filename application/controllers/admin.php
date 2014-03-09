@@ -22,7 +22,8 @@ class Admin extends YD_Controller
 	/**
    * The default method called, if none is provided.
    */
-	public function index() {
+	public function index()
+	{
 		// FIXME change this when we have dashboard
 		$this->narratives();
 	}
@@ -30,7 +31,8 @@ class Admin extends YD_Controller
 	/**
    * Display login form.
    */
-	public function login() {
+	public function login()
+	{
 		if ($this->get_logged_in_user())
 		{
 			redirect('admin');
@@ -53,8 +55,10 @@ class Admin extends YD_Controller
 	/**
    * Terminates a user session.
    */
-	public function logout() {
+	public function logout()
+	{
 		$this->require_login();
+		session_destroy();
 		$this->set_logged_in_user(NULL);
 		$this->system_message_model->set_message('You have been logged out.', MESSAGE_NOTICE);
 		redirect('admin/login');

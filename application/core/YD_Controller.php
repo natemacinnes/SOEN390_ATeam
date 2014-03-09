@@ -4,6 +4,7 @@ class YD_Controller extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
+		@session_start();
 	}
 
 	public static function set_instance(&$newCI) {

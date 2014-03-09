@@ -328,10 +328,10 @@ function narrative_draw_bubbles(vis) {
  * Make the API call to add narrative to the user's history given a narrative
  * data object.
  */
-function narrative_history_add(data)
+function narrative_history_add(d)
 {
-	var url = yd_settings.site_url + 'ajax/add_history/' + data.narrative_id;
-	jQuery.get(url)
+	var url = yd_settings.site_url + 'ajax/add_history/' + d.narrative_id;
+	jQuery.getJSON(url)
 		.done(function(data) {
 			narrative_history_load();
 		})
