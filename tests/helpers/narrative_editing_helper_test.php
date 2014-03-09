@@ -2,7 +2,7 @@
 /**
  * @group Model
  */
-class Editing_Model_Test extends CIUnit_TestCase
+class Narrative_Editing_Helper_Test extends CIUnit_TestCase
 {
 	/**
 	 * Loads sample data into test tables.
@@ -28,7 +28,7 @@ class Editing_Model_Test extends CIUnit_TestCase
 		parent::tearDown();
 		parent::setUp();
 
-		$this->CI->load->model('editing_model');
+		$this->CI->load->helper('narrative_editing');
 	}
 
 	/**
@@ -39,11 +39,11 @@ class Editing_Model_Test extends CIUnit_TestCase
 
 	/**
 	 * UT-0049
-	 * @covers Editing_Model::gatherInfo
+	 * @covers narrative_track_data
 	 */
-	public function test__gatherInfo__valid_id()
+	public function test__narrative_track_data__valid_id()
 	{
-		$info = $this->CI->editing_model->gatherInfo(1);
+		$info = narrative_track_data(1);
 
 		$check = false;
 		if(isset($info['narrative_id']))
@@ -56,12 +56,12 @@ class Editing_Model_Test extends CIUnit_TestCase
 
 	/**
 	 * UT-0050
-	 * @covers Editing_Model::gatherInfo
+	 * @covers Editing_Model::narrative_track_data
 	 */
-	public function test__gatherInfo__invalid_id()
+	public function test__narrative_track_data__invalid_id()
 	{
-		$info = $this->CI->editing_model->gatherInfo(-1);
+		$info = narrative_track_data(-1);
 		$this->assertEquals($info, null);
 	}
-	
+
 }
