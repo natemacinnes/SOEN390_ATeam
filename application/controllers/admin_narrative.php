@@ -119,12 +119,13 @@ class Admin_Narrative extends YD_Controller
 		$this->narrative_model->unpublish($id);
 
 		// Creating a new folder to move for processing
-		$new_narrative_dir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
+		$old_narrative_dir = $this->config->item('site_data_dir') . '/' . $id . '/';
+		$new_narrative_dir = $old_narrative_dir . $id . '/';
 		mkdir($new_narrative_dir, 0755);
 
 		// Creating a new folder to store deleted files
-		$delDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/deleted/';
-		mkdir($delDir, 0755);
+		$new_deleted_dir = $new_narrative_dir . 'deleted/';
+		mkdir($new_deleted_dir, 0755);
 
 		//Archiving desired tracks and moving the rest to the new folder
 		$tracks_for_deletion = $this->input->post('tracks');
@@ -141,19 +142,20 @@ class Admin_Narrative extends YD_Controller
 		}
 
 		// Moving XML file to the new folder
+		narrative_move_files($old_narrative_dir, $new_narrative_dir);
 		narrative_move_xml($id, $new_narrative_dir);
 
 		// Moving files from the old to the new deleted folder
-		$old_deleted_dir = $this->config->item('site_data_dir') . '/' . $id . '/deleted/';
+		$old_deleted_dir = $old_narrative_dir . 'deleted/';
 		if (is_dir($old_deleted_dir)) {
-			narrative_move_files($old_deleted_dir, $delDir);
+			narrative_move_files($old_deleted_dir, $new_deleted_dir);
 		}
 
 		// Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
 		$tmp_path = move_dir_to_tmp($new_narrative_dir, $id);
 
 		// Deleting old narrative folder
-		delete_dir($this->config->item('site_data_dir') . '/' . $id . '/');
+		delete_dir($old_narrative_dir);
 
 		// Calling processing on the new folder
 		$this->narrative_model->process_narrative($tmp_path, $id);
@@ -195,12 +197,13 @@ class Admin_Narrative extends YD_Controller
 		$previousStatus = $this->narrative_model->unpublish($id);
 
 		// Creating a new folder to move for processing
-		$new_narrative_dir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/';
+		$old_narrative_dir = $this->config->item('site_data_dir') . '/' . $id . '/';
+		$new_narrative_dir = $old_narrative_dir . $id . '/';
 		mkdir($new_narrative_dir, 0755);
 
 		// Creating a new folder to store deleted files
-		$delDir = $this->config->item('site_data_dir') . '/' . $id . '/' . $id . '/deleted/';
-		mkdir($delDir, 0755);
+		$new_deleted_dir = $new_narrative_dir . '/deleted/';
+		mkdir($new_deleted_dir, 0755);
 
 		$tracks_for_restoration = $this->input->post('tracks');
 		if ($tracks_for_restoration)
@@ -219,17 +222,18 @@ class Admin_Narrative extends YD_Controller
 		narrative_move_xml($id, $new_narrative_dir);
 
 		//Moving files from the old to the new deleted folder
-		narrative_move_files($this->config->item('site_data_dir') . '/' . $id . '/deleted/', $delDir);
-		narrative_move_files($this->config->item('site_data_dir') . '/' . $id . '/', $new_narrative_dir);
+		$old_deleted_dir = $old_narrative_dir . 'deleted/';
+		narrative_move_files($old_deleted_dir, $new_deleted_dir);
+		narrative_move_files($old_narrative_dir, $new_narrative_dir);
 
 		//Purging files from the uploads folder to the tmp folder to handle error of disappearing jpg
-		narrative_purge_files($this->config->item('site_data_dir') . '/' . $id . '/', $new_narrative_dir);
+		narrative_purge_files($old_narrative_dir, $new_narrative_dir);
 
 		//Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
 		$tmp_path = move_dir_to_tmp($new_narrative_dir, $id);
 
 		//Deleting old narrative folder
-		delete_dir($this->config->item('site_data_dir') . '/' . $id . '/');
+		delete_dir($old_narrative_dir);
 
 		//Calling processing on the new folder
 		$this->narrative_model->process_narrative($tmp_path, $id);
