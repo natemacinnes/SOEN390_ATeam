@@ -43,7 +43,7 @@ class Comment_Model_Test extends CIUnit_TestCase
 	 */
 	public function test__get_all__multiple_returned()
 	{
-		$comments = $this->CI->comment_model->get_all();
+		$comments = $this->CI->comment_model->get_all(1);
 
 		$count = 0;
 		$array_only = TRUE;
