@@ -12,6 +12,7 @@ class Pages extends YD_Controller
 	{
 		parent::__construct();
 		$this->load->model('topic_model');
+		$this->load->model('tutorial_model');
 	}
 
 	/**
@@ -22,5 +23,14 @@ class Pages extends YD_Controller
 		$topic = $this->topic_model->get_topic();
 		$data = array('topic' => $topic);
 		$this->view_wrapper('pages/home', $data);
+	}
+
+	public function tutorial($language) {
+		$row = $this->tutorial_model->get_all();
+
+		$data['enurl'] = $row[0]['url'];//direct mappings are bad kids
+		$data['frurl'] = $row[1]['url'];//TODO:Make a bit more generic in sprint 3
+
+		$this->load->view('embedded/tutorial', $data);
 	}
 }

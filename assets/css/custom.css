@@ -83,6 +83,19 @@ body {
 	margin-bottom: 15px;
 }
 
+.top-padding{
+	padding-top: 5px;
+}
+.left-padding{
+	padding-left: 5px;
+}
+.right-padding{
+	padding-right: 5px;
+}
+.bottom-padding{
+	padding-bottom: 5px;
+}
+
 .float-left{
 	float: left;
 }
@@ -106,6 +119,9 @@ body {
 .bottom-border{
 	border-bottom: 1px solid #ddd;
 }
+.top-border{
+	border-top: 1px solid #ddd;
+}
 
 .portal-topic {
 	padding: 0em 1em;
@@ -120,6 +136,12 @@ body {
 .debug label {
 	padding-left: 0.1em;
 }
+
+span.red { color: #c23b22; }
+span.green { color: #03c03c; }
+span.blue { color: #0198e1; }
+span.yellow { color: #ffbf00; }
+
 
 /*****************************************************************************
 
@@ -174,8 +196,14 @@ body {
 #recent-container {
 	float: right;
 	width: 15%;
-	padding: 0.5em;
 }
+
+#recent-container .svg-container {
+  overflow-y: scroll;
+}
+
+.controls-container .btn{ box-shadow: 0 1px 0 #bbb; }
+.filter-container .btn{ box-shadow: 0 1px 0 #bbb; }
 
 /*****************************************************************************
 
@@ -254,6 +282,17 @@ body {
 
 .flag-wrapper td:nth-child(2){ max-width: 200px;}
 .flag-wrapper td:nth-child(3){ min-width: 150px;}
+
+/*****************************************************************************
+
+									Player
+
+ *****************************************************************************/
+
+.player-wrapper{ position: relative;}
+
+.player-buttons .btn{ box-shadow: 0 1px 0 #bbb; }
+
 
 /*****************************************************************************
 

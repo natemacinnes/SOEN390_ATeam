@@ -34,13 +34,7 @@ class Ajax extends YD_Controller
 			{
 				continue;
 			}
-			// +1 to ensure that 0 doesn't give us NaN
-			$pie_data = array(
-				array("label" => "agrees", "value" => $narrative['agrees']+1),
-				array("label" => "disagrees", "value" => $narrative['disagrees']+1),
-			);
-			$narrative['pie_data'] = $pie_data;
-			//$narrative['created'] = strtotime($narrative['created']);
+      $this->process_narrative_bubble($narrative);
 			$nodes[] = $narrative;
 		}
 
@@ -48,6 +42,27 @@ class Ajax extends YD_Controller
 
 		print json_encode($data);
 	}
+
+  /**
+   * Accepts a narrative array and processes some options in preparation for use
+   * with D3.
+   */
+  private function process_narrative_bubble(&$narrative)
+  {
+    $history = $this->session->userdata('history');
+    if ($history === FALSE) {
+      $history = array();
+    }
+
+    $narrative['viewed'] = in_array($narrative['narrative_id'], $history);
+
+    // +1 to ensure that 0 doesn't give us NaN
+    $pie_data = array(
+      array("label" => "agrees", "value" => $narrative['agrees']+1),
+      array("label" => "disagrees", "value" => $narrative['disagrees']+1),
+    );
+    $narrative['pie_data'] = $pie_data;
+  }
 
 	/**
 	 * Return the image URL given a narrative & timecode.
@@ -78,4 +93,108 @@ class Ajax extends YD_Controller
 			print $return;
 		}
 	}
+
+	/**
+	 * Increment the amount of views on a narrative.
+	 */
+	public function increment_views($narrative_id)
+	{
+		$this->narrative_model->increment_views($narrative_id);
+	}
+
+	/**
+	 * Increment the agree/disagree of a narrative.
+	 */
+	public function increment_agrees_disagrees($narrative_id, $decision)
+	{
+		if($decision == "Agree")
+		{
+			$this->narrative_model->toggle_agrees($narrative_id, "+");
+			echo "green";
+		}
+		else if($decision == "Disagree")
+		{
+			$this->narrative_model->toggle_disagrees($narrative_id, "+");
+			echo "red";
+		}
+		else
+		{
+			echo "";
+		}
+	}
+
+	/**
+	 * decrement the agree/disagree of a narrative.
+	 */
+	public function decrement_agrees_disagrees($narrative_id, $decision)
+	{
+		if($decision == "Agree")
+		{
+			$this->narrative_model->toggle_agrees($narrative_id, "-");
+			echo "green";
+		}
+		else if($decision == "Disagree")
+		{
+			$this->narrative_model->toggle_disagrees($narrative_id, "-");
+			echo "red";
+		}
+		else
+		{
+			echo "";
+		}
+	}
+
+	/**
+	 * Increment the agree/disagree of a narrative.
+	 */
+	public function toggle_concensus($incrementing, $decrementing, $narrative_id)
+	{
+		$this->narrative_model->toggle($incrementing, $decrementing, $narrative_id);
+	}
+
+	/**
+	 * Outputs JSON for the history bar without modifying it.
+	 */
+	public function get_history() {
+		$history = $this->session->userdata('history');
+		if ($history === FALSE) {
+			$history = array();
+		}
+    array_slice($history, 0, NARRATIVE_HISTORY_LIMIT);
+		$narratives = array();
+		foreach($history as $narrative_id) {
+      $narrative = $this->narrative_model->get($narrative_id);
+      $this->process_narrative_bubble($narrative);
+			$narratives[] = $narrative;
+		}
+		print json_encode($narratives);
+	}
+
+	/**
+	 * Adds a narrative to the history, then outputs get_history().
+	 */
+	public function add_history($narrative_id) {
+		// Modifying session data to add the currently requested session id
+		$history = $this->session->userdata('history');
+		if ($history === FALSE) {
+			$history = array();
+		}
+		// Handling case where the same narrative is replayed, to avoid duplicates in the history
+		$key = array_search($narrative_id, $history);
+		if ($key !== FALSE)
+		{
+			unset($history[$key]);
+		}
+		array_unshift($history, $narrative_id);
+		$this->session->set_userdata('history', $history);
+
+		print $this->get_history();
+	}
+
+  /**
+   * Clears history
+   */
+  public function clear_history() {
+    $history = $this->session->set_userdata('history', array());
+  }
 }

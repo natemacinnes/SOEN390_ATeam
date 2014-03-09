@@ -84,12 +84,42 @@ class Admin extends YD_Controller
 	/**
 	 * Displays a list of all narratives on the portal with management links.
 	 */
-	public function narratives()
+	public function narratives($sort_by = "id", $sort_order = "asc", $offset = 0)
 	{
 		$this->require_login();
-		$narratives = $this->narrative_model->get_all();
 
-		$data = array('narratives' => $narratives);
+		// Pagination initialization
+		$this->load->library('pagination');
+
+		$data['sort_by'] = $sort_by;
+		$data['sort_order'] = $sort_order;
+		$data['offset'] = $offset;
+		$data['limit'] = 20;
+
+
+		$narratives = $this->narrative_model->get_all($sort_by, NULL, $sort_order, $offset, $data['limit']);
+		$total_narratives = $this->narrative_model->get_total_count();
+
+		$config['base_url'] = site_url("admin/narratives/$sort_by/$sort_order");
+		$config['total_rows'] = $total_narratives['count'];
+		$config['per_page'] = $data['limit'];
+		$config['uri_segment'] = 5;
+		$config['first_link'] = 'First';
+		$config['last_link'] = 'Last';
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = '&gt;';
+		$config['next_tag_close'] = '</li>';
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = '&lt;';
+		$config['prev_tag_close'] = '</li>';
+		$config['full_tag_open'] = '<ul class="pagination float-right">';
+		$config['full_tag_close'] = '</ul>';
+
+		$this->pagination->initialize($config);
+		$data["links"] = $this->pagination->create_links();
+
+
+		$data['narratives'] = $narratives;
 		$this->view_wrapper('admin/narratives/list', $data);
 	}
 	//display admin topic change page
@@ -98,14 +128,14 @@ class Admin extends YD_Controller
 		$this->require_login();
 		$this->view_wrapper('admin/topic');
 	}
-	
-	
+
+
 	//TODO topic change functionality
 	public function change_topic()
 	{
-		$this->require_login();	
+		$this->require_login();
 		$topic = $this->input->post("topic");
-		
+
 		if(strlen($topic))
 		{
 			$this->topic_model->change_topic($topic);
@@ -116,7 +146,7 @@ class Admin extends YD_Controller
 		{
 			$this->system_message_model->set_message('Portal Topic Error. Please try again.', MESSAGE_WARNING);
 			redirect('admin/topic');
-		} 
+		}
 
 	}
 
@@ -188,7 +218,7 @@ class Admin extends YD_Controller
 		//Checking if any narratives have been checked
 		if(isset($_POST['narratives'])) $narratives = $_POST['narratives'];
 		else redirect('admin');
-		
+
 		if(count($narratives) == 1) $message = 'Narrative';
 		else $message = 'Narratives';
 
@@ -198,7 +228,7 @@ class Admin extends YD_Controller
 			//Displaying deletion confirmation and downloads page
 			$data['narratives'] = $narratives;
 			$this->view_wrapper('admin/narratives/delete', $data);
-			
+
 		}
 		else if(isset($_POST['publish']))
 		{
@@ -227,16 +257,16 @@ class Admin extends YD_Controller
 			redirect('admin/narratives');
 		}
 	}
-	
+
 	public function downloadAll()
 	{
 		$this->require_login();
-		
+
 		//Input
 		$narratives = unserialize($_POST['narratives']);
-	
+
 		$this->load->library('zip');
-		
+
 		foreach($narratives as $id)
 		{
 			//Zip narrative directory
@@ -247,14 +277,14 @@ class Admin extends YD_Controller
 		// Download the zip file to the administrators desktop
 		$this->zip->download('all.zip');
 	}
-	
+
 	public function deleteAll()
 	{
 		$this->require_login();
-	
+
 		//Input
 		$narratives = unserialize($_POST['narratives']);
-		
+
 		//Delete selected narratives and then remove them from the database
 		$message = 'Narratives';
 		foreach($narratives as $id)

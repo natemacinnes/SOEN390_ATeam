@@ -1,0 +1,57 @@
+
+row1:
+  narrative_id: 1
+  position: 0
+  audio_length: 0
+  created: 2013-05-30 20:19:33
+  uploaded: 2014-03-05 19:28:54
+  uploaded_by: 1
+  language: "EN"
+  views: 0
+  agrees: 0
+  disagrees: 0
+  shares: 0
+  flags: 0
+  status: 0
+row2:
+  narrative_id: 2
+  position: 0
+  audio_length: 0
+  created: 2013-07-11 11:22:31
+  uploaded: 2014-03-05 19:28:55
+  uploaded_by: 1
+  language: "EN"
+  views: 0
+  agrees: 0
+  disagrees: 0
+  shares: 0
+  flags: 0
+  status: 0
+row3:
+  narrative_id: 3
+  position: 0
+  audio_length: 0
+  created: 2013-05-30 20:19:33
+  uploaded: 2014-03-05 19:28:54
+  uploaded_by: 1
+  language: "EN"
+  views: 0
+  agrees: 0
+  disagrees: 0
+  shares: 0
+  flags: 0
+  status: 1
+row4:
+  narrative_id: 4
+  position: 0
+  audio_length: 0
+  created: 2013-07-11 11:22:31
+  uploaded: 2014-03-05 19:28:55
+  uploaded_by: 1
+  language: "EN"
+  views: 0
+  agrees: 0
+  disagrees: 0
+  shares: 0
+  flags: 0
+  status: 1

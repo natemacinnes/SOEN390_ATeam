@@ -1,0 +1,16 @@
+
+row1: 
+  cflag_id: 1
+  comment_id: 3
+  description: "Rude comment"
+  date_created: 2014-03-05 19:32:41
+row2: 
+  cflag_id: 2
+  comment_id: 3
+  description: "Innappropriate"
+  date_created: 2014-03-05 19:32:46
+row3: 
+  cflag_id: 3
+  comment_id: 2
+  description: "I disagree with this comment"
+  date_created: 2014-03-05 19:33:05

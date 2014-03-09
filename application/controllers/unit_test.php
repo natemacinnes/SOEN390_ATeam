@@ -14,7 +14,6 @@ class Unit_Test extends YD_Controller {
     $this->config->set_item('site_data_dir', 'test');
   }
 
-
   private function getClassDefinedMethods($object) {
     $methods = array();
     $reflection = new ReflectionClass($object);
@@ -49,6 +48,10 @@ class Unit_Test extends YD_Controller {
   }
 
   public function index() {
+    if (!$this->input->server('remote_addr')) {
+      // If we're running from PHPUnit, stop.
+      return;
+    }
     $data['test_controllers'] = array();
 
     // Load external classes - see note below about set_instance(). Merge test

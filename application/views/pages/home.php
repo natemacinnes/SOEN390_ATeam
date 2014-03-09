@@ -21,11 +21,15 @@
 
     <div class="controls-container btn-toolbar">
       <div class="btn-group btn-group-horizontal sort-container">
-        <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span> Recent</a>
-        <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default active" role="button">
+        <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span> Recent / R&eacute;cent</a>
+        <a href="#popular" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default" role="button">
           <span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span> /
           <span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span>
-          Popular
+          Popular / Populaire
+        </a>
+        <a href="#history" title="Watched narratives&#013;Discussions vue" class="btn btn-default active" role="button">
+          <span class="glyphicon glyphicon-map-marker"></span>
+          Watched / Vue
         </a>
       </div>
       <div class="btn-group btn-group-horizontal filter-container">
@@ -45,7 +49,9 @@
     <!-- this sets the background color (must match recent-container) -->
       <div class="inner clearfix">
         <!-- right column that appears to expand to meet left column -->
-        <div id="recent-container"></div>
+        <div id="recent-container">
+          <div class="svg-container svg-container-history"></div>
+        </div>
         <!-- left column -->
         <div id="bubble-container" class="float-left">
           <div class="svg-container svg-container-1 float-left"></div>

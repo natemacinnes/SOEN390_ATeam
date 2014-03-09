@@ -72,6 +72,8 @@ define('NARRATIVE_POSITION_DISAGREE', 2);
 |
 */
 define('NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL', 2000);
+define('NARRATIVE_HISTORY_LIMIT', 15);
+define('NARRATIVE_HISTORY_VISIBLE', 3.5);
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
