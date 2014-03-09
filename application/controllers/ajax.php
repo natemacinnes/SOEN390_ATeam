@@ -168,6 +168,7 @@ class Ajax extends YD_Controller
 			$narratives[] = $narrative;
 		}
 		print json_encode($narratives);
+		return json_encode($narratives);
 	}
 
 	/**
@@ -189,6 +190,7 @@ class Ajax extends YD_Controller
 		$this->session->set_userdata('history', $history);
 
 		print $this->get_history();
+		return ($this->get_history());
 	}
 
   /**
