@@ -286,19 +286,18 @@ class Narrative_Model extends CI_Model
 						if (PHP_OS == 'WINNT')
 						{
 							$command = realpath("../storage/ffmpeg.exe"). " -i ". $dir . '\\' .$file . " -n -f mp3 -ab 128k " . $dir . '\\' .$file_name . ".mp3 2>&1";
+							$file_input = "file " . "'" . $dir . "\\" .$file_name .".mp3'\r\n";
 						}
 						else
 						{
 							$command = realpath("../storage/ffmpeg"). " -i ". $dir . '/' .$file . " -n -f mp3 -ab 128k " . $dir . '/' .$file_name . ".mp3 2>&1";
+							$file_input = "file " . "'" . $dir . "//" .$file_name .".mp3'\n";
 						}
 						$temp = shell_exec($command);
 
 						//write the file name to audio_container.txt
-						$file_input = "file " . "'" . $dir . "\\" .$file_name .".mp3'\r\n";
 						fwrite($file_concat, $file_input);
-
 						preg_match("/Duration: (.*?),/", $temp, $matches);
-
 						$raw_duration = $matches[1];
 
 						//raw_duration is in 00:00:00.00 format. This converts it to seconds.
@@ -401,7 +400,7 @@ class Narrative_Model extends CI_Model
 		}
 		else
 		{
-			$this->db->query('UPDATE narratives SET audio_length='.$endTimes.' WHERE narrative_id=\''.$id.'\';');
+			$this->db->query('UPDATE narratives SET audio_length=? WHERE narrative_id=?;', array($endTimes, $id));
 		}
 
 		//creating the directory on the server
