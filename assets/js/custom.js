@@ -7,6 +7,7 @@ String.prototype.repeat = function(num) {
  */
 jQuery(document).ready(function() {
 	yd_settings.ui = {
+		filters: {},
 		transition_duration: 700,
 		ring_inner_radius: 0.8,
 		filtered_opacity: 0.2,
@@ -56,7 +57,7 @@ jQuery(document).ready(function() {
 	jQuery('.filter-container.btn-group a').click(function() {
 		jQuery(this).toggleClass('active');
 		jQuery('.filter-container.btn-group a').not(this).removeClass('active');
-		yd_settings.language_filter = jQuery('.filter-container.btn-group a.active').attr('href');
+		yd_settings.ui.filters.language = jQuery('.filter-container.btn-group a.active').attr('href');
 		return false;
 	});
 
@@ -64,14 +65,19 @@ jQuery(document).ready(function() {
 	// twice by the same callback handler. It allows new DOM elements to be bound,
 	// leaving existing ones untouched.
 	if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
-		yd_settings.sort_by = jQuery('.sort-container.btn-group a.active').attr('href').substring(1);
+		jQuery('.sort-container.btn-group a').each(function() {
+			var filter = jQuery(this).attr('href').substring(1);
+			yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
+		});
+
 		narrative_display_initialize();
 	}
 
 	// Radio-like toggle buttons for sort
 	jQuery('.sort-container.btn-group a').click(function () {
 		jQuery(this).toggleClass('active');
-		yd_settings.recent_filter = jQuery('.sort-container.btn-group a[href="#age"]').hasClass('active');
+		var filter = jQuery(this).attr('href').substring(1)
+		yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		return false;
 	});
 });
@@ -116,7 +122,6 @@ function narrative_bubbles_load(position) {
 		svgselect = ".svg-container-" + position;
 		url += '/' + position;
 	}
-	yd_settings.recent_filter = null;
 
 	var num_parent_bubbles = jQuery('#bubble-container .svg-container').length;
 	var diameter = jQuery("#bubble-container").width();
@@ -139,7 +144,7 @@ function narrative_bubbles_load(position) {
 
 	// Retrieve JSON from AJAX controller, but only once upon initial load
 	d3.json(url, function(error, data) {
-		console.log('creating bubbles for SVG ' + svgselect +' sorted by ' + yd_settings.sort_by);
+		console.log('creating bubbles for SVG ' + svgselect);
 
 		// Select elements, even if they do not exist yet. enter() creates them and
 		// appends them to the selection object. Then, we operate on them.
@@ -186,7 +191,7 @@ function narrative_bubbles_load(position) {
  * styling changes.
  */
 function narrative_bubbles_update(svgselect) {
-	console.log('updating bubbles for SVG ' + svgselect + ' sorted by ' + yd_settings.sort_by);
+	console.log('updating bubbles for SVG ' + svgselect);
 
 	var format = d3.format(",.0f");
 	var svg = d3.select(svgselect).select('svg');
@@ -501,15 +506,35 @@ bubble_fill_color = function(d) {
  * the provided narrative object matches the filter or not.
  */
 function narrative_matches_filter(d) {
+	if (d.children) {
+		return true;
+	}
+
 	var recent = true;
-	if (!d.children && yd_settings.recent_filter) {
+	if (yd_settings.ui.filters.recent) {
 		var today = new Date();
 		today.setDate(today.getDate() - 7);
 		var dateStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
 		recent = date_from_string(d.uploaded) > date_from_string(dateStr);
 	}
-	// FIXME case sensitivity
-	return (d.children || yd_settings.language_filter == null || yd_settings.language_filter == d.language.toLowerCase()) && recent;
+
+	var popular = true;
+	if (yd_settings.ui.filters.popular != false) {
+		popular = d.agrees / Math.max(d.disagrees, 1) > 1.5;
+	}
+
+	var history = true;
+	if (yd_settings.ui.filters.history) {
+		history = !d.viewed;
+	}
+
+	var language = true;
+	if (yd_settings.ui.filters.language) {
+		// FIXME case sensitivity
+		language = yd_settings.ui.filters.language == d.language.toLowerCase();
+	}
+
+	return language && recent && popular && history;
 }
 
 /**
