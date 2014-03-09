@@ -12,7 +12,6 @@
 			<img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400' >
 			<br />
 			<audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls' class="autoplay"></audio></br>
-			<span id='current-time'></span>
 
 			<div class="player-stats">
 				<div class="float-left">
