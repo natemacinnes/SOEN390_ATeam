@@ -13,6 +13,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 		'narratives' => 'narratives',
   );
 	protected $sampleNarrativeXml;
+	protected $sampleNarrativeXmlFR;
 
 	public function __contruct($name = NULL, array $data = array(), $dataName = '')
 	{
@@ -30,6 +31,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 		parent::setUp();
 
 		$this->sampleNarrativeXml = '<?xml version="1.0" encoding="UTF-8"?><narrative><narrativeName>2</narrativeName><language>English</language><submitDate>2013-07-11</submitDate><time>11-22-31</time></narrative>';
+		$this->sampleNarrativeXmlFR = '<?xml version="1.0" encoding="UTF-8"?><narrative><narrativeName>2</narrativeName><language>French</language><submitDate>2013-07-11</submitDate><time>11-22-31</time></narrative>';
 
 		$this->CI->load->model('narrative_model', TRUE);
 		$this->CI->load->model('upload_model');
@@ -391,5 +393,91 @@ class Narrative_Model_Test extends CIUnit_TestCase
 		}
 
 		$this->assertEquals(TRUE, $detection);
+	}
+	
+	/**
+	 * UT-0064
+	 * @covers Narrative_Model::get_total_count
+	 */	
+	 
+	function test__get_total_count()
+	{
+		$count = $this->CI->narrative_model->get_total_count();
+		$count_arr = array('count' => 4);
+		
+		$this->assertEquals($count, $count_arr);
+	}
+
+	/**
+	 * UT-0065
+	 * @covers Narrative_Model::get_XML_narrative_language
+	 */
+	function test__xml_parse__get_XML_narrative_language__FR() {
+		$xmlRoot = new SimpleXMLElement($this->sampleNarrativeXmlFR);
+		$xml_retval = $this->CI->narrative_model->get_XML_narrative_language($xmlRoot);
+		$this->assertEquals("FR", $xml_retval);
+	}
+	
+	/**
+	 * UT-0066
+	 * @covers Narrative_Model::publish
+	 */
+	 
+	function test__publish()
+	{
+		$this->CI->narrative_model->publish(1);
+		$narr_array = $this->CI->narrative_model->get(1);
+		$this->assertEquals($narr_array["status"], 1);
+	}
+	
+	/**
+	 * UT-0067
+	 * @covers Narrative_Model::unpublish
+	 */
+	 
+	function test__unpublish()
+	{
+		$this->CI->narrative_model->unpublish(1);
+		$narr_array = $this->CI->narrative_model->get(1);
+		$this->assertEquals($narr_array["status"], 0);
+	}
+	
+	/**
+	 * UT-0068
+	 * @covers Narrative_Model::increment_views
+	 */
+	
+	function test__increment_views()
+	{
+		$narr_array_before = $this->CI->narrative_model->get(1);
+		$this->CI->narrative_model->increment_views(1);
+		$narr_array_after = $this->CI->narrative_model->get(1);
+		$this->assertEquals($narr_array_before["views"], $narr_array_after["views"]-1);
+	}
+	
+	/**
+	 * UT-0069
+	 * @covers Narrative_Model::toggle_agrees
+	 */
+	
+	function test__toggle_agrees()
+	{
+		$narr_array_before = $this->CI->narrative_model->get(1);
+		$this->CI->narrative_model->toggle_agrees(1, "+");
+		$narr_array_after = $this->CI->narrative_model->get(1);
+		$this->assertEquals($narr_array_before["agrees"], $narr_array_after["agrees"]-1);
+	}
+
+	/**
+	 * UT-0070
+	 * @covers Narrative_Model::toggle_disagrees
+	 */
+	
+	function test__toggle_disagrees()
+	{
+		$narr_array_before = $this->CI->narrative_model->get(1);
+		$this->CI->narrative_model->toggle_disagrees(1, "+");
+		$narr_array_after = $this->CI->narrative_model->get(1);
+		$this->assertEquals($narr_array_before["disagrees"], $narr_array_after["disagrees"]-1);
 	}
 }

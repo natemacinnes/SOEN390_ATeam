@@ -218,11 +218,13 @@ class Narrative_Model extends CI_Model
 					$isBatchUpload = TRUE;
 					$newPath = $narrative_path.'/'.$filecheck;
 					$data = $this->process_narrative($newPath);
+					/*
 					if ($data['error'] === 1)
 					{
 						$data['error_message'] = 'Processing failed, one of the narrative folders uploaded does not contain an XML file. Please attempt the upload again.';
 						return $data;
 					}
+					*/
 				}
 				if($this->is_image($file_extension))
 				{
