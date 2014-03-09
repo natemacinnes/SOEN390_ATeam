@@ -1,6 +1,6 @@
 <div class="container fixed-margin">
   <div class="page-header">
-    <h1>Narrative <small>Edit: <?php echo $narrative['narrative_id']; ?></small></h1>
+    <h1>Narrative <small><?php echo $narrative['narrative_id']; ?></small></h1>
   </div>
 
   <div class="float-left big-left-margin big-right-margin">
@@ -88,9 +88,6 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <div class="tab-pane active" id="edit">
-      <div class="page-header">
-        <h2>Edit</h2>
-      </div>
       <?php echo form_open('admin/narratives/' . $narrative['narrative_id'] . '/process', 'class="big-bottom-margin form-horizontal"'); ?>
         <?php echo form_hidden('modified', $narrative['modified']); ?>
         <div class="soundtracks float-left big-right-margin">
@@ -160,9 +157,6 @@
       <?php endif; ?>
     </div>
     <div class="tab-pane" id="comments">
-      <div class="page-header">
-        <h2>Comments</h2>
-      </div>
       <table class="table table-hover">
       <thead>
         <tr>
@@ -184,7 +178,7 @@
             <td><?php print $comment['parent_comment']; ?></td>
             <td><?php print $comment['body']; ?></td>
             <td><?php print $comment['created']; ?></td>
-            <td><?php echo anchor('admin/comments/' . $comment['comment_id'] . '/review', $comment['flags']); ?></td>
+            <td><?php echo anchor('admin/comments/' . $comment['comment_id'] . '/edit', $comment['flags']); ?></td>
             <td>Published</td>
             <td>
               <a href="#" title="Delete" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a>
@@ -195,9 +189,6 @@
     </table>
     </div>
     <div class="tab-pane" id="flags">
-      <div class="page-header">
-        <h2>Flags</h2>
-      </div>
       <table class="table table-hover">
         <thead>
           <tr>

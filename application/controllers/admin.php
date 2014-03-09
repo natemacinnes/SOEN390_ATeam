@@ -15,6 +15,7 @@ class Admin extends YD_Controller
 		$this->load->model('narrative_model');
 		$this->load->model('admin_model');
 		$this->load->model('variable_model');
+		$this->load->helper('narrative_editing');
 		// Used to pass admin ID between methods during validation
 		$admin_id = null;
 	}
@@ -139,7 +140,7 @@ class Admin extends YD_Controller
 		$this->require_login();
 		$topic = $this->input->post("topic");
 
-		if(strlen($topic))
+		if (strlen($topic))
 		{
 			$this->variable_model->set('portal_topic', $topic);
 			$this->system_message_model->set_message('Portal Topic Successfully Changed.', MESSAGE_NOTICE);
@@ -171,7 +172,7 @@ class Admin extends YD_Controller
 		//Creating unique folder name
 		$folder_name = time();
 		$path = $this->config->item('site_data_dir') . '/tmp/' . $folder_name . '/';
-		if(!is_dir($path))
+		if (!is_dir($path))
 		{
 			mkdir($path, 0775, TRUE);
 		}
@@ -214,81 +215,105 @@ class Admin extends YD_Controller
 		redirect('admin');
 	}
 
-	public function batchAction()
+	public function bulk()
 	{
 		 $this->require_login();
 
-		//Checking if any narratives have been checked
-		if(isset($_POST['narratives'])) $narratives = $_POST['narratives'];
-		else redirect('admin');
-
-		if(count($narratives) == 1) $message = 'Narrative';
-		else $message = 'Narratives';
-
-		//Perform action depending on clicked button
-		if(isset($_POST['delete']))
+		// Checking if any narratives have been checked
+		$narratives = $this->input->post('narratives');
+		if (!$narratives)
 		{
-			//Displaying deletion confirmation and downloads page
+			redirect('admin');
+		}
+
+		$action = $this->input->post('action');
+		$message = count($narratives) > 1 ? 'Narratives' : 'Narrative';
+
+		// Perform action depending on clicked button
+		if ($action == 'delete')
+		{
+			// Displaying deletion confirmation and downloads page
 			$data['narratives'] = $narratives;
 			$this->view_wrapper('admin/narratives/delete', $data);
-
 		}
-		else if(isset($_POST['publish']))
+		else if ($action == 'publish')
 		{
-			//Publish selected narratives
-			foreach($narratives as $id)
+			// Publish selected narratives
+			foreach ($narratives as $id)
 			{
 				$this->narrative_model->publish($id);
 				$message = $message . ' #' . $id . ', ';
 			}
-			if(count($narratives)) $message = $message . 'has been published successfully.';
-			else $message = $message . 'have all been published successfully.';
+			if (count($narratives)) {
+				$message .= 'has been published successfully.';
+			}
+			else {
+				$message .= 'have all been published successfully.';
+			}
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
-		else if(isset($_POST['unpublish']))
+		else if ($action == 'unpublish')
 		{
-			//Unpublish selected narratives
+			// Unpublish selected narratives
 			foreach($narratives as $id)
 			{
 				$this->narrative_model->unpublish($id);
 				$message = $message.' #'.$id.', ';
 			}
-			if(count($narratives)) $message = $message . 'has been unpublished successfully.';
-			else $message = $message . 'have all been unpublished successfully.';
+			if (count($narratives)) {
+				$message .= 'has been unpublished successfully.';
+			}
+			else {
+				$message .= 'have all been unpublished successfully.';
+			}
+			$this->system_message_model->set_message($message);
+			redirect('admin/narratives');
+		}
+		else if ($action == 'download')
+		{
+			$this->bulk_download($narratives);
+
+			if (count($narratives)) {
+				$message .= 'has been unpublished successfully.';
+			}
+			else {
+				$message .= 'have all been unpublished successfully.';
+			}
+
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
 	}
 
-	public function downloadAll()
+	public function bulk_download($narratives = NULL)
 	{
 		$this->require_login();
-
-		//Input
-		$narratives = unserialize($_POST['narratives']);
+		if ($narratives === NULL) {
+			$narratives = unserialize($this->input->post('narratives'));
+		}
 
 		$this->load->library('zip');
 
 		foreach($narratives as $id)
 		{
-			//Zip narrative directory
+			// Zip narrative directories
 			$path = $this->config->item('site_data_dir') . '/' . $id . '/';
 			$this->zip->read_dir($path, FALSE);
 		}
 
 		// Download the zip file to the administrators desktop
-		$this->zip->download('all.zip');
+		$this->zip->download('narratives-' . strftime('%Y%m%d-%H%M%S') . '.zip');
 	}
 
-	public function deleteAll()
+	public function bulk_delete()
 	{
 		$this->require_login();
+		if ($narratives === NULL) {
+			$narratives = unserialize($this->input->post('narratives'));
+		}
 
-		//Input
-		$narratives = unserialize($_POST['narratives']);
-
-		//Delete selected narratives and then remove them from the database
+		// Delete selected narratives and then remove them from the database
 		$message = 'Narratives';
 		foreach($narratives as $id)
 		{

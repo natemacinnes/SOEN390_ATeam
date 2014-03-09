@@ -41,13 +41,6 @@ class Admin_Comment extends YD_Controller
   }
 
   /**
-   * TODO: decide if needed or not
-   */
-  public function edit($comment_id = NULL)
-  {
-  }
-
-  /**
    * Review comments includes flags and change publish status.
    */
   public function review($comment_id = 0)

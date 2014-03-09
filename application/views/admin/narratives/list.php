@@ -12,21 +12,22 @@
 			<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Unpublished</a></li>
 		</ul>
 	</div>-->
-	
+
 	<!-- FIXME needs work for bulk actions and no form close -->
-	<?php echo form_open('admin/batchAction'); ?>
+	<?php echo form_open('admin/narratives/bulk'); ?>
 		<div class="btn-group big-top-margin float-left">
 			<button type="button" class="btn btn-default" disabled="disabled">Batch Actions:</button>
-			<?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?>
-			<?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?>
-			<?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'publish', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-eye-open"></span> Publish', 'class' => "btn btn-default")); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'unpublish', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-eye-close"></span> Unpublish', 'class' => "btn btn-default")); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'download', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-cloud-download"></span> Download', 'class' => "btn btn-default")); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'delete', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-remove"></span> Delete', 'class' => "btn btn-default")); ?>
 		</div>
 	<!-- WHY DOES THIS ONLY WORK WITHOUT FORM CLOSE? -->
 
 	<!--THIS GENERATES PAGINATION-->
-	<?php 
+	<?php
 		if (strlen($links)){
-			echo $links; 
+			echo $links;
 		}
 	?>
 	<div class="clear"></div>
@@ -57,30 +58,30 @@
 					<td><?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/review', $narrative['flags']); ?></td>
 					<td><?php echo $narrative['status'] == 1 ? 'Published' : 'Not Published'; ?></td>
 					<td>
-						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/review', '<span class="glyphicon glyphicon-eye-open"></span>', 'title="Review" class="btn btn-default btn-xs" role="button"'); ?>
-						<?php echo anchor('admin/comments/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-comment">', 'title="View Comments" class="btn btn-default btn-xs" role="button"'); ?>
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-pencil"></span>', 'title="Edit" class="btn btn-default btn-xs" role="button"'); ?>
+						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/download', '<span class="glyphicon glyphicon-cloud-download">', 'title="Download" class="btn btn-default btn-xs" role="button"'); ?>
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/delete', '<span class="glyphicon glyphicon-remove">', 'title="Delete" class="btn btn-default btn-xs" role="button"'); ?>
 					</td>
 				</tr>
 			<?php endforeach; ?>
 		</tbody>
 	</table>
-	
+
 	<!-- FIXME should be button anchor links and use JS to trigger submit buttons above -->
-	<?php echo form_open('admin/batchAction'); ?>
+	<?php echo form_open('admin/narratives/bulk'); ?>
 		<div class="btn-group big-top-margin float-left">
 			<button type="button" class="btn btn-default" disabled="disabled">Batch Actions:</button>
-			<?php echo form_submit('delete', 'Delete', "class='btn btn-default'"); ?>
-			<?php echo form_submit('publish', 'Publish', "class='btn btn-default'"); ?>
-			<?php echo form_submit('unpublish', 'Unpublish', "class='btn btn-default'"); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'publish', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-eye-open"></span> Publish', 'class' => "btn btn-default")); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'unpublish', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-eye-close"></span> Unpublish', 'class' => "btn btn-default")); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'download', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-cloud-download"></span> Download', 'class' => "btn btn-default")); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'delete', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-remove"></span> Delete', 'class' => "btn btn-default")); ?>
 		</div>
 	<!-- WHY DOES THIS ONLY WORK WITHOUT FORM CLOSE? -->
 
 	<!--THIS GENERATES PAGINATION-->
-	<?php 
+	<?php
 		if (strlen($links)){
-			echo $links; 
+			echo $links;
 		}
 	?>
 	<div class="clear"></div>
