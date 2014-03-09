@@ -133,25 +133,32 @@ class Admin extends YD_Controller
 		$this->view_wrapper('admin/topic');
 	}
 
+	/**
+	 * Display the settings form
+	 */
+	public function settings() {
+		$data = array(
+			'portal_topic' => $this->variable_model->get('portal_topic'),
+		);
+		$this->view_wrapper('admin/settings', $data);
+	}
 
-	//TODO topic change functionality
-	public function change_topic()
+	/**
+   * Update the site settings
+   */
+	public function update_settings()
 	{
-		$this->require_login();
-		$topic = $this->input->post("topic");
-
-		if (strlen($topic))
+		$new_topic = $this->input->post('portal_topic');
+		if (strlen($new_topic))
 		{
-			$this->variable_model->set('portal_topic', $topic);
-			$this->system_message_model->set_message('Portal Topic Successfully Changed.', MESSAGE_NOTICE);
-			redirect('admin/topic');
+			$this->variable_model->set('portal_topic', $new_topic);
+			$this->system_message_model->set_message('Settings updated successfully.', MESSAGE_NOTICE);
+			redirect('admin/settings');
 		}
-		else
-		{
-			$this->system_message_model->set_message('Portal Topic Error. Please try again.', MESSAGE_WARNING);
-			redirect('admin/topic');
+		else {
+			$this->system_message_model->set_message('Settings could not be updated.', MESSAGE_ERROR);
+			redirect('admin/settings');
 		}
-
 	}
 
 	/**

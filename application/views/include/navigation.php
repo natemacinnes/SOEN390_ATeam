@@ -25,11 +25,7 @@
 				</li>
 				<li><?php echo anchor('admin/comments', 'Comments'); ?></li>
 				<li class="Topic">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Portal Topic <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><?php echo anchor('admin/topic', 'Change Topic'); ?></li>
-
-					</ul>
+					<li><?php echo anchor('admin/settings', 'Portal settings'); ?></li>
 				</li>
 			</ul>
 
