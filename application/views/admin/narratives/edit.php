@@ -67,7 +67,7 @@
     if (file_exists($path)):
     ?>
       <div class="player-wrapper" id="narrative-<?php echo $narrative['narrative_id']; ?>">
-        <img src='' id='audio_image' alt='Audio image to accompany narrative' height='510' width='400'>
+        <img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400'>
         <br />
         <audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls'></audio></br>
       </div>
