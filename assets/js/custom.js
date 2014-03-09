@@ -53,6 +53,15 @@ jQuery(document).ready(function() {
 	// present on page load (i.e. on admin review narrative page)
 	narrative_player_load();
 
+	jQuery('audio,video').not('.player-processed').addClass('player-processed').each(function() {
+	  jQuery(this).mediaelementplayer({
+	  	// the order of controls you want on the control bar (and other plugins below)
+			features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume'],
+			// show framecount in timecode (##:00:00:00)
+			showTimecodeFrameCount: false
+		});
+	});
+
 	// Toggle buttons for navigation links
 	jQuery('.filter-container.btn-group a').click(function() {
 		jQuery(this).toggleClass('active');
@@ -411,10 +420,13 @@ function narrative_history_load()
 function narrative_bind_player(svgselect) {
 	// Colorbox popup for audio player
 	jQuery(svgselect + " g.node-base").click(function(e) {
+		if (!narrative_matches_filter(this.__data__)) {
+			return false;
+		}
+
 		// Call method to add narrative to history
 		narrative_history_add(this.__data__);
 
-		this.__data__.viewed = 1;
 		// Both are here because we need to reset the fill style for both the
 		// clicked bubble (which could be in the history bar) and the actual
 		// narrative bubble in the main display
@@ -422,9 +434,8 @@ function narrative_bind_player(svgselect) {
 		d3.select('#narrative-' + this.__data__.narrative_id).select('circle').style('fill', bubble_fill_color);
 
 		// Don't open colorbox for unmatched language filter
-		if (!narrative_matches_filter(this.__data__)) {
-			return false;
-		}
+		this.__data__.viewed = 1;
+
 		var image_update_timer;
 		var colorbox = jQuery.colorbox({
 			href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
@@ -559,7 +570,9 @@ function narrative_player_load() {
 		myaudio.addEventListener('canplay', function(e) {
 			player_last_update = e.timeStamp;
 			narrative_player_update_image(myaudio.currentTime);
-			myaudio.play();
+			if (jQuery(this).hasClass('autoplay')) {
+				myaudio.play();
+			}
 		}, false);
 		// Update as the audio continues to play.
 		myaudio.addEventListener('timeupdate', function(e) {
