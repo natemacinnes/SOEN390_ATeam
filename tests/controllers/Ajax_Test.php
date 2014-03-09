@@ -26,6 +26,8 @@ class Ajax_Test extends CIUnit_TestCase
 
 		parent::tearDown();
 		parent::setUp();
+
+		$this->CI->load->model('narrative_model');
 	}
 
 	/**
@@ -67,6 +69,7 @@ class Ajax_Test extends CIUnit_TestCase
 	/**
 	 * UT-FIXME
 	 * @covers Ajax::bubbles
+	 * @covers Ajax::process_narrative_bubble
 	 */
 	public function test__bubbles__valid_position()
 	{
@@ -83,6 +86,7 @@ class Ajax_Test extends CIUnit_TestCase
 	/**
 	 * UT-FIXME
 	 * @covers Ajax::bubbles
+	 * @covers Ajax::process_narrative_bubble
 	 */
 	public function test__bubbles__no_position()
 	{
@@ -212,16 +216,26 @@ class Ajax_Test extends CIUnit_TestCase
 	 * UT-0060
 	 * @covers Ajax::toggle_concensus
 	 */
-
-	 /*public function test__toggle_concensus__incremental()
+	 public function test__toggle_concensus__incremental()
 	 {
-		$this->assertEquals(true,false);
-	 }*/
+	 	$narrative_id = 1;
+	 	$old = $this->CI->narrative_model->get($narrative_id);
+
+	 	ob_start();
+		$this->CI->toggle_concensus('agrees', 'disagrees', $narrative_id);
+		ob_end_clean();
+
+		$new = $this->CI->narrative_model->get($narrative_id);
+
+		$this->assertEquals($new['agrees'], $old['agrees']+1);
+		$this->assertEquals($new['disagrees'], $old['disagrees']-1);
+	 }
 
 
 	 /**
 	 * UT-0062
 	 * @covers Ajax::get_history
+	 * @covers Ajax::clear_history
 	 */
 	 public function test__get_history__false_history()
 	 {
@@ -244,6 +258,8 @@ class Ajax_Test extends CIUnit_TestCase
 
 	 public function test__get_history__contains_history()
 	 {
+	 	$this->CI->clear_history();
+
 	 	ob_start();
 		$this->CI->add_history(1);
 		$output = ob_get_contents();
@@ -256,6 +272,7 @@ class Ajax_Test extends CIUnit_TestCase
 	 /**
 	 * UT-0061
 	 * @covers Ajax::add_history
+	 * @covers Ajax::clear_history
 	 */
 	 public function test__add_history__valid_id()
 	 {

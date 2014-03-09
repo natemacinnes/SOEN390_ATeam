@@ -187,6 +187,6 @@ class Ajax extends YD_Controller
    * Clears history
    */
   public function clear_history() {
-    $history = $this->session->set_userdata('history', array());
+    $history = $this->session->unset_userdata('history');
   }
 }
