@@ -418,7 +418,7 @@ function narrative_history_load()
  * clicking a node under the SVG specified in 'svgselect'.
  */
 function narrative_bind_player(svgselect) {
-	// Colorbox popup for audio player
+	// Don't open colorbox for unmatched language filter
 	jQuery(svgselect + " g.node-base").click(function(e) {
 		if (!narrative_matches_filter(this.__data__)) {
 			return false;
@@ -430,12 +430,14 @@ function narrative_bind_player(svgselect) {
 		// Both are here because we need to reset the fill style for both the
 		// clicked bubble (which could be in the history bar) and the actual
 		// narrative bubble in the main display
-		d3.select(this).select('circle').style("fill", bubble_fill_color);
-		d3.select('#narrative-' + this.__data__.narrative_id).select('circle').style('fill', bubble_fill_color);
-
-		// Don't open colorbox for unmatched language filter
 		this.__data__.viewed = 1;
+		d3.select(this).select('circle').style("fill", bubble_fill_color);
+		d3.select('#narrative-' + this.__data__.narrative_id)
+			.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; })
+			.select('circle')
+				.style('fill', bubble_fill_color);
 
+		// Colorbox popup for audio player
 		var image_update_timer;
 		var colorbox = jQuery.colorbox({
 			href: yd_settings.site_url + "narratives/" + this.__data__.narrative_id,
