@@ -173,8 +173,8 @@ class Admin_Narrative extends YD_Controller
     //Moving XML file to the new folder
     $this->editing_model->moveXML($id, $newDir);
 	
-	//Moving files from the old to the new deleted folder
-	$this->editing_model->moveFiles($this->config->item('site_data_dir') . '/' . $id . '/deleted/', $delDir);
+  	//Moving files from the old to the new deleted folder
+  	$this->editing_model->moveFiles($this->config->item('site_data_dir') . '/' . $id . '/deleted/', $delDir);
 
     //Creating new folder in tmp directory to hold the edited narrative and moving edited narrative to it
     $tmpPath = $this->editing_model->moveDir($newDir, $id);

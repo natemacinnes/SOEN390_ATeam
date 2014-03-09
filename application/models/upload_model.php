@@ -27,9 +27,18 @@ class Upload_Model extends CI_Model
 			return $data;
 		}
 
+		//Getting path of the new narrative
+		$file_scan = scandir($path);
+		foreach($file_scan as $file)
+		{
+			$file_extension = pathinfo($file, PATHINFO_EXTENSION);
+
+			if($file_extension != 'zip' && $file != '.' && $file != '..')
+				$data['narrative_path'] = $path.$file;
+		}
+
 		//Return for processing
 		$data['error'] = 0;
-		$data['narrative_path'] = $path.substr($zipFileName, 0, -4);
 		return $data;
 	}
 }

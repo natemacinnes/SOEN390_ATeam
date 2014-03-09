@@ -198,7 +198,7 @@ class Admin extends YD_Controller
 			return;
 		}
 
-		//Calling arrative_model for processing
+		//Calling narrative_model for processing
 		$data = $this->narrative_model->process_narrative($data['narrative_path']);
 		if ($data['error'] === 1)
 		{
