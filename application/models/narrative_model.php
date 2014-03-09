@@ -434,6 +434,7 @@ class Narrative_Model extends CI_Model
 		unset($narrative['narrative_id']);
 
 		$this->db->where('narrative_id', $narrative_id);
+		$this->db->update($this->table, $narrative);
 		$this->set_modified_date($narrative_id);
 	}
 

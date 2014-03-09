@@ -517,6 +517,11 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 */
 	function test__update() {
 		$narrative = $this->CI->narrative_model->get(1);
+		$narrative['audio_length'] = 5;
 		$this->CI->narrative_model->update($narrative);
+
+		$updated_narrative = $this->CI->narrative_model->get(1);
+		$this->assertEquals(5, $updated_narrative['audio_length']);
+		$this->assertNotEquals($narrative['modified'], $updated_narrative['modified']);
 	}
 }
