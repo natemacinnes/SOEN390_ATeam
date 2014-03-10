@@ -49,7 +49,8 @@ class Narrative_Model extends CI_Model
 		{
 			$this->db->where('position', $position);
 		}
-		if ($limit) {
+		if ($limit)
+		{
 			$query->limit($limit, $offset);
 		}
 		$query = $this->db
@@ -59,10 +60,14 @@ class Narrative_Model extends CI_Model
 		return $narratives;
 	}
 
+	/**
+	 * Returns the number of records.
+	 */
 	public function get_total_count()
 	{
-		$query = $this->db->query('SELECT count(*) as count FROM narratives;');
-		return $query->row_array();
+		$query = $this->db->query('SELECT count(*) as count FROM ' . $this->table);
+		$row = $query->row_array();
+    return $row['count'];
 	}
 
 	//following is for xml parsing
@@ -138,7 +143,8 @@ class Narrative_Model extends CI_Model
 	 * FIXME: Not called from anywhere? Remove line below when that is fixed.
 	 * @codeCoverageIgnore
 	 */
-	function process_image($original_image, $original_image_name, $original_image_extension, $directory, $image_destroy) {
+	function process_image($original_image, $original_image_name, $original_image_extension, $directory, $image_destroy)
+	{
 		$image_container = null;
 		//getimagesize will determine the type of image
 		$image_size = getimagesize($directory . '/' . $original_image);
@@ -441,7 +447,8 @@ class Narrative_Model extends CI_Model
 	/**
 	 * Sets the modified date to the current timestamp.
 	 */
-	private function set_modified_date($narrative_id) {
+	private function set_modified_date($narrative_id)
+	{
 		$this->db->query('UPDATE narratives SET modified=CURRENT_TIMESTAMP WHERE narrative_id=?;', array($narrative_id));
 	}
 

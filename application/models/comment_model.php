@@ -2,7 +2,8 @@
 
 class Comment_Model extends CI_Model {
   private $table = 'comments';
-  public function __construct() {
+  public function __construct()
+  {
     parent::__construct();
   }
 
@@ -10,14 +11,35 @@ class Comment_Model extends CI_Model {
   /**
    * Retrieve get all comments for for a given narrative (used for admin side)
    */
-  public function get_all($narrative_id = NULL)
+  public function get_all($narrative_id = NULL, $sort_by = 'id', $sort_order = 'asc', $offset = 0, $limit = NULL)
   {
-    $this->db->from($this->table);
+    // Get the sort column
+    $sort_cols = array(
+      'id' => 'comment_id',
+      'parent' => 'parent_comment',
+      'narrative' => 'narrative_id',
+      'created' => 'created',
+      'status' => 'status',
+    );
+    if (!isset($sort_cols[$sort_by]))
+    {
+      // TODO: Error handling
+      return array();
+    }
+    $sort_col = $sort_cols[$sort_by];
+
+    $query = $this->db->from($this->table);
     if($narrative_id)
     {
       $this->db->where('narrative_id', $narrative_id);
     }
-    $query = $this->db->get();
+    if ($limit)
+    {
+      $query->limit($limit, $offset);
+    }
+    $query = $this->db
+      ->order_by($sort_col, $sort_order)
+      ->get();
     $comments = $query->result_array();
     return $comments;
   }
@@ -42,10 +64,21 @@ class Comment_Model extends CI_Model {
       ->order_by('created', 'desc')
       ->get();
     $comments = array();
-    foreach ($query->result_array() as $comment) {
+    foreach ($query->result_array() as $comment)
+    {
       $comments[$comment['comment_id']] = $comment;
     }
     return $comments;
+  }
+
+  /**
+   * Returns the number of records.
+   */
+  public function get_total_count()
+  {
+    $query = $this->db->query('SELECT count(*) as count FROM ' . $this->table);
+    $row = $query->row_array();
+    return $row['count'];
   }
 
   /**

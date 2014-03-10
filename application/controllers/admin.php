@@ -13,6 +13,8 @@ class Admin extends YD_Controller
 		parent::__construct();
 		$this->load->model('upload_model');
 		$this->load->model('narrative_model');
+		$this->load->model('comment_model');
+		$this->load->model('comment_flag_model');
 		$this->load->model('admin_model');
 		$this->load->model('variable_model');
 		$this->load->helper('narrative_editing');
@@ -21,8 +23,8 @@ class Admin extends YD_Controller
 	}
 
 	/**
-   * The default method called, if none is provided.
-   */
+	 * The default method called, if none is provided.
+	 */
 	public function index()
 	{
 		// FIXME change this when we have dashboard
@@ -30,8 +32,8 @@ class Admin extends YD_Controller
 	}
 
 	/**
-   * Display login form.
-   */
+	 * Display login form.
+	 */
 	public function login()
 	{
 		if ($this->get_logged_in_user())
@@ -54,8 +56,8 @@ class Admin extends YD_Controller
 	}
 
 	/**
-   * Terminates a user session.
-   */
+	 * Terminates a user session.
+	 */
 	public function logout()
 	{
 		$this->require_login();
@@ -66,11 +68,11 @@ class Admin extends YD_Controller
 	}
 
 	/**
-   * Validation callback that attempts to authenticate the user, returning a
-   * form error if not.
-   *
-   * TODO: figure out how to hide this from being accessed via URLs
-   */
+	 * Validation callback that attempts to authenticate the user, returning a
+	 * form error if not.
+	 *
+	 * TODO: figure out how to hide this from being accessed via URLs
+	 */
 	public function validate_authenticate_user($password)
 	{
 		$email = $this->input->post("email");
@@ -100,12 +102,10 @@ class Admin extends YD_Controller
 		$data['offset'] = $offset;
 		$data['limit'] = 20;
 
-
 		$narratives = $this->narrative_model->get_all($sort_by, NULL, $sort_order, $offset, $data['limit']);
-		$total_narratives = $this->narrative_model->get_total_count();
 
 		$config['base_url'] = site_url("admin/narratives/$sort_by/$sort_order");
-		$config['total_rows'] = $total_narratives['count'];
+		$config['total_rows'] = $this->narrative_model->get_total_count();
 		$config['per_page'] = $data['limit'];
 		$config['uri_segment'] = 5;
 		$config['first_link'] = 'First';
@@ -122,21 +122,76 @@ class Admin extends YD_Controller
 		$this->pagination->initialize($config);
 		$data["links"] = $this->pagination->create_links();
 
-
 		$data['narratives'] = $narratives;
 		$this->view_wrapper('admin/narratives/list', $data);
 	}
-	//display admin topic change page
-	public function topic()
+
+	/**
+	 * The default method called, if none is provided.
+	 */
+	public function comments($sort_by = "id", $sort_order = "asc", $offset = 0, $narrative_id = NULL)
 	{
 		$this->require_login();
-		$this->view_wrapper('admin/topic');
+
+		// Pagination initialization
+		$this->load->library('pagination');
+
+		$data['sort_by'] = $sort_by;
+		$data['sort_order'] = $sort_order;
+		$data['offset'] = $offset;
+		$data['limit'] = 20;
+
+		$comments = $this->comment_model->get_all(NULL, $sort_by == 'flags' ? 'id' : $sort_by, $sort_order, $offset, $data['limit']);
+
+		$config['base_url'] = site_url("admin/comments/$sort_by/$sort_order");
+		$config['total_rows'] = $this->comment_model->get_total_count();
+		$config['per_page'] = $data['limit'];
+		$config['uri_segment'] = 5;
+		$config['first_link'] = 'First';
+		$config['last_link'] = 'Last';
+		$config['next_tag_open'] = '<li>';
+		$config['next_link'] = '&gt;';
+		$config['next_tag_close'] = '</li>';
+		$config['prev_tag_open'] = '<li>';
+		$config['prev_link'] = '&lt;';
+		$config['prev_tag_close'] = '</li>';
+		$config['full_tag_open'] = '<ul class="pagination float-right">';
+		$config['full_tag_close'] = '</ul>';
+
+		$this->pagination->initialize($config);
+		$data["links"] = $this->pagination->create_links();
+
+		foreach ($comments as &$comment)
+		{
+			$flags = $this->comment_flag_model->get_by_comment_id($comment['comment_id']);
+			$comment['flags'] = count($flags);
+		}
+
+		function commentsFlagSort($item1,$item2)
+		{
+			if ($item1['flags'] == $item2['flags']) {
+				return 0;
+			}
+			return ($item1['flags'] < $item2['flags']) ? 1 : -1;
+		}
+		if ($sort_by == 'flags')
+		{
+			usort($comments,'commentsFlagSort');
+			if ($sort_order == 'asc') {
+				$comments = array_reverse($comments);
+			}
+		}
+
+		$data['comments'] = $comments;
+
+		$this->view_wrapper('admin/comments/list', $data);
 	}
 
 	/**
 	 * Display the settings form
 	 */
-	public function settings() {
+	public function settings()
+	{
 		$data = array(
 			'portal_topic' => $this->variable_model->get('portal_topic'),
 		);
@@ -144,8 +199,8 @@ class Admin extends YD_Controller
 	}
 
 	/**
-   * Update the site settings
-   */
+	 * Update the site settings
+	 */
 	public function update_settings()
 	{
 		$new_topic = $this->input->post('portal_topic');
@@ -155,14 +210,15 @@ class Admin extends YD_Controller
 			$this->system_message_model->set_message('Settings updated successfully.', MESSAGE_NOTICE);
 			redirect('admin/settings');
 		}
-		else {
+		else
+		{
 			$this->system_message_model->set_message('Settings could not be updated.', MESSAGE_ERROR);
 			redirect('admin/settings');
 		}
 	}
 
 	/**
- 	 * Display narrative upload form.
+	 * Display narrative upload form.
 	 */
 	public function upload()
 	{
@@ -251,10 +307,12 @@ class Admin extends YD_Controller
 				$this->narrative_model->publish($id);
 				$message = $message . ' #' . $id . ', ';
 			}
-			if (count($narratives)) {
+			if (count($narratives))
+			{
 				$message .= 'has been published successfully.';
 			}
-			else {
+			else
+			{
 				$message .= 'have all been published successfully.';
 			}
 			$this->system_message_model->set_message($message);
@@ -268,10 +326,12 @@ class Admin extends YD_Controller
 				$this->narrative_model->unpublish($id);
 				$message = $message.' #'.$id.', ';
 			}
-			if (count($narratives)) {
+			if (count($narratives))
+			{
 				$message .= 'has been unpublished successfully.';
 			}
-			else {
+			else
+			{
 				$message .= 'have all been unpublished successfully.';
 			}
 			$this->system_message_model->set_message($message);
@@ -281,10 +341,12 @@ class Admin extends YD_Controller
 		{
 			$this->bulk_download($narratives);
 
-			if (count($narratives)) {
+			if (count($narratives))
+			{
 				$message .= 'has been unpublished successfully.';
 			}
-			else {
+			else
+			{
 				$message .= 'have all been unpublished successfully.';
 			}
 
@@ -296,7 +358,8 @@ class Admin extends YD_Controller
 	public function bulk_download($narratives = NULL)
 	{
 		$this->require_login();
-		if ($narratives === NULL) {
+		if ($narratives === NULL)
+		{
 			$narratives = unserialize($this->input->post('narratives'));
 		}
 
@@ -316,7 +379,8 @@ class Admin extends YD_Controller
 	public function bulk_delete()
 	{
 		$this->require_login();
-		if ($narratives === NULL) {
+		if ($narratives === NULL)
+		{
 			$narratives = unserialize($this->input->post('narratives'));
 		}
 

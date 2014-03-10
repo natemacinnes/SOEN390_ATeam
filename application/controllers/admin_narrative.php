@@ -24,7 +24,8 @@ class Admin_Narrative extends YD_Controller
 	/**
 	 * The default method called, if none is provided.
 	 */
-	public function index($id = NULL) {
+	public function index($id = NULL)
+	{
 		// Alias for when /show isn't explicitly in the SQL.
 		$this->edit($id);
 	}
@@ -41,7 +42,8 @@ class Admin_Narrative extends YD_Controller
 		$data['paths'] = narrative_track_data($narrative_id);
 		$data['narrative'] = $this->narrative_model->get($narrative_id);
 		$data['admin'] = $this->admin_model->get($data['narrative']['uploaded_by']);
-		if (!$data['paths']) {
+		if (!$data['paths'])
+		{
 			$this->system_message_model->set_message('Narrative #' . $narrative_id . ' could not be found.', MESSAGE_ERROR);
 			redirect('admin/narratives');
 		}
@@ -57,7 +59,8 @@ class Admin_Narrative extends YD_Controller
 		// FIXME should be a model method or at least parameter to get_all()
 		function comment_sort_by_flags($item1,$item2)
 		{
-			if ($item1['flags'] == $item2['flags']) {
+			if ($item1['flags'] == $item2['flags'])
+			{
 				return 0;
 			}
 			return ($item1['flags'] < $item2['flags']) ? 1 : -1;
@@ -126,7 +129,8 @@ class Admin_Narrative extends YD_Controller
 
 		// Moving files from the old to the new deleted folder
 		$old_deleted_dir = $old_narrative_dir . 'deleted/';
-		if (is_dir($old_deleted_dir)) {
+		if (is_dir($old_deleted_dir))
+		{
 			narrative_move_files($old_deleted_dir, $new_deleted_dir);
 		}
 
@@ -218,7 +222,8 @@ class Admin_Narrative extends YD_Controller
 		$this->narrative_model->process_narrative($tmp_path, $id);
 
 		//Republishing the narrative before announcing success
-		if ($previousStatus == 1) {
+		if ($previousStatus == 1)
+		{
 			$this->narrative_model->publish($id);
 		}
 
