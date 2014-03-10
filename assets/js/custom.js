@@ -534,8 +534,18 @@ function narrative_matches_filter(d) {
 	}
 
 	var popular = true;
-	if (yd_settings.ui.filters.popular != false) {
+	if (yd_settings.ui.filters.popular) {
 		popular = d.agrees / Math.max(d.disagrees, 1) > 1.5;
+	}
+
+	var agrees = true;
+	if (yd_settings.ui.filters.agrees) {
+		agrees = d.agrees / Math.max(d.disagrees, 1) > 1.5;
+	}
+
+	var disagrees = true;
+	if (yd_settings.ui.filters.disagrees) {
+		disagrees = d.disagrees / Math.max(d.agrees, 1) > 1.5;
 	}
 
 	var history = true;
@@ -549,7 +559,7 @@ function narrative_matches_filter(d) {
 		language = yd_settings.ui.filters.language == d.language.toLowerCase();
 	}
 
-	return language && recent && popular && history;
+	return language && recent && popular && agrees && disagrees && history;
 }
 
 /**

@@ -22,11 +22,15 @@
     <div class="controls-container btn-toolbar">
       <div class="btn-group btn-group-horizontal sort-container">
         <a href="#age" title="New narratives&#013;Nouvelles discussions" class="btn btn-default" role="button"><span class="glyphicon glyphicon-time"></span> Recent / R&eacute;cent</a>
+        <!--
         <a href="#popular" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default" role="button">
           <span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span> /
           <span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span>
           Popular / Populaire
         </a>
+        -->
+        <a href="#agrees" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span> Agrees / Approuv&eacute;es</a>
+        <a href="#disagrees" title="Disagreed narratives&#013;Discussions contest&eacute;es" class="btn btn-default" role="button"><span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span> Disagrees / Contest&eacute;es</a>
         <a href="#history" title="Watched narratives&#013;Discussions vue" class="btn btn-default active" role="button">
           <span class="glyphicon glyphicon-map-marker"></span>
           Watched / Vue
