@@ -413,9 +413,7 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	function test__get_total_count()
 	{
 		$count = $this->CI->narrative_model->get_total_count();
-		$count_arr = array('count' => 4);
-
-		$this->assertEquals($count, $count_arr);
+		$this->assertEquals(4, $count);
 	}
 
 	/**

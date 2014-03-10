@@ -66,64 +66,60 @@ class Comment_Model_Test extends CIUnit_TestCase
 	 * UT-0045
 	 * @covers Comment_Model::get
 	 */
-
-	 public function test__get__valid_id()
-	 {
+	public function test__get__valid_id()
+	{
 		$comment_id = 1;
 		$comment = $this->CI->comment_model->get($comment_id);
 		$this->assertTrue(is_array($comment) && isset($comment['comment_id']));
 		$this->assertEquals($comment_id, $comment['comment_id']);
-	 }
+	}
 
 	/**
 	 * UT-0046
 	 * @covers Comment_Model::get
 	 */
-
-	 public function test__get__invalid_id()
-	 {
+	public function test__get__invalid_id()
+	{
 		$comment = $this->CI->comment_model->get(-1);
-
 		$this->assertEquals($comment, array());
-	 }
+	}
 
 	/**
 	 * UT-0047
 	 * @covers Comment_Model::get_by_narrative_id
 	 */
-
-	 public function test__get_by_narrative_id__valid_id()
-	 {
+	public function test__get_by_narrative_id__valid_id()
+	{
 		$comments = $this->CI->comment_model->get_by_narrative_id(1);
 		$this->assertEquals(2, count($comments));
 		$this->assertEquals(1, $comments[1]['comment_id']);
 		$this->assertEquals(2, $comments[2]['comment_id']);
-	 }
+	}
 
 	/**
 	 * UT-0048
 	 * @covers Comment_Model::get_by_narrative_id
 	 */
-
-	 public function test__get_by_narrative_id__invalid_id()
-	 {
+	public function test__get_by_narrative_id__invalid_id()
+	{
 		$retrieved_comments = $this->CI->comment_model->get_by_narrative_id(-1);
 
 		$this->assertEquals($retrieved_comments, array());
-	 }
+	}
 
-	 /**
+	/**
 	 * UT-0071
 	 * @covers Comment_Model::insert
 	 */
-
-	 public function test__insert()
-	 {
-	 	$comment = array(
-	 		'' => ''
-	 	);
+	public function test__insert()
+	{
+		$comment = array(
+			'narrative_id' => 1,
+			'body' => "some comment text",
+			'status' => 1,
+		);
 		$last_id = $this->CI->comment_model->insert($comment);
 
 		$this->assertGreaterThan(0, $last_id);
-	 }
+	}
 }
