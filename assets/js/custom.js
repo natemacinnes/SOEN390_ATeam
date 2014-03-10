@@ -169,7 +169,7 @@ function narrative_bubbles_load(position) {
 				//   relative to 0
 
 		var positionLabel = svg.append('text')
-			.attr("dx", 230)
+			.attr("dx", width/2)
 			.attr("dy", 25)
 			.style("text-anchor", "middle")
 			.style("font-size", "2em")
