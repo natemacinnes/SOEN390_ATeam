@@ -653,6 +653,7 @@ function initialize_commenting() {
 		jQuery.post(url, formdata)
 			.done(function(data) {
 				jQuery("#new-comment").val('');
+				jQuery('#comment-' + comment_id + ' .action-comment-report').css('color', 'red');
 				alert("Thank you, this comment has been reported.");
 			})
 			.fail(function() {
