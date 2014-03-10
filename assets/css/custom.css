@@ -187,19 +187,20 @@ span.yellow { color: #ffbf00; }
 }
 
 #bubble-container {
+	width: 100%;
 	position: relative;
-	width: 85%;
 	color: inherit;
 	background-color: #eeeeee;
 }
 
 #recent-container {
-	float: right;
-	width: 15%;
+	clear: both;
+	height: 180px;
+	background-color: #ccc;
 }
 
 #recent-container .svg-container {
-  overflow-y: scroll;
+  overflow-x: scroll;
 }
 
 .controls-container .btn{ box-shadow: 0 1px 0 #bbb; }

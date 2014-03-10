@@ -341,27 +341,6 @@ function narrative_history_add(d)
 }
 
 /**
- * Callback for d3's .data() which populates the x, y, and r attributes.
- * Effectively, this is a custom d3 layout callback.
- */
-function narrative_history_data(data, i)
-{
-	var width = jQuery("#recent-container").width();
-	var num_parent_bubbles = jQuery('#bubble-container .svg-container').length;
-	var diameter = jQuery("#bubble-container").width();
-	var height = diameter/num_parent_bubbles;
-	var padding = 5;
-	var radius = Math.min(width, (height - 2*yd_settings.constants.NARRATIVE_HISTORY_VISIBLE*padding) / yd_settings.constants.NARRATIVE_HISTORY_VISIBLE) / 2;
-	var radius_padding = radius + padding;
-	data.forEach(function(d, i) {
-		d.x = (width-radius*2)/2 + radius;
-		d.y = i*radius_padding*2 + radius_padding;
-		d.r = radius;
-	});
-	return data;
-}
-
-/**
  * Retrieves the user's history and loads the history bar.
  */
 function narrative_history_load()
@@ -371,20 +350,35 @@ function narrative_history_load()
 		.done(function(data) {
 			var num_parent_bubbles = jQuery('#bubble-container .svg-container').length;
 			var diameter = jQuery("#bubble-container").width();
-			var width = jQuery("#recent-container").width() - 20; // for scrollbar width
-			var height = diameter/num_parent_bubbles;
+			var width = jQuery("#recent-container").width();
+			jQuery(svgselect).height(jQuery("#recent-container").height());
+			var height = jQuery("#recent-container").height() - 20; // for scrollbar
 			// Get the limiting dimension (width or height), subtract desired padding,
 			// then divide by 5 to get history circle radius
-			var padding = 5;
-			var radius = Math.min(width, (height - 2*yd_settings.constants.NARRATIVE_HISTORY_VISIBLE*padding) / yd_settings.constants.NARRATIVE_HISTORY_VISIBLE) / 2;
+			var padding = 10;
+			var radius = Math.min(height - padding*2, (width - 2*yd_settings.constants.NARRATIVE_HISTORY_VISIBLE*padding) / yd_settings.constants.NARRATIVE_HISTORY_VISIBLE) / 2;
 			var radius_padding = radius + padding;
 			var svgselect = '#recent-container .svg-container';
 			console.log('loading history bubbles for SVG ' + svgselect);
-			jQuery(svgselect).height(height);
+
 			var svg = d3.select(svgselect).html('').append("svg")
-				.attr("width", width)
-				.attr("height", radius_padding * 2*data.length)
+				.attr("width", radius_padding * 2*data.length)
+				.attr("height", height)
 				.attr("class", "bubble");
+
+			/**
+			 * Callback for d3's .data() which populates the x, y, and r attributes.
+			 * Effectively, this is a custom d3 layout callback.
+			 */
+			function narrative_history_data(data, i)
+			{
+				data.forEach(function(d, i) {
+					d.x = i*radius_padding*2 + radius_padding;
+					d.y = (height-radius*2)/2 + radius;
+					d.r = radius;
+				});
+				return data;
+			}
 
 			var vis = svg.datum(data).selectAll('g.node')
 				.data(narrative_history_data)
