@@ -471,11 +471,11 @@ function date_from_string(str) {
 function position_label_text(position) {
 	switch (position) {
 		case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
-			return 'Neutral';
+			return 'Neutral / Ambivalent';
 		case yd_settings.constants.NARRATIVE_POSITION_AGREE:
-			return 'For';
+			return 'For / Pour';
 		case yd_settings.constants.NARRATIVE_POSITION_DISAGREE:
-			return 'Against';
+			return 'Against / Contre';
 		default:
 			return null;
 	}
