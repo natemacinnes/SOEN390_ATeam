@@ -89,4 +89,15 @@ class Comment_Model extends CI_Model {
     $this->db->insert($this->table, $comment);
     return $this->db->insert_id();
   }
+
+  /**
+   * Deletes an comment based on the conditions passed.
+   *
+   * Example:
+   *   $this->comment_model->delete(array('comment_id' => $narrative['comment_id']));
+   */
+  public function delete($conditions)
+  {
+    $this->db->delete($this->table, $conditions);
+  }
 }

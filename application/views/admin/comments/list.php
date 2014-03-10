@@ -45,7 +45,7 @@
           <td><?php echo anchor('admin/comments/' . $comment['comment_id'] . '/review', $comment['flags']); ?></td>
           <td>Published</td>
           <td>
-            <a href="#" title="Delete" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a>
+            <?php echo anchor("admin/comments/" . $comment['comment_id'] . "/delete", '<span class="glyphicon glyphicon-remove"></span>', 'title="Delete" class="btn btn-default btn-xs" role="button"'); ?>
           </td>
         </tr>
       <?php endforeach; ?>

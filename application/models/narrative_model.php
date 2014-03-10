@@ -456,7 +456,7 @@ class Narrative_Model extends CI_Model
 	 * Deletes an narrative based on the conditions passed.
 	 *
 	 * Example:
-	 *   $this->narrative_model->delete(array('narrative_id' => $narrative->id));
+	 *   $this->narrative_model->delete(array('narrative_id' => $narrative['narrative_id']));
 	 */
 	public function delete($conditions)
 	{

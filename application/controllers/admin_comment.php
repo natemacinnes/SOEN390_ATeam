@@ -25,7 +25,9 @@ class Admin_Comment extends YD_Controller
 		$this->view_wrapper('admin/comments/review', array('comment' => $comment, 'flags' => $flags));
 	}
 
-	public function delete($comment_id = NULL)
+	public function delete($comment_id)
 	{
+		$comment = $this->comment_model->delete(array('comment_id' => $comment_id));
+		redirect('admin/comments');
 	}
 }
