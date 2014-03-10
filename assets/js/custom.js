@@ -520,7 +520,7 @@ function narrative_matches_filter(d) {
 	}
 
 	var recent = true;
-	if (yd_settings.ui.filters.recent) {
+	if (yd_settings.ui.filters.age) {
 		var today = new Date();
 		today.setDate(today.getDate() - 7);
 		var dateStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
