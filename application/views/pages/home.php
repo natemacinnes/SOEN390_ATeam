@@ -56,10 +56,10 @@
         <div class="svg-container svg-container-0 float-left"></div>
         <div class="svg-container svg-container-2 float-left"></div>
       </div>
+      <h2 style="text-align: center; background-color: #ccc; margin-bottom: 0em;">History / Histoire</h2>
       <div id="recent-container">
         <div class="svg-container svg-container-history"></div>
       </div>
-      <h2 style="text-align: center">History / Histoire</h2>
     </div>
 
     <div class="clear"></div>
