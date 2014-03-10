@@ -59,6 +59,7 @@
       <div id="recent-container">
         <div class="svg-container svg-container-history"></div>
       </div>
+      <h2 style="text-align: center">History / Histoire</h2>
     </div>
 
     <div class="clear"></div>
