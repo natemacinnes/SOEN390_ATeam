@@ -26,7 +26,8 @@ class Player extends YD_Controller
 		$comments = $this->comment_model->get_by_narrative_id($narrative_id);
 
 		$rendered_comments = '';
-		foreach ($comments as $comment) {
+		foreach ($comments as $comment)
+		{
 			// Render the comments into the variable
 			$rendered_comments .= $this->load->view('embedded/comment', array('comment' => $comment), TRUE);
 		}

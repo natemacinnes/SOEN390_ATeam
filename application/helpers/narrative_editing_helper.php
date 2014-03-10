@@ -46,7 +46,8 @@ function narrative_track_data($narrative_id)
   $CI =& get_instance();
   $base_dir = $CI->config->item('site_data_dir') . '/' . $narrative_id;
   $path = $base_dir . "/AudioTimes.xml";
-  if (!file_exists($path)) {
+  if (!file_exists($path))
+  {
     return FALSE;
   }
   $xml_reader = simplexml_load_file($path);

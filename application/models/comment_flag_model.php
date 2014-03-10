@@ -1,8 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Comment_Flag_Model extends CI_Model {
+class Comment_Flag_Model extends CI_Model
+{
   private $table = 'comment_flags';
-  public function __construct() {
+  public function __construct()
+  {
     parent::__construct();
   }
 
@@ -19,7 +21,8 @@ class Comment_Flag_Model extends CI_Model {
     return $query->result_array();
   }
 
-  public function insert($comment_id, $description = '') {
+  public function insert($comment_id, $description = '')
+  {
     $comment_flag = array(
       'comment_id' => $comment_id,
       'description' => $description,

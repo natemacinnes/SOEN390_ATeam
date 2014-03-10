@@ -25,7 +25,8 @@ class Pages extends YD_Controller
 		$this->view_wrapper('pages/home', $data);
 	}
 
-	public function tutorial($language) {
+	public function tutorial($language)
+	{
 		$row = $this->tutorial_model->get_all();
 
 		$data['enurl'] = $row[0]['url'];//direct mappings are bad kids

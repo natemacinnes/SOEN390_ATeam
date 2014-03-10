@@ -49,7 +49,8 @@ class Ajax extends YD_Controller
 	 */
 	private function process_narrative_bubble(&$narrative)
 	{
-		if (!isset($_SESSION['history'])) {
+		if (!isset($_SESSION['history']))
+		{
 			$_SESSION['history'] = array();
 		}
 
@@ -146,14 +147,18 @@ class Ajax extends YD_Controller
 	/**
 	 * Outputs JSON for the history bar without modifying it.
 	 */
-	public function get_history() {
-		if (!isset($_SESSION['history'])) {
+	public function get_history()
+	{
+		if (!isset($_SESSION['history']))
+		{
 			$_SESSION['history'] = array();
 		}
 		$display_history = array_slice($_SESSION['history'], 0, NARRATIVE_HISTORY_LIMIT);
 		$narratives = array();
-		foreach ($display_history as $narrative_id) {
-			if ($narrative = $this->narrative_model->get($narrative_id)) {
+		foreach ($display_history as $narrative_id)
+		{
+			if ($narrative = $this->narrative_model->get($narrative_id))
+			{
 				$this->process_narrative_bubble($narrative);
 				$narratives[] = $narrative;
 			}
@@ -164,9 +169,11 @@ class Ajax extends YD_Controller
 	/**
 	 * Adds a narrative to the history, then outputs get_history().
 	 */
-	public function add_history($narrative_id) {
+	public function add_history($narrative_id)
+	{
 		// Modifying session data to add the currently requested session id
-		if (!isset($_SESSION['history'])) {
+		if (!isset($_SESSION['history']))
+		{
 			$_SESSION['history'] = array();
 		}
 		// Handling case where the same narrative is replayed, to avoid duplicates in the history
@@ -183,8 +190,10 @@ class Ajax extends YD_Controller
 	/**
 	 * Clears history
 	 */
-	public function clear_history() {
-		if (isset($_SESSION['history'])) {
+	public function clear_history()
+	{
+		if (isset($_SESSION['history']))
+		{
 			unset($_SESSION['history']);
 		}
 	}

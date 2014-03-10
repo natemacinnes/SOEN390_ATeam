@@ -27,7 +27,8 @@ class Comments extends YD_Controller
 	public function reply($narrative_id, $parent_id = NULL)
 	{
 		$text = $this->input->post('comment-text');
-		if (strlen($text)) {
+		if (strlen($text))
+		{
 			$comment = array(
 	      'narrative_id' => $narrative_id,
 	      'parent_comment' => $parent_id,

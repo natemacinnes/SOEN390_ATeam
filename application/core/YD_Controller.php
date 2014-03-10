@@ -7,7 +7,8 @@ class YD_Controller extends CI_Controller
 		@session_start();
 	}
 
-	public static function set_instance(&$newCI) {
+	public static function set_instance(&$newCI)
+	{
 		// Ugly, but the only way to restore the static instance of CI_Controller
 		// since PHP doesn't support proper inheritance of private static methods
 		// and properties.
@@ -62,7 +63,8 @@ class YD_Controller extends CI_Controller
 			$data['validation_errors'] = validation_errors();
 		}
 		$this->load->view('include/header', $data);
-		if ($data['logged_in_user']) {
+		if ($data['logged_in_user'])
+		{
 			$this->load->view('include/navigation', $data);
 		}
 		$this->load->view('include/system_messages', $data);

@@ -7,7 +7,7 @@
     <table class="narrative-info table table-condensed table-striped table-bordered">
       <tr>
         <td class="data-label">Status (click to toggle):</td>
-        <td>
+        <td class="data-value">
           <?php if ($narrative['status']) {
             echo anchor("admin/narratives/" . $narrative['narrative_id'] . "/unpublish", 'Published', array('class' => 'btn btn-default btn-xs active'));
           }
@@ -19,43 +19,43 @@
       </tr>
       <tr>
         <td class="data-label"><span class="glyphicon glyphicon-eye-open"></span> Views:</td>
-        <td><?php echo $narrative['views']; ?></td>
+        <td class="data-value"><?php echo $narrative['views']; ?></td>
       </tr>
       <tr>
         <td class="data-label"><span class="glyphicon glyphicon-thumbs-up"></span> Agrees:</td>
-        <td><?php echo $narrative['agrees']; ?></td>
+        <td class="data-value"><?php echo $narrative['agrees']; ?></td>
       </tr>
       <tr>
         <td class="data-label"><span class="glyphicon glyphicon-thumbs-down"></span> Disagrees:</td>
-        <td><?php echo $narrative['disagrees']; ?></td>
+        <td class="data-value"><?php echo $narrative['disagrees']; ?></td>
       </tr>
       <tr>
         <td class="data-label"><span class="glyphicon glyphicon-share"></span> Shares:</td>
-        <td><?php echo $narrative['shares']; ?></td>
+        <td class="data-value"><?php echo $narrative['shares']; ?></td>
       </tr>
       <tr>
         <td class="data-label"><span class="glyphicon glyphicon-flag"></span> Flags:</td>
-        <td><?php echo $narrative['flags']; ?></td>
+        <td class="data-value"><?php echo $narrative['flags']; ?></td>
       </tr>
       <tr>
         <td class="data-label">Audio length (seconds):</td>
-        <td><?php echo $narrative['audio_length']; ?></td>
+        <td class="data-value"><?php echo $narrative['audio_length']; ?></td>
       </tr>
       <tr>
         <td class="data-label">Created on:</td>
-        <td><?php echo $narrative['created']; ?></td>
+        <td class="data-value"><?php echo $narrative['created']; ?></td>
       </tr>
       <tr>
         <td class="data-label">Uploaded on:</td>
-        <td><?php echo $narrative['uploaded']; ?></td>
+        <td class="data-value"><?php echo $narrative['uploaded']; ?></td>
       </tr>
       <tr>
         <td class="data-label">Uploaded by:</td>
-        <td><?php echo $admin['login']; ?></td>
+        <td class="data-value"><?php echo $admin['login']; ?></td>
       </tr>
       <tr>
         <td class="data-label">Language:</td>
-        <td><?php echo $narrative['language']; ?></td>
+        <td class="data-value"><?php echo $narrative['language']; ?></td>
       </tr>
     </table>
   </div>
@@ -178,7 +178,7 @@
             <td><?php print $comment['parent_comment']; ?></td>
             <td><?php print $comment['body']; ?></td>
             <td><?php print $comment['created']; ?></td>
-            <td><?php echo anchor('admin/comments/' . $comment['comment_id'] . '/edit', $comment['flags']); ?></td>
+            <td><?php echo anchor('admin/comments/' . $comment['comment_id'] . '/review', $comment['flags']); ?></td>
             <td>Published</td>
             <td>
               <a href="#" title="Delete" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a>

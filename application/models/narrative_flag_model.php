@@ -2,7 +2,8 @@
 
 class Narrative_Flag_Model extends CI_Model {
   private $table = 'narrative_flags';
-  public function __construct() {
+  public function __construct()
+  {
     parent::__construct();
   }
 

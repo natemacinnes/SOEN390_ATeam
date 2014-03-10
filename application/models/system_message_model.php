@@ -49,7 +49,8 @@ class System_Message_Model extends CI_Model
 	public function get_messages($clear = TRUE)
 	{
 		$messages = $this->session->userdata('system_messages');
-		if ($clear) {
+		if ($clear)
+		{
 			$this->session->set_userdata('system_messages', array());
 		}
 		return $messages;

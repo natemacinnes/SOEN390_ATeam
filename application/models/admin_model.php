@@ -2,7 +2,8 @@
 
 class Admin_Model extends CI_Model {
 	private $table = 'admins';
-	public function __construct() {
+	public function __construct()
+	{
 		parent::__construct();
 	}
 
@@ -24,7 +25,8 @@ class Admin_Model extends CI_Model {
 	/**
 	 * Retrieve flags for a given admin
 	 */
-	public function valid_admin($email, $password) {
+	public function valid_admin($email, $password)
+	{
 		$this->db->select('admin_id');
 		$this->db->where('login', $email);
 		$this->db->where('password', $password);
