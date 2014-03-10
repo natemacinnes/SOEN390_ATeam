@@ -48,7 +48,7 @@
 			</div>
 		</div>
 	<?php else: ?>
-		Video does not exist.
+		<p>Narrative does not exist.</p>
 	<?php endif; ?>
 
 <script type="text/javascript">
