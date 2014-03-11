@@ -683,6 +683,11 @@ function narrative_player_buttons_initialize()
 			});
 	});
 
+	//Handle bookmarking of narrative
+	jQuery(".bookmark-btn").click(function() {
+		  window.location.assign(yd_settings.site_url + "narratives/" + nar_id);
+	});
+
 	//local var to decide agree/disagree
 	var last_concensus = "";
 	//get narrative ID

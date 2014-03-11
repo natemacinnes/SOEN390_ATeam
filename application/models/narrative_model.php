@@ -527,4 +527,12 @@ class Narrative_Model extends CI_Model
 		}
 		$this->db->update('narratives');
 	}
+
+	/**
+	*	Set narrative position as For, Neutral, or Against
+	*/
+	public function setPosition($narrative_id, $position)
+	{
+		$this->db->query("UPDATE narratives SET position=" . $position . " WHERE narrative_id=" . $narrative_id . ";");
+	}
 }

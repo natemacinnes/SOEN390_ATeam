@@ -37,7 +37,7 @@
 			<div class="player-buttons bottom-margin">
 				<div class="float-left">
 					<div class="btn-group">
-						<a href="#" class="btn btn-default">Bookmark <span class="yellow glyphicon glyphicon-bookmark"></span></a>
+						<a href="#" class="btn btn-default bookmark-btn">Bookmark <span class="yellow glyphicon glyphicon-bookmark"></span></a>
 						<a href="#" class="btn btn-default">Share <span class="blue glyphicon glyphicon-user"></span></a>
 					</div>
 				</div>

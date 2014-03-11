@@ -22,6 +22,12 @@
 			<?php echo form_button(array('name' => 'action', 'value' => 'download', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-cloud-download"></span> Download', 'class' => "btn btn-default")); ?>
 			<?php echo form_button(array('name' => 'action', 'value' => 'delete', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-remove"></span> Delete', 'class' => "btn btn-default")); ?>
 		</div>
+		<div class="btn-group big-top-margin float-right">
+			<button type="button" class="btn btn-default" disabled="disabled">Mark as:</button>
+			<?php echo form_button(array('name' => 'action', 'value' => 'markFor', 'type' => 'submit', 'content' => 'For', 'class' => "btn btn-default")); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'markNeutral', 'type' => 'submit', 'content' => 'Neutral', 'class' => "btn btn-default")); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'markAgainst', 'type' => 'submit', 'content' => 'Against', 'class' => "btn btn-default")); ?>
+		</div>
 	<!-- WHY DOES THIS ONLY WORK WITHOUT FORM CLOSE? -->
 
 	<!--THIS GENERATES PAGINATION-->
@@ -75,6 +81,12 @@
 			<?php echo form_button(array('name' => 'action', 'value' => 'unpublish', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-eye-close"></span> Unpublish', 'class' => "btn btn-default")); ?>
 			<?php echo form_button(array('name' => 'action', 'value' => 'download', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-cloud-download"></span> Download', 'class' => "btn btn-default")); ?>
 			<?php echo form_button(array('name' => 'action', 'value' => 'delete', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-remove"></span> Delete', 'class' => "btn btn-default")); ?>
+		</div>
+		<div class="btn-group big-top-margin float-right">
+			<button type="button" class="btn btn-default" disabled="disabled">Mark as:</button>
+			<?php echo form_button(array('name' => 'action', 'value' => 'markFor', 'type' => 'submit', 'content' => 'For', 'class' => "btn btn-default")); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'markNeutral', 'type' => 'submit', 'content' => 'Neutral', 'class' => "btn btn-default")); ?>
+			<?php echo form_button(array('name' => 'action', 'value' => 'markAgainst', 'type' => 'submit', 'content' => 'Against', 'class' => "btn btn-default")); ?>
 		</div>
 	<!-- WHY DOES THIS ONLY WORK WITHOUT FORM CLOSE? -->
 

@@ -22,7 +22,12 @@ class Ajax extends YD_Controller
 	public function bubbles($position = NULL)
 	{
 		$data = array();
-		$data['name'] = 'flare';
+		if($position == 0)
+			$data['name'] = 'Neutral / Ambivalent';
+		else if($position == 1)
+			$data['name'] = 'For / Pour';
+		else if($position == 2)
+			$data['name'] = 'Against / Contre';
 		// Clusters are groups of nodes
 		$nodes = array();
 
