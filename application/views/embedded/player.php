@@ -1,3 +1,6 @@
+	<div class="float-right">
+		<a class="action-narrative-report" href="#">Flag Narrative <span class="glyphicon glyphicon-flag"></span></a>
+	</div>
 	<div class="page-header">
 		<h1>Narrative <small><?php echo $narrative_id; ?></small></h1>
 	</div>

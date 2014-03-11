@@ -19,4 +19,16 @@ class Narrative_Flag_Model extends CI_Model {
 
     return $query->result_array();
   }
+
+  /**
+  * Flag the narrative
+  */
+  public function insert($narrative_id)
+  {
+    $query = $this->db->query('SELECT * FROM narratives WHERE narrative_id=' . $narrative_id . ';');
+    $row = $query->row_array();
+    $newFlag = $row['flags'] + 1;
+
+    $this->db->query('UPDATE narratives SET flags=' . $newFlag . " WHERE narrative_id=" . $narrative_id . ";");
+  }
 }

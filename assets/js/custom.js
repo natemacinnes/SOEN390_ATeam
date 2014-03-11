@@ -671,6 +671,18 @@ function initialize_commenting() {
  */
 function narrative_player_buttons_initialize()
 {
+	//Handle flagging of narrative
+	jQuery(".action-narrative-report").click(function() {
+		var url = yd_settings.site_url + "player/flag/" + nar_id;
+		jQuery.post(url)
+			.done(function() {
+				alert("Thank you, narrative has been reported.");
+			})
+			.fail(function() {
+				alert("An error occurred while reporting the narrative. Please try again.")
+			});
+	});
+
 	//local var to decide agree/disagree
 	var last_concensus = "";
 	//get narrative ID
