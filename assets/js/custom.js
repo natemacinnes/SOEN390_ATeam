@@ -568,8 +568,9 @@ function narrative_player_load() {
 	if (player_wrappers.length) {
 
 		//Tracking asynchronous call with google analytics
-		alert(yd_settings.site_url + "narratives/" + this.__data__.narrative_id);
-		_gaq.push(['_trackPageview', yd_settings.site_url + "narratives/" + this.__data__.narrative_id]);
+		var url = yd_settings.site_url + "narratives/" + nar_id;
+		alert(url);
+		_gaq.push(['_trackPageview', url]);
 
 		player_wrappers.addClass('player-processed')
 		jQuery('audio,video', player_wrappers).mediaelementplayer({
