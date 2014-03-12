@@ -443,7 +443,7 @@ function narrative_bind_player(svgselect) {
 			onComplete: function() {
 
 				//Registering loading of the narrative in the colorbox for Google Analytics
-				_gaq.push(['_trackPageview', href]);
+				_gaq.push(['_trackPageview', yd_settings.site_url + "narratives/" + this.__data__.narrative_id]);
 
 				narrative_player_load();
 				jQuery(this).colorbox.resize();
