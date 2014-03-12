@@ -445,8 +445,7 @@ function narrative_bind_player(svgselect) {
 			onComplete: function() {
 
 				//Registering loading of the narrative in the colorbox
-				var url1 = "/narratives/" + this.__data__.narrative_id;
-				_gaq.push(['_trackPageview', url1]);
+				//_gaq.push(['_trackPageview', url]);
 
 				narrative_player_load();
 				jQuery(this).colorbox.resize();
