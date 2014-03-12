@@ -55,7 +55,7 @@
 		<tbody>
 			<?php foreach ($narratives as $narrative): ?>
 				<tr>
-			<td><?php echo form_checkbox('narratives[]', $narrative['narrative_id'], FALSE); ?>
+					<td><?php echo form_checkbox('narratives[]', $narrative['narrative_id'], FALSE); ?>
 					<td><?php print $narrative['narrative_id']; ?></td>
 					<td><?php printf('%d', $narrative['audio_length']/60); ?>:<?php printf('%02d', $narrative['audio_length']%60); ?></td>
 					<td><?php print $narrative['language']; ?></td>

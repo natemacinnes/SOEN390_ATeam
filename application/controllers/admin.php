@@ -28,7 +28,15 @@ class Admin extends YD_Controller
 	public function index()
 	{
 		// FIXME change this when we have dashboard
-		$this->narratives();
+		$this->dashboard();
+	}
+
+	/**
+	*	Display dashboard
+	*/
+	public function dashboard()
+	{
+		$this->view_wrapper('admin/dashboard');
 	}
 
 	/**
