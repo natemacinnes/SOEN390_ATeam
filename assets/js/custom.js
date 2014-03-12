@@ -441,6 +441,10 @@ function narrative_bind_player(svgselect) {
 			speed: 700,
 			opacity: 0,
 			onComplete: function() {
+
+				//Registering loading of the narrative in the colorbox
+
+
 				narrative_player_load();
 				jQuery(this).colorbox.resize();
 			},
@@ -563,7 +567,8 @@ function narrative_player_load() {
 	var player_wrappers = jQuery('.player-wrapper').not('player-processed')
 	if (player_wrappers.length) {
 
-		//Registering loading of the narrative in the colorbox for Google Analytics
+		//Tracking asynchronous call with google analytics
+		alert(yd_settings.site_url + "narratives/" + this.__data__.narrative_id);
 		_gaq.push(['_trackPageview', yd_settings.site_url + "narratives/" + this.__data__.narrative_id]);
 
 		player_wrappers.addClass('player-processed')
