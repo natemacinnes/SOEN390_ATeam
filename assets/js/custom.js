@@ -433,12 +433,12 @@ function narrative_bind_player(svgselect) {
 			.select('circle')
 				.style('fill', bubble_fill_color);
 
-		var url = yd_settings.site_url + "narratives/" + this.__data__.narrative_id;
+		var url = "narratives/" + this.__data__.narrative_id;
 
 		// Colorbox popup for audio player
 		var image_update_timer;
 		var colorbox = jQuery.colorbox({
-			href: url,
+			href: yd_settings.site_url + url,
 			left: 0,
 			speed: 700,
 			opacity: 0,
