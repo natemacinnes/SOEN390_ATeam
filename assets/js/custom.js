@@ -568,7 +568,8 @@ function narrative_player_load() {
 	if (player_wrappers.length) {
 
 		//Tracking asynchronous call with google analytics
-		var url = yd_settings.site_url + "narratives/" + nar_id;
+		alert(nar_id);
+		var url = "/narratives/" + nar_id;
 		alert(url);
 		_gaq.push(['_trackPageview', url]);
 
