@@ -433,19 +433,19 @@ function narrative_bind_player(svgselect) {
 			.select('circle')
 				.style('fill', bubble_fill_color);
 
-		var url = "narratives/" + this.__data__.narrative_id;
+		var narrative_url = "narratives/" + this.__data__.narrative_id;
 
 		// Colorbox popup for audio player
 		var image_update_timer;
 		var colorbox = jQuery.colorbox({
-			href: yd_settings.site_url + url,
+			href: yd_settings.site_url + narrative_url,
 			left: 0,
 			speed: 700,
 			opacity: 0,
 			onComplete: function() {
 
 				//Registering loading of the narrative in the colorbox
-				_gaq.push(['_trackPageview', url]);
+				_gaq.push(['_trackPageview', narrative_url]);
 
 				narrative_player_load();
 				jQuery(this).colorbox.resize();
