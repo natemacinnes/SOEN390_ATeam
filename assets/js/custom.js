@@ -441,6 +441,10 @@ function narrative_bind_player(svgselect) {
 			speed: 700,
 			opacity: 0,
 			onComplete: function() {
+
+				//Registering loading of the narrative in the colorbox for Google Analytics
+				_gaq.push(['_trackPageview', href]);
+
 				narrative_player_load();
 				jQuery(this).colorbox.resize();
 			},
@@ -562,10 +566,6 @@ function narrative_matches_filter(d) {
 function narrative_player_load() {
 	var player_wrappers = jQuery('.player-wrapper').not('player-processed')
 	if (player_wrappers.length) {
-
-		//Tracking asynchronous call with google analytics
-		_gaq.push(['_trackPageview', '/some-page']);
-
 		player_wrappers.addClass('player-processed')
 		jQuery('audio,video', player_wrappers).mediaelementplayer({
 			// the order of controls you want on the control bar (and other plugins below)
