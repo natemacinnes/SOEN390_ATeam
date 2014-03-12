@@ -36,6 +36,8 @@ class Admin extends YD_Controller
 	*/
 	public function dashboard()
 	{
+		$this->require_login();
+		
 		$this->view_wrapper('admin/dashboard');
 	}
 
