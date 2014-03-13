@@ -148,6 +148,22 @@ class Ajax extends YD_Controller
 	{
 		$this->narrative_model->toggle($incrementing, $decrementing, $narrative_id);
 	}
+	
+	/**
+	 * Increment the agree, decrement the disagree of a narrative.
+	 */
+	 public function toggle_agree_to_disagree($narrative_id)
+	 {
+		$this->narrative_model->increment_disagree_decrement_agree($narrative_id);
+	 }
+	 
+	/**
+	 * Increment the disagree, decrement the agree of a narrative.
+	 */
+	 public function toggle_disagree_to_agree($narrative_id)
+	 {
+		$this->narrative_model->increment_agree_decrement_disagree($narrative_id);
+	 }
 
 	/**
 	 * Outputs JSON for the history bar without modifying it.

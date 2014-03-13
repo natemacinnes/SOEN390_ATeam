@@ -89,7 +89,35 @@ jQuery(document).ready(function() {
 		yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		return false;
 	});
+	
+	//Function that gets called to load narrative if the user is using a bookmark or other
+	//HACKY: 2s delay to account for the loading of all the SVG objects needed to simulate click on them.
+	setTimeout
+	(
+		function()
+		{
+			initiate_player(document.getElementsByName("toPlay")[0].value);
+		},
+		2000
+	);
 });
+
+/**
+*	Method that gets called when the user mentionned a specific narrative to be played (bookmark or other)
+*/
+function initiate_player(id)
+{
+	//Creating click event
+	var evt = document.createEvent("MouseEvents");
+    evt.initMouseEvent("click", true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+
+    //If the element exist, simulate click
+    var narrative = document.getElementById("narrative-" + id);
+    if(narrative != null)
+    {
+		narrative.dispatchEvent(evt);
+	}
+}
 
 /**
  * Binds a colorbox callback to links with a 'colorbox' class. Result is magic
@@ -704,7 +732,11 @@ function narrative_player_buttons_initialize()
 		//Increment the agrees, decrement the disagrees
 		if(last_concensus == "Agree" && jQuery.trim(jQuery(this).text()) == "Disagree")
 		{
-			var url = yd_settings.site_url + "ajax/toggle_concensus/agrees/disagrees/" + nar_id;
+			var url = yd_settings.site_url + "ajax/toggle_agree_to_disagree/" + nar_id;
+			//set the last user choice to disagree
+			last_concensus = jQuery.trim(jQuery(this).text());
+			jQuery(this).toggleClass('active btn-primary');
+			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active btn-primary');
 			jQuery.post(url)
 			.done(function(data) {
 				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) + 1 + " ");
@@ -714,29 +746,24 @@ function narrative_player_buttons_initialize()
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-			//set the last user choice to disagree
-			last_concensus = jQuery.trim(jQuery(this).text());
-			jQuery(this).toggleClass('active');
-			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active');
 		}
 		//Increment the disagrees, decrement the agrees
 		else if(last_concensus == "Disagree" && jQuery.trim(jQuery(this).text()) == "Agree")
 		{
-			var url = yd_settings.site_url + "ajax/toggle_concensus/disagrees/agrees/" + nar_id;
+			var url = yd_settings.site_url + "ajax/toggle_disagree_to_agree/" + nar_id;
+			//set the last user choice to agree
+			last_concensus = jQuery.trim(jQuery(this).text());
+			jQuery(this).toggleClass('active btn-primary');
+			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active btn-primary');
 			jQuery.post(url)
 			.done(function(data) {
 				jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) + 1 + " ");
 				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) - 1 + " ");
 				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
-
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-			//set the last user choice to agree
-			last_concensus = jQuery.trim(jQuery(this).text());
-			jQuery(this).toggleClass('active');
-			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active');
 		}
 		//Increment the disagrees or agrees
 		else if(last_concensus == "")
@@ -744,35 +771,53 @@ function narrative_player_buttons_initialize()
 			//set last_concensus according to the button pressed (agree/disagree)
 			last_concensus = jQuery.trim(jQuery(this).text());
 			var url = yd_settings.site_url + "ajax/increment_agrees_disagrees/" + nar_id + "/" + last_concensus;
+			jQuery(this).toggleClass('active btn-primary');
+			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active btn-primary');
 			jQuery.post(url)
 			.done(function(data) {
-				jQuery(".player-stats .float-right ." + data + ".text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right ." + data + ".text").text())) + 1 + " ");
+				if(last_concensus == "Agree")
+				{
+					jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) + 1 + " ");
+				}
+				else if(last_concensus == "Disagree")
+				{
+					jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) + 1 + " ");
+				}
+				//fade-in and fade-out a message
+				//fade_in_success_message("Your vote has been accepted");
+				//setTimeout(fade_out_success_message, 2000);
 				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-			jQuery(this).toggleClass('active');
-			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active');
 		}
-		//If the user clicks the same button twice, undo voting
 		else if( last_concensus == jQuery.trim(jQuery(this).text()) )
 		{
 			var url = yd_settings.site_url + "ajax/decrement_agrees_disagrees/" + nar_id + "/" + last_concensus;
+			//set last_concensus to an empty string.
+			jQuery(this).removeClass('active btn-primary');
+			
 			$.post(url)
-			.success(function(data) {
-				jQuery(".player-stats .float-right ." + data + ".text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right ." + data + ".text").text())) - 1 + " ");
+			.done(function(data) {
+				if(last_concensus == "Agree")
+				{
+					jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) - 1 + " ");
+				}
+				else if(last_concensus == "Disagree")
+				{
+					jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) - 1 + " ");
+				}
+				//fade-in and fade-out a message
+				//fade_in_success_message("Your vote has been accepted");
+				//setTimeout(fade_out_success_message, 2000);
+				last_concensus = "";
 				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
-
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-			//set last_concensus to an empty string.
-			last_concensus = "";
-			jQuery('.player-buttons .float-right .btn-group .btn').removeClass('active');
 		}
-		{}
 	});
 
 	function update_concensus_bar(agrees, disagrees)
@@ -782,5 +827,15 @@ function narrative_player_buttons_initialize()
 		var new_disagrees = Math.round(disagrees/total_votes) * 100;
 		jQuery(".progress-bar progress-bar-success").width(new_agrees);
 		jQuery(".progress-bar progress-bar-danger").width(new_disagrees);
+	}
+	
+	function fade_in_success_message(input)
+	{
+		jQuery(".success-message").text(input).fadeIn();
+	}
+	
+	function fade_out_success_message()
+	{
+		jQuery(".success-message").fadeOut();
 	}
 }

@@ -510,24 +510,28 @@ class Narrative_Model extends CI_Model
 		$this->db->set('disagrees', 'disagrees' . $operator . '1', FALSE);
 		$this->db->update('narratives');
 	}
-
+	
 	/**
-	*	toggle disagree or agree of a narrative
+	*	Increment agree and decrement disagrees
 	*/
-	public function toggle($incrementing, $decrementing, $narrative_id)
+	public function increment_agree_decrement_disagree($narrative_id)
 	{
 		$this->db->where('narrative_id', $narrative_id);
-		if(strlen($incrementing))
-		{
-			$this->db->set( $incrementing, $incrementing . '+1', FALSE);
-		}
-		if(strlen($decrementing))
-		{
-			$this->db->set( $decrementing, $decrementing . '-1', FALSE);
-		}
+		$this->db->set('agrees', 'agrees+1', FALSE);
+		$this->db->set('disagrees', 'disagrees-1', FALSE);
+		$this->db->update('narratives');				
+	}
+	
+	/**
+	*	Increment disagree and decrement agrees
+	*/
+	public function increment_disagree_decrement_agree($narrative_id)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+		$this->db->set('agrees', 'agrees-1', FALSE);
+		$this->db->set('disagrees', 'disagrees+1', FALSE);
 		$this->db->update('narratives');
 	}
-
 	/**
 	*	Set narrative position as For, Neutral, or Against
 	*/
