@@ -68,7 +68,7 @@ jQuery(document).ready(function() {
 		jQuery('.filter-container.btn-group a').not(this).removeClass('active');
 		yd_settings.ui.filters.language = jQuery('.filter-container.btn-group a.active').attr('href');
 		return false;
-	});
+	}).tooltip();
 
 	// This design pattern uses CSS classes to ensure that items aren't processed
 	// twice by the same callback handler. It allows new DOM elements to be bound,
@@ -88,7 +88,7 @@ jQuery(document).ready(function() {
 		var filter = jQuery(this).attr('href').substring(1)
 		yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		return false;
-	});
+	}).tooltip();
 });
 
 /**
