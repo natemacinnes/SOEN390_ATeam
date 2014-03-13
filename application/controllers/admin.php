@@ -285,7 +285,7 @@ class Admin extends YD_Controller
 
 		//Output success
 		$this->system_message_model->set_message('Narrative(s) uploaded successfully.', MESSAGE_NOTICE);
-		redirect('admin');
+		redirect('admin/narratives');
 	}
 
 	public function bulk()
