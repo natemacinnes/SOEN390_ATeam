@@ -709,6 +709,18 @@ function initialize_commenting() {
 		function(){
 			jQuery(this).children(".actions").children().stop().fadeOut("fast");
 		});
+	
+	/*Post comment upon clicking enter
+	 *Kinda Hacky*/
+	jQuery('.comments-container #new-comment-form .form-control').keypress(function (e) 
+	{
+		var key = e.which;
+		if(key == 13)  // the enter key code
+		{
+			jQuery(this).siblings('.action-comment-post').click();
+			return false;  
+		}
+	}); 
 }
 
 /**
