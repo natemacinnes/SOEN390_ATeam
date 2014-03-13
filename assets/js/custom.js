@@ -700,6 +700,17 @@ function initialize_commenting() {
 				alert("An error occurred while reporting the comment. Please try again.");
 			});
 	});
+	
+	//show reply and flag on hover
+	jQuery(".comments-wrapper .comment").hover( 
+		function(){
+			jQuery(this).children(".actions").children().fadeIn("fast");
+			jQuery(this).children(".actions").children().fadeIn("fast");
+		}, 
+		function(){
+			jQuery(this).children(".actions").children().fadeOut("fast");
+			jQuery(this).children(".actions").children().fadeOut("fast");
+		});
 }
 
 /**
