@@ -203,8 +203,8 @@ span.grey { color: #808080}
   overflow-x: scroll;
 }
 
-.controls-container .btn{ box-shadow: 0 1px 0 #bbb; }
-.filter-container .btn{ box-shadow: 0 1px 0 #bbb; }
+.controls-container .btn{ box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05); }
+.filter-container .btn{ box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05); }
 
 /*****************************************************************************
 
@@ -292,7 +292,7 @@ span.grey { color: #808080}
 
 .player-wrapper{ position: relative;}
 
-.player-buttons .btn{ box-shadow: 0 1px 0 #bbb; }
+.player-buttons .btn{ box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05); }
 
 
 /*****************************************************************************
