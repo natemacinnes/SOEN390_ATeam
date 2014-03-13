@@ -1,4 +1,12 @@
+
 <div class="home">
+<?php
+  if(!isset($narrative))
+  {
+    $narrative = -1;
+  }
+  echo form_hidden('toPlay', $narrative);
+?>
   <div class="container">
     <div class="page-header">
       <h1><span id="page-header-you">You</span><span id="page-header-deliberate">Deliberate</span></h1>

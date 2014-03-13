@@ -25,6 +25,14 @@ class Pages extends YD_Controller
 		$this->view_wrapper('pages/home', $data);
 	}
 
+	public function narratives($id)
+	{
+		$topic = $this->variable_model->get('portal_topic');
+		$data = array('topic' => $topic);
+		$data['narrative'] = $id;
+		$this->view_wrapper('pages/home', $data);
+	}
+
 	public function tutorial($language)
 	{
 		$row = $this->tutorial_model->get_all();
