@@ -28,7 +28,17 @@ class Admin extends YD_Controller
 	public function index()
 	{
 		// FIXME change this when we have dashboard
-		$this->narratives();
+		$this->dashboard();
+	}
+
+	/**
+	*	Display dashboard
+	*/
+	public function dashboard()
+	{
+		$this->require_login();
+		
+		$this->view_wrapper('admin/dashboard');
 	}
 
 	/**
@@ -275,7 +285,7 @@ class Admin extends YD_Controller
 
 		//Output success
 		$this->system_message_model->set_message('Narrative(s) uploaded successfully.', MESSAGE_NOTICE);
-		redirect('admin');
+		redirect('admin/narratives');
 	}
 
 	public function bulk()
@@ -307,7 +317,7 @@ class Admin extends YD_Controller
 				$this->narrative_model->publish($id);
 				$message = $message . ' #' . $id . ', ';
 			}
-			if (count($narratives))
+			if (count($narratives) == 1)
 			{
 				$message .= 'has been published successfully.';
 			}
@@ -326,7 +336,7 @@ class Admin extends YD_Controller
 				$this->narrative_model->unpublish($id);
 				$message = $message.' #'.$id.', ';
 			}
-			if (count($narratives))
+			if (count($narratives) == 1)
 			{
 				$message .= 'has been unpublished successfully.';
 			}
@@ -341,7 +351,7 @@ class Admin extends YD_Controller
 		{
 			$this->bulk_download($narratives);
 
-			if (count($narratives))
+			if (count($narratives) == 1)
 			{
 				$message .= 'has been unpublished successfully.';
 			}
@@ -350,6 +360,60 @@ class Admin extends YD_Controller
 				$message .= 'have all been unpublished successfully.';
 			}
 
+			$this->system_message_model->set_message($message);
+			redirect('admin/narratives');
+		}
+		else if($action == 'markFor')
+		{
+			foreach($narratives as $id)
+			{
+				$this->narrative_model->setPosition($id, 1);
+				$message = $message . ' #' . $id . ', ';
+			}
+			if (count($narratives) == 1)
+			{
+				$message .= 'has been marked as for successfully.';
+			}
+			else
+			{
+				$message .= 'have all been marked as for successfully.';
+			}
+			$this->system_message_model->set_message($message);
+			redirect('admin/narratives');
+		}
+		else if($action == 'markNeutral')
+		{
+			foreach($narratives as $id)
+			{
+				$this->narrative_model->setPosition($id, 0);
+				$message = $message . ' #' . $id . ', ';
+			}
+			if (count($narratives) == 1)
+			{
+				$message .= 'has been marked as neutral successfully.';
+			}
+			else
+			{
+				$message .= 'have all been marked as neutral successfully.';
+			}
+			$this->system_message_model->set_message($message);
+			redirect('admin/narratives');
+		}
+		else if($action == 'markAgainst')
+		{
+			foreach($narratives as $id)
+			{
+				$this->narrative_model->setPosition($id, 2);
+				$message = $message . ' #' . $id . ', ';
+			}
+			if (count($narratives) == 1)
+			{
+				$message .= 'has been marked as against successfully.';
+			}
+			else
+			{
+				$message .= 'have all been marked as against successfully.';
+			}
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}

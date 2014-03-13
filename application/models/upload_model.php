@@ -27,14 +27,31 @@ class Upload_Model extends CI_Model
 			return $data;
 		}
 
-		//Getting path of the new narrative
-		$file_scan = scandir($path);
-		foreach($file_scan as $file)
+		//Getting path of the new narrative - Handling mismatch of name of zip and containing folder
+		$nar_path = $path . substr($zipFileName, 0, -4);
+		if(is_dir($nar_path))
 		{
-			$file_extension = pathinfo($file, PATHINFO_EXTENSION);
+			$data['narrative_path'] = $nar_path;
+		}
+		else
+		{
+			$file_scan = scandir($path);
+			foreach($file_scan as $file)
+			{
+				$file_extension = pathinfo($file, PATHINFO_EXTENSION);
 
-			if($file_extension != 'zip' && $file != '.' && $file != '..')
-				$data['narrative_path'] = $path.$file;
+				//System was being fooled by having the __MACOSX folder in it, substr is used to keep it open for
+				//possible future modification by Apple
+				if($file_extension != 'zip' && $file != '.' && $file != '..' && $file != substr('__MACOSX', 0, 5))
+					$data['narrative_path'] = $path.$file;
+			}
+		}
+
+		//If folder empty
+		if(!isset($data['narrative_path']))
+		{
+			$data['error'] = 1;
+			return $data;
 		}
 
 		//Return for processing

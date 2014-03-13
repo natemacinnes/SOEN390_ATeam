@@ -11,14 +11,14 @@
 	$total_votes = (float)$narrative['agrees'] + (float)$narrative['disagrees'];
 	if (file_exists($path)):
 	?>
+		<?php include_once("application/analyticstracking.php"); ?>
 		<div class="player-wrapper float-left right-margin" id="narrative-<?php echo $narrative_id; ?>">
 			<img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400' >
 			<br />
 			<audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls' class="autoplay"></audio></br>
-
 			<div class="player-stats">
 				<div class="float-left">
-					<p><span class="glyphicon glyphicon-eye-open"></span> <?php echo $narrative['views']; ?></p>
+					<p><span class="glyphicon glyphicon-eye-open"></span> <?php echo $narrative['views']; ?>             <span class="bg-success success-message" style=""></span></p>
 				</div>
 				<div class="float-right">
 					<p><span class="green glyphicon glyphicon-thumbs-up"></span> <span class="green text"><?php echo $narrative['agrees']; ?> </span><span class="red glyphicon glyphicon-thumbs-down"></span> <span class="red text"><?php echo $narrative['disagrees']; ?></span></p>
@@ -33,14 +33,15 @@
 				  </div>
 				</div>
 			</div>
-
+			
 			<div class="player-buttons bottom-margin">
 				<div class="float-left">
 					<div class="btn-group">
-						<a href="#" class="btn btn-default">Bookmark <span class="yellow glyphicon glyphicon-bookmark"></span></a>
+						<a href="#" class="btn btn-default bookmark-btn">Bookmark <span class="yellow glyphicon glyphicon-bookmark"></span></a>
 						<a href="#" class="btn btn-default">Share <span class="blue glyphicon glyphicon-user"></span></a>
 					</div>
 				</div>
+				
 				<div class="float-right">
 					<div class="btn-group">
 						<a href="#" class="btn btn-default">Agree <span class="green glyphicon glyphicon-thumbs-up"></span></a>
