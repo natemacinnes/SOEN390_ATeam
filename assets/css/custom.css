@@ -141,7 +141,7 @@ span.red { color: #c23b22; }
 span.green { color: #03c03c; }
 span.blue { color: #0198e1; }
 span.yellow { color: #ffbf00; }
-
+span.grey { color: #808080}
 
 /*****************************************************************************
 
@@ -346,6 +346,10 @@ span.yellow { color: #ffbf00; }
 	float: right;
 }
 
+.comment .date{
+	font-style: italic;
+	font-size: 11px;
+}
 .comment .actions a {
 	margin-left: 1em;
 }
