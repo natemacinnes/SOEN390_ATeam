@@ -137,8 +137,8 @@ body {
 	padding-left: 0.1em;
 }
 
-span.red { color: #c23b22; }
-span.green { color: #03c03c; }
+span.red { color: #c23b22; /*#D9534F;*/}
+span.green { color: #03c03c; /*#5CB85C; */}
 span.blue { color: #0198e1; }
 span.yellow { color: #ffbf00; }
 
@@ -170,33 +170,33 @@ span.yellow { color: #ffbf00; }
 }
 
 #homepage-content-wrapper {
-	width: 100%;
+	/*width: 100%;
 	margin-bottom: 30px;
 	border: 1px solid #ccc;
 	border-radius: 6px;
 	line-height: 2.1428571435;
-	margin-top: 0.5em;
+	margin-top: 0.5em;*/
 }
 
 #homepage-content-wrapper .inner {
 	width: 100%;
 	position: relative;
-	line-height: 2.1428571435;
+	/*line-height: 2.1428571435;*/
 	color: inherit;
-	background-color: #ccc;
+	/*background-color: #ccc;*/
 }
 
 #bubble-container {
 	width: 100%;
 	position: relative;
 	color: inherit;
-	background-color: #eeeeee;
+	/*background-color: #eeeeee;*/
 }
 
 #recent-container {
 	clear: both;
 	height: 180px;
-	background-color: #ccc;
+	/*background-color: #ccc;*/
 }
 
 #recent-container .svg-container {
@@ -217,7 +217,7 @@ span.yellow { color: #ffbf00; }
 
 .help-container {
   position: absolute;
-  bottom: -0.5em; /* matches margin-top of #homepage-content-wrapper */
+  bottom: -5px; /* matches margin-top of #homepage-content-wrapper */
   right: 64px;
 }
 

@@ -49,16 +49,24 @@
     </div>
 
     <!-- this sets the width available & corners -->
-    <div id="homepage-content-wrapper" class="clearfix">
+    <div class="panel panel-default top-margin">
+      <div class="panel-heading">Click a bubble to play a narrative / ...</div>
     <!-- this sets the background color (must match recent-container) -->
-      <div id="bubble-container" class="float-left">
-        <div class="svg-container svg-container-1 float-left"></div>
-        <div class="svg-container svg-container-0 float-left"></div>
-        <div class="svg-container svg-container-2 float-left"></div>
+      <div id="homepage-content-wrapper" class="clearfix panel-body">
+        <div id="bubble-container" class="float-left">
+          <div class="svg-container svg-container-1 float-left"></div>
+          <div class="svg-container svg-container-0 float-left"></div>
+          <div class="svg-container svg-container-2 float-left"></div>
+        </div>
       </div>
-      <h2 style="text-align: center; background-color: #ccc; margin-bottom: 0em;">History / Histoire</h2>
-      <div id="recent-container">
-        <div class="svg-container svg-container-history"></div>
+    </div>
+
+    <div class="panel panel-default">
+      <div class="panel-heading">History / ...</div>
+      <div class="panel-body">
+        <div id="recent-container">
+          <div class="svg-container svg-container-history"></div>
+        </div>
       </div>
     </div>
 
