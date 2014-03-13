@@ -137,8 +137,8 @@ body {
 	padding-left: 0.1em;
 }
 
-span.red { color: #c23b22; }
-span.green { color: #03c03c; }
+span.red { color: #c23b22; /*#D9534F;*/}
+span.green { color: #03c03c; /*#5CB85C; */}
 span.blue { color: #0198e1; }
 span.yellow { color: #ffbf00; }
 

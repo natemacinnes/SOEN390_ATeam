@@ -14,9 +14,9 @@ jQuery(document).ready(function() {
 		bubble_fill_normal_mask: 0.5,
 		bubble_fill_hover_mask: 0.8,
 		system_colors: {
-			green: '#009933',
+			green: '#5CB85C',
 			darkgreen: '#007a28',
-			red: '#CC0000',
+			red: '#D9534F',
 			darkred: '#a30000',
 			lightgrey: '#CFCFCF',
 			grey: '#eeeeee',
