@@ -89,7 +89,35 @@ jQuery(document).ready(function() {
 		yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		return false;
 	});
+
+	//Function that gets called to load narrative if the user is using a bookmark or other
+	//HACKY: 2s delay to account for the loading of all the SVG objects needed to simulate click on them.
+	setTimeout
+	(
+		function()
+		{
+			initiate_player(document.getElementsByName("toPlay")[0].value);
+		},
+		2000
+	);
 });
+
+/**
+*	Method that gets called when the user mentionned a specific narrative to be played (bookmark or other)
+*/
+function initiate_player(id)
+{
+	//Creating click event
+	var evt = document.createEvent("MouseEvents");
+    evt.initMouseEvent("click", true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+
+    //If the element exist, simulate click
+    var narrative = document.getElementById("narrative-" + id);
+    if(narrative != null)
+    {
+		narrative.dispatchEvent(evt);
+	}
+}
 
 /**
  * Binds a colorbox callback to links with a 'colorbox' class. Result is magic
@@ -433,7 +461,7 @@ function narrative_bind_player(svgselect) {
 			.select('circle')
 				.style('fill', bubble_fill_color);
 
-		var narrative_url = "narratives/" + this.__data__.narrative_id;
+		var narrative_url = "player/" + this.__data__.narrative_id;
 
 		// Colorbox popup for audio player
 		var image_update_timer;
