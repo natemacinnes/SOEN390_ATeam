@@ -56,7 +56,7 @@ jQuery(document).ready(function() {
 
 	jQuery('audio,video').not('.player-processed').addClass('player-processed').each(function() {
 	  jQuery(this).mediaelementplayer({
-	  	// the order of controls you want on the control bar (and other plugins below)
+		// the order of controls you want on the control bar (and other plugins below)
 			features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume'],
 			// show framecount in timecode (##:00:00:00)
 			showTimecodeFrameCount: false
@@ -115,9 +115,9 @@ function initiate_player(id)
  */
 function colorbox_initialize() {
 	jQuery('a')
-    .filter('.colorbox:not(.colorbox-processed)')
-    .addClass('colorbox-processed')
-    .colorbox();
+	.filter('.colorbox:not(.colorbox-processed)')
+	.addClass('colorbox-processed')
+	.colorbox();
 }
 
 /**
@@ -441,6 +441,12 @@ function narrative_bind_player(svgselect) {
 		// Call method to add narrative to history
 		narrative_history_add(this.__data__);
 
+		// Modify address bar without reloading page
+		// See https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history
+		// FIXME HTML5 ONLY
+		var stateObj = {};
+		history.pushState(stateObj, "Narrative " + this.__data__.narrative_id, yd_settings.site_url + "narratives/" + this.__data__.narrative_id);
+
 		// Both are here because we need to reset the fill style for both the
 		// clicked bubble (which could be in the history bar) and the actual
 		// narrative bubble in the main display
@@ -451,7 +457,7 @@ function narrative_bind_player(svgselect) {
 			.select('circle')
 				.style('fill', bubble_fill_color);
 
-		var narrative_url = "narratives/" + this.__data__.narrative_id;
+		var narrative_url = "player/" + this.__data__.narrative_id;
 
 		// Colorbox popup for audio player
 		var image_update_timer;
@@ -468,6 +474,12 @@ function narrative_bind_player(svgselect) {
 			},
 			onClosed: function() {
 				clearInterval(image_update_timer);
+
+				// Modify address bar without reloading page
+				// See https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history
+				// FIXME HTML5 ONLY
+				var stateObj = {};
+				history.pushState(stateObj, "Home", yd_settings.site_url);
 			}
 		});
 		//increment the number of views in the database
@@ -477,6 +489,9 @@ function narrative_bind_player(svgselect) {
 				alert("There was an registering your vote on this narrative.");
 			});
 	});
+
+	var id = jQuery('input[name=toPlay]').val();
+	jQuery(svgselect + " #narrative-" + id).not('.bookmark-play').addClass('bookmark-play').trigger('click');
 }
 
 /**
@@ -706,7 +721,7 @@ function narrative_player_buttons_initialize()
 
 	//Handle bookmarking of narrative
 	jQuery(".bookmark-btn").click(function() {
-		  window.location.assign(yd_settings.site_url + "narratives/" + nar_id);
+		  add_bookmark();
 	});
 
 	//local var to decide agree/disagree
@@ -824,5 +839,40 @@ function narrative_player_buttons_initialize()
 	function fade_out_success_message()
 	{
 		jQuery(".success-message").fadeOut();
+	}
+}
+
+function add_bookmark()
+{
+	var title = document.title;
+	var url = document.location.href;
+
+	if (window.sidebar)
+	{
+		/* Mozilla Firefox Bookmark */
+		window.sidebar.addPanel(title, url, "");
+	}
+	else if (window.external)
+	{
+		/* IE Favorite */
+		if (window.external.AddFavorite) {
+			window.external.AddFavorite(url, title);
+		}
+		/* Chrome */
+		else {
+			alert('Your browser does not support automatic bookmarks. Please press Control+D to bookmark this page.');
+		}
+
+	}
+	else if (window.opera && window.print)
+	{
+		/* Opera Hotlist */
+		alert('Your browser does not support automatic bookmarks. Please press Control+D to bookmark this page.');
+		return true;
+	}
+	else
+	{
+		/* Other */
+		alert('Your browser does not support automatic bookmarks. Please press Control+D to bookmark this page.');
 	}
 }
