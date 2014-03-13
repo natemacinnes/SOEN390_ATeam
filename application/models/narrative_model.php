@@ -6,6 +6,7 @@ class Narrative_Model extends CI_Model
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->helper('narrative_model_helper');
 	}
 
 	/**
@@ -339,38 +340,9 @@ class Narrative_Model extends CI_Model
 
 						//Get the time that the narrative end in the concatenated narrative
 						$endTimes = $endTimes + floatval($duration);
-
-						//Add narrative node to XML file
-						$name  = $xml->createElement("Mp3Name");
-						$mp3Name = $xml->createTextNode($file);
-						$name->appendChild($mp3Name);
-
-						$start   = $xml->createElement("Start");
-						$startTime = $xml->createTextNode($startTimes);
-						$start->appendChild($startTime);
-
-						$length   = $xml->createElement("Duration");
-						$lengthTime = $xml->createTextNode($duration);
-						$length->appendChild($lengthTime);
-
-						$end   = $xml->createElement("End");
-						$endTime = $xml->createTextNode($endTimes);
-						$end->appendChild($endTime);
-
-						$image  = $xml->createElement("Image");
-						$imageNarrative = $xml->createTextNode($audio_image);
-						$image->appendChild($imageNarrative);
-
-						$narrative = $xml->createElement("Narrative");
-						$narrative->appendChild($name);
-						$narrative->appendChild($start);
-						$narrative->appendChild($end);
-						$narrative->appendChild($length);
-						$narrative->appendChild($image);
-
-						$root->appendChild($narrative);
-
-						//end of xml stuff
+						
+						//REFACTORED: xml creation now in the narrative_model_helper
+						$root->appendChild(create_narrative_xml($xml,$file, $startTimes, $duration, $endTimes, $audio_image));
 						$startTimes = $startTimes + floatval($duration) ;  //get the starting time of the narrative in the concatenated narrative
 					}
 				}
@@ -380,6 +352,7 @@ class Narrative_Model extends CI_Model
 		//change path of xml
 		$xmlpath = $dir . "/AudioTimes.xml";
 		$xml->save($xmlpath) or die("Error");
+		
 		fclose($file_concat);
 		if (PHP_OS == 'WINNT')
 		{

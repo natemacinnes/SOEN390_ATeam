@@ -9,14 +9,14 @@ jQuery(document).ready(function() {
 	yd_settings.ui = {
 		filters: {},
 		transition_duration: 700,
-		ring_inner_radius: 0.8,
+		ring_inner_radius: 0.85,
 		filtered_opacity: 0.2,
 		bubble_fill_normal_mask: 0.5,
 		bubble_fill_hover_mask: 0.8,
 		system_colors: {
-			green: '#009933',
+			green: '#5CB85C',
 			darkgreen: '#007a28',
-			red: '#CC0000',
+			red: '#D9534F',
 			darkred: '#a30000',
 			lightgrey: '#CFCFCF',
 			grey: '#eeeeee',
@@ -26,7 +26,8 @@ jQuery(document).ready(function() {
 			darkblue: '#274e7e',
 			purple: '#743CBC',
 			darkpurple: '#452470',
-			yellow: '#FFFF00'
+			yellow: '#FFFF00',
+      white: '#FFFFFF'
 		},
 		// glyphicons are a font, so to update this create a span glyphicon,
 		// inspect its CSS to get the UTF-8 escape code. Next, use character
@@ -68,7 +69,7 @@ jQuery(document).ready(function() {
 		jQuery('.filter-container.btn-group a').not(this).removeClass('active');
 		yd_settings.ui.filters.language = jQuery('.filter-container.btn-group a.active').attr('href');
 		return false;
-	});
+	}).tooltip();
 
 	// This design pattern uses CSS classes to ensure that items aren't processed
 	// twice by the same callback handler. It allows new DOM elements to be bound,
@@ -88,18 +89,7 @@ jQuery(document).ready(function() {
 		var filter = jQuery(this).attr('href').substring(1)
 		yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		return false;
-	});
-	
-	//Function that gets called to load narrative if the user is using a bookmark or other
-	//HACKY: 2s delay to account for the loading of all the SVG objects needed to simulate click on them.
-	setTimeout
-	(
-		function()
-		{
-			initiate_player(document.getElementsByName("toPlay")[0].value);
-		},
-		2000
-	);
+	}).tooltip();
 });
 
 /**
@@ -196,12 +186,12 @@ function narrative_bubbles_load(position) {
 				// ^ the root g container is transformed, so for all children x and y is
 				//   relative to 0
 
-		var positionLabel = svg.append('text')
+		/*var positionLabel = svg.append('text')
 			.attr("dx", width/2)
 			.attr("dy", 25)
 			.style("text-anchor", "middle")
 			.style("font-size", "2em")
-			.text(position_label_text(position));
+			.text(position_label_text(position));*/
 
 		narrative_draw_bubbles(vis);
 		narrative_bind_player(svgselect);
@@ -305,7 +295,7 @@ function narrative_draw_bubbles(vis) {
 		// This computes the SVG path data required to form an arc.
 	var arc = d3.svg.arc()
 		.outerRadius(function(d) { return d.r; })
-		.innerRadius(function(d) { return d.r*yd_settings.ui.ring_inner_radius; });
+		.innerRadius(function(d) { return  d.r*yd_settings.ui.ring_inner_radius; });
 
 	// One SVG g container per pie chart slice
 	var arcs = vis.selectAll("g.slice")
@@ -467,9 +457,7 @@ function narrative_bind_player(svgselect) {
 		var image_update_timer;
 		var colorbox = jQuery.colorbox({
 			href: yd_settings.site_url + narrative_url,
-			left: 0,
 			speed: 700,
-			opacity: 0,
 			onComplete: function() {
 
 				//Registering loading of the narrative in the colorbox
@@ -522,10 +510,10 @@ bubble_fill_color = function(d) {
 	color = d.viewed ? 'dark' : '';
 	color = ''
 	if (d.children) {
-		return yd_settings.ui.system_colors.lightgrey;
+		return yd_settings.ui.system_colors.white;
 	}
 	switch (parseInt(d.position)) {
-		case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
+    case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
 			color += 'darkgrey';
 			break;
 
@@ -536,7 +524,6 @@ bubble_fill_color = function(d) {
 		case yd_settings.constants.NARRATIVE_POSITION_DISAGREE:
 			color += 'blue';
 			break;
-
 		default:
 		  color = 'lightgrey';
 		  break;
@@ -808,7 +795,7 @@ function narrative_player_buttons_initialize()
 			var url = yd_settings.site_url + "ajax/decrement_agrees_disagrees/" + nar_id + "/" + last_concensus;
 			//set last_concensus to an empty string.
 			jQuery(this).removeClass('active btn-primary');
-			
+
 			$.post(url)
 			.done(function(data) {
 				if(last_concensus == "Agree")
@@ -839,12 +826,12 @@ function narrative_player_buttons_initialize()
 		jQuery(".progress-bar progress-bar-success").width(new_agrees);
 		jQuery(".progress-bar progress-bar-danger").width(new_disagrees);
 	}
-	
+
 	function fade_in_success_message(input)
 	{
 		jQuery(".success-message").text(input).fadeIn();
 	}
-	
+
 	function fade_out_success_message()
 	{
 		jQuery(".success-message").fadeOut();
