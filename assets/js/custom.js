@@ -458,6 +458,12 @@ function narrative_bind_player(svgselect) {
 			},
 			onClosed: function() {
 				clearInterval(image_update_timer);
+
+				// Modify address bar without reloading page
+				// See https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history
+				// FIXME HTML5 ONLY
+				var stateObj = {};
+				history.pushState(stateObj, "Home", yd_settings.site_url);
 			}
 		});
 		//increment the number of views in the database
