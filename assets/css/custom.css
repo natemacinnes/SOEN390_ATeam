@@ -374,3 +374,45 @@ span.grey { color: #808080}
   text-align: right;
   padding-right: 0.5em;
 }
+
+/* To change position of close button to Top Right Corner */
+/*#colorbox #cboxClose
+{
+	top: 0;
+	right: 0;
+}
+#cboxLoadedContent{
+	margin-top:28px;
+	margin-bottom:0;
+}
+*/
+
+#cboxLoadingOverlay {
+	background: #fff;
+}
+
+#cboxLoadingGraphic {
+	background: url('../colorbox-master/example4/images/loading.gif') no-repeat center center;
+}
+
+#cboxContent {
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	overflow: hidden;
+	background: #fff;
+}
+
+#cboxLoadedContent {
+	background: #ffffff;
+	padding: 2em;
+}
+
+#cboxClose {
+	right: 3px;
+	top: 1px;
+}
+
+.narrative-report-wrapper {
+	position: relative;
+	top: 2em;
+}
