@@ -137,14 +137,17 @@ body {
 	padding-left: 0.1em;
 }
 
+div.purple{ background: #743CBC; }
+div.lightgrey{ background: #777777; }
+div.lightblue{ background: #4282D3; }
 span.red { color: #c23b22; /*#D9534F;*/}
 span.green { color: #03c03c; /*#5CB85C; */}
 span.blue { color: #0198e1; }
 span.yellow { color: #ffbf00; }
 span.grey { color: #808080; }
-.purple{ background: #743CBC; }
-.lightgrey{ background: #777777; }
-.lightblue{ background: #4282D3; }
+span.ltgrey { color: #A0A0A0; }
+span.purple { color: #9E76D0; }
+span.lightblue { color: #7BA7E0; }
 
 /*****************************************************************************
 
@@ -169,7 +172,7 @@ span.grey { color: #808080; }
 }
 
 #page-header-you {
-	color: white; text-shadow: 1px 1px #000000, -1px -1px #000000;
+	/*color: white; text-shadow: 1px 1px #000000, -1px -1px #000000;*/
 }
 
 #homepage-content-wrapper {
