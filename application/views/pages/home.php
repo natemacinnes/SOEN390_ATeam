@@ -17,23 +17,16 @@
       <div class="btn-group btn-group-horizontal sort-container">
         <a href="#age" title="Recent narratives / Nouvelles discussions" class="btn btn-default disabled" role="button" data-toggle="tooltip" data-placement="top" data-container="body">Filter by / filtr&eacute; par: </a>
         <a href="#age" title="Most recent / Plus r&eacute;cent" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="glyphicon glyphicon-time"></span></a>
-        <!--
-        <a href="#popular" title="Agreed narratives&#013;Discussions approuv&eacute;es" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body">
-          <span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span> /
-          <span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span>
-          Popular / Populaire
-        </a>
-        -->
         <a href="#agrees" title="Most agreed / Plus d'accords" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span></a>
         <a href="#disagrees" title="Most disagreed / Plus de d&eacute;saccords" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span></a>
-        <a href="#history" title="Watched / Discussions vue" class="btn btn-default active" role="button" data-toggle="tooltip" data-placement="top" data-container="body">
-          <span class="glyphicon glyphicon-map-marker"></span>
-        </a>
+        <a href="#history" title="Watched / Discussions vue" class="btn btn-default active" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="glyphicon glyphicon-map-marker"></span></a>
       </div>
+
       <div class="btn-group btn-group-horizontal filter-container">
         <a href="en" title="English / Anglais" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="flagicon flagicon-en"></span> EN</a>
         <a href="fr" title="French / Fran&ccedil;ais" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="flagicon flagicon-fr"></span> FR</a>
       </div>
+
       <div class="help-container">
         <!--<a href=blah class="btn btn-default colorbox"><a href="www.youtube.com" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help colorbox"><span class="glyphicon glyphicon-question-sign"></span></a>
         -->
