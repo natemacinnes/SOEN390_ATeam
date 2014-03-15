@@ -27,7 +27,7 @@ jQuery(document).ready(function() {
 			purple: '#743CBC',
 			darkpurple: '#452470',
 			yellow: '#FFFF00',
-      white: '#FFFFFF'
+			white: '#FFFFFF'
 		},
 		// glyphicons are a font, so to update this create a span glyphicon,
 		// inspect its CSS to get the UTF-8 escape code. Next, use character
@@ -55,7 +55,7 @@ jQuery(document).ready(function() {
 	narrative_player_load();
 
 	jQuery('audio,video').not('.player-processed').addClass('player-processed').each(function() {
-	  jQuery(this).mediaelementplayer({
+		jQuery(this).mediaelementplayer({
 		// the order of controls you want on the control bar (and other plugins below)
 			features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume'],
 			// show framecount in timecode (##:00:00:00)
@@ -93,18 +93,18 @@ jQuery(document).ready(function() {
 });
 
 /**
-*	Method that gets called when the user mentionned a specific narrative to be played (bookmark or other)
+* Method that gets called when the user mentionned a specific narrative to be played (bookmark or other)
 */
 function initiate_player(id)
 {
 	//Creating click event
 	var evt = document.createEvent("MouseEvents");
-    evt.initMouseEvent("click", true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+		evt.initMouseEvent("click", true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
 
-    //If the element exist, simulate click
-    var narrative = document.getElementById("narrative-" + id);
-    if(narrative != null)
-    {
+		//If the element exist, simulate click
+		var narrative = document.getElementById("narrative-" + id);
+		if(narrative != null)
+		{
 		narrative.dispatchEvent(evt);
 	}
 }
@@ -135,6 +135,29 @@ function narrative_display_initialize() {
 }
 
 /**
+ * Accessor compatible .map() to determine non-normalized value from data object
+ */
+function narrative_bubble_value(d, i) {
+	return parseInt(d.agrees) + parseInt(d.disagrees);
+}
+
+/**
+ * Normalization puts all entries in a range of 0 - 1, then multiplies by a
+ * factor to achieve a scaled version. A common base is added to all results.
+ */
+function narrative_bubbles_standardize(data, factor, base) {
+	var min = d3.min(data.children, narrative_bubble_value);
+	var max = d3.max(data.children, narrative_bubble_value);
+	var diff = max - min;
+
+	data.children.forEach(function(d, i) {
+		d.value = (narrative_bubble_value(d, i) - min) / diff;
+		d.value *= factor;
+		d.value += base;
+	});
+}
+
+/**
  * Loads bubbles for the indicated language & position.
  */
 function narrative_bubbles_load(position) {
@@ -157,10 +180,12 @@ function narrative_bubbles_load(position) {
 	var color = d3.scale.category20c();
 
 	// Accepts nodes and computes the position of them for use by .data()
+	// normally we'd set .value() to an inline function with some formula, but
+	// we're using d.value as precalculated by the standardization function.
 	var pack = d3.layout.pack()
 		.sort(null)
 		.size([width, height])
-		.value(function(d) { return d.agrees + d.disagrees; })
+		.value(function(d) { return d.value; })
 		.padding(5);
 
 	// Create the SVG bubble structure
@@ -172,6 +197,9 @@ function narrative_bubbles_load(position) {
 	// Retrieve JSON from AJAX controller, but only once upon initial load
 	d3.json(url, function(error, data) {
 		console.log('creating bubbles for SVG ' + svgselect);
+
+		// Sets the d.value attribute to something normalized
+		narrative_bubbles_standardize(data, 250, 25);
 
 		// Select elements, even if they do not exist yet. enter() creates them and
 		// appends them to the selection object. Then, we operate on them.
@@ -435,7 +463,7 @@ function narrative_bind_player(svgselect) {
 		// TODO: disabled for now
 		// Only allow popup if (a) narrative matches filter or (b) is in history bar
 		//if (! (narrative_matches_filter(this.__data__) || jQuery(this).attr('id').indexOf('history-') === 0)) {
-		//	return false;
+		//  return false;
 		//}
 
 		// Call method to add narrative to history
@@ -528,7 +556,7 @@ bubble_fill_color = function(d) {
 		return yd_settings.ui.system_colors.white;
 	}
 	switch (parseInt(d.position)) {
-    case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
+		case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
 			color += 'darkgrey';
 			break;
 
@@ -540,8 +568,8 @@ bubble_fill_color = function(d) {
 			color += 'blue';
 			break;
 		default:
-		  color = 'lightgrey';
-		  break;
+			color = 'lightgrey';
+			break;
 	}
 	return yd_settings.ui.system_colors[color];
 }
@@ -709,18 +737,18 @@ function initialize_commenting() {
 		function(){
 			jQuery(this).children(".actions").children().stop().fadeOut("fast");
 		});
-	
+
 	/*Post comment upon clicking enter
 	 *Kinda Hacky*/
-	jQuery('.comments-container #new-comment-form .form-control').keypress(function (e) 
+	jQuery('.comments-container #new-comment-form .form-control').keypress(function (e)
 	{
 		var key = e.which;
 		if(key == 13)  // the enter key code
 		{
 			jQuery(this).siblings('.action-comment-post').click();
-			return false;  
+			return false;
 		}
-	}); 
+	});
 }
 
 /**
@@ -742,7 +770,7 @@ function narrative_player_buttons_initialize()
 
 	//Handle bookmarking of narrative
 	jQuery(".bookmark-btn").click(function() {
-		  add_bookmark();
+			add_bookmark();
 	});
 
 	//local var to decide agree/disagree
