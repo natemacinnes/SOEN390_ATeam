@@ -47,7 +47,7 @@
       <div class="panel-heading">Click a bubble to play a narrative / ...</div>
     <!-- this sets the background color (must match recent-container) -->
       <div id="homepage-content-wrapper" class="clearfix panel-body">
-        <div id="bubble-container" class="float-left">
+        <div id="bubble-container">
           <div class="svg-container svg-container-1 float-left"></div>
           <div class="svg-container svg-container-0 float-left"></div>
           <div class="svg-container svg-container-2 float-left"></div>
@@ -55,7 +55,19 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel panel-default float-left" id="legend-wrapper">
+      <div class="panel-heading">Legend / ...</div>
+      <div class="panel-body legend-content">
+        <p>
+          Narratives / Narratifs:<br/>
+          <div class="legend-circle purple display-inline-block"></div> For / Pour<br/>
+          <div class="legend-circle lightgrey display-inline-block"></div> Neutral / Neutre<br/>
+          <div class="legend-circle lightblue display-inline-block"></div> Against / Contre
+        </p>
+      </div>
+    </div>
+
+    <div class="panel panel-default float-right" id="recent-wrapper">
       <div class="panel-heading">History / ...</div>
       <div class="panel-body">
         <div id="recent-container">
@@ -63,7 +75,7 @@
         </div>
       </div>
     </div>
-
     <div class="clear"></div>
+
   </div>
 </div>

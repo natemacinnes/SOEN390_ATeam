@@ -46,9 +46,9 @@ body {
 	 background: #fcfcfc;
 }
 
-@media only screen and (min-width: 1650px) {
+@media only screen and (min-width: 1350px) {
 	.container {
-		width: 1620px;
+		width: 1320px;
 	}
 }
 
@@ -141,7 +141,10 @@ span.red { color: #c23b22; /*#D9534F;*/}
 span.green { color: #03c03c; /*#5CB85C; */}
 span.blue { color: #0198e1; }
 span.yellow { color: #ffbf00; }
-span.grey { color: #808080}
+span.grey { color: #808080; }
+.purple{ background: #743CBC; }
+.lightgrey{ background: #777777; }
+.lightblue{ background: #4282D3; }
 
 /*****************************************************************************
 
@@ -201,6 +204,22 @@ span.grey { color: #808080}
 
 #recent-container .svg-container {
   overflow-x: scroll;
+}
+
+#legend-wrapper{
+	width: 30%;
+}
+
+#recent-wrapper{
+	width: 68%;
+}
+
+.legend-circle {
+	border-radius: 50%;
+	width: 15px;
+	height: 15px;
+	opacity: 0.7;
+	/* width and height can be anything, as long as they're equal */
 }
 
 .controls-container .btn{ box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05); }
