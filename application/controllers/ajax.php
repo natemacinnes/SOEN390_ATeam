@@ -142,21 +142,13 @@ class Ajax extends YD_Controller
 	}
 
 	/**
-	 * Increment the agree/disagree of a narrative.
-	 */
-	public function toggle_concensus($incrementing, $decrementing, $narrative_id)
-	{
-		$this->narrative_model->toggle($incrementing, $decrementing, $narrative_id);
-	}
-	
-	/**
 	 * Increment the agree, decrement the disagree of a narrative.
 	 */
 	 public function toggle_agree_to_disagree($narrative_id)
 	 {
 		$this->narrative_model->increment_disagree_decrement_agree($narrative_id);
 	 }
-	 
+
 	/**
 	 * Increment the disagree, decrement the agree of a narrative.
 	 */
