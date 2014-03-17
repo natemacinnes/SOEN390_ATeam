@@ -709,23 +709,6 @@ function narrative_player_buttons_initialize()
 		  add_bookmark();
 	});
 
-	jQuery(".share-btn").click
-	(
-		function()
-		{
-			console.log('Loading doc');
-			var url = yd_settings.site_url + "ajax/share";
-			jQuery.post(url)
-				.done
-				(
-					function(data)
-					{
-						document.getElementById('sharebox').innerHTML = data;
-					}
-				);
-		}
-	);
-
 	//local var to decide agree/disagree
 	var last_concensus = "";
 	//get narrative ID
