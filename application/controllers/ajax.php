@@ -202,4 +202,12 @@ class Ajax extends YD_Controller
 			unset($_SESSION['history']);
 		}
 	}
+
+	/**
+	*	Displaying the share page in the colorbox
+	*/
+	public function share()
+	{
+		$this->load->view('embedded/share.php');
+	}
 }

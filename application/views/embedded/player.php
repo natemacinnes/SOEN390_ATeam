@@ -39,7 +39,7 @@
 				<div class="float-left">
 					<div class="btn-group">
 						<a href="#" class="btn btn-default bookmark-btn">Bookmark <span class="yellow glyphicon glyphicon-bookmark"></span></a>
-						<a href="#" class="btn btn-default">Share <span class="blue glyphicon glyphicon-user"></span></a>
+						<a href="#" class="btn btn-default share-btn">Share <span class="blue glyphicon glyphicon-user"></span></a>
 					</div>
 				</div>
 				<div class="float-right">
@@ -48,6 +48,8 @@
 						<a href="#" class="btn btn-default">Disagree <span class="red glyphicon glyphicon-thumbs-down"></span></a>
 					</div>
 				</div>
+				<div class="clear"></div>
+				<div id="sharebox"></div>
 				<div class="clear"></div>
 			</div>
 		</div>
