@@ -499,6 +499,8 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 * @covers Narrative_Model::toggle
 	 */
 	function test__toggle() {
+		$this->markTestSkipped('This test case needs to be re-factored; the original method no longer exists.');
+		return;
 		$narrative_id = 1;
 	 	$old = $this->CI->narrative_model->get($narrative_id);
 		$this->CI->narrative_model->toggle('agrees', 'disagrees', $narrative_id);

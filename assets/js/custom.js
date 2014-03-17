@@ -9,14 +9,14 @@ jQuery(document).ready(function() {
 	yd_settings.ui = {
 		filters: {},
 		transition_duration: 700,
-		ring_inner_radius: 0.8,
+		ring_inner_radius: 0.85,
 		filtered_opacity: 0.2,
 		bubble_fill_normal_mask: 0.5,
 		bubble_fill_hover_mask: 0.8,
 		system_colors: {
-			green: '#009933',
+			green: '#5CB85C',
 			darkgreen: '#007a28',
-			red: '#CC0000',
+			red: '#D9534F',
 			darkred: '#a30000',
 			lightgrey: '#CFCFCF',
 			grey: '#eeeeee',
@@ -26,7 +26,8 @@ jQuery(document).ready(function() {
 			darkblue: '#274e7e',
 			purple: '#743CBC',
 			darkpurple: '#452470',
-			yellow: '#FFFF00'
+			yellow: '#FFFF00',
+			white: '#FFFFFF'
 		},
 		// glyphicons are a font, so to update this create a span glyphicon,
 		// inspect its CSS to get the UTF-8 escape code. Next, use character
@@ -54,7 +55,7 @@ jQuery(document).ready(function() {
 	narrative_player_load();
 
 	jQuery('audio,video').not('.player-processed').addClass('player-processed').each(function() {
-	  jQuery(this).mediaelementplayer({
+		jQuery(this).mediaelementplayer({
 		// the order of controls you want on the control bar (and other plugins below)
 			features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume'],
 			// show framecount in timecode (##:00:00:00)
@@ -68,7 +69,7 @@ jQuery(document).ready(function() {
 		jQuery('.filter-container.btn-group a').not(this).removeClass('active');
 		yd_settings.ui.filters.language = jQuery('.filter-container.btn-group a.active').attr('href');
 		return false;
-	});
+	}).tooltip();
 
 	// This design pattern uses CSS classes to ensure that items aren't processed
 	// twice by the same callback handler. It allows new DOM elements to be bound,
@@ -88,8 +89,25 @@ jQuery(document).ready(function() {
 		var filter = jQuery(this).attr('href').substring(1)
 		yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		return false;
-	});
+	}).tooltip();
 });
+
+/**
+* Method that gets called when the user mentionned a specific narrative to be played (bookmark or other)
+*/
+function initiate_player(id)
+{
+	//Creating click event
+	var evt = document.createEvent("MouseEvents");
+		evt.initMouseEvent("click", true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+
+		//If the element exist, simulate click
+		var narrative = document.getElementById("narrative-" + id);
+		if(narrative != null)
+		{
+		narrative.dispatchEvent(evt);
+	}
+}
 
 /**
  * Binds a colorbox callback to links with a 'colorbox' class. Result is magic
@@ -117,6 +135,29 @@ function narrative_display_initialize() {
 }
 
 /**
+ * Accessor compatible .map() to determine non-normalized value from data object
+ */
+function narrative_bubble_value(d, i) {
+	return parseInt(d.agrees) + parseInt(d.disagrees);
+}
+
+/**
+ * Normalization puts all entries in a range of 0 - 1, then multiplies by a
+ * factor to achieve a scaled version. A common base is added to all results.
+ */
+function narrative_bubbles_standardize(data, factor, base) {
+	var min = d3.min(data.children, narrative_bubble_value);
+	var max = d3.max(data.children, narrative_bubble_value);
+	var diff = max - min;
+
+	data.children.forEach(function(d, i) {
+		d.value = (narrative_bubble_value(d, i) - min) / diff;
+		d.value *= factor;
+		d.value += base;
+	});
+}
+
+/**
  * Loads bubbles for the indicated language & position.
  */
 function narrative_bubbles_load(position) {
@@ -139,10 +180,12 @@ function narrative_bubbles_load(position) {
 	var color = d3.scale.category20c();
 
 	// Accepts nodes and computes the position of them for use by .data()
+	// normally we'd set .value() to an inline function with some formula, but
+	// we're using d.value as precalculated by the standardization function.
 	var pack = d3.layout.pack()
 		.sort(null)
 		.size([width, height])
-		.value(function(d) { return d.agrees + d.disagrees; })
+		.value(function(d) { return d.value; })
 		.padding(5);
 
 	// Create the SVG bubble structure
@@ -154,6 +197,9 @@ function narrative_bubbles_load(position) {
 	// Retrieve JSON from AJAX controller, but only once upon initial load
 	d3.json(url, function(error, data) {
 		console.log('creating bubbles for SVG ' + svgselect);
+
+		// Sets the d.value attribute to something normalized
+		narrative_bubbles_standardize(data, 250, 25);
 
 		// Select elements, even if they do not exist yet. enter() creates them and
 		// appends them to the selection object. Then, we operate on them.
@@ -168,12 +214,12 @@ function narrative_bubbles_load(position) {
 				// ^ the root g container is transformed, so for all children x and y is
 				//   relative to 0
 
-		var positionLabel = svg.append('text')
+		/*var positionLabel = svg.append('text')
 			.attr("dx", width/2)
 			.attr("dy", 25)
 			.style("text-anchor", "middle")
 			.style("font-size", "2em")
-			.text(position_label_text(position));
+			.text(position_label_text(position));*/
 
 		narrative_draw_bubbles(vis);
 		narrative_bind_player(svgselect);
@@ -277,7 +323,7 @@ function narrative_draw_bubbles(vis) {
 		// This computes the SVG path data required to form an arc.
 	var arc = d3.svg.arc()
 		.outerRadius(function(d) { return d.r; })
-		.innerRadius(function(d) { return d.r*yd_settings.ui.ring_inner_radius; });
+		.innerRadius(function(d) { return  d.r*yd_settings.ui.ring_inner_radius; });
 
 	// One SVG g container per pie chart slice
 	var arcs = vis.selectAll("g.slice")
@@ -417,7 +463,7 @@ function narrative_bind_player(svgselect) {
 		// TODO: disabled for now
 		// Only allow popup if (a) narrative matches filter or (b) is in history bar
 		//if (! (narrative_matches_filter(this.__data__) || jQuery(this).attr('id').indexOf('history-') === 0)) {
-		//	return false;
+		//  return false;
 		//}
 
 		// Call method to add narrative to history
@@ -445,9 +491,7 @@ function narrative_bind_player(svgselect) {
 		var image_update_timer;
 		var colorbox = jQuery.colorbox({
 			href: yd_settings.site_url + narrative_url,
-			left: 0,
 			speed: 700,
-			opacity: 0,
 			onComplete: function() {
 
 				//Registering loading of the narrative in the colorbox
@@ -509,7 +553,7 @@ bubble_fill_color = function(d) {
 	color = d.viewed ? 'dark' : '';
 	color = ''
 	if (d.children) {
-		return yd_settings.ui.system_colors.lightgrey;
+		return yd_settings.ui.system_colors.white;
 	}
 	switch (parseInt(d.position)) {
 		case yd_settings.constants.NARRATIVE_POSITION_NEUTRAL:
@@ -523,10 +567,9 @@ bubble_fill_color = function(d) {
 		case yd_settings.constants.NARRATIVE_POSITION_DISAGREE:
 			color += 'blue';
 			break;
-
 		default:
-		  color = 'lightgrey';
-		  break;
+			color = 'lightgrey';
+			break;
 	}
 	return yd_settings.ui.system_colors[color];
 }
@@ -685,6 +728,27 @@ function initialize_commenting() {
 				alert("An error occurred while reporting the comment. Please try again.");
 			});
 	});
+
+	//show reply and flag on hover
+	jQuery(".comments-wrapper .comment").hover(
+		function(){
+			jQuery(this).children(".actions").children().stop().fadeIn("fast");
+		},
+		function(){
+			jQuery(this).children(".actions").children().stop().fadeOut("fast");
+		});
+
+	/*Post comment upon clicking enter
+	 *Kinda Hacky*/
+	jQuery('.comments-container #new-comment-form .form-control').keypress(function (e)
+	{
+		var key = e.which;
+		if(key == 13)  // the enter key code
+		{
+			jQuery(this).siblings('.action-comment-post').click();
+			return false;
+		}
+	});
 }
 
 /**
@@ -706,7 +770,7 @@ function narrative_player_buttons_initialize()
 
 	//Handle bookmarking of narrative
 	jQuery(".bookmark-btn").click(function() {
-		  add_bookmark();
+			add_bookmark();
 	});
 
 	//local var to decide agree/disagree
@@ -719,7 +783,11 @@ function narrative_player_buttons_initialize()
 		//Increment the agrees, decrement the disagrees
 		if(last_concensus == "Agree" && jQuery.trim(jQuery(this).text()) == "Disagree")
 		{
-			var url = yd_settings.site_url + "ajax/toggle_concensus/agrees/disagrees/" + nar_id;
+			var url = yd_settings.site_url + "ajax/toggle_agree_to_disagree/" + nar_id;
+			//set the last user choice to disagree
+			last_concensus = jQuery.trim(jQuery(this).text());
+			jQuery(this).toggleClass('active btn-primary');
+			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active btn-primary');
 			jQuery.post(url)
 			.done(function(data) {
 				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) + 1 + " ");
@@ -729,29 +797,24 @@ function narrative_player_buttons_initialize()
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-			//set the last user choice to disagree
-			last_concensus = jQuery.trim(jQuery(this).text());
-			jQuery(this).toggleClass('active');
-			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active');
 		}
 		//Increment the disagrees, decrement the agrees
 		else if(last_concensus == "Disagree" && jQuery.trim(jQuery(this).text()) == "Agree")
 		{
-			var url = yd_settings.site_url + "ajax/toggle_concensus/disagrees/agrees/" + nar_id;
+			var url = yd_settings.site_url + "ajax/toggle_disagree_to_agree/" + nar_id;
+			//set the last user choice to agree
+			last_concensus = jQuery.trim(jQuery(this).text());
+			jQuery(this).toggleClass('active btn-primary');
+			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active btn-primary');
 			jQuery.post(url)
 			.done(function(data) {
 				jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) + 1 + " ");
 				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) - 1 + " ");
 				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
-
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-			//set the last user choice to agree
-			last_concensus = jQuery.trim(jQuery(this).text());
-			jQuery(this).toggleClass('active');
-			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active');
 		}
 		//Increment the disagrees or agrees
 		else if(last_concensus == "")
@@ -759,35 +822,53 @@ function narrative_player_buttons_initialize()
 			//set last_concensus according to the button pressed (agree/disagree)
 			last_concensus = jQuery.trim(jQuery(this).text());
 			var url = yd_settings.site_url + "ajax/increment_agrees_disagrees/" + nar_id + "/" + last_concensus;
+			jQuery(this).toggleClass('active btn-primary');
+			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active btn-primary');
 			jQuery.post(url)
 			.done(function(data) {
-				jQuery(".player-stats .float-right ." + data + ".text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right ." + data + ".text").text())) + 1 + " ");
+				if(last_concensus == "Agree")
+				{
+					jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) + 1 + " ");
+				}
+				else if(last_concensus == "Disagree")
+				{
+					jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) + 1 + " ");
+				}
+				//fade-in and fade-out a message
+				//fade_in_success_message("Your vote has been accepted");
+				//setTimeout(fade_out_success_message, 2000);
 				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-			jQuery(this).toggleClass('active');
-			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active');
 		}
-		//If the user clicks the same button twice, undo voting
 		else if( last_concensus == jQuery.trim(jQuery(this).text()) )
 		{
 			var url = yd_settings.site_url + "ajax/decrement_agrees_disagrees/" + nar_id + "/" + last_concensus;
-			$.post(url)
-			.success(function(data) {
-				jQuery(".player-stats .float-right ." + data + ".text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right ." + data + ".text").text())) - 1 + " ");
-				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
+			//set last_concensus to an empty string.
+			jQuery(this).removeClass('active btn-primary');
 
+			$.post(url)
+			.done(function(data) {
+				if(last_concensus == "Agree")
+				{
+					jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) - 1 + " ");
+				}
+				else if(last_concensus == "Disagree")
+				{
+					jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) - 1 + " ");
+				}
+				//fade-in and fade-out a message
+				//fade_in_success_message("Your vote has been accepted");
+				//setTimeout(fade_out_success_message, 2000);
+				last_concensus = "";
+				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-			//set last_concensus to an empty string.
-			last_concensus = "";
-			jQuery('.player-buttons .float-right .btn-group .btn').removeClass('active');
 		}
-		{}
 	});
 
 	function update_concensus_bar(agrees, disagrees)
@@ -797,6 +878,16 @@ function narrative_player_buttons_initialize()
 		var new_disagrees = Math.round(disagrees/total_votes) * 100;
 		jQuery(".progress-bar progress-bar-success").width(new_agrees);
 		jQuery(".progress-bar progress-bar-danger").width(new_disagrees);
+	}
+
+	function fade_in_success_message(input)
+	{
+		jQuery(".success-message").text(input).fadeIn();
+	}
+
+	function fade_out_success_message()
+	{
+		jQuery(".success-message").fadeOut();
 	}
 }
 

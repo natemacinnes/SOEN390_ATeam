@@ -218,6 +218,8 @@ class Ajax_Test extends CIUnit_TestCase
 	 */
 	 public function test__toggle_concensus__incremental()
 	 {
+	 	$this->markTestSkipped('This test case needs to be re-factored; the original method no longer exists.');
+		return;
 	 	$narrative_id = 1;
 	 	$old = $this->CI->narrative_model->get($narrative_id);
 
