@@ -899,8 +899,10 @@ function narrative_player_buttons_initialize()
 		var current_disagrees = parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text()));
 		var url = "";
 
+		jQuery(".player-buttons .float-right .btn-group .btn").addClass('disabled')
+
 		//Increment the agrees, decrement the disagrees
-		if(last_concensus == "Agree" && jQuery.trim(jQuery(this).text()) == "Disagree")
+		if(last_consensus == "agree" && new_consensus == "disagree")
 		{
 			url = yd_settings.site_url + "ajax/toggle_agree_to_disagree/" + nar_id;
 			current_agrees -= 1;
@@ -942,7 +944,11 @@ function narrative_player_buttons_initialize()
 		// After whatever it was we did, update consensus
 		jQuery.post(url)
 			.done(function(data) {
-				jQuery(".player-buttons .float-right .btn-group .btn").not(clicked).removeClass('active btn-primary');
+				jQuery(".player-buttons .float-right .btn-group .btn")
+					.removeClass('disabled')
+					.not(clicked)
+					.removeClass('active btn-primary');
+
 				jQuery(clicked).toggleClass('active btn-primary');
 
 				last_consensus = "";
