@@ -37,7 +37,7 @@ class Admin extends YD_Controller
 	public function dashboard()
 	{
 		$this->require_login();
-		
+
 		$this->view_wrapper('admin/dashboard');
 	}
 
@@ -100,7 +100,7 @@ class Admin extends YD_Controller
 	/**
 	 * Displays a list of all narratives on the portal with management links.
 	 */
-	public function narratives($sort_by = "id", $sort_order = "asc", $offset = 0)
+	public function narratives($sort_by = "id", $sort_order = "desc", $offset = 0)
 	{
 		$this->require_login();
 
@@ -139,7 +139,7 @@ class Admin extends YD_Controller
 	/**
 	 * The default method called, if none is provided.
 	 */
-	public function comments($sort_by = "id", $sort_order = "asc", $offset = 0, $narrative_id = NULL)
+	public function comments($sort_by = "id", $sort_order = "desc", $offset = 0, $narrative_id = NULL)
 	{
 		$this->require_login();
 

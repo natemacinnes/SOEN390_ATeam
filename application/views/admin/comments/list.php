@@ -24,13 +24,13 @@
   <table class="table table-hover">
     <thead>
       <tr>
-        <th><a href="<?php echo site_url("admin/comments/narrative/" . ($sort_order == "asc" && $sort_by == "narrative" ? "desc" : "asc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "narrative") ? " active $sort_order" : ""; ?>">Narrative ID</a></th>
-        <th><a href="<?php echo site_url("admin/comments/id/" . ($sort_order == "asc" && $sort_by == "id" ? "desc" : "asc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "id") ? " active $sort_order" : ""; ?>">Comment ID</a></th>
-        <th><a href="<?php echo site_url("admin/comments/parent/" . ($sort_order == "asc" && $sort_by == "parent" ? "desc" : "asc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "parent") ? " active $sort_order" : ""; ?>">Parent ID</a></th>
+        <th><a href="<?php echo site_url("admin/comments/narrative/" . ($sort_order == "desc" && $sort_by == "narrative" ? "asc" : "desc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "narrative") ? " active $sort_order" : ""; ?>">Narrative ID</a></th>
+        <th><a href="<?php echo site_url("admin/comments/id/" . ($sort_order == "desc" && $sort_by == "id" ? "asc" : "desc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "id") ? " active $sort_order" : ""; ?>">Comment ID</a></th>
+        <th><a href="<?php echo site_url("admin/comments/parent/" . ($sort_order == "desc" && $sort_by == "parent" ? "asc" : "desc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "parent") ? " active $sort_order" : ""; ?>">Parent ID</a></th>
         <th>Content</th>
-        <th><a href="<?php echo site_url("admin/comments/created/" . ($sort_order == "asc" && $sort_by == "created" ? "desc" : "asc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "created") ? " active $sort_order" : ""; ?>">Created</a></th>
-        <th><a href="<?php echo site_url("admin/comments/flags/" . ($sort_order == "asc" && $sort_by == "flags" ? "desc" : "asc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "flags") ? " active $sort_order" : ""; ?>">Flags</a></th>
-        <th><a href="<?php echo site_url("admin/comments/status/" . ($sort_order == "asc" && $sort_by == "status" ? "desc" : "asc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "status") ? " active $sort_order" : ""; ?>">Status</a></th>
+        <th><a href="<?php echo site_url("admin/comments/created/" . ($sort_order == "desc" && $sort_by == "created" ? "asc" : "desc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "created") ? " active $sort_order" : ""; ?>">Created</a></th>
+        <th><a href="<?php echo site_url("admin/comments/flags/" . ($sort_order == "desc" && $sort_by == "flags" ? "asc" : "desc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "flags") ? " active $sort_order" : ""; ?>">Flags</a></th>
+        <th><a href="<?php echo site_url("admin/comments/status/" . ($sort_order == "desc" && $sort_by == "status" ? "asc" : "desc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "status") ? " active $sort_order" : ""; ?>">Status</a></th>
         <th>Actions</th>
       </tr>
     </thead>
