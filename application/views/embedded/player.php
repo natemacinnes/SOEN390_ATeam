@@ -44,8 +44,8 @@ if (file_exists($path)):
 
 			<div class="float-right">
 				<div class="btn-group">
-					<a href="#" class="btn btn-default">Agree <span class="green glyphicon glyphicon-thumbs-up"></span></a>
-					<a href="#" class="btn btn-default">Disagree <span class="red glyphicon glyphicon-thumbs-down"></span></a>
+					<a href="#agree" class="btn btn-default">Agree <span class="green glyphicon glyphicon-thumbs-up"></span></a>
+					<a href="#disagree" class="btn btn-default">Disagree <span class="red glyphicon glyphicon-thumbs-down"></span></a>
 				</div>
 			</div>
 			<div class="clear"></div>

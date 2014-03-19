@@ -96,7 +96,7 @@ class Ajax extends YD_Controller
 	 */
 	public function increment_views($narrative_id)
 	{
-		$this->narrative_model->increment_views($narrative_id);
+		echo $this->narrative_model->increment_views($narrative_id);
 	}
 
 	/**
