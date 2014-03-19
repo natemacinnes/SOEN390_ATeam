@@ -22,11 +22,11 @@ class Ajax extends YD_Controller
 	public function bubbles($position = NULL)
 	{
 		$data = array();
-		if($position == 0)
+		if ($position == 0)
 			$data['name'] = 'Neutral / Ambivalent';
-		else if($position == 1)
+		else if ($position == 1)
 			$data['name'] = 'For / Pour';
-		else if($position == 2)
+		else if ($position == 2)
 			$data['name'] = 'Against / Contre';
 		// Clusters are groups of nodes
 		$nodes = array();
@@ -104,12 +104,12 @@ class Ajax extends YD_Controller
 	 */
 	public function increment_agrees_disagrees($narrative_id, $decision)
 	{
-		if($decision == "Agree")
+		if ($decision == "agree")
 		{
 			$this->narrative_model->toggle_agrees($narrative_id, "+");
 			echo "green";
 		}
-		else if($decision == "Disagree")
+		else if ($decision == "disagree")
 		{
 			$this->narrative_model->toggle_disagrees($narrative_id, "+");
 			echo "red";
@@ -125,12 +125,12 @@ class Ajax extends YD_Controller
 	 */
 	public function decrement_agrees_disagrees($narrative_id, $decision)
 	{
-		if($decision == "Agree")
+		if ($decision == "agree")
 		{
 			$this->narrative_model->toggle_agrees($narrative_id, "-");
 			echo "green";
 		}
-		else if($decision == "Disagree")
+		else if ($decision == "disagree")
 		{
 			$this->narrative_model->toggle_disagrees($narrative_id, "-");
 			echo "red";

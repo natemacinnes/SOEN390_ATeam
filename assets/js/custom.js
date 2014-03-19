@@ -267,6 +267,12 @@ function narrative_bubbles_update(svgselect) {
 	var arcs = vis.selectAll('g.slice')
 		.data(narrative_data_radiusmapper)
 
+	vis.selectAll('tspan.node-label-agrees')
+		.text(function(d) { return d.agrees; });
+
+	vis.selectAll('tspan.node-label-disagrees')
+		.text(function(d) { return d.disagrees; });
+
 	// Circle fill hover
 	jQuery(svgselect + ' g.node-base').hover(
 		function() { if (narrative_matches_filter(this.__data__)) { jQuery('circle', this).css('opacity', 0.7); }},
@@ -345,6 +351,7 @@ function narrative_draw_bubbles(vis) {
 		.style("text-anchor", "middle")
 		.style("cursor", "pointer");
 	label_agree.append('svg:tspan')
+		.attr('class', 'node-label-agrees')
 		.text(function(d) { return d.agrees; })
 		.style("dominant-baseline", "central")
 	label_agree.append('svg:tspan')
@@ -360,6 +367,7 @@ function narrative_draw_bubbles(vis) {
 		.style("cursor", "pointer")
 		.style("display", function(d) { return null; });
 	label_disagree.append('svg:tspan')
+		.attr('class', 'node-label-disagrees')
 		.text(function(d) { return d.disagrees; })
 		.style("dominant-baseline", "central")
 	label_disagree.append('svg:tspan')
@@ -792,9 +800,6 @@ function narrative_player_buttons_initialize()
 		var url = "";
 
 		// Increment the agrees, decrement the disagrees
-		console.log('last_consensus', last_consensus);
-		console.log('new_consensus', new_consensus);
-
 		if (last_consensus == "agree" && new_consensus == "disagree")
 		{
 			url = yd_settings.site_url + "ajax/toggle_agree_to_disagree/" + nar_id;
@@ -837,6 +842,7 @@ function narrative_player_buttons_initialize()
 		// After whatever it was we did, update consensus
 		jQuery.post(url)
 			.done(function(data) {
+				console.log(url);
 				jQuery(".player-buttons .float-right .btn-group .btn").not(clicked).removeClass('active btn-primary');
 				jQuery(clicked).toggleClass('active btn-primary');
 
@@ -849,6 +855,18 @@ function narrative_player_buttons_initialize()
 				jQuery(".player-stats .float-right .green.text").text(current_agrees + " ");
 				jQuery(".player-stats .float-right .red.text").text(current_disagrees + " ");
 				update_concensus_bar(current_agrees, current_disagrees);
+
+				jQuery('#narrative-' + nar_id)[0].__data__.agrees = current_agrees;
+				jQuery('#narrative-' + nar_id)[0].__data__.disagrees = current_disagrees;
+
+				jQuery('#history-narrative-' + nar_id)[0].__data__.agrees = current_agrees;
+				jQuery('#history-narrative-' + nar_id)[0].__data__.disagrees = current_disagrees;
+
+				var vis = d3.selectAll('.svg-container').selectAll('svg');
+				vis.selectAll('tspan.node-label-agrees')
+					.text(function(d) { return d.agrees; });
+				vis.selectAll('tspan.node-label-disagrees')
+					.text(function(d) { return d.disagrees; });
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
