@@ -36,6 +36,7 @@ class Comments extends YD_Controller
 	      'status' => 1,
 	    );
 			$comment['comment_id'] = $this->comment_model->insert($comment);
+			$comment['created'] = date("Y-m-d h:i:s");
 			$this->load->view('embedded/comment', array('comment' => $comment));
 		}
 		else {

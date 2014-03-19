@@ -790,7 +790,7 @@ function initialize_commenting() {
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
 				jQuery("#new-comment").val('');
-				initialize_commenting();
+				//initialize_commenting();
 			})
 			.fail(function() {
 				alert("An error occurred while adding your comment. Please try again.");
@@ -809,7 +809,7 @@ function initialize_commenting() {
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
 				jQuery("#new-comment").val('');
-				initialize_commenting();
+				//initialize_commenting();
 			})
 			.fail(function() {
 				alert("An error occurred while adding your comment. Please try again.");
@@ -832,7 +832,7 @@ function initialize_commenting() {
 	});
 
 	//show reply and flag on hover
-	jQuery(".comments-wrapper .comment").hover(
+	jQuery(".comment").hover(
 		function(){
 			jQuery(this).children(".actions").children().stop().fadeIn("fast");
 		},
@@ -858,6 +858,8 @@ function initialize_commenting() {
  */
 function narrative_player_buttons_initialize()
 {
+	show_share_url();
+
 	//Handle flagging of narrative
 	jQuery(".action-narrative-report").click(function() {
 		var url = yd_settings.site_url + "player/flag/" + nar_id;
@@ -874,6 +876,11 @@ function narrative_player_buttons_initialize()
 	jQuery(".bookmark-btn").click(function() {
 			add_bookmark();
 	});
+
+	//handle sharing action
+	jQuery(".share-btn").click(function() {
+		show_share_url();
+	})
 
 	//local var to decide agree/disagree
 	var last_consensus = "";
@@ -892,8 +899,8 @@ function narrative_player_buttons_initialize()
 		var current_disagrees = parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text()));
 		var url = "";
 
-		// Increment the agrees, decrement the disagrees
-		if (last_consensus == "agree" && new_consensus == "disagree")
+		//Increment the agrees, decrement the disagrees
+		if(last_concensus == "Agree" && jQuery.trim(jQuery(this).text()) == "Disagree")
 		{
 			url = yd_settings.site_url + "ajax/toggle_agree_to_disagree/" + nar_id;
 			current_agrees -= 1;
@@ -988,4 +995,9 @@ function narrative_player_buttons_initialize()
 function add_bookmark()
 {
 	alert('Please press Control+D to bookmark this page; your browser does not support automatic bookmark creation.');
+}
+
+function show_share_url(){
+	jQuery(".link-content").toggle();
+	jQuery(this).colorbox.resize();
 }

@@ -336,6 +336,10 @@ span.lightblue { color: #7BA7E0; }
 	resize: vertical;
 }
 
+.comments-container{
+
+}
+
 .comments-wrapper {
 	margin-top: 1em;
 	height: 432px;

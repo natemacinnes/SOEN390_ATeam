@@ -16,6 +16,7 @@ if (file_exists($path)):
 		<img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400' >
 		<br />
 		<audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls' class="autoplay"></audio></br>
+		
 		<div class="player-stats">
 			<div class="float-left">
 				<p><span class="glyphicon glyphicon-eye-open"></span> <?php echo $narrative['views']; ?>             <span class="bg-success success-message" style=""></span></p>
@@ -38,7 +39,7 @@ if (file_exists($path)):
 			<div class="float-left">
 				<div class="btn-group">
 					<a href="#" class="btn btn-default bookmark-btn">Bookmark <span class="yellow glyphicon glyphicon-bookmark"></span></a>
-					<a href="#" class="btn btn-default">Share <span class="blue glyphicon glyphicon-user"></span></a>
+					<a href="#" class="btn btn-default share-btn">Share <span class="blue glyphicon glyphicon-user"></span></a>
 				</div>
 			</div>
 
@@ -49,6 +50,16 @@ if (file_exists($path)):
 				</div>
 			</div>
 			<div class="clear"></div>
+		</div>
+
+		<div class="share-link">
+			<div class="link-content" style="display: hidden;">
+				<div class="input-group" style="width: 404px;">
+				  <span class="input-group-addon"><span class="glyphicon glyphicon-link"></span></span>
+				  <input type="text" class="form-control"/ value="URL">
+				  <span class="input-group-addon"><a href="#">send</a></span>
+				</div>
+			</div>
 		</div>
 	</div>
 <?php else: ?>
