@@ -500,8 +500,14 @@ function narrative_bind_player(svgselect) {
 				narrative_player_load();
 				jQuery(this).colorbox.resize();
 			},
-			onClosed: function() {
+			onCleanup: function() {
 				clearInterval(image_update_timer);
+
+				// Cleanup MediaElement player - ensures audio stops playing if it
+				// loaded a hidden plug-in for compatibility shim
+				$("#colorbox audio,#colorbox video").data('mediaelementplayer').remove();
+			},
+			onClosed: function() {
 
 				// Modify address bar without reloading page
 				// See https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history
