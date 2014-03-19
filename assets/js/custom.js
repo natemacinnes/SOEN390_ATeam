@@ -351,7 +351,7 @@ function narrative_draw_bubbles(vis) {
 		.text(yd_settings.ui.glyphicon_map.agrees)
 		.attr('dx', '0.3em')
 		.style("dominant-baseline", "central")
-		.style('font-family', "'Glyphicons Halflings")
+		.style("font-family", "'Glyphicons Halflings'")
 		.style('fill', yd_settings.ui.system_colors.green);
 
 	var label_disagree = vis.filter(function(d, i) { return !d.children && d.r > 35 }).append("text")
@@ -366,7 +366,7 @@ function narrative_draw_bubbles(vis) {
 		.text(yd_settings.ui.glyphicon_map.disagrees)
 		.attr('dx', '0.3em')
 		.style("dominant-baseline", "central")
-		.style('font-family', "'Glyphicons Halflings")
+		.style('font-family', "'Glyphicons Halflings'")
 		.style('fill', yd_settings.ui.system_colors.red);
 }
 
