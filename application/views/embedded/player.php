@@ -55,6 +55,3 @@ if (file_exists($path)):
 	<p>Narrative does not exist.</p>
 <?php endif; ?>
 
-<script type="text/javascript">
-	narrative_player_buttons_initialize();
-</script>

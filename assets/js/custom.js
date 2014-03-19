@@ -553,6 +553,7 @@ function narrative_bind_player(svgselect) {
 				_gaq.push(['_trackPageview', narrative_url]);
 
 				narrative_player_load();
+				narrative_player_buttons_initialize();
 				jQuery(this).colorbox.resize();
 			},
 			onCleanup: function() {
@@ -688,7 +689,7 @@ function narrative_matches_filter(d) {
  * Loads the narrative player once the popup page with audio is ready.
  */
 function narrative_player_load() {
-	var player_wrappers = jQuery('.player-wrapper').not('player-processed')
+	var player_wrappers = jQuery('.player-wrapper').not('player-processed');
 	if (player_wrappers.length) {
 		player_wrappers.addClass('player-processed')
 		jQuery('audio,video', player_wrappers).mediaelementplayer({
@@ -842,7 +843,12 @@ function narrative_player_buttons_initialize()
 	//local var to decide agree/disagree
 	var last_consensus = "";
 	//get narrative ID
-	var nar_id = jQuery(".player-wrapper").attr('id').substring(10);
+	var player_wrappers = jQuery(".player-wrapper");
+	if (!player_wrappers.length)
+	{
+		return;
+	}
+	var nar_id = player_wrappers.attr('id').substring(10);
 	//If agree or disagree button is pressed
 	jQuery(".player-buttons .float-right .btn-group .btn").click(function() {
 		var clicked = this;
