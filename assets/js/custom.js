@@ -8,6 +8,7 @@ String.prototype.repeat = function(num) {
 jQuery(document).ready(function() {
 	yd_settings.ui = {
 		filters: {},
+		bubble_text_radius_cutoff: 35,
 		transition_duration: 700,
 		ring_inner_radius: 0.85,
 		filtered_opacity: 0.2,
@@ -346,7 +347,7 @@ function narrative_draw_bubbles(vis) {
 
 	// This comes after the paths so that the text doesn't get covered by the
 	// path rendering
-	var label_agree = vis.filter(function(d, i) { return !d.children && d.r > 35 }).append("text")
+	var label_agree = vis.filter(function(d, i) { return !d.children && d.r > yd_settings.ui.bubble_text_radius_cutoff }).append("text")
 		.attr('dy', '-0.6em')
 		.style("text-anchor", "middle")
 		.style("cursor", "pointer");
@@ -361,7 +362,7 @@ function narrative_draw_bubbles(vis) {
 		.style("font-family", "'Glyphicons Halflings'")
 		.style('fill', yd_settings.ui.system_colors.green);
 
-	var label_disagree = vis.filter(function(d, i) { return !d.children && d.r > 35 }).append("text")
+	var label_disagree = vis.filter(function(d, i) { return !d.children && d.r > yd_settings.ui.bubble_text_radius_cutoff }).append("text")
 		.attr('dy', '0.6em')
 		.style("text-anchor", "middle")
 		.style("cursor", "pointer")
