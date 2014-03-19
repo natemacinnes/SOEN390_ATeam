@@ -756,8 +756,6 @@ function initialize_commenting() {
  */
 function narrative_player_buttons_initialize()
 {
-	show_share_url();
-
 	//Handle flagging of narrative
 	jQuery(".action-narrative-report").click(function() {
 		var url = yd_settings.site_url + "player/flag/" + nar_id;
@@ -775,18 +773,13 @@ function narrative_player_buttons_initialize()
 			add_bookmark();
 	});
 
-	//handle sharing action
-	jQuery(".share-btn").click(function() {
-		show_share_url();
-	})
-
 	//local var to decide agree/disagree
 	var last_concensus = "";
 	//get narrative ID
 	var nar_id = jQuery(".page-header small").text();
 	//If agree or disagree button is pressed
 	jQuery(".player-buttons .float-right .btn-group .btn").click(function() {
-
+		alert("hi");
 		//Increment the agrees, decrement the disagrees
 		if(last_concensus == "Agree" && jQuery.trim(jQuery(this).text()) == "Disagree")
 		{
@@ -896,7 +889,7 @@ function narrative_player_buttons_initialize()
 	{
 		jQuery(".success-message").fadeOut();
 	}
-}
+
 
 function add_bookmark()
 {
@@ -933,6 +926,9 @@ function add_bookmark()
 	}
 }
 
-function show_share_url(){
-	jQuery(".link-content").toggle();
+function show_share_url()
+{
+	jQuery(".share-btn").click(function() {
+		jQuery(".link-content").toggle();
+	});
 }
