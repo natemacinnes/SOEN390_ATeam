@@ -456,7 +456,7 @@ function narrative_history_load()
 				if (a_pos == b_pos) {
 					return 0;
 				}
-				return a_pos > b_pos;
+				return a_pos < b_pos ? -1 : 1;
 			}
 			data = new_data.sort(history_sort_func);
 			// End standardization of bubble data
