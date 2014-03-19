@@ -1,4 +1,7 @@
 <div class="comment" id="comment-<?php echo $comment['comment_id'] ?>">
+	<?php if(array_key_exists("parent", $comment)): ?>
+		<p class="quote" id="parent-<?php echo $comment['parent']['id']; ?>"><?php echo $comment['parent']['body']; ?>
+	<?php endif; ?>
 	<p><?php echo $comment['body']; ?></p>
   <div class="pull-left">
 	<span class="grey date">
