@@ -21,10 +21,11 @@ if (typeof String.prototype.endsWith != 'function') {
 jQuery(document).ready(function() {
 	yd_settings.ui = {
 		filters: {},
+		sort: {},
 		bubble_text_radius_cutoff: 35,
 		transition_duration: 700,
 		ring_inner_radius: 0.85,
-		filtered_opacity: 0.2,
+		min_filtered_opacity: 0.10,
 		bubble_fill_normal_mask: 0.5,
 		bubble_fill_hover_mask: 0.8,
 		system_colors: {
@@ -78,10 +79,19 @@ jQuery(document).ready(function() {
 	});
 
 	// Toggle buttons for navigation links
+	jQuery('.language-container.btn-group a').click(function() {
+		jQuery(this).toggleClass('active');
+		jQuery('.language-container.btn-group a').not(this).removeClass('active');
+		yd_settings.ui.filters.language = jQuery('.language-container.btn-group a.active').attr('href').substring(1);;
+		return false;
+	}).tooltip();
+
+	// Toggle buttons for navigation links
 	jQuery('.filter-container.btn-group a').click(function() {
 		jQuery(this).toggleClass('active');
 		jQuery('.filter-container.btn-group a').not(this).removeClass('active');
-		yd_settings.ui.filters.language = jQuery('.filter-container.btn-group a.active').attr('href');
+		var filter = jQuery(this).attr('href').substring(1);
+		yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		return false;
 	}).tooltip();
 
@@ -89,7 +99,8 @@ jQuery(document).ready(function() {
 	// twice by the same callback handler. It allows new DOM elements to be bound,
 	// leaving existing ones untouched.
 	if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
-		jQuery('.sort-container.btn-group a').each(function() {
+		// Initialize filter settings to defaults
+		jQuery('.filter-container.btn-group a').each(function() {
 			var filter = jQuery(this).attr('href').substring(1);
 			yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		});
@@ -100,8 +111,20 @@ jQuery(document).ready(function() {
 	// Radio-like toggle buttons for sort
 	jQuery('.sort-container.btn-group a').click(function () {
 		jQuery(this).toggleClass('active');
-		var filter = jQuery(this).attr('href').substring(1)
-		yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
+		jQuery('.sort-container.btn-group a').not(this).removeClass('active');
+		yd_settings.ui.sort.criteria = jQuery(this).hasClass('active') ? jQuery(this).attr('href').substring(1) : null;
+
+		// If we selected a new criteria, not untoggled
+		if (jQuery(this).hasClass('active')) {
+			var new_data = [];
+			var positions = [yd_settings.constants.NARRATIVE_POSITION_NEUTRAL, yd_settings.constants.NARRATIVE_POSITION_AGREE, yd_settings.constants.NARRATIVE_POSITION_DISAGREE];
+			positions.forEach(function(position, i) {
+				var tmp = jQuery('.svg-container-' + position + ' svg').get(0);
+				new_data = new_data.concat(tmp.__data__.children);
+			});
+			yd_settings.ui.sort.min = d3.min(new_data, narrative_sort_value);
+			yd_settings.ui.sort.max = d3.max(new_data, narrative_sort_value);
+		}
 		return false;
 	}).tooltip();
 });
@@ -153,6 +176,18 @@ function narrative_display_initialize() {
  */
 function narrative_bubble_value(d, i) {
 	return parseInt(d.agrees) + parseInt(d.disagrees);
+}
+
+/**
+ * Accessor compatible .map() to determine non-normalized value from data object
+ */
+function narrative_sort_value(d, i) {
+	if (yd_settings.ui.sort.criteria == 'age') {
+		return date_from_string(d.uploaded);
+	}
+	else {
+		return parseInt(d[yd_settings.ui.sort.criteria]);
+	}
 }
 
 /**
@@ -224,7 +259,7 @@ function narrative_bubbles_load(position) {
 				.attr("class", function(d) { return 'node ' + (!d.children ? 'node-base' : 'node-parent'); })
 				.attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
 				.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
-				.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; });
+				.style("opacity", function(d) { return narrative_matches_filter(d) ? narrative_sort_opacity(d) : yd_settings.ui.min_filtered_opacity; });
 				// ^ the root g container is transformed, so for all children x and y is
 				//   relative to 0
 
@@ -240,13 +275,7 @@ function narrative_bubbles_load(position) {
 		narrative_bubbles_update(svgselect);
 
 		// Toggle buttons for navigation links
-		jQuery('.sort-container.btn-group a').click(function() {
-			narrative_bubbles_update(svgselect);
-			return false;
-		});
-
-		// Toggle buttons for navigation links
-		jQuery('.filter-container.btn-group a').click(function() {
+		jQuery('.controls-container .btn-group a').click(function() {
 			narrative_bubbles_update(svgselect);
 			return false;
 		});
@@ -271,7 +300,7 @@ function narrative_bubbles_update(svgselect) {
 
 	vis.transition().duration(yd_settings.ui.transition_duration)
 		.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
-		.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; });
+		.style("opacity", function(d) { return narrative_matches_filter(d) ? narrative_sort_opacity(d) : yd_settings.ui.min_filtered_opacity; });
 
 	vis.selectAll('circle')
 		.transition().duration(yd_settings.ui.transition_duration)
@@ -536,7 +565,7 @@ function narrative_bind_player(svgselect) {
 		this.__data__.viewed = 1;
 		d3.select(this).select('circle').style("fill", bubble_fill_color);
 		d3.select('#narrative-' + this.__data__.narrative_id)
-			.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; })
+			.style("opacity", function(d) { return narrative_matches_filter(d) ? narrative_sort_opacity(d) : yd_settings.ui.min_filtered_opacity; })
 			.select('circle')
 				.style('fill', bubble_fill_color);
 
@@ -648,29 +677,6 @@ function narrative_matches_filter(d) {
 		return true;
 	}
 
-	var recent = true;
-	if (yd_settings.ui.filters.age) {
-		var today = new Date();
-		today.setDate(today.getDate() - 7);
-		var dateStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-		recent = date_from_string(d.uploaded) > date_from_string(dateStr);
-	}
-
-	var popular = true;
-	if (yd_settings.ui.filters.popular) {
-		popular = d.agrees / Math.max(d.disagrees, 1) > 1.5;
-	}
-
-	var agrees = true;
-	if (yd_settings.ui.filters.agrees) {
-		agrees = d.agrees / Math.max(d.disagrees, 1) > 1.5;
-	}
-
-	var disagrees = true;
-	if (yd_settings.ui.filters.disagrees) {
-		disagrees = d.disagrees / Math.max(d.agrees, 1) > 1.5;
-	}
-
 	var history = true;
 	if (yd_settings.ui.filters.history) {
 		history = !d.viewed;
@@ -682,7 +688,36 @@ function narrative_matches_filter(d) {
 		language = yd_settings.ui.filters.language == d.language.toLowerCase();
 	}
 
-	return language && recent && popular && agrees && disagrees && history;
+	return language && history;
+}
+
+/**
+ * Examines the current filter settings stored in yd_settings and determines if
+ * the provided narrative object matches the filter or not.
+ */
+function narrative_sort_opacity(d) {
+	if (d.children) {
+		return true;
+	}
+
+	factor = 1;
+	if (yd_settings.ui.sort.criteria == 'age') {
+		var min_ms = yd_settings.ui.sort.min.getTime();
+		var max_ms = yd_settings.ui.sort.max.getTime();
+		var current = date_from_string(d.uploaded).getTime();
+		factor = (current - min_ms) / (max_ms - min_ms);
+	}
+	else if (yd_settings.ui.sort.criteria == 'agrees') {
+		factor = (d.agrees - yd_settings.ui.sort.min)/ (yd_settings.ui.sort.max - yd_settings.ui.sort.min)
+	}
+	else if (yd_settings.ui.sort.criteria == 'disagrees') {
+		factor = (d.disagrees - yd_settings.ui.sort.min)/ (yd_settings.ui.sort.max - yd_settings.ui.sort.min)
+	}
+	else {
+		factor = 1;
+	}
+	// Scaling: http://stackoverflow.com/questions/5294955/how-to-scale-down-a-range-of-numbers-with-a-known-min-and-max-value
+	return (1 - yd_settings.ui.min_filtered_opacity) * factor + yd_settings.ui.min_filtered_opacity;
 }
 
 /**
