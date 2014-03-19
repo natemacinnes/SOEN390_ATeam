@@ -560,10 +560,13 @@ function narrative_bind_player(svgselect) {
 
 				// Cleanup MediaElement player - ensures audio stops playing if it
 				// loaded a hidden plug-in for compatibility shim
-				$("#colorbox audio,#colorbox video").data('mediaelementplayer').remove();
+				var player = jQuery("#colorbox audio,#colorbox video")
+				if (player.length && player.data('mediaelementplayer')) {
+					player.data('mediaelementplayer').pause();
+					player.data('mediaelementplayer').remove();
+				}
 			},
 			onClosed: function() {
-
 				// Modify address bar without reloading page
 				// See https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history
 				// FIXME HTML5 ONLY
@@ -889,7 +892,6 @@ function narrative_player_buttons_initialize()
 		// After whatever it was we did, update consensus
 		jQuery.post(url)
 			.done(function(data) {
-				console.log(url);
 				jQuery(".player-buttons .float-right .btn-group .btn").not(clicked).removeClass('active btn-primary');
 				jQuery(clicked).toggleClass('active btn-primary');
 
