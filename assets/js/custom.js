@@ -790,7 +790,7 @@ function initialize_commenting() {
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
 				jQuery("#new-comment").val('');
-				//initialize_commenting();
+				initialize_commenting();
 			})
 			.fail(function() {
 				alert("An error occurred while adding your comment. Please try again.");
@@ -809,7 +809,7 @@ function initialize_commenting() {
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
 				jQuery("#new-comment").val('');
-				//initialize_commenting();
+				initialize_commenting();
 			})
 			.fail(function() {
 				alert("An error occurred while adding your comment. Please try again.");
@@ -832,7 +832,7 @@ function initialize_commenting() {
 	});
 
 	//show reply and flag on hover
-	jQuery(".comment").hover(
+	jQuery(".comment").not('.comment-processed').addClass('comment-processed').hover(
 		function(){
 			jQuery(this).children(".actions").children().stop().fadeIn("fast");
 		},
@@ -842,7 +842,7 @@ function initialize_commenting() {
 
 	/*Post comment upon clicking enter
 	 *Kinda Hacky*/
-	jQuery('.comments-container #new-comment-form .form-control').keypress(function (e)
+	jQuery('.comments-container #new-comment-form .form-control').not('.comment-processed').addClass('comment-processed').keypress(function (e)
 	{
 		var key = e.which;
 		if(key == 13)  // the enter key code
