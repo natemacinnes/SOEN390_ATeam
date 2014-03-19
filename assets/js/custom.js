@@ -1,5 +1,18 @@
-String.prototype.repeat = function(num) {
-	return new Array(num + 1).join(this);
+if (typeof String.prototype.repeat != 'function') {
+	String.prototype.repeat = function(num) {
+		return new Array(num + 1).join(this);
+	}
+}
+// See http://stackoverflow.com/questions/646628/how-to-check-if-a-string-startswith-another-string
+if (typeof String.prototype.startsWith != 'function') {
+	String.prototype.startsWith = function (str) {
+		return this.slice(0, str.length) == str;
+	};
+}
+if (typeof String.prototype.endsWith != 'function') {
+	String.prototype.endsWith = function (str) {
+		return this.slice(-str.length) == str;
+	};
 }
 
 /**
@@ -147,12 +160,12 @@ function narrative_bubble_value(d, i) {
  * factor to achieve a scaled version. A common base is added to all results.
  */
 function narrative_bubbles_standardize(data, factor, base) {
-	var min = d3.min(data.children, narrative_bubble_value);
-	var max = d3.max(data.children, narrative_bubble_value);
+	var min = d3.min(data, narrative_bubble_value);
+	var max = d3.max(data, narrative_bubble_value);
 	var diff = max - min;
 
-	data.children.forEach(function(d, i) {
-		d.value = (narrative_bubble_value(d, i) - min) / diff;
+	data.forEach(function(d, i) {
+		d.value = (diff == 0 ? 1 : (narrative_bubble_value(d, i) - min) / diff);
 		d.value *= factor;
 		d.value += base;
 	});
@@ -200,7 +213,7 @@ function narrative_bubbles_load(position) {
 		console.log('creating bubbles for SVG ' + svgselect);
 
 		// Sets the d.value attribute to something normalized
-		narrative_bubbles_standardize(data, 250, 25);
+		narrative_bubbles_standardize(data.children, 250, 25);
 
 		// Select elements, even if they do not exist yet. enter() creates them and
 		// appends them to the selection object. Then, we operate on them.
@@ -421,6 +434,33 @@ function narrative_history_load()
 				.attr("height", height)
 				.attr("class", "bubble");
 
+			// This sets each bubble to be a static size. If the code between the
+			// standardization comments below is left uncommented, it will then get
+			// scaled for each set of narratives of a given position in history.
+			data.forEach(function(d, i) { d.value = radius; });
+
+			// Standardize history bubble data foreach narrative position independently
+			var new_data = [];
+			var types = [yd_settings.constants.NARRATIVE_POSITION_NEUTRAL, yd_settings.constants.NARRATIVE_POSITION_AGREE, yd_settings.constants.NARRATIVE_POSITION_DISAGREE];
+			types.forEach(function(type, i) {
+				var tmp = data.filter(function(d) { return d.position == type; });
+				narrative_bubbles_standardize(tmp, radius*3/4, radius/4);
+				new_data = new_data.concat(tmp);
+			});
+
+			// Concatenation will mess up the ordering. Merge arrays and resort.
+			var original_order = data.map(function(d) { return d.narrative_id; });
+			function history_sort_func(a, b) {
+				var a_pos = original_order.indexOf(a.narrative_id);
+				var b_pos = original_order.indexOf(b.narrative_id);
+				if (a_pos == b_pos) {
+					return 0;
+				}
+				return a_pos > b_pos;
+			}
+			data = new_data.sort(history_sort_func);
+			// End standardization of bubble data
+
 			/**
 			 * Callback for d3's .data() which populates the x, y, and r attributes.
 			 * Effectively, this is a custom d3 layout callback.
@@ -428,9 +468,15 @@ function narrative_history_load()
 			function narrative_history_data(data, i)
 			{
 				data.forEach(function(d, i) {
-					d.x = i*radius_padding*2 + radius_padding;
-					d.y = (height-radius*2)/2 + radius;
-					d.r = radius;
+					// Find out where the previous bubble ended.
+					var previous_x = 0;
+					if (data[i-1]) {
+						previous_x = data[i-1].x + data[i-1].r;
+					}
+					// Add our radius and padding to that position for next bubble
+					d.r = d.value;
+					d.x = previous_x + padding + d.r;
+					d.y = (height-d.r*2)/2 + d.r;
 				});
 				return data;
 			}
@@ -471,7 +517,7 @@ function narrative_bind_player(svgselect) {
 	jQuery(svgselect + " g.node-base").click(function(e) {
 		// TODO: disabled for now
 		// Only allow popup if (a) narrative matches filter or (b) is in history bar
-		//if (! (narrative_matches_filter(this.__data__) || jQuery(this).attr('id').indexOf('history-') === 0)) {
+		//if (! (narrative_matches_filter(this.__data__) || jQuery(this).attr('id').startsWith('history-'))) {
 		//  return false;
 		//}
 
