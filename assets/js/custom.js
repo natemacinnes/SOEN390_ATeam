@@ -25,7 +25,8 @@ jQuery(document).ready(function() {
 		bubble_text_radius_cutoff: 35,
 		transition_duration: 700,
 		ring_inner_radius: 0.85,
-		min_filtered_opacity: 0.10,
+		min_filtered_opacity: 0.00,
+    min_sort_opacity: 0.10,
 		bubble_fill_normal_mask: 0.5,
 		bubble_fill_hover_mask: 0.8,
 		system_colors: {
@@ -82,7 +83,12 @@ jQuery(document).ready(function() {
 	jQuery('.language-container.btn-group a').click(function() {
 		jQuery(this).toggleClass('active');
 		jQuery('.language-container.btn-group a').not(this).removeClass('active');
-		yd_settings.ui.filters.language = jQuery('.language-container.btn-group a.active').attr('href').substring(1);;
+    if (jQuery(this).hasClass('active')) {
+      yd_settings.ui.filters.language = jQuery('.language-container.btn-group a.active').attr('href').substring(1);
+    }
+    else {
+		  yd_settings.ui.filters.language = null;
+    }
 		return false;
 	}).tooltip();
 
@@ -103,7 +109,7 @@ jQuery(document).ready(function() {
 		jQuery('.filter-container.btn-group a').each(function() {
 			var filter = jQuery(this).attr('href').substring(1);
 			yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
-		});
+		}).tooltip();
 
 		narrative_display_initialize();
 	}
@@ -546,9 +552,9 @@ function narrative_bind_player(svgselect) {
 	jQuery(svgselect + " g.node-base").click(function(e) {
 		// TODO: disabled for now
 		// Only allow popup if (a) narrative matches filter or (b) is in history bar
-		//if (! (narrative_matches_filter(this.__data__) || jQuery(this).attr('id').startsWith('history-'))) {
-		//  return false;
-		//}
+	 if (! (narrative_matches_filter(this.__data__) || jQuery(this).attr('id').startsWith('history-'))) {
+		  return false;
+		}
 
 		// Call method to add narrative to history
 		narrative_history_add(this.__data__);
@@ -717,7 +723,7 @@ function narrative_sort_opacity(d) {
 		factor = 1;
 	}
 	// Scaling: http://stackoverflow.com/questions/5294955/how-to-scale-down-a-range-of-numbers-with-a-known-min-and-max-value
-	return (1 - yd_settings.ui.min_filtered_opacity) * factor + yd_settings.ui.min_filtered_opacity;
+	return (1 - yd_settings.ui.min_sort_opacity) * factor + yd_settings.ui.min_sort_opacity;
 }
 
 /**
