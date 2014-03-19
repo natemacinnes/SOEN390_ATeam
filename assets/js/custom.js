@@ -688,7 +688,7 @@ function initialize_commenting() {
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
 				jQuery("#new-comment").val('');
-				initialize_commenting();
+				//initialize_commenting();
 			})
 			.fail(function() {
 				alert("An error occurred while adding your comment. Please try again.");
@@ -707,7 +707,7 @@ function initialize_commenting() {
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
 				jQuery("#new-comment").val('');
-				initialize_commenting();
+				//initialize_commenting();
 			})
 			.fail(function() {
 				alert("An error occurred while adding your comment. Please try again.");
@@ -730,7 +730,7 @@ function initialize_commenting() {
 	});
 
 	//show reply and flag on hover
-	jQuery(".comments-wrapper .comment").hover(
+	jQuery(".comment").hover(
 		function(){
 			jQuery(this).children(".actions").children().stop().fadeIn("fast");
 		},
@@ -785,8 +785,8 @@ function narrative_player_buttons_initialize()
 	//get narrative ID
 	var nar_id = jQuery(".page-header small").text();
 	//If agree or disagree button is pressed
-	jQuery(".player-buttons .float-right .btn-group .btn").click(function() {
-
+	jQuery(".player-buttons .float-right .btn-group .btn").click(function(e) {
+		e.preventDefault;
 		//Increment the agrees, decrement the disagrees
 		if(last_concensus == "Agree" && jQuery.trim(jQuery(this).text()) == "Disagree")
 		{
@@ -935,4 +935,5 @@ function add_bookmark()
 
 function show_share_url(){
 	jQuery(".link-content").toggle();
+	jQuery(this).colorbox.resize();
 }
