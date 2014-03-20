@@ -27,10 +27,11 @@ class Player extends YD_Controller
 		$comments = $this->comment_model->get_by_narrative_id($narrative_id);
 
 		$rendered_comments = '';
+		$comments_copy = $comments;
 		foreach ($comments as $comment)
 		{
 			// Render the comments into the variable
-			$rendered_comments .= $this->load->view('embedded/comment', array('comment' => $comment), TRUE);
+			$rendered_comments .= $this->load->view('embedded/comment', array('comment' => $comment, 'comments' => $comments_copy), TRUE);
 		}
 		$data = array('comments' => $rendered_comments, 'narrative_id' => $narrative_id);
 		$this->load->view('embedded/comments', $data);
@@ -38,6 +39,20 @@ class Player extends YD_Controller
 
 	public function flag($narrative_id)
 	{
-		$this->narrative_flag_model->insert($narrative_id);
+		$text = $this->input->post('flag-narrative');
+		if (strlen($text))
+		{
+			$this->narrative_flag_model->insert($narrative_id, $text);
+		}
+		else
+		{
+			// Set header: 400 Bad response
+			$this->output->set_status_header('400');
+		}
+	}
+
+	public function flag_narrative_form()
+	{
+		$this->load->view('embedded/flag_narrative');
 	}
 }

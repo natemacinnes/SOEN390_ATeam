@@ -17,6 +17,7 @@
 	<?php endif; ?>
 	</div>
 </div>
+<div class="clear"></div>
 <script type="text/javascript">
 	initialize_commenting();
 </script>

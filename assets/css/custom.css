@@ -310,6 +310,11 @@ span.lightblue { color: #7BA7E0; }
 .flag-wrapper td:nth-child(2){ max-width: 200px;}
 .flag-wrapper td:nth-child(3){ min-width: 150px;}
 
+.flag-narrative-wrapper {
+	position: relative;
+	width: 400px;
+}
+
 /*****************************************************************************
 
 									Player
@@ -334,6 +339,10 @@ span.lightblue { color: #7BA7E0; }
 
 .form-control {
 	resize: vertical;
+}
+
+.comments-container{
+
 }
 
 .comments-wrapper {

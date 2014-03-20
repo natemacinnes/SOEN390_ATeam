@@ -487,27 +487,37 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	}
 
 	/**
+	 * UT-0071
+	 * @covers Narrative_Model::increment_agree_decrement_disagree
+	 */
+	function test__increment_agree_decrement_disagree()
+	{
+		$narr_array_before = $this->CI->narrative_model->get(1);
+		$this->CI->narrative_model->increment_agree_decrement_disagree(1);
+		$narr_array_after = $this->CI->narrative_model->get(1);
+		$this->assertEquals($narr_array_before["disagrees"], $narr_array_after["disagrees"]+1);
+		$this->assertEquals($narr_array_before["agrees"], $narr_array_after["agrees"]-1);
+	}
+
+	/**
+	 * UT-0072
+	 * @covers Narrative_Model::increment_disagree_decrement_agree
+	 */
+	function test__increment_disagree_decrement_agree()
+	{
+		$narr_array_before = $this->CI->narrative_model->get(1);
+		$this->CI->narrative_model->increment_disagree_decrement_agree(1);
+		$narr_array_after = $this->CI->narrative_model->get(1);
+		$this->assertEquals($narr_array_before["agrees"], $narr_array_after["agrees"]+1);
+		$this->assertEquals($narr_array_before["disagrees"], $narr_array_after["disagrees"]-1);
+	}
+
+	/**
 	 * UT-0076
 	 * @covers Narrative_Model::process_image
 	 */
 	function test__process_image() {
 		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	/**
-	 * UT-0077
-	 * @covers Narrative_Model::toggle
-	 */
-	function test__toggle() {
-		$this->markTestSkipped('This test case needs to be re-factored; the original method no longer exists.');
-		return;
-		$narrative_id = 1;
-	 	$old = $this->CI->narrative_model->get($narrative_id);
-		$this->CI->narrative_model->toggle('agrees', 'disagrees', $narrative_id);
-		$new = $this->CI->narrative_model->get($narrative_id);
-
-		$this->assertEquals($new['agrees'], $old['agrees']+1);
-		$this->assertEquals($new['disagrees'], $old['disagrees']-1);
 	}
 
 	/**

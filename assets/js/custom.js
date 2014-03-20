@@ -1,5 +1,18 @@
-String.prototype.repeat = function(num) {
-	return new Array(num + 1).join(this);
+if (typeof String.prototype.repeat != 'function') {
+	String.prototype.repeat = function(num) {
+		return new Array(num + 1).join(this);
+	}
+}
+// See http://stackoverflow.com/questions/646628/how-to-check-if-a-string-startswith-another-string
+if (typeof String.prototype.startsWith != 'function') {
+	String.prototype.startsWith = function (str) {
+		return this.slice(0, str.length) == str;
+	};
+}
+if (typeof String.prototype.endsWith != 'function') {
+	String.prototype.endsWith = function (str) {
+		return this.slice(-str.length) == str;
+	};
 }
 
 /**
@@ -8,9 +21,11 @@ String.prototype.repeat = function(num) {
 jQuery(document).ready(function() {
 	yd_settings.ui = {
 		filters: {},
+		sort: {},
+		bubble_text_radius_cutoff: 35,
 		transition_duration: 700,
 		ring_inner_radius: 0.85,
-		filtered_opacity: 0.2,
+		min_filtered_opacity: 0.10,
 		bubble_fill_normal_mask: 0.5,
 		bubble_fill_hover_mask: 0.8,
 		system_colors: {
@@ -64,10 +79,19 @@ jQuery(document).ready(function() {
 	});
 
 	// Toggle buttons for navigation links
+	jQuery('.language-container.btn-group a').click(function() {
+		jQuery(this).toggleClass('active');
+		jQuery('.language-container.btn-group a').not(this).removeClass('active');
+		yd_settings.ui.filters.language = jQuery('.language-container.btn-group a.active').attr('href').substring(1);;
+		return false;
+	}).tooltip();
+
+	// Toggle buttons for navigation links
 	jQuery('.filter-container.btn-group a').click(function() {
 		jQuery(this).toggleClass('active');
 		jQuery('.filter-container.btn-group a').not(this).removeClass('active');
-		yd_settings.ui.filters.language = jQuery('.filter-container.btn-group a.active').attr('href');
+		var filter = jQuery(this).attr('href').substring(1);
+		yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		return false;
 	}).tooltip();
 
@@ -75,7 +99,8 @@ jQuery(document).ready(function() {
 	// twice by the same callback handler. It allows new DOM elements to be bound,
 	// leaving existing ones untouched.
 	if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
-		jQuery('.sort-container.btn-group a').each(function() {
+		// Initialize filter settings to defaults
+		jQuery('.filter-container.btn-group a').each(function() {
 			var filter = jQuery(this).attr('href').substring(1);
 			yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		});
@@ -86,8 +111,20 @@ jQuery(document).ready(function() {
 	// Radio-like toggle buttons for sort
 	jQuery('.sort-container.btn-group a').click(function () {
 		jQuery(this).toggleClass('active');
-		var filter = jQuery(this).attr('href').substring(1)
-		yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
+		jQuery('.sort-container.btn-group a').not(this).removeClass('active');
+		yd_settings.ui.sort.criteria = jQuery(this).hasClass('active') ? jQuery(this).attr('href').substring(1) : null;
+
+		// If we selected a new criteria, not untoggled
+		if (jQuery(this).hasClass('active')) {
+			var new_data = [];
+			var positions = [yd_settings.constants.NARRATIVE_POSITION_NEUTRAL, yd_settings.constants.NARRATIVE_POSITION_AGREE, yd_settings.constants.NARRATIVE_POSITION_DISAGREE];
+			positions.forEach(function(position, i) {
+				var tmp = jQuery('.svg-container-' + position + ' svg').get(0);
+				new_data = new_data.concat(tmp.__data__.children);
+			});
+			yd_settings.ui.sort.min = d3.min(new_data, narrative_sort_value);
+			yd_settings.ui.sort.max = d3.max(new_data, narrative_sort_value);
+		}
 		return false;
 	}).tooltip();
 });
@@ -142,16 +179,28 @@ function narrative_bubble_value(d, i) {
 }
 
 /**
+ * Accessor compatible .map() to determine non-normalized value from data object
+ */
+function narrative_sort_value(d, i) {
+	if (yd_settings.ui.sort.criteria == 'age') {
+		return date_from_string(d.uploaded);
+	}
+	else {
+		return parseInt(d[yd_settings.ui.sort.criteria]);
+	}
+}
+
+/**
  * Normalization puts all entries in a range of 0 - 1, then multiplies by a
  * factor to achieve a scaled version. A common base is added to all results.
  */
 function narrative_bubbles_standardize(data, factor, base) {
-	var min = d3.min(data.children, narrative_bubble_value);
-	var max = d3.max(data.children, narrative_bubble_value);
+	var min = d3.min(data, narrative_bubble_value);
+	var max = d3.max(data, narrative_bubble_value);
 	var diff = max - min;
 
-	data.children.forEach(function(d, i) {
-		d.value = (narrative_bubble_value(d, i) - min) / diff;
+	data.forEach(function(d, i) {
+		d.value = (diff == 0 ? 1 : (narrative_bubble_value(d, i) - min) / diff);
 		d.value *= factor;
 		d.value += base;
 	});
@@ -199,7 +248,7 @@ function narrative_bubbles_load(position) {
 		console.log('creating bubbles for SVG ' + svgselect);
 
 		// Sets the d.value attribute to something normalized
-		narrative_bubbles_standardize(data, 250, 25);
+		narrative_bubbles_standardize(data.children, 250, 25);
 
 		// Select elements, even if they do not exist yet. enter() creates them and
 		// appends them to the selection object. Then, we operate on them.
@@ -210,7 +259,7 @@ function narrative_bubbles_load(position) {
 				.attr("class", function(d) { return 'node ' + (!d.children ? 'node-base' : 'node-parent'); })
 				.attr("id", function(d) { return !d.children ? 'narrative-' + d.narrative_id : null; })
 				.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
-				.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; });
+				.style("opacity", function(d) { return narrative_matches_filter(d) ? narrative_sort_opacity(d) : yd_settings.ui.min_filtered_opacity; });
 				// ^ the root g container is transformed, so for all children x and y is
 				//   relative to 0
 
@@ -226,13 +275,7 @@ function narrative_bubbles_load(position) {
 		narrative_bubbles_update(svgselect);
 
 		// Toggle buttons for navigation links
-		jQuery('.sort-container.btn-group a').click(function() {
-			narrative_bubbles_update(svgselect);
-			return false;
-		});
-
-		// Toggle buttons for navigation links
-		jQuery('.filter-container.btn-group a').click(function() {
+		jQuery('.controls-container .btn-group a').click(function() {
 			narrative_bubbles_update(svgselect);
 			return false;
 		});
@@ -257,7 +300,7 @@ function narrative_bubbles_update(svgselect) {
 
 	vis.transition().duration(yd_settings.ui.transition_duration)
 		.attr("transform", function(d) { return 'translate(' + d.x +',' + d.y + ')'; })
-		.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; });
+		.style("opacity", function(d) { return narrative_matches_filter(d) ? narrative_sort_opacity(d) : yd_settings.ui.min_filtered_opacity; });
 
 	vis.selectAll('circle')
 		.transition().duration(yd_settings.ui.transition_duration)
@@ -266,6 +309,12 @@ function narrative_bubbles_update(svgselect) {
 
 	var arcs = vis.selectAll('g.slice')
 		.data(narrative_data_radiusmapper)
+
+	vis.selectAll('tspan.node-label-agrees')
+		.text(function(d) { return d.agrees; });
+
+	vis.selectAll('tspan.node-label-disagrees')
+		.text(function(d) { return d.disagrees; });
 
 	// Circle fill hover
 	jQuery(svgselect + ' g.node-base').hover(
@@ -340,33 +389,35 @@ function narrative_draw_bubbles(vis) {
 
 	// This comes after the paths so that the text doesn't get covered by the
 	// path rendering
-	var label_agree = vis.filter(function(d, i) { return !d.children && d.r > 35 }).append("text")
+	var label_agree = vis.filter(function(d, i) { return !d.children && d.r > yd_settings.ui.bubble_text_radius_cutoff }).append("text")
 		.attr('dy', '-0.6em')
 		.style("text-anchor", "middle")
 		.style("cursor", "pointer");
 	label_agree.append('svg:tspan')
+		.attr('class', 'node-label-agrees')
 		.text(function(d) { return d.agrees; })
 		.style("dominant-baseline", "central")
 	label_agree.append('svg:tspan')
 		.text(yd_settings.ui.glyphicon_map.agrees)
 		.attr('dx', '0.3em')
 		.style("dominant-baseline", "central")
-		.style('font-family', "'Glyphicons Halflings")
+		.style("font-family", "'Glyphicons Halflings'")
 		.style('fill', yd_settings.ui.system_colors.green);
 
-	var label_disagree = vis.filter(function(d, i) { return !d.children && d.r > 35 }).append("text")
+	var label_disagree = vis.filter(function(d, i) { return !d.children && d.r > yd_settings.ui.bubble_text_radius_cutoff }).append("text")
 		.attr('dy', '0.6em')
 		.style("text-anchor", "middle")
 		.style("cursor", "pointer")
 		.style("display", function(d) { return null; });
 	label_disagree.append('svg:tspan')
+		.attr('class', 'node-label-disagrees')
 		.text(function(d) { return d.disagrees; })
 		.style("dominant-baseline", "central")
 	label_disagree.append('svg:tspan')
 		.text(yd_settings.ui.glyphicon_map.disagrees)
 		.attr('dx', '0.3em')
 		.style("dominant-baseline", "central")
-		.style('font-family', "'Glyphicons Halflings")
+		.style('font-family', "'Glyphicons Halflings'")
 		.style('fill', yd_settings.ui.system_colors.red);
 }
 
@@ -412,6 +463,33 @@ function narrative_history_load()
 				.attr("height", height)
 				.attr("class", "bubble");
 
+			// This sets each bubble to be a static size. If the code between the
+			// standardization comments below is left uncommented, it will then get
+			// scaled for each set of narratives of a given position in history.
+			data.forEach(function(d, i) { d.value = radius; });
+
+			// Standardize history bubble data foreach narrative position independently
+			var new_data = [];
+			var types = [yd_settings.constants.NARRATIVE_POSITION_NEUTRAL, yd_settings.constants.NARRATIVE_POSITION_AGREE, yd_settings.constants.NARRATIVE_POSITION_DISAGREE];
+			types.forEach(function(type, i) {
+				var tmp = data.filter(function(d) { return d.position == type; });
+				narrative_bubbles_standardize(tmp, radius*3/4, radius/4);
+				new_data = new_data.concat(tmp);
+			});
+
+			// Concatenation will mess up the ordering. Merge arrays and resort.
+			var original_order = data.map(function(d) { return d.narrative_id; });
+			function history_sort_func(a, b) {
+				var a_pos = original_order.indexOf(a.narrative_id);
+				var b_pos = original_order.indexOf(b.narrative_id);
+				if (a_pos == b_pos) {
+					return 0;
+				}
+				return a_pos < b_pos ? -1 : 1;
+			}
+			data = new_data.sort(history_sort_func);
+			// End standardization of bubble data
+
 			/**
 			 * Callback for d3's .data() which populates the x, y, and r attributes.
 			 * Effectively, this is a custom d3 layout callback.
@@ -419,9 +497,15 @@ function narrative_history_load()
 			function narrative_history_data(data, i)
 			{
 				data.forEach(function(d, i) {
-					d.x = i*radius_padding*2 + radius_padding;
-					d.y = (height-radius*2)/2 + radius;
-					d.r = radius;
+					// Find out where the previous bubble ended.
+					var previous_x = 0;
+					if (data[i-1]) {
+						previous_x = data[i-1].x + data[i-1].r;
+					}
+					// Add our radius and padding to that position for next bubble
+					d.r = d.value;
+					d.x = previous_x + padding + d.r;
+					d.y = (height-d.r*2)/2 + d.r;
 				});
 				return data;
 			}
@@ -462,7 +546,7 @@ function narrative_bind_player(svgselect) {
 	jQuery(svgselect + " g.node-base").click(function(e) {
 		// TODO: disabled for now
 		// Only allow popup if (a) narrative matches filter or (b) is in history bar
-		//if (! (narrative_matches_filter(this.__data__) || jQuery(this).attr('id').indexOf('history-') === 0)) {
+		//if (! (narrative_matches_filter(this.__data__) || jQuery(this).attr('id').startsWith('history-'))) {
 		//  return false;
 		//}
 
@@ -481,7 +565,7 @@ function narrative_bind_player(svgselect) {
 		this.__data__.viewed = 1;
 		d3.select(this).select('circle').style("fill", bubble_fill_color);
 		d3.select('#narrative-' + this.__data__.narrative_id)
-			.style("opacity", function(d) { return narrative_matches_filter(d) ? 1 : yd_settings.ui.filtered_opacity; })
+			.style("opacity", function(d) { return narrative_matches_filter(d) ? narrative_sort_opacity(d) : yd_settings.ui.min_filtered_opacity; })
 			.select('circle')
 				.style('fill', bubble_fill_color);
 
@@ -498,11 +582,21 @@ function narrative_bind_player(svgselect) {
 				_gaq.push(['_trackPageview', narrative_url]);
 
 				narrative_player_load();
+				narrative_player_buttons_initialize();
 				jQuery(this).colorbox.resize();
 			},
-			onClosed: function() {
+			onCleanup: function() {
 				clearInterval(image_update_timer);
 
+				// Cleanup MediaElement player - ensures audio stops playing if it
+				// loaded a hidden plug-in for compatibility shim
+				var player = jQuery("#colorbox audio,#colorbox video")
+				if (player.length && player.data('mediaelementplayer')) {
+					player.data('mediaelementplayer').pause();
+					player.data('mediaelementplayer').remove();
+				}
+			},
+			onClosed: function() {
 				// Modify address bar without reloading page
 				// See https://developer.mozilla.org/en-US/docs/Web/Guide/API/DOM/Manipulating_the_browser_history
 				// FIXME HTML5 ONLY
@@ -583,29 +677,6 @@ function narrative_matches_filter(d) {
 		return true;
 	}
 
-	var recent = true;
-	if (yd_settings.ui.filters.age) {
-		var today = new Date();
-		today.setDate(today.getDate() - 7);
-		var dateStr = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-		recent = date_from_string(d.uploaded) > date_from_string(dateStr);
-	}
-
-	var popular = true;
-	if (yd_settings.ui.filters.popular) {
-		popular = d.agrees / Math.max(d.disagrees, 1) > 1.5;
-	}
-
-	var agrees = true;
-	if (yd_settings.ui.filters.agrees) {
-		agrees = d.agrees / Math.max(d.disagrees, 1) > 1.5;
-	}
-
-	var disagrees = true;
-	if (yd_settings.ui.filters.disagrees) {
-		disagrees = d.disagrees / Math.max(d.agrees, 1) > 1.5;
-	}
-
 	var history = true;
 	if (yd_settings.ui.filters.history) {
 		history = !d.viewed;
@@ -617,14 +688,43 @@ function narrative_matches_filter(d) {
 		language = yd_settings.ui.filters.language == d.language.toLowerCase();
 	}
 
-	return language && recent && popular && agrees && disagrees && history;
+	return language && history;
+}
+
+/**
+ * Examines the current filter settings stored in yd_settings and determines if
+ * the provided narrative object matches the filter or not.
+ */
+function narrative_sort_opacity(d) {
+	if (d.children) {
+		return true;
+	}
+
+	factor = 1;
+	if (yd_settings.ui.sort.criteria == 'age') {
+		var min_ms = yd_settings.ui.sort.min.getTime();
+		var max_ms = yd_settings.ui.sort.max.getTime();
+		var current = date_from_string(d.uploaded).getTime();
+		factor = (current - min_ms) / (max_ms - min_ms);
+	}
+	else if (yd_settings.ui.sort.criteria == 'agrees') {
+		factor = (d.agrees - yd_settings.ui.sort.min)/ (yd_settings.ui.sort.max - yd_settings.ui.sort.min)
+	}
+	else if (yd_settings.ui.sort.criteria == 'disagrees') {
+		factor = (d.disagrees - yd_settings.ui.sort.min)/ (yd_settings.ui.sort.max - yd_settings.ui.sort.min)
+	}
+	else {
+		factor = 1;
+	}
+	// Scaling: http://stackoverflow.com/questions/5294955/how-to-scale-down-a-range-of-numbers-with-a-known-min-and-max-value
+	return (1 - yd_settings.ui.min_filtered_opacity) * factor + yd_settings.ui.min_filtered_opacity;
 }
 
 /**
  * Loads the narrative player once the popup page with audio is ready.
  */
 function narrative_player_load() {
-	var player_wrappers = jQuery('.player-wrapper').not('player-processed')
+	var player_wrappers = jQuery('.player-wrapper').not('player-processed');
 	if (player_wrappers.length) {
 		player_wrappers.addClass('player-processed')
 		jQuery('audio,video', player_wrappers).mediaelementplayer({
@@ -639,8 +739,9 @@ function narrative_player_load() {
 		var player_last_update = (new Date).getTime();
 		var myaudio = document.getElementById("narrative_audio");
 		// Update when the audio is ready to play (at load or after seeking)
+		// NOTE: e.timeStamp() is not consistent - see http://stackoverflow.com/questions/18197401/javascript-event-timestamps-not-consistent
 		myaudio.addEventListener('canplay', function(e) {
-			player_last_update = e.timeStamp;
+			player_last_update = Date.now();
 			narrative_player_update_image(myaudio.currentTime);
 			if (jQuery(this).hasClass('autoplay')) {
 				myaudio.play();
@@ -648,8 +749,9 @@ function narrative_player_load() {
 		}, false);
 		// Update as the audio continues to play.
 		myaudio.addEventListener('timeupdate', function(e) {
-			if (e.timeStamp - player_last_update > yd_settings.constants.NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL) {
-				player_last_update = e.timeStamp;
+			var time_now = Date.now();
+			if (time_now - player_last_update > yd_settings.constants.NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL) {
+				player_last_update = time_now;
 				narrative_player_update_image(myaudio.currentTime);
 			}
 		}, false);
@@ -730,7 +832,7 @@ function initialize_commenting() {
 	});
 
 	//show reply and flag on hover
-	jQuery(".comments-wrapper .comment").hover(
+	jQuery(".comment").not('.comment-processed').addClass('comment-processed').hover(
 		function(){
 			jQuery(this).children(".actions").children().stop().fadeIn("fast");
 		},
@@ -740,7 +842,7 @@ function initialize_commenting() {
 
 	/*Post comment upon clicking enter
 	 *Kinda Hacky*/
-	jQuery('.comments-container #new-comment-form .form-control').keypress(function (e)
+	jQuery('.comments-container #new-comment-form .form-control').not('.comment-processed').addClass('comment-processed').keypress(function (e)
 	{
 		var key = e.which;
 		if(key == 13)  // the enter key code
@@ -756,15 +858,70 @@ function initialize_commenting() {
  */
 function narrative_player_buttons_initialize()
 {
+	show_share_url();
+
+	//get narrative ID
+	var player_wrappers = jQuery(".player-wrapper");
+	if (!player_wrappers.length)
+	{
+		return;
+	}
+	var nar_id = player_wrappers.attr('id').substring(10);
+
 	//Handle flagging of narrative
-	jQuery(".action-narrative-report").click(function() {
-		var url = yd_settings.site_url + "player/flag/" + nar_id;
+	jQuery(".action-narrative-report").not('.flag-not-clicked').removeClass('flag-not-clicked').click(function() {
+		jQuery('.comments-container').hide('fast');
+		jQuery('.player-wrapper').hide('fast');
+
+		//if there is already a flag narrative form in the player, remove it and return to the player
+		if(jQuery("#colorbox .flag-narrative-wrapper").length)
+		{
+			document.getElementById("narrative_audio").play();
+			//remove the flag narrative form
+			jQuery("#colorbox .flag-narrative-wrapper").remove();
+			//bring back the player and comments
+			jQuery('.comments-container').fadeIn('fast');
+			jQuery('.player-wrapper').fadeIn('fast');
+			jQuery(".action-narrative-report").addClass('flag-not-clicked');
+		}
+		else 
+		{
+			//add the narrative flag form to the colorbox
+			jQuery(".page-header").after("<div class='flag-narrative-wrapper float-left'></div>");
+			//pause the audio player
+			document.getElementById("narrative_audio").pause();
+			//load the flag narrative form from the views
+			jQuery("#colorbox .flag-narrative-wrapper").load(yd_settings.site_url + 'player/flag_narrative_form');
+			jQuery(".action-narrative-report").addClass('flag-not-clicked');
+		}
+		/*var url = yd_settings.site_url + "player/flag/" + nar_id;
 		jQuery.post(url)
 			.done(function() {
 				alert("Thank you, narrative has been reported.");
 			})
 			.fail(function() {
 				alert("An error occurred while reporting the narrative. Please try again.")
+			});*/
+	});
+
+	//Narrative flag description handler
+	jQuery(".flag-narrative-wrapper #flag-narrative-form .flag-narrative-post a").click(function() {
+		alert("Enter");
+		jQuery(this).addClass('disabled');
+		var url = yd_settings.site_url + "player/flag/" + nar_id;
+		var formdata = jQuery("#flag-narrative-form").serialize();
+		jQuery.post(url, formdata)
+			.done(function() {
+				alert("Thank you, narrative has been reported.");
+				jQuery("#colorbox .flag-narrative-wrapper").remove();
+				//bring back the player and comments
+				jQuery('.comments-container').fadeIn('fast');
+				jQuery('.player-wrapper').fadeIn('fast');
+				document.getElementById("narrative_audio").play();
+			})
+			.fail(function() {
+				alert("An error occurred while reporting the narrative. Please try again.");
+				jQuery(".flag-narrative-post").removeClass('disabled');
 			});
 	});
 
@@ -773,107 +930,104 @@ function narrative_player_buttons_initialize()
 			add_bookmark();
 	});
 
+	//handle sharing action
+	jQuery(".share-btn").click(function() {
+		show_share_url();
+	})
+
 	//local var to decide agree/disagree
-	var last_concensus = "";
-	//get narrative ID
-	var nar_id = jQuery(".page-header small").text();
+	var last_consensus = "";
+
 	//If agree or disagree button is pressed
 	jQuery(".player-buttons .float-right .btn-group .btn").click(function() {
+		var clicked = this;
+		var new_consensus = jQuery(this).attr('href').substring(1);
+		var current_agrees = parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text()));
+		var current_disagrees = parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text()));
+		var url = "";
+
+		jQuery(".player-buttons .float-right .btn-group .btn").addClass('disabled')
 
 		//Increment the agrees, decrement the disagrees
-		if(last_concensus == "Agree" && jQuery.trim(jQuery(this).text()) == "Disagree")
+		if(last_consensus == "agree" && new_consensus == "disagree")
 		{
-			var url = yd_settings.site_url + "ajax/toggle_agree_to_disagree/" + nar_id;
-			//set the last user choice to disagree
-			last_concensus = jQuery.trim(jQuery(this).text());
-			jQuery(this).toggleClass('active btn-primary');
-			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active btn-primary');
-			jQuery.post(url)
-			.done(function(data) {
-				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) + 1 + " ");
-				jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) - 1 + " ");
-				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
-			})
-			.fail(function() {
-				alert("An error occurred while voting.");
-			});
+			url = yd_settings.site_url + "ajax/toggle_agree_to_disagree/" + nar_id;
+			current_agrees -= 1;
+			current_disagrees += 1;
 		}
 		//Increment the disagrees, decrement the agrees
-		else if(last_concensus == "Disagree" && jQuery.trim(jQuery(this).text()) == "Agree")
+		else if (last_consensus == "disagree" && new_consensus == "agree")
 		{
-			var url = yd_settings.site_url + "ajax/toggle_disagree_to_agree/" + nar_id;
-			//set the last user choice to agree
-			last_concensus = jQuery.trim(jQuery(this).text());
-			jQuery(this).toggleClass('active btn-primary');
-			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active btn-primary');
-			jQuery.post(url)
-			.done(function(data) {
-				jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) + 1 + " ");
-				jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) - 1 + " ");
-				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
-			})
-			.fail(function() {
-				alert("An error occurred while voting.");
-			});
+			url = yd_settings.site_url + "ajax/toggle_disagree_to_agree/" + nar_id;
+			current_agrees += 1;
+			current_disagrees -= 1;
 		}
 		//Increment the disagrees or agrees
-		else if(last_concensus == "")
+		else if (last_consensus == "")
 		{
-			//set last_concensus according to the button pressed (agree/disagree)
-			last_concensus = jQuery.trim(jQuery(this).text());
-			var url = yd_settings.site_url + "ajax/increment_agrees_disagrees/" + nar_id + "/" + last_concensus;
-			jQuery(this).toggleClass('active btn-primary');
-			jQuery('.player-buttons .float-right .btn-group .btn').not(this).removeClass('active btn-primary');
-			jQuery.post(url)
-			.done(function(data) {
-				if(last_concensus == "Agree")
-				{
-					jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) + 1 + " ");
-				}
-				else if(last_concensus == "Disagree")
-				{
-					jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) + 1 + " ");
-				}
-				//fade-in and fade-out a message
-				//fade_in_success_message("Your vote has been accepted");
-				//setTimeout(fade_out_success_message, 2000);
-				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
-			})
-			.fail(function() {
-				alert("An error occurred while voting.");
-			});
+			url = yd_settings.site_url + "ajax/increment_agrees_disagrees/" + nar_id + "/" + new_consensus;
+			if (new_consensus == "agree")
+			{
+				current_agrees += 1;
+			}
+			else if (new_consensus == "disagree")
+			{
+				current_disagrees += 1;
+			}
 		}
-		else if( last_concensus == jQuery.trim(jQuery(this).text()) )
+		else if (last_consensus == new_consensus)
 		{
-			var url = yd_settings.site_url + "ajax/decrement_agrees_disagrees/" + nar_id + "/" + last_concensus;
-			//set last_concensus to an empty string.
-			jQuery(this).removeClass('active btn-primary');
+			url = yd_settings.site_url + "ajax/decrement_agrees_disagrees/" + nar_id + "/" + new_consensus;
+			if (new_consensus == "agree")
+			{
+				current_agrees -= 1;
+			}
+			else if (new_consensus == "disagree")
+			{
+				current_disagrees -= 1;
+			}
+		}
 
-			$.post(url)
+		// After whatever it was we did, update consensus
+		jQuery.post(url)
 			.done(function(data) {
-				if(last_concensus == "Agree")
-				{
-					jQuery(".player-stats .float-right .green.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())) - 1 + " ");
+				jQuery(".player-buttons .float-right .btn-group .btn")
+					.removeClass('disabled')
+					.not(clicked)
+					.removeClass('active btn-primary');
+
+				jQuery(clicked).toggleClass('active btn-primary');
+
+				last_consensus = "";
+				var active = jQuery(".player-buttons .float-right .btn-group .btn").filter(".active");
+				if (active.length) {
+					last_consensus = active.attr('href').substring(1);
 				}
-				else if(last_concensus == "Disagree")
-				{
-					jQuery(".player-stats .float-right .red.text").text(parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())) - 1 + " ");
-				}
-				//fade-in and fade-out a message
-				//fade_in_success_message("Your vote has been accepted");
-				//setTimeout(fade_out_success_message, 2000);
-				last_concensus = "";
-				update_concensus_bar(parseInt(jQuery.trim(jQuery(".player-stats .float-right .green.text").text())), parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text())));
+
+				jQuery(".player-stats .float-right .green.text").text(current_agrees + " ");
+				jQuery(".player-stats .float-right .red.text").text(current_disagrees + " ");
+				update_concensus_bar(current_agrees, current_disagrees);
+
+				jQuery('#narrative-' + nar_id)[0].__data__.agrees = current_agrees;
+				jQuery('#narrative-' + nar_id)[0].__data__.disagrees = current_disagrees;
+
+				jQuery('#history-narrative-' + nar_id)[0].__data__.agrees = current_agrees;
+				jQuery('#history-narrative-' + nar_id)[0].__data__.disagrees = current_disagrees;
+
+				var vis = d3.selectAll('.svg-container').selectAll('svg');
+				vis.selectAll('tspan.node-label-agrees')
+					.text(function(d) { return d.agrees; });
+				vis.selectAll('tspan.node-label-disagrees')
+					.text(function(d) { return d.disagrees; });
 			})
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-		}
 	});
 
 	function update_concensus_bar(agrees, disagrees)
 	{
-		var total_votes = agrees + disagrees;
+		var total_votes = Math.max(agrees + disagrees, 1);
 		var new_agrees = Math.round(agrees/total_votes) * 100;
 		var new_disagrees = Math.round(disagrees/total_votes) * 100;
 		jQuery(".progress-bar progress-bar-success").width(new_agrees);
@@ -893,35 +1047,10 @@ function narrative_player_buttons_initialize()
 
 function add_bookmark()
 {
-	var title = document.title;
-	var url = document.location.href;
+	alert('Please press Control+D to bookmark this page; your browser does not support automatic bookmark creation.');
+}
 
-	if (window.sidebar)
-	{
-		/* Mozilla Firefox Bookmark */
-		window.sidebar.addPanel(title, url, "");
-	}
-	else if (window.external)
-	{
-		/* IE Favorite */
-		if (window.external.AddFavorite) {
-			window.external.AddFavorite(url, title);
-		}
-		/* Chrome */
-		else {
-			alert('Your browser does not support automatic bookmarks. Please press Control+D to bookmark this page.');
-		}
-
-	}
-	else if (window.opera && window.print)
-	{
-		/* Opera Hotlist */
-		alert('Your browser does not support automatic bookmarks. Please press Control+D to bookmark this page.');
-		return true;
-	}
-	else
-	{
-		/* Other */
-		alert('Your browser does not support automatic bookmarks. Please press Control+D to bookmark this page.');
-	}
+function show_share_url(){
+	jQuery(".link-content").toggle();
+	jQuery(this).colorbox.resize();
 }

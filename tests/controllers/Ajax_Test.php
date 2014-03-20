@@ -214,23 +214,38 @@ class Ajax_Test extends CIUnit_TestCase
 
 	 /**
 	 * UT-0060
-	 * @covers Ajax::toggle_concensus
+	 * @covers Ajax::toggle_agree_to_disagree
 	 */
-	 public function test__toggle_concensus__incremental()
+	 public function test__toggle_agree_to_disagree()
 	 {
-	 	$this->markTestSkipped('This test case needs to be re-factored; the original method no longer exists.');
-		return;
 	 	$narrative_id = 1;
-	 	$old = $this->CI->narrative_model->get($narrative_id);
+	 	$narr_previous_data = $this->CI->narrative_model->get($narrative_id);
 
 	 	ob_start();
-		$this->CI->toggle_concensus('agrees', 'disagrees', $narrative_id);
-		ob_end_clean();
+		$this->CI->toggle_agree_to_disagree($narrative_id);
+	 	ob_end_clean();
 
-		$new = $this->CI->narrative_model->get($narrative_id);
+	 	$narr_new_data = $this->CI->narrative_model->get($narrative_id);
+	 	$this->assertEquals($narr_previous_data['agrees'], $narr_new_data['agrees']+1);
+		$this->assertEquals($narr_previous_data['disagrees'], $narr_new_data['disagrees']-1);
+	 }
 
-		$this->assertEquals($new['agrees'], $old['agrees']+1);
-		$this->assertEquals($new['disagrees'], $old['disagrees']-1);
+	 /**
+	 * UT-0061
+	 * @covers Ajax::toggle_disagree_to_agree
+	 */
+	 public function test__toggle_agree_to_disagree()
+	 {
+	 	$narrative_id = 1;
+	 	$narr_previous_data = $this->CI->narrative_model->get($narrative_id);
+
+	 	ob_start();
+		$this->CI->toggle_disagree_to_agree($narrative_id);
+	 	ob_end_clean();
+
+	 	$narr_new_data = $this->CI->narrative_model->get($narrative_id);
+	 	$this->assertEquals($narr_previous_data['agrees'], $narr_new_data['agrees']-1);
+		$this->assertEquals($narr_previous_data['disagrees'], $narr_new_data['disagrees']+1);
 	 }
 
 
