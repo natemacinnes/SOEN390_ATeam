@@ -1,6 +1,6 @@
-<div class="comment" id="comment-<?php echo $comment['comment_id'] ?>">
-	<?php if(array_key_exists("parent", $comment)): ?>
-		<p class="quote" id="parent-<?php echo $comment['parent']['id']; ?>"><?php echo $comment['parent']['body']; ?>
+<div class="comment" id="comment-<?php echo $comment['comment_id']; ?>">
+	<?php if($comment['parent_comment']): ?>
+		<p class="quote" id="parent-<?php echo $comment['parent_comment']; ?>"><?php echo $comments[$comment['parent_comment']]['body']; ?>
 	<?php endif; ?>
 	<p><?php echo $comment['body']; ?></p>
   <div class="pull-left">

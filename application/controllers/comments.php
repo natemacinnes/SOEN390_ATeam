@@ -30,14 +30,16 @@ class Comments extends YD_Controller
 		if (strlen($text))
 		{
 			$comment = array(
-	      'narrative_id' => $narrative_id,
-	      'parent_comment' => $parent_id,
-	      'body' => $text,
-	      'status' => 1,
-	    );
+		      'narrative_id' => $narrative_id,
+		      'parent_comment' => $parent_id,
+		      'body' => $text,
+		      'status' => 1,
+		    );
 			$comment['comment_id'] = $this->comment_model->insert($comment);
 			$comment['created'] = date("Y-m-d h:i:s");
-			$this->load->view('embedded/comment', array('comment' => $comment));
+			$comments = $this->comment_model->get_by_narrative_id($narrative_id);
+
+			$this->load->view('embedded/comment', array('comment' => $comment, 'comments' => $comments));
 		}
 		else {
 			// Set header: 400 Bad response
