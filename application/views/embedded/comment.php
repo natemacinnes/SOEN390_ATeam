@@ -1,8 +1,9 @@
 <div class="comment" id="comment-<?php echo $comment['comment_id']; ?>">
+	<input type="hidden" class="comment-id" name="comment_id" value="<?php echo $comment['comment_id']; ?>" />
 	<?php if($comment['parent_comment']): ?>
 		<p class="quote" id="parent-<?php echo $comment['parent_comment']; ?>"><?php echo $comments[$comment['parent_comment']]['body']; ?>
 	<?php endif; ?>
-	<p><?php echo $comment['body']; ?></p>
+	<p class="comment-body"><?php echo $comment['body']; ?></p>
   <div class="pull-left">
 	<span class="grey date">
 	<?php 

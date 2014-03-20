@@ -796,23 +796,41 @@ function initialize_commenting() {
 				alert("An error occurred while adding your comment. Please try again.");
 			});
 	});
-	// Click handler: Comment (on comment)
+
+	//Click handler: Load reply form
 	jQuery(".action-comment-reply").not('.comment-processed').addClass('comment-processed').click(function() {
+		var parent_body = jQuery(this).parent().siblings('.comment-body').text();
+		var parent_id = jQuery(this).parent().siblings('.comment-id').val();
+		var url = yd_settings.site_url + 'comments/reply_form/' + parent_id + '/' + parent_body;
+		jQuery.post(url, function(data) {
+			if(jQuery(".reply").length)
+			{
+				jQuery(".reply").remove();
+			}
+			jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
+			initialize_commenting();
+		});
+	});
+
+	// Click handler: submit a reply to a comment
+	//jQuery(".action-reply-post").not('.comment-processed').addClass('comment-processed').click(function() {
+	jQuery(".action-reply-post").not('.comment-processed').addClass('comment-processed').click(function() {
 		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
-		var parent_comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
-		var url = yd_settings.site_url + "comments/reply/" + narrative_id + '/' + parent_comment_id;
-		var formdata = jQuery("#new-comment-form").serialize();
+		var parent_id = jQuery(this).parent().siblings(".parent-id").val();
+		//alert(narrative_id + " " + parent_id);
+		var url = yd_settings.site_url + "comments/reply/" + narrative_id + '/' + parent_id;
+		var formdata = jQuery("#new-reply-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
-				// Remove the 'no comment' message if it exists
-				jQuery('.comments-wrapper .remove-me').remove();
+				// Remove the 'reply box if it exists
+				jQuery('.reply').remove();
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
-				jQuery("#new-comment").val('');
+				//jQuery("#new-comment").val('');
 				initialize_commenting();
 			})
 			.fail(function() {
-				alert("An error occurred while adding your comment. Please try again.");
+				alert("An error occurred while replying to the comment. Please try again.");
 			});
 	});
 	// Click handler: Flag (on comment)
@@ -874,7 +892,7 @@ function narrative_player_buttons_initialize()
 		jQuery('.player-wrapper').hide('fast');
 
 		//if there is already a flag narrative form in the player, remove it and return to the player
-		if(jQuery("#colorbox .flag-narrative-wrapper").length)
+		if(jQuery(".flag-narrative-wrapper").length)
 		{
 			document.getElementById("narrative_audio").play();
 			//remove the flag narrative form
@@ -906,7 +924,7 @@ function narrative_player_buttons_initialize()
 
 	//Narrative flag description handler
 	jQuery(".flag-narrative-wrapper #flag-narrative-form .flag-narrative-post a").click(function() {
-		alert("Enter");
+		//alert("Enter");
 		jQuery(this).addClass('disabled');
 		var url = yd_settings.site_url + "player/flag/" + nar_id;
 		var formdata = jQuery("#flag-narrative-form").serialize();
