@@ -26,7 +26,7 @@ jQuery(document).ready(function() {
 		transition_duration: 700,
 		ring_inner_radius: 0.85,
 		min_filtered_opacity: 0.00,
-    min_sort_opacity: 0.10,
+    min_sort_opacity: 0.2,
 		bubble_fill_normal_mask: 0.5,
 		bubble_fill_hover_mask: 0.8,
 		system_colors: {
