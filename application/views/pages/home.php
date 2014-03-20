@@ -8,10 +8,15 @@
 	echo form_hidden('toPlay', $narrative);
 ?>
 	<div class="container">
-		<div class="page-header">
-			<h1><span id="page-header-you" class="lightblue">You</span><span id="page-header-deliberate">Deliberate</span></h1>
-		<h4><?php echo $topic; ?></h4>
-		</div>
+    <div class="page-header">
+
+      <div class="topic-header">
+        <h4><?php echo $topic; ?></h4>
+      </div>
+
+      <h1><span id="page-header-you" class="lightblue">You</span><span id="page-header-deliberate">Deliberate</span></h1>
+
+    </div>
 
 		<div class="controls-container btn-toolbar">
 			<div class="btn-group btn-group-horizontal sort-container">
@@ -38,7 +43,7 @@
 		</div>
 
 		<!-- this sets the width available & corners -->
-		<div class="panel panel-default top-margin">
+		<div class="panel panel-default top-margin" id="narrative-wrapper">
 			<div class="panel-heading">Click a bubble to play a narrative / ...</div>
 		<!-- this sets the background color (must match recent-container) -->
 			<div id="homepage-content-wrapper" class="clearfix panel-body">
@@ -50,6 +55,7 @@
 			</div>
 		</div>
 
+    <!-- this wraps the history bubbles -->
 		<div class="panel panel-default float-right" id="recent-wrapper">
 			<div class="panel-heading">History / Deja Vu</div>
 			<div class="panel-body">

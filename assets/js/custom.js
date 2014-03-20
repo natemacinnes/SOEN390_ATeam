@@ -746,7 +746,8 @@ function narrative_player_load() {
 		var myaudio = document.getElementById("narrative_audio");
 		// Update when the audio is ready to play (at load or after seeking)
 		// NOTE: e.timeStamp() is not consistent - see http://stackoverflow.com/questions/18197401/javascript-event-timestamps-not-consistent
-		myaudio.addEventListener('canplay', function(e) {
+		var first_update = null;
+    myaudio.addEventListener('canplay', function(e) {
 			player_last_update = Date.now();
 			narrative_player_update_image(myaudio.currentTime);
 			if (jQuery(this).hasClass('autoplay')) {
@@ -756,10 +757,15 @@ function narrative_player_load() {
 		// Update as the audio continues to play.
 		myaudio.addEventListener('timeupdate', function(e) {
 			var time_now = Date.now();
+      if (first_update == null) {
+        console.log("first update: " + time_now);
+        first_update = time_now;
+      }
 			if (time_now - player_last_update > yd_settings.constants.NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL) {
 				player_last_update = time_now;
 				narrative_player_update_image(myaudio.currentTime);
 			}
+      console.log("update: " + time_now)
 		}, false);
 	}
 }

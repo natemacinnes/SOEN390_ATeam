@@ -166,17 +166,23 @@ span.lightblue { color: #7BA7E0; }
 }
 
 .page-header {
-	margin: 1em 0px;
+	margin: 1em 0px 1.5em;
 	padding-bottom: 0px;
 }
 .page-header h1 {
 	font-family: myFirstFont;
 	font-size: 400%;
 	margin: 0px;
+	padding-bottom: 0px;
 }
 
 #page-header-you {
 	/*color: white; text-shadow: 1px 1px #000000, -1px -1px #000000;*/
+}
+
+.topic-header {
+	float: right;
+	text-align: right;
 }
 
 #homepage-content-wrapper {
@@ -203,6 +209,10 @@ span.lightblue { color: #7BA7E0; }
 	/*background-color: #eeeeee;*/
 }
 
+#narrative-wrapper {
+	margin-bottom: 5px;
+}
+
 #recent-container {
 	clear: both;
 	height: 180px;
@@ -211,10 +221,6 @@ span.lightblue { color: #7BA7E0; }
 
 #recent-container .svg-container {
   overflow-x: scroll;
-}
-
-#legend-wrapper{
-	width: 30%;
 }
 
 #recent-wrapper{
