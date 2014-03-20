@@ -887,60 +887,27 @@ function narrative_player_buttons_initialize()
 	var nar_id = player_wrappers.attr('id').substring(10);
 
 	//Handle flagging of narrative
-	jQuery(".action-narrative-report").not('.flag-not-clicked').removeClass('flag-not-clicked').click(function() {
-		jQuery('.comments-container').hide('fast');
-		jQuery('.player-wrapper').hide('fast');
-
-		//if there is already a flag narrative form in the player, remove it and return to the player
-		if(jQuery(".flag-narrative-wrapper").length)
+	jQuery(".action-narrative-report").not('.flag-clicked').addClass('flag-not-clicked').click(function() {
+		var url = yd_settings.site_url + "player/flag/" + nar_id;
+		//jQuery(this).removeClass("action-narrative-report");
+		if(jQuery(this).hasClass("flag-clicked"))
 		{
-			document.getElementById("narrative_audio").play();
-			//remove the flag narrative form
-			jQuery("#colorbox .flag-narrative-wrapper").remove();
-			//bring back the player and comments
-			jQuery('.comments-container').fadeIn('fast');
-			jQuery('.player-wrapper').fadeIn('fast');
-			jQuery(".action-narrative-report").addClass('flag-not-clicked');
+			return;
 		}
-		else 
+		else
 		{
-			//add the narrative flag form to the colorbox
-			jQuery(".page-header").after("<div class='flag-narrative-wrapper float-left'></div>");
-			//pause the audio player
-			document.getElementById("narrative_audio").pause();
-			//load the flag narrative form from the views
-			jQuery("#colorbox .flag-narrative-wrapper").load(yd_settings.site_url + 'player/flag_narrative_form');
-			jQuery(".action-narrative-report").addClass('flag-not-clicked');
-		}
-		/*var url = yd_settings.site_url + "player/flag/" + nar_id;
-		jQuery.post(url)
+			jQuery.post(url)
 			.done(function() {
-				alert("Thank you, narrative has been reported.");
+				jQuery(".action-narrative-report").css('color', 'red');
+				jQuery(".action-narrative-report").text("Narrative Reported");
+				jQuery(".action-narrative-report").removeClass("flag-not-clicked")
+				jQuery(".action-narrative-report").addClass('flag-clicked');
 			})
 			.fail(function() {
 				alert("An error occurred while reporting the narrative. Please try again.")
-			});*/
-	});
-
-	//Narrative flag description handler
-	jQuery(".flag-narrative-wrapper #flag-narrative-form .flag-narrative-post a").click(function() {
-		//alert("Enter");
-		jQuery(this).addClass('disabled');
-		var url = yd_settings.site_url + "player/flag/" + nar_id;
-		var formdata = jQuery("#flag-narrative-form").serialize();
-		jQuery.post(url, formdata)
-			.done(function() {
-				alert("Thank you, narrative has been reported.");
-				jQuery("#colorbox .flag-narrative-wrapper").remove();
-				//bring back the player and comments
-				jQuery('.comments-container').fadeIn('fast');
-				jQuery('.player-wrapper').fadeIn('fast');
-				document.getElementById("narrative_audio").play();
-			})
-			.fail(function() {
-				alert("An error occurred while reporting the narrative. Please try again.");
-				jQuery(".flag-narrative-post").removeClass('disabled');
 			});
+		}
+		
 	});
 
 	//Handle bookmarking of narrative
