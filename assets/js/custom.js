@@ -602,37 +602,47 @@ function narrative_bind_player(svgselect) {
 					player.data('mediaelementplayer').remove();
 				}
 
-				//Notify Google Analytics of partial or full play
-				if(document.getElementsByName("fullPlay")[0].value == "true")
-				{
-					_gaq.push(['_trackPageview', narrative_url + "/full"]);
-				}
-				else
-				{
-					_gaq.push(['_trackPageview', narrative_url + "/partial"]);
-				}
 
-				//Notify Google Analytics of agree or disagree or nothing
-				if(document.getElementsByName("opinion")[0].value == "agree")
+        //In the event that there is not media element, do not collect analytics,
+        // TO_DO: proper fix
+        if(document.getElementById("DNE") != null) {
+          return;
+        }
+        else
 				{
-					_gaq.push(['_trackPageview', narrative_url + "/agree"]);
-				}
-				else if(document.getElementsByName("opinion")[0].value == "disagree")
-				{
-					_gaq.push(['_trackPageview', narrative_url + "/disagree"]);
-				}
+          //Notify Google Analytics of partial or full play
+  				if(document.getElementsByName("fullPlay")[0].value == "true")
+  				{
+  					_gaq.push(['_trackPageview', narrative_url + "/full"]);
+  				}
+  				else
+  				{
+  					_gaq.push(['_trackPageview', narrative_url + "/partial"]);
+            console.log("blahh");
+  				}
 
-				//Notify Google Analytics of bookmarking or nothing
-				if(document.getElementsByName("bookmark")[0].value == "true")
-				{
-					_gaq.push(['_trackPageview', narrative_url + "/bookmark"]);
-				}
+  				//Notify Google Analytics of agree or disagree or nothing
+  				if(document.getElementsByName("opinion")[0].value == "agree")
+  				{
+  					_gaq.push(['_trackPageview', narrative_url + "/agree"]);
+  				}
+  				else if(document.getElementsByName("opinion")[0].value == "disagree")
+  				{
+  					_gaq.push(['_trackPageview', narrative_url + "/disagree"]);
+  				}
 
-				//Notify Google Analytics of sharing or nothing
-				if(document.getElementsByName("share")[0].value == "true")
-				{
-					_gaq.push(['_trackPageview', narrative_url + "/share"]);
-				}
+  				//Notify Google Analytics of bookmarking or nothing
+  				if(document.getElementsByName("bookmark")[0].value == "true")
+  				{
+  					_gaq.push(['_trackPageview', narrative_url + "/bookmark"]);
+  				}
+
+  				//Notify Google Analytics of sharing or nothing
+  				if(document.getElementsByName("share")[0].value == "true")
+  				{
+  					_gaq.push(['_trackPageview', narrative_url + "/share"]);
+  				}
+        }
 			},
 			onClosed: function() {
 				// Modify address bar without reloading page

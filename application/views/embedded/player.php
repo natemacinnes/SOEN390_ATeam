@@ -67,6 +67,6 @@ if (file_exists($path)):
 		</div>
 	</div>
 <?php else: ?>
-	<p>Narrative does not exist.</p>
+	<p id="DNE">Narrative does not exist.</p>
 <?php endif; ?>
 
