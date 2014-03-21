@@ -872,15 +872,68 @@ function narrative_player_buttons_initialize()
 {
 	show_share_url();
 
+	//get narrative ID
+	var player_wrappers = jQuery(".player-wrapper");
+	if (!player_wrappers.length)
+	{
+		return;
+	}
+	var nar_id = player_wrappers.attr('id').substring(10);
+
 	//Handle flagging of narrative
-	jQuery(".action-narrative-report").click(function() {
-		var url = yd_settings.site_url + "player/flag/" + nar_id;
+	jQuery(".action-narrative-report").not('.flag-not-clicked').removeClass('flag-not-clicked').click(function() {
+		jQuery('.comments-container').hide('fast');
+		jQuery('.player-wrapper').hide('fast');
+
+		//if there is already a flag narrative form in the player, remove it and return to the player
+		if(jQuery("#colorbox .flag-narrative-wrapper").length)
+		{
+			document.getElementById("narrative_audio").play();
+			//remove the flag narrative form
+			jQuery("#colorbox .flag-narrative-wrapper").remove();
+			//bring back the player and comments
+			jQuery('.comments-container').fadeIn('fast');
+			jQuery('.player-wrapper').fadeIn('fast');
+			jQuery(".action-narrative-report").addClass('flag-not-clicked');
+		}
+		else 
+		{
+			//add the narrative flag form to the colorbox
+			jQuery(".page-header").after("<div class='flag-narrative-wrapper float-left'></div>");
+			//pause the audio player
+			document.getElementById("narrative_audio").pause();
+			//load the flag narrative form from the views
+			jQuery("#colorbox .flag-narrative-wrapper").load(yd_settings.site_url + 'player/flag_narrative_form');
+			jQuery(".action-narrative-report").addClass('flag-not-clicked');
+		}
+		/*var url = yd_settings.site_url + "player/flag/" + nar_id;
 		jQuery.post(url)
 			.done(function() {
 				alert("Thank you, narrative has been reported.");
 			})
 			.fail(function() {
 				alert("An error occurred while reporting the narrative. Please try again.")
+			});*/
+	});
+
+	//Narrative flag description handler
+	jQuery(".flag-narrative-wrapper #flag-narrative-form .flag-narrative-post a").click(function() {
+		alert("Enter");
+		jQuery(this).addClass('disabled');
+		var url = yd_settings.site_url + "player/flag/" + nar_id;
+		var formdata = jQuery("#flag-narrative-form").serialize();
+		jQuery.post(url, formdata)
+			.done(function() {
+				alert("Thank you, narrative has been reported.");
+				jQuery("#colorbox .flag-narrative-wrapper").remove();
+				//bring back the player and comments
+				jQuery('.comments-container').fadeIn('fast');
+				jQuery('.player-wrapper').fadeIn('fast');
+				document.getElementById("narrative_audio").play();
+			})
+			.fail(function() {
+				alert("An error occurred while reporting the narrative. Please try again.");
+				jQuery(".flag-narrative-post").removeClass('disabled');
 			});
 	});
 
@@ -896,13 +949,7 @@ function narrative_player_buttons_initialize()
 
 	//local var to decide agree/disagree
 	var last_consensus = "";
-	//get narrative ID
-	var player_wrappers = jQuery(".player-wrapper");
-	if (!player_wrappers.length)
-	{
-		return;
-	}
-	var nar_id = player_wrappers.attr('id').substring(10);
+
 	//If agree or disagree button is pressed
 	jQuery(".player-buttons .float-right .btn-group .btn").click(function() {
 		var clicked = this;
@@ -911,8 +958,10 @@ function narrative_player_buttons_initialize()
 		var current_disagrees = parseInt(jQuery.trim(jQuery(".player-stats .float-right .red.text").text()));
 		var url = "";
 
+		jQuery(".player-buttons .float-right .btn-group .btn").addClass('disabled')
+
 		//Increment the agrees, decrement the disagrees
-		if(last_concensus == "Agree" && jQuery.trim(jQuery(this).text()) == "Disagree")
+		if(last_consensus == "agree" && new_consensus == "disagree")
 		{
 			url = yd_settings.site_url + "ajax/toggle_agree_to_disagree/" + nar_id;
 			current_agrees -= 1;
@@ -954,7 +1003,11 @@ function narrative_player_buttons_initialize()
 		// After whatever it was we did, update consensus
 		jQuery.post(url)
 			.done(function(data) {
-				jQuery(".player-buttons .float-right .btn-group .btn").not(clicked).removeClass('active btn-primary');
+				jQuery(".player-buttons .float-right .btn-group .btn")
+					.removeClass('disabled')
+					.not(clicked)
+					.removeClass('active btn-primary');
+
 				jQuery(clicked).toggleClass('active btn-primary');
 
 				last_consensus = "";
