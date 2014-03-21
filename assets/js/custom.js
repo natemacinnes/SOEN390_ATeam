@@ -852,23 +852,41 @@ function initialize_commenting() {
 				alert("An error occurred while adding your comment. Please try again.");
 			});
 	});
-	// Click handler: Comment (on comment)
+
+	//Click handler: Load reply form
 	jQuery(".action-comment-reply").not('.comment-processed').addClass('comment-processed').click(function() {
+		var parent_body = jQuery(this).parent().siblings('.comment-body').text();
+		var parent_id = jQuery(this).parent().siblings('.comment-id').val();
+		var url = yd_settings.site_url + 'comments/reply_form/' + parent_id + '/' + parent_body;
+		jQuery.post(url, function(data) {
+			if(jQuery(".reply").length)
+			{
+				jQuery(".reply").remove();
+			}
+			jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
+			initialize_commenting();
+		});
+	});
+
+	// Click handler: submit a reply to a comment
+	//jQuery(".action-reply-post").not('.comment-processed').addClass('comment-processed').click(function() {
+	jQuery(".action-reply-post").not('.comment-processed').addClass('comment-processed').click(function() {
 		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
-		var parent_comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
-		var url = yd_settings.site_url + "comments/reply/" + narrative_id + '/' + parent_comment_id;
-		var formdata = jQuery("#new-comment-form").serialize();
+		var parent_id = jQuery(this).parent().siblings(".parent-id").val();
+		//alert(narrative_id + " " + parent_id);
+		var url = yd_settings.site_url + "comments/reply/" + narrative_id + '/' + parent_id;
+		var formdata = jQuery("#new-reply-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
-				// Remove the 'no comment' message if it exists
-				jQuery('.comments-wrapper .remove-me').remove();
+				// Remove the 'reply box if it exists
+				jQuery('.reply').remove();
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
-				jQuery("#new-comment").val('');
+				//jQuery("#new-comment").val('');
 				initialize_commenting();
 			})
 			.fail(function() {
-				alert("An error occurred while adding your comment. Please try again.");
+				alert("An error occurred while replying to the comment. Please try again.");
 			});
 	});
 	// Click handler: Flag (on comment)
@@ -925,60 +943,27 @@ function narrative_player_buttons_initialize()
 	var nar_id = player_wrappers.attr('id').substring(10);
 
 	//Handle flagging of narrative
-	jQuery(".action-narrative-report").not('.flag-not-clicked').removeClass('flag-not-clicked').click(function() {
-		jQuery('.comments-container').hide('fast');
-		jQuery('.player-wrapper').hide('fast');
-
-		//if there is already a flag narrative form in the player, remove it and return to the player
-		if(jQuery("#colorbox .flag-narrative-wrapper").length)
+	jQuery(".action-narrative-report").not('.flag-clicked').addClass('flag-not-clicked').click(function() {
+		var url = yd_settings.site_url + "player/flag/" + nar_id;
+		//jQuery(this).removeClass("action-narrative-report");
+		if(jQuery(this).hasClass("flag-clicked"))
 		{
-			document.getElementById("narrative_audio").play();
-			//remove the flag narrative form
-			jQuery("#colorbox .flag-narrative-wrapper").remove();
-			//bring back the player and comments
-			jQuery('.comments-container').fadeIn('fast');
-			jQuery('.player-wrapper').fadeIn('fast');
-			jQuery(".action-narrative-report").addClass('flag-not-clicked');
+			return;
 		}
 		else
 		{
-			//add the narrative flag form to the colorbox
-			jQuery(".page-header").after("<div class='flag-narrative-wrapper float-left'></div>");
-			//pause the audio player
-			document.getElementById("narrative_audio").pause();
-			//load the flag narrative form from the views
-			jQuery("#colorbox .flag-narrative-wrapper").load(yd_settings.site_url + 'player/flag_narrative_form');
-			jQuery(".action-narrative-report").addClass('flag-not-clicked');
-		}
-		/*var url = yd_settings.site_url + "player/flag/" + nar_id;
-		jQuery.post(url)
+			jQuery.post(url)
 			.done(function() {
-				alert("Thank you, narrative has been reported.");
+				jQuery(".action-narrative-report").css('color', 'red');
+				jQuery(".action-narrative-report").text("Narrative Reported");
+				jQuery(".action-narrative-report").removeClass("flag-not-clicked")
+				jQuery(".action-narrative-report").addClass('flag-clicked');
 			})
 			.fail(function() {
 				alert("An error occurred while reporting the narrative. Please try again.")
-			});*/
-	});
-
-	//Narrative flag description handler
-	jQuery(".flag-narrative-wrapper #flag-narrative-form .flag-narrative-post a").click(function() {
-		alert("Enter");
-		jQuery(this).addClass('disabled');
-		var url = yd_settings.site_url + "player/flag/" + nar_id;
-		var formdata = jQuery("#flag-narrative-form").serialize();
-		jQuery.post(url, formdata)
-			.done(function() {
-				alert("Thank you, narrative has been reported.");
-				jQuery("#colorbox .flag-narrative-wrapper").remove();
-				//bring back the player and comments
-				jQuery('.comments-container').fadeIn('fast');
-				jQuery('.player-wrapper').fadeIn('fast');
-				document.getElementById("narrative_audio").play();
-			})
-			.fail(function() {
-				alert("An error occurred while reporting the narrative. Please try again.");
-				jQuery(".flag-narrative-post").removeClass('disabled');
 			});
+		}
+		
 	});
 
 	//Handle bookmarking of narrative
