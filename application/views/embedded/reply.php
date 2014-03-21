@@ -1,6 +1,6 @@
 <div class="comment reply">
 	<input type="hidden" class="parent-id" name="parent_id" value="<?php echo $parent_id; ?>" />
-	<p class="quote"><?php echo $parent_body; ?></p>
+	<p class="quote"><?php echo urldecode($parent_body); ?></p>
 	<form method="POST" name="new-reply-form" id="new-reply-form">
 		<input type="hidden" name="narrative_id" value="" />
 		<textarea class="form-control" rows="3" placeholder="Enter your Reply..." id="new-reply" name="comment-text"></textarea>
