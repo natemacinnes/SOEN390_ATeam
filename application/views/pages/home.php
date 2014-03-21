@@ -31,7 +31,7 @@
 				<a href="#fr" title="French / Fran&ccedil;ais" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="flagicon flagicon-fr"></span> FR</a>
 			</div>
 			<div class="btn-group btn-group-horizontal filter-container">
-				<a href="#history" title="Watched / Discussions vue" class="btn btn-default active" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="glyphicon glyphicon-map-marker"></span></a>
+				<a href="#history" title="Watched / Discussions vue" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="glyphicon glyphicon-map-marker"></span></a>
 			</div>
 
 			<div class="help-container">
