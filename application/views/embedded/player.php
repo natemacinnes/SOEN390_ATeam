@@ -18,8 +18,6 @@ if (file_exists($path)):
 		<audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls' class="autoplay"></audio></br>
 		<?php echo form_hidden('fullPlay', 'false'); ?>
 		<?php echo form_hidden('opinion', 'null'); ?>
-		<?php echo form_hidden('share', 'false'); ?>
-		<?php echo form_hidden('bookmark', 'false'); ?>
 
 		<div class="player-stats">
 			<div class="float-left">

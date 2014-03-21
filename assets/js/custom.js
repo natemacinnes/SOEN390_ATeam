@@ -615,18 +615,6 @@ function narrative_bind_player(svgselect) {
 				{
 					_gaq.push(['_trackPageview', narrative_url + "/disagree"]);
 				}
-
-				//Notify Google Analytics of sharing or nothing
-				if(document.getElementsByName("share")[0].value == "true")
-				{
-					_gaq.push(['_trackPageview', narrative_url + "/share"]);
-				}
-
-				//Notify Google Analytics of bookmarking or nothing
-				if(document.getElementsByName("bookmark")[0].value == "true")
-				{
-					_gaq.push(['_trackPageview', narrative_url + "/bookmark"]);
-				}
 			},
 			onClosed: function() {
 				// Modify address bar without reloading page
@@ -896,6 +884,9 @@ function initialize_commenting() {
 		var formdata = jQuery("#new-comment-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
+				//Notify Google Analytics of comment flagging
+				_gaq.push(['_trackPageview', url]);
+
 				jQuery("#new-comment").val('');
 				jQuery('#comment-' + comment_id + ' .action-comment-report').css('color', 'red');
 				alert("Thank you, this comment has been reported.");
@@ -954,6 +945,9 @@ function narrative_player_buttons_initialize()
 		{
 			jQuery.post(url)
 			.done(function() {
+				//Notify Google Analytics of narrative flagging
+				_gaq.push(['_trackPageview', url]);
+
 				jQuery(".action-narrative-report").css('color', 'red');
 				jQuery(".action-narrative-report").text("Narrative Reported");
 				jQuery(".action-narrative-report").removeClass("flag-not-clicked")
@@ -963,16 +957,22 @@ function narrative_player_buttons_initialize()
 				alert("An error occurred while reporting the narrative. Please try again.")
 			});
 		}
-		
+
 	});
 
 	//Handle bookmarking of narrative
 	jQuery(".bookmark-btn").click(function() {
-			add_bookmark();
+		//Notify Google Analytics of bookmarking
+		_gaq.push(['_trackPageview', narrative_url + "/bookmark"]);
+
+		add_bookmark();
 	});
 
 	//handle sharing action
 	jQuery(".share-btn").click(function() {
+		//Notify Google Analytics of sharing
+		_gaq.push(['_trackPageview', narrative_url + "/share"]);
+
 		show_share_url();
 	})
 
@@ -1094,12 +1094,10 @@ function narrative_player_buttons_initialize()
 
 function add_bookmark()
 {
-	document.getElementsByName("bookmark")[0].value = "true";
 	alert('Please press Control+D to bookmark this page; your browser does not support automatic bookmark creation.');
 }
 
 function show_share_url(){
-	document.getElementsByName("share")[0].value = "true";
 	jQuery(".link-content").toggle();
 	jQuery(this).colorbox.resize();
 }
