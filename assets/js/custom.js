@@ -837,10 +837,14 @@ function initialize_commenting() {
 	// Click handler: Comment (root level)
 	jQuery(".action-comment-post").not('.comment-processed').addClass('comment-processed').click(function() {
 		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
-		var url = yd_settings.site_url + "comments/reply/" + narrative_id;
+		var uri = "comments/reply/" + narrative_id;
+		var url = yd_settings.site_url + uri;
 		var formdata = jQuery("#new-comment-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
+				//Notify Google Analytics of addition of comment root level
+				_gaq.push(['_trackPageview', "/" + uri]);
+
 				// Remove the 'no comment' message if it exists
 				jQuery('.comments-wrapper .remove-me').remove();
 				// Add the new comment, pre-rendered by the controller
@@ -874,10 +878,14 @@ function initialize_commenting() {
 		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
 		var parent_id = jQuery(this).parent().siblings(".parent-id").val();
 		//alert(narrative_id + " " + parent_id);
-		var url = yd_settings.site_url + "comments/reply/" + narrative_id + '/' + parent_id;
+		var uri = "comments/reply/" + narrative_id + '/' + parent_id;
+		var url = yd_settings.site_url + uri;
 		var formdata = jQuery("#new-reply-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
+				//Notifying Google Analytics of commenting on a comment
+				_gaq.push(['_trackPageview', "/" + uri]);
+
 				// Remove the 'reply box if it exists
 				jQuery('.reply').remove();
 				// Add the new comment, pre-rendered by the controller
