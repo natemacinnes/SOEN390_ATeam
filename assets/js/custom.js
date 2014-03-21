@@ -578,7 +578,7 @@ function narrative_bind_player(svgselect) {
 			speed: 700,
 			onComplete: function() {
 
-				//Registering loading of the narrative in the colorbox
+				//Registering loading of the narrative in the colorbox - Commented out because Google analytics was tracking 1 load of /narrative/# AND 1 load of /player/# (offsetting percentages)
 				//_gaq.push(['_trackPageview', narrative_url]);
 
 				narrative_player_load();
@@ -599,11 +599,11 @@ function narrative_bind_player(svgselect) {
 				//Notify server of partial or full play
 				if(document.getElementsByName("fullPlay")[0].value == "true")
 				{
-					_gaq.push(['_trackNarrativeFullPlay', narrative_url]);
+					_gaq.push(['_trackPageview', narrative_url + "/full"]);
 				}
 				else
 				{
-					_gaq.push(['_trackNarrativePartialPlay', narrative_url]);
+					_gaq.push(['_trackPageview', narrative_url + "/partial"]);
 				}
 			},
 			onClosed: function() {
