@@ -748,12 +748,37 @@ function narrative_player_load() {
 			}
 		}, false);
 		// Update as the audio continues to play.
+		var listenedTime = 0;
+		var lastTime = 0;
+		var skippedTime = 0;
 		myaudio.addEventListener('timeupdate', function(e) {
 			var time_now = Date.now();
 			if (time_now - player_last_update > yd_settings.constants.NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL) {
 				player_last_update = time_now;
 				narrative_player_update_image(myaudio.currentTime);
 			}
+
+			//Detection of absolute full play
+			var difference = myaudio.currentTime - lastTime;
+
+			if(difference > 1 || difference < 0)
+			{
+				//Skip detected
+				skippedTime += difference;
+			}
+			else
+			{
+				listenedTime += difference;
+			}
+
+			if(skippedTime <= 0 && (listenedTime + skippedTime) > !!!!!!!Length of narrative!!!!!! - 1)
+			{
+				//This constitutes a full play of the narrative
+				//TODO add partial play
+				_gaq.push(['_trackNarrativeFullPlay', narrative_url]);
+			}
+
+			lastTime = myaudio.currentTime;
 		}, false);
 	}
 }
@@ -884,7 +909,7 @@ function narrative_player_buttons_initialize()
 			jQuery('.player-wrapper').fadeIn('fast');
 			jQuery(".action-narrative-report").addClass('flag-not-clicked');
 		}
-		else 
+		else
 		{
 			//add the narrative flag form to the colorbox
 			jQuery(".page-header").after("<div class='flag-narrative-wrapper float-left'></div>");
