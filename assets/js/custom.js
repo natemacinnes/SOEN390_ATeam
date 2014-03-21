@@ -615,6 +615,18 @@ function narrative_bind_player(svgselect) {
 				{
 					_gaq.push(['_trackPageview', narrative_url + "/disagree"]);
 				}
+
+				//Notify Google Analytics of bookmarking or nothing
+				if(document.getElementsByName("bookmark")[0].value == "true")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/bookmark"]);
+				}
+
+				//Notify Google Analytics of sharing or nothing
+				if(document.getElementsByName("share")[0].value == "true")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/share"]);
+				}
 			},
 			onClosed: function() {
 				// Modify address bar without reloading page
@@ -880,12 +892,13 @@ function initialize_commenting() {
 	// Click handler: Flag (on comment)
 	jQuery(".action-comment-report").not('.comment-processed').addClass('comment-processed').click(function() {
 		var comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
-		var url = yd_settings.site_url + "comments/flag/" + comment_id;
+		var uri = "comments/flag/" + comment_id;
+		var url = yd_settings.site_url + uri;
 		var formdata = jQuery("#new-comment-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
 				//Notify Google Analytics of comment flagging
-				_gaq.push(['_trackPageview', url]);
+				_gaq.push(['_trackPageview', "/" + uri]);
 
 				jQuery("#new-comment").val('');
 				jQuery('#comment-' + comment_id + ' .action-comment-report').css('color', 'red');
@@ -935,7 +948,8 @@ function narrative_player_buttons_initialize()
 
 	//Handle flagging of narrative
 	jQuery(".action-narrative-report").not('.flag-clicked').addClass('flag-not-clicked').click(function() {
-		var url = yd_settings.site_url + "player/flag/" + nar_id;
+		var uri = "player/flag/" + nar_id;
+		var url = yd_settings.site_url + uri;
 		//jQuery(this).removeClass("action-narrative-report");
 		if(jQuery(this).hasClass("flag-clicked"))
 		{
@@ -946,7 +960,7 @@ function narrative_player_buttons_initialize()
 			jQuery.post(url)
 			.done(function() {
 				//Notify Google Analytics of narrative flagging
-				_gaq.push(['_trackPageview', url]);
+				_gaq.push(['_trackPageview', "/" + uri]);
 
 				jQuery(".action-narrative-report").css('color', 'red');
 				jQuery(".action-narrative-report").text("Narrative Reported");
@@ -962,17 +976,13 @@ function narrative_player_buttons_initialize()
 
 	//Handle bookmarking of narrative
 	jQuery(".bookmark-btn").click(function() {
-		//Notify Google Analytics of bookmarking
-		_gaq.push(['_trackPageview', narrative_url + "/bookmark"]);
-
+		document.getElementsByName("bookmark")[0].value = "true"; //To notify Google analytics of the bookmark action
 		add_bookmark();
 	});
 
 	//handle sharing action
 	jQuery(".share-btn").click(function() {
-		//Notify Google Analytics of sharing
-		_gaq.push(['_trackPageview', narrative_url + "/share"]);
-
+		document.getEleemntsByName("share")[0].value = "true"; //To notify Google analytics of the share action
 		show_share_url();
 	})
 
