@@ -596,7 +596,7 @@ function narrative_bind_player(svgselect) {
 					player.data('mediaelementplayer').remove();
 				}
 
-				//Notify server of partial or full play
+				//Notify Google Analytics of partial or full play
 				if(document.getElementsByName("fullPlay")[0].value == "true")
 				{
 					_gaq.push(['_trackPageview', narrative_url + "/full"]);
@@ -604,6 +604,28 @@ function narrative_bind_player(svgselect) {
 				else
 				{
 					_gaq.push(['_trackPageview', narrative_url + "/partial"]);
+				}
+
+				//Notify Google Analytics of agree or disagree or nothing
+				if(document.getElementsByName("opinion")[0].value == "agree")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/agree"]);
+				}
+				else if(document.getElementsByName("opinion")[0].value == "disagree")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/disagree"]);
+				}
+
+				//Notify Google Analytics of sharing or nothing
+				if(document.getElementsByName("share")[0].value == "true")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/share"]);
+				}
+
+				//Notify Google Analytics of bookmarking or nothing
+				if(document.getElementsByName("bookmark")[0].value == "true")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/bookmark"]);
 				}
 			},
 			onClosed: function() {
@@ -988,6 +1010,7 @@ function narrative_player_buttons_initialize()
 			url = yd_settings.site_url + "ajax/toggle_agree_to_disagree/" + nar_id;
 			current_agrees -= 1;
 			current_disagrees += 1;
+			document.getElementsByName("opinion")[0].value = "agree";
 		}
 		//Increment the disagrees, decrement the agrees
 		else if (last_consensus == "disagree" && new_consensus == "agree")
@@ -995,6 +1018,7 @@ function narrative_player_buttons_initialize()
 			url = yd_settings.site_url + "ajax/toggle_disagree_to_agree/" + nar_id;
 			current_agrees += 1;
 			current_disagrees -= 1;
+			document.getElementsByName("opinion")[0].value = "disagree";
 		}
 		//Increment the disagrees or agrees
 		else if (last_consensus == "")
@@ -1003,10 +1027,12 @@ function narrative_player_buttons_initialize()
 			if (new_consensus == "agree")
 			{
 				current_agrees += 1;
+				document.getElementsByName("opinion")[0].value = "agree";
 			}
 			else if (new_consensus == "disagree")
 			{
 				current_disagrees += 1;
+				document.getElementsByName("opinion")[0].value = "disagree";
 			}
 		}
 		else if (last_consensus == new_consensus)
@@ -1015,10 +1041,12 @@ function narrative_player_buttons_initialize()
 			if (new_consensus == "agree")
 			{
 				current_agrees -= 1;
+				document.getElementsByName("opinion")[0].value = "null";
 			}
 			else if (new_consensus == "disagree")
 			{
 				current_disagrees -= 1;
+				document.getElementsByName("opinion")[0].value = "null";
 			}
 		}
 
@@ -1081,10 +1109,12 @@ function narrative_player_buttons_initialize()
 
 function add_bookmark()
 {
+	document.getElementsByName("bookmark")[0].value = "true";
 	alert('Please press Control+D to bookmark this page; your browser does not support automatic bookmark creation.');
 }
 
 function show_share_url(){
+	document.getElementsByName("share")[0].value = "true";
 	jQuery(".link-content").toggle();
 	jQuery(this).colorbox.resize();
 }
