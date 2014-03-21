@@ -48,9 +48,12 @@
 		<!-- this sets the background color (must match recent-container) -->
 			<div id="homepage-content-wrapper" class="clearfix panel-body">
 				<div id="bubble-container">
-					<div class="svg-container svg-container-1 float-left"></div>
+
+					<div class="svg-container svg-container-1 float-left"></p></div>
+
 					<div class="svg-container svg-container-0 float-left"></div>
-					<div class="svg-container svg-container-2 float-left"></div>
+
+					<div class="svg-container svg-container-2 float-left"><p>Bob</p></div>
 				</div>
 			</div>
 		</div>
