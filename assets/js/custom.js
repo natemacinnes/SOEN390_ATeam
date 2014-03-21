@@ -584,8 +584,8 @@ function narrative_bind_player(svgselect) {
 			speed: 700,
 			onComplete: function() {
 
-				//Registering loading of the narrative in the colorbox
-				_gaq.push(['_trackPageview', narrative_url]);
+				//Registering loading of the narrative in the colorbox - Commented out because Google analytics was tracking 1 load of /narrative/# AND 1 load of /player/# (offsetting percentages)
+				//_gaq.push(['_trackPageview', narrative_url]);
 
 				narrative_player_load();
 				narrative_player_buttons_initialize();
@@ -600,6 +600,38 @@ function narrative_bind_player(svgselect) {
 				if (player.length && player.data('mediaelementplayer')) {
 					player.data('mediaelementplayer').pause();
 					player.data('mediaelementplayer').remove();
+				}
+
+				//Notify Google Analytics of partial or full play
+				if(document.getElementsByName("fullPlay")[0].value == "true")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/full"]);
+				}
+				else
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/partial"]);
+				}
+
+				//Notify Google Analytics of agree or disagree or nothing
+				if(document.getElementsByName("opinion")[0].value == "agree")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/agree"]);
+				}
+				else if(document.getElementsByName("opinion")[0].value == "disagree")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/disagree"]);
+				}
+
+				//Notify Google Analytics of bookmarking or nothing
+				if(document.getElementsByName("bookmark")[0].value == "true")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/bookmark"]);
+				}
+
+				//Notify Google Analytics of sharing or nothing
+				if(document.getElementsByName("share")[0].value == "true")
+				{
+					_gaq.push(['_trackPageview', narrative_url + "/share"]);
 				}
 			},
 			onClosed: function() {
@@ -746,8 +778,7 @@ function narrative_player_load() {
 		var myaudio = document.getElementById("narrative_audio");
 		// Update when the audio is ready to play (at load or after seeking)
 		// NOTE: e.timeStamp() is not consistent - see http://stackoverflow.com/questions/18197401/javascript-event-timestamps-not-consistent
-		var first_update = null;
-    myaudio.addEventListener('canplay', function(e) {
+		myaudio.addEventListener('canplay', function(e) {
 			player_last_update = Date.now();
 			narrative_player_update_image(myaudio.currentTime);
 			if (jQuery(this).hasClass('autoplay')) {
@@ -755,17 +786,36 @@ function narrative_player_load() {
 			}
 		}, false);
 		// Update as the audio continues to play.
+		var listenedTime = 0;
+		var lastTime = 0;
+		var skippedTime = 0;
 		myaudio.addEventListener('timeupdate', function(e) {
 			var time_now = Date.now();
-      if (first_update == null) {
-        console.log("first update: " + time_now);
-        first_update = time_now;
-      }
 			if (time_now - player_last_update > yd_settings.constants.NARRATIVE_PLAYER_IMAGE_UPDATE_INTERVAL) {
 				player_last_update = time_now;
 				narrative_player_update_image(myaudio.currentTime);
 			}
-      console.log("update: " + time_now)
+
+			//Detection of absolute full play
+			var difference = myaudio.currentTime - lastTime;
+
+			if(difference > 1 || difference < 0)
+			{
+				//Skip detected
+				skippedTime += difference;
+			}
+			else
+			{
+				listenedTime += difference;
+			}
+
+			if(skippedTime <= 0 && (listenedTime + skippedTime) > myaudio.duration - 1)
+			{
+				//This constitutes a full play of the narrative
+				document.getElementsByName("fullPlay")[0].value = "true";
+			}
+
+			lastTime = myaudio.currentTime;
 		}, false);
 	}
 }
@@ -793,10 +843,14 @@ function initialize_commenting() {
 	// Click handler: Comment (root level)
 	jQuery(".action-comment-post").not('.comment-processed').addClass('comment-processed').click(function() {
 		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
-		var url = yd_settings.site_url + "comments/reply/" + narrative_id;
+		var uri = "comments/reply/" + narrative_id;
+		var url = yd_settings.site_url + uri;
 		var formdata = jQuery("#new-comment-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
+				//Notify Google Analytics of addition of comment root level
+				_gaq.push(['_trackPageview', "/" + uri]);
+
 				// Remove the 'no comment' message if it exists
 				jQuery('.comments-wrapper .remove-me').remove();
 				// Add the new comment, pre-rendered by the controller
@@ -808,32 +862,58 @@ function initialize_commenting() {
 				alert("An error occurred while adding your comment. Please try again.");
 			});
 	});
-	// Click handler: Comment (on comment)
+
+	//Click handler: Load reply form
 	jQuery(".action-comment-reply").not('.comment-processed').addClass('comment-processed').click(function() {
+		var parent_body = jQuery(this).parent().siblings('.comment-body').text();
+		var parent_id = jQuery(this).parent().siblings('.comment-id').val();
+		var url = yd_settings.site_url + 'comments/reply_form/' + parent_id + '/' + parent_body;
+		jQuery.post(url, function(data) {
+			if(jQuery(".reply").length)
+			{
+				jQuery(".reply").remove();
+			}
+			jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
+			initialize_commenting();
+		});
+	});
+
+	// Click handler: submit a reply to a comment
+	//jQuery(".action-reply-post").not('.comment-processed').addClass('comment-processed').click(function() {
+	jQuery(".action-reply-post").not('.comment-processed').addClass('comment-processed').click(function() {
 		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
-		var parent_comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
-		var url = yd_settings.site_url + "comments/reply/" + narrative_id + '/' + parent_comment_id;
-		var formdata = jQuery("#new-comment-form").serialize();
+		var parent_id = jQuery(this).parent().siblings(".parent-id").val();
+		//alert(narrative_id + " " + parent_id);
+		var uri = "comments/reply/" + narrative_id + '/' + parent_id;
+		var url = yd_settings.site_url + uri;
+		var formdata = jQuery("#new-reply-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
-				// Remove the 'no comment' message if it exists
-				jQuery('.comments-wrapper .remove-me').remove();
+				//Notifying Google Analytics of commenting on a comment
+				_gaq.push(['_trackPageview', "/" + uri]);
+
+				// Remove the 'reply box if it exists
+				jQuery('.reply').remove();
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
-				jQuery("#new-comment").val('');
+				//jQuery("#new-comment").val('');
 				initialize_commenting();
 			})
 			.fail(function() {
-				alert("An error occurred while adding your comment. Please try again.");
+				alert("An error occurred while replying to the comment. Please try again.");
 			});
 	});
 	// Click handler: Flag (on comment)
 	jQuery(".action-comment-report").not('.comment-processed').addClass('comment-processed').click(function() {
 		var comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
-		var url = yd_settings.site_url + "comments/flag/" + comment_id;
+		var uri = "comments/flag/" + comment_id;
+		var url = yd_settings.site_url + uri;
 		var formdata = jQuery("#new-comment-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
+				//Notify Google Analytics of comment flagging
+				_gaq.push(['_trackPageview', "/" + uri]);
+
 				jQuery("#new-comment").val('');
 				jQuery('#comment-' + comment_id + ' .action-comment-report').css('color', 'red');
 				alert("Thank you, this comment has been reported.");
@@ -881,69 +961,42 @@ function narrative_player_buttons_initialize()
 	var nar_id = player_wrappers.attr('id').substring(10);
 
 	//Handle flagging of narrative
-	jQuery(".action-narrative-report").not('.flag-not-clicked').removeClass('flag-not-clicked').click(function() {
-		jQuery('.comments-container').hide('fast');
-		jQuery('.player-wrapper').hide('fast');
-
-		//if there is already a flag narrative form in the player, remove it and return to the player
-		if(jQuery("#colorbox .flag-narrative-wrapper").length)
+	jQuery(".action-narrative-report").not('.flag-clicked').addClass('flag-not-clicked').click(function() {
+		var uri = "player/flag/" + nar_id;
+		var url = yd_settings.site_url + uri;
+		//jQuery(this).removeClass("action-narrative-report");
+		if(jQuery(this).hasClass("flag-clicked"))
 		{
-			document.getElementById("narrative_audio").play();
-			//remove the flag narrative form
-			jQuery("#colorbox .flag-narrative-wrapper").remove();
-			//bring back the player and comments
-			jQuery('.comments-container').fadeIn('fast');
-			jQuery('.player-wrapper').fadeIn('fast');
-			jQuery(".action-narrative-report").addClass('flag-not-clicked');
+			return;
 		}
-		else 
+		else
 		{
-			//add the narrative flag form to the colorbox
-			jQuery(".page-header").after("<div class='flag-narrative-wrapper float-left'></div>");
-			//pause the audio player
-			document.getElementById("narrative_audio").pause();
-			//load the flag narrative form from the views
-			jQuery("#colorbox .flag-narrative-wrapper").load(yd_settings.site_url + 'player/flag_narrative_form');
-			jQuery(".action-narrative-report").addClass('flag-not-clicked');
-		}
-		/*var url = yd_settings.site_url + "player/flag/" + nar_id;
-		jQuery.post(url)
+			jQuery.post(url)
 			.done(function() {
-				alert("Thank you, narrative has been reported.");
+				//Notify Google Analytics of narrative flagging
+				_gaq.push(['_trackPageview', "/" + uri]);
+
+				jQuery(".action-narrative-report").css('color', 'red');
+				jQuery(".action-narrative-report").text("Narrative Reported");
+				jQuery(".action-narrative-report").removeClass("flag-not-clicked")
+				jQuery(".action-narrative-report").addClass('flag-clicked');
 			})
 			.fail(function() {
 				alert("An error occurred while reporting the narrative. Please try again.")
-			});*/
-	});
-
-	//Narrative flag description handler
-	jQuery(".flag-narrative-wrapper #flag-narrative-form .flag-narrative-post a").click(function() {
-		alert("Enter");
-		jQuery(this).addClass('disabled');
-		var url = yd_settings.site_url + "player/flag/" + nar_id;
-		var formdata = jQuery("#flag-narrative-form").serialize();
-		jQuery.post(url, formdata)
-			.done(function() {
-				alert("Thank you, narrative has been reported.");
-				jQuery("#colorbox .flag-narrative-wrapper").remove();
-				//bring back the player and comments
-				jQuery('.comments-container').fadeIn('fast');
-				jQuery('.player-wrapper').fadeIn('fast');
-				document.getElementById("narrative_audio").play();
-			})
-			.fail(function() {
-				alert("An error occurred while reporting the narrative. Please try again.");
-				jQuery(".flag-narrative-post").removeClass('disabled');
 			});
+		}
+
 	});
 
 	//Handle bookmarking of narrative
 	jQuery(".bookmark-btn").click(function() {
-			add_bookmark();
+		document.getElementsByName("bookmark")[0].value = "true"; //To notify Google analytics of the bookmark action
+		add_bookmark();
 	});
 
 	//handle sharing action
 	jQuery(".share-btn").click(function() {
+		document.getEleemntsByName("share")[0].value = "true"; //To notify Google analytics of the share action
 		show_share_url();
 	})
 
@@ -966,6 +1019,7 @@ function narrative_player_buttons_initialize()
 			url = yd_settings.site_url + "ajax/toggle_agree_to_disagree/" + nar_id;
 			current_agrees -= 1;
 			current_disagrees += 1;
+			document.getElementsByName("opinion")[0].value = "agree";
 		}
 		//Increment the disagrees, decrement the agrees
 		else if (last_consensus == "disagree" && new_consensus == "agree")
@@ -973,6 +1027,7 @@ function narrative_player_buttons_initialize()
 			url = yd_settings.site_url + "ajax/toggle_disagree_to_agree/" + nar_id;
 			current_agrees += 1;
 			current_disagrees -= 1;
+			document.getElementsByName("opinion")[0].value = "disagree";
 		}
 		//Increment the disagrees or agrees
 		else if (last_consensus == "")
@@ -981,10 +1036,12 @@ function narrative_player_buttons_initialize()
 			if (new_consensus == "agree")
 			{
 				current_agrees += 1;
+				document.getElementsByName("opinion")[0].value = "agree";
 			}
 			else if (new_consensus == "disagree")
 			{
 				current_disagrees += 1;
+				document.getElementsByName("opinion")[0].value = "disagree";
 			}
 		}
 		else if (last_consensus == new_consensus)
@@ -993,10 +1050,12 @@ function narrative_player_buttons_initialize()
 			if (new_consensus == "agree")
 			{
 				current_agrees -= 1;
+				document.getElementsByName("opinion")[0].value = "null";
 			}
 			else if (new_consensus == "disagree")
 			{
 				current_disagrees -= 1;
+				document.getElementsByName("opinion")[0].value = "null";
 			}
 		}
 

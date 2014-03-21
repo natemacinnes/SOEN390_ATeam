@@ -39,20 +39,13 @@ class Player extends YD_Controller
 
 	public function flag($narrative_id)
 	{
-		$text = $this->input->post('flag-narrative');
-		if (strlen($text))
-		{
-			$this->narrative_flag_model->insert($narrative_id, $text);
-		}
-		else
-		{
-			// Set header: 400 Bad response
-			$this->output->set_status_header('400');
-		}
+		$this->narrative_flag_model->insert($narrative_id);
 	}
 
+	/* Might not need this anymore.
 	public function flag_narrative_form()
 	{
 		$this->load->view('embedded/flag_narrative');
 	}
+	*/
 }
