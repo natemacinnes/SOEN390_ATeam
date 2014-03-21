@@ -16,7 +16,8 @@ if (file_exists($path)):
 		<img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400' >
 		<br />
 		<audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls' class="autoplay"></audio></br>
-		
+		<?php echo form_hidden('fullPlay', 'false'); ?>
+
 		<div class="player-stats">
 			<div class="float-left">
 				<p><span class="glyphicon glyphicon-eye-open"></span> <?php echo $narrative['views']; ?>             <span class="bg-success success-message" style=""></span></p>

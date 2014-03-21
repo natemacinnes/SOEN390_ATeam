@@ -595,6 +595,16 @@ function narrative_bind_player(svgselect) {
 					player.data('mediaelementplayer').pause();
 					player.data('mediaelementplayer').remove();
 				}
+
+				//Notify server of partial or full play
+				if(document.getElementsByName("fullPlay")[0].value == "true")
+				{
+					_gaq.push(['_trackNarrativeFullPlay', narrative_url]);
+				}
+				else
+				{
+					_gaq.push(['_trackNarrativePartialPlay', narrative_url]);
+				}
 			},
 			onClosed: function() {
 				// Modify address bar without reloading page
@@ -771,11 +781,10 @@ function narrative_player_load() {
 				listenedTime += difference;
 			}
 
-			if(skippedTime <= 0 && (listenedTime + skippedTime) > !!!!!!!Length of narrative!!!!!! - 1)
+			if(skippedTime <= 0 && (listenedTime + skippedTime) > myaudio.duration - 1)
 			{
 				//This constitutes a full play of the narrative
-				//TODO add partial play
-				_gaq.push(['_trackNarrativeFullPlay', narrative_url]);
+				document.getElementsByName("fullPlay")[0].value = "true";
 			}
 
 			lastTime = myaudio.currentTime;
