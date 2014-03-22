@@ -46,6 +46,10 @@ body {
 	 background: #fcfcfc;
 }
 
+textarea {
+    resize: none;
+}
+
 @media only screen and (min-width: 1350px) {
 	.container {
 		width: 1320px;
@@ -141,6 +145,8 @@ span.bold{
 	padding-left: 0.1em;
 }
 
+span.italic { font-style: italic;}
+
 div.purple{ background: #743CBC; }
 div.lightgrey{ background: #777777; }
 div.lightblue{ background: #4282D3; }
@@ -224,7 +230,11 @@ span.lightblue { color: #7BA7E0; }
 }
 
 #recent-wrapper{
-	width: 68%;
+	width: 75%;
+}
+
+#legend-wrapper{
+	width: 24.5%;
 }
 
 .legend-circle {

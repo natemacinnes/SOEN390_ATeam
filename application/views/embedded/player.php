@@ -60,9 +60,10 @@ if (file_exists($path)):
 			<div class="link-content" style="display: none;">
 				<div class="input-group" style="width: 404px;">
 				  <span class="input-group-addon"><span class="glyphicon glyphicon-link"></span></span>
-				  <input type="text" class="form-control"/ value="<?php echo base_url("narratives/" . $narrative_id); ?>">
+				  <input type="text" style="resize: none;" class="form-control"/ value="<?php echo base_url("narratives/" . $narrative_id); ?>">
 				  <span class="input-group-addon"><a id="copy-share" data-clipboard-text="<?php echo base_url("narratives/" . $narrative_id); ?>" title="copy">copy</a></span>
 				</div>
+				<p><small><span class="italic grey">*Copy the text to share or save / Copier le text pour partager ou sauver</span></small></p>
 			</div>
 		</div>
 	</div>
