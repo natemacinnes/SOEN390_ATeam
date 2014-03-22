@@ -960,8 +960,19 @@ function initialize_commenting() {
  */
 function narrative_player_buttons_initialize()
 {
-	show_share_url();
+	var client = new ZeroClipboard( document.getElementById("copy-share"), {
+	  moviePath: yd_settings.site_url + "assets/zeroclipboard/ZeroClipboard.swf"
+	} );
 
+	client.on( "load", function(client) {
+	  // alert( "movie is loaded" );
+
+	  client.on( "complete", function(client, args) {
+	    // `this` is the element that was clicked
+	    //this.style.display = "none";
+	    alert("Copied text to clipboard: " + args.text );
+	  } );
+	} );
 	//get narrative ID
 	var player_wrappers = jQuery(".player-wrapper");
 	if (!player_wrappers.length)
@@ -1002,13 +1013,13 @@ function narrative_player_buttons_initialize()
 	jQuery(".bookmark-btn").click(function() {
 		document.getElementsByName("bookmark")[0].value = "true"; //To notify Google analytics of the bookmark action
 		add_bookmark();
-	});
+	}).tooltip();
 
 	//handle sharing action
 	jQuery(".share-btn").click(function() {
-		document.getEleemntsByName("share")[0].value = "true"; //To notify Google analytics of the share action
+		document.getElementsByName("share")[0].value = "true"; //To notify Google analytics of the share action
 		show_share_url();
-	})
+	}).tooltip();
 
 	//local var to decide agree/disagree
 	var last_consensus = "";
@@ -1104,7 +1115,7 @@ function narrative_player_buttons_initialize()
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-	});
+	}).tooltip();
 
 	function update_concensus_bar(agrees, disagrees)
 	{

@@ -57,10 +57,21 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="panel panel-default float-left" id="legend-wrapper">
+			<div class="panel-heading">Legend / ...</div>
+			<div class="panel-body legend-content">
+				<p>
+					<span class="bold">Narratives / Narratifs:</span><br/>
+					<div class="legend-circle purple display-inline-block left-margin"></div> For / Pour<br/>
+					<div class="legend-circle lightgrey display-inline-block left-margin"></div> Neutral / Neutre<br/>
+					<div class="legend-circle lightblue display-inline-block left-margin"></div> Against / Contre
+				</p>
+			</div>
+		</div>
 
-    <!-- this wraps the history bubbles -->
 		<div class="panel panel-default float-right" id="recent-wrapper">
-			<div class="panel-heading">History / Deja Vu</div>
+			<div class="panel-heading">History / ...</div>
 			<div class="panel-body">
 				<div id="recent-container">
 					<div class="svg-container svg-container-history"></div>
