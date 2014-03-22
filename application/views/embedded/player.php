@@ -42,26 +42,26 @@ if (file_exists($path)):
 		<div class="player-buttons bottom-margin">
 			<div class="float-left">
 				<div class="btn-group">
-					<a href="#" class="btn btn-default bookmark-btn">Bookmark <span class="yellow glyphicon glyphicon-bookmark"></span></a>
-					<a href="#" class="btn btn-default share-btn">Share <span class="blue glyphicon glyphicon-user"></span></a>
+					<a href="#" class="btn btn-default bookmark-btn" role="button" title="Bookmark / ..." data-toggle="tooltip" data-placement="top" data-container="body">Bookmark <span class="yellow glyphicon glyphicon-bookmark"></span></a>
+					<a href="#" class="btn btn-default share-btn" role="button" title="Share / Partager" data-toggle="tooltip" data-placement="top" data-container="body">Share <span class="blue glyphicon glyphicon-share"></span></a>
 				</div>
 			</div>
 
 			<div class="float-right">
 				<div class="btn-group">
-					<a href="#agree" class="btn btn-default">Agree <span class="green glyphicon glyphicon-thumbs-up"></span></a>
-					<a href="#disagree" class="btn btn-default">Disagree <span class="red glyphicon glyphicon-thumbs-down"></span></a>
+					<a href="#agree" class="btn btn-default" role="button" title="Agree / ..." data-toggle="tooltip" data-placement="top" data-container="body">Agree <span class="green glyphicon glyphicon-thumbs-up"></span></a>
+					<a href="#disagree" class="btn btn-default" role="button" title="Disagree / ..." data-toggle="tooltip" data-placement="top" data-container="body">Disagree <span class="red glyphicon glyphicon-thumbs-down"></span></a>
 				</div>
 			</div>
 			<div class="clear"></div>
 		</div>
 
 		<div class="share-link">
-			<div class="link-content" style="display: hidden;">
+			<div class="link-content" style="display: none;">
 				<div class="input-group" style="width: 404px;">
 				  <span class="input-group-addon"><span class="glyphicon glyphicon-link"></span></span>
-				  <input type="text" class="form-control"/ value="URL">
-				  <span class="input-group-addon"><a href="#">send</a></span>
+				  <input type="text" class="form-control"/ value="<?php echo base_url("narratives/" . $narrative_id); ?>">
+				  <span class="input-group-addon"><a id="copy-share" data-clipboard-text="<?php echo base_url("narratives/" . $narrative_id); ?>" title="copy">copy</a></span>
 				</div>
 			</div>
 		</div>
