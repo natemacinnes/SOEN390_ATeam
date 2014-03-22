@@ -57,10 +57,7 @@
 				</div>
 			</div>
 		</div>
-
-<<<<<<< HEAD
-    <!-- this wraps the history bubbles -->
-=======
+		
 		<div class="panel panel-default float-left" id="legend-wrapper">
 			<div class="panel-heading">Legend / ...</div>
 			<div class="panel-body legend-content">
@@ -73,7 +70,6 @@
 			</div>
 		</div>
 
->>>>>>> parent of 9880719... Romoved legend panel
 		<div class="panel panel-default float-right" id="recent-wrapper">
 			<div class="panel-heading">History / ...</div>
 			<div class="panel-body">
