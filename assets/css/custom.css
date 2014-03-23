@@ -245,6 +245,16 @@ span.lightblue { color: #7BA7E0; }
 	/* width and height can be anything, as long as they're equal */
 }
 
+#for-bubbles {
+  width: 25%;
+}
+#neutral-bubbles {
+  width: 50%;
+}
+#against-bubbles {
+  width: 75%;
+}
+
 .controls-container .btn{ box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05); }
 .filter-container .btn{ box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05); }
 

@@ -50,16 +50,19 @@
 				<div id="bubble-container">
 					<div class="bubble-legend">
 						<span class="bold">Legend / Legende:</span>
-	          <div class="legend-circle purple display-inline-block left-margin"></div> For / Pour &nbsp;
-	          <div class="legend-circle lightgrey display-inline-block left-margin"></div> Neutral / Neutre &nbsp;
-	          <div class="legend-circle lightblue display-inline-block left-margin"></div> Against / Contre &nbsp;
+	          <div class="legend-circle purple display-inline-block left-margin"></div>
+	          <span class="for-bubbles"> For / Pour &nbsp; </span>
+	          <div class="legend-circle lightgrey display-inline-block left-margin"></div>
+	         	<span class="neutral-bubbles"> Neutral / Neutre &nbsp; </span>
+	          <div class="legend-circle lightblue display-inline-block left-margin"></div>
+	          <span class="agains-bubbles"> Against / Contre &nbsp; </span>
           </div>
 
 					<div class="svg-container svg-container-1 float-left"></p></div>
 
 					<div class="svg-container svg-container-0 float-left"></div>
 
-					<div class="svg-container svg-container-2 float-left"><p>Bob</p></div>
+					<div class="svg-container svg-container-2 float-left"></div>
 				</div>
 			</div>
 		</div>
