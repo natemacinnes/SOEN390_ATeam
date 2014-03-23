@@ -965,14 +965,14 @@ function narrative_player_buttons_initialize()
 	} );
 
 	client.on( "load", function(client) {
-	  // alert( "movie is loaded" );
-
+	   //alert( "movie is loaded" );
+	   
 	  client.on( "complete", function(client, args) {
 	    // `this` is the element that was clicked
 	    //this.style.display = "none";
 	    alert("Copied text to clipboard: " + args.text );
-	  } );
-	} );
+	  });
+	});
 	//get narrative ID
 	var player_wrappers = jQuery(".player-wrapper");
 	if (!player_wrappers.length)
