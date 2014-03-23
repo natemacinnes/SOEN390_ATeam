@@ -48,6 +48,12 @@
 		<!-- this sets the background color (must match recent-container) -->
 			<div id="homepage-content-wrapper" class="clearfix panel-body">
 				<div id="bubble-container">
+					<div class="bubble-legend">
+						<span class="bold">Legend / Legende:</span>
+	          <div class="legend-circle purple display-inline-block left-margin"></div> For / Pour &nbsp;
+	          <div class="legend-circle lightgrey display-inline-block left-margin"></div> Neutral / Neutre &nbsp;
+	          <div class="legend-circle lightblue display-inline-block left-margin"></div> Against / Contre &nbsp;
+          </div>
 
 					<div class="svg-container svg-container-1 float-left"></p></div>
 
