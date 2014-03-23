@@ -2,7 +2,7 @@
 	<div class="new-comment">
 		<form method="POST" name="new-comment-form" id="new-comment-form">
 			<input type="hidden" name="narrative_id" value="<?php echo $narrative_id; ?>" />
-			<textarea class="form-control" rows="3" placeholder="Enter your comment..." id="new-comment" name="comment-text"></textarea>
+			<textarea class="form-control" rows="3" style="resize: none;" placeholder="Enter your comment..." id="new-comment" name="comment-text"></textarea>
 			<a href="#" class="btn btn-primary btn-sm top-margin float-right action-comment-post" id="<?php echo $narrative_id; ?>" role="button">Post</a>
 			<div class="clear"></div>
 		</form>
