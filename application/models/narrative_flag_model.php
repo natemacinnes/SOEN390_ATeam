@@ -30,7 +30,7 @@ class Narrative_Flag_Model extends CI_Model {
     $this->db->set('flags', 'flags+1', FALSE);
     $this->db->update('narratives');
 
-    /*Might not need this anymore
+    //Might not need this anymore
     //insert flag description into narrative flag table
     $data = array(
         'narrative_id' => $narrative_id,
