@@ -44,7 +44,7 @@
 
 		<!-- this sets the width available & corners -->
 		<div class="panel panel-default top-margin" id="narrative-wrapper">
-			<div class="panel-heading">Click a bubble to play a narrative / ...</div>
+			<div class="panel-heading">Click a bubble to listen to an opinion / Appuyez sur une bulle pour écouter une opinion </div>
 		<!-- this sets the background color (must match recent-container) -->
 			<div id="homepage-content-wrapper" class="clearfix panel-body">
 				<div id="bubble-container">
@@ -68,7 +68,7 @@
 		</div>
 
 		<div class="panel panel-default float-right" id="recent-wrapper">
-			<div class="panel-heading">History / ...</div>
+			<div class="panel-heading">History / Historique</div>
 			<div class="panel-body">
 				<div id="recent-container">
 					<div class="svg-container svg-container-history"></div>
