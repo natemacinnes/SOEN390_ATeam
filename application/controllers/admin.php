@@ -460,11 +460,11 @@ class Admin extends YD_Controller
 		$this->system_message_model->set_message($message);
 		redirect('admin/narratives');
 	}
-	
+
 	public function metrics()
 	{
-		$this->load->library('gapi', array("email"=>"sahiln25@gmail.com", "password"=>"password"));
-		
+		$this->load->library('gapi');
+
 		$this->view_wrapper('admin/metrics');
 	}
 }
