@@ -53,7 +53,7 @@
 	          <div class="legend-circle purple display-inline-block left-margin"></div>
 	          <span class="for-bubbles"> For / Pour &nbsp; </span>
 	          <div class="legend-circle lightgrey display-inline-block left-margin"></div>
-	         	<span class="neutral-bubbles"> Neutral / Neutre &nbsp; </span>
+	         	<span class="neutral-bubbles"> Ambivalent / Ambivalente &nbsp; </span>
 	          <div class="legend-circle lightblue display-inline-block left-margin"></div>
 	          <span class="agains-bubbles"> Against / Contre &nbsp; </span>
           </div>
