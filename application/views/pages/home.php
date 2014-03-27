@@ -38,14 +38,13 @@
 				<!--<a href=blah class="btn btn-default colorbox"><a href="www.youtube.com" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help colorbox"><span class="glyphicon glyphicon-question-sign"></span></a>
 				-->
 				<a href="tutorial/english" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help colorbox"><span class="glyphicon glyphicon-question-sign"></span></a>
-				<a href="#" title="Give us your feedback&#013;Donnez-nous votre feedback" class="btn btn-warning btn-lg btn-feedback"><span class="glyphicon glyphicon-envelope"></span></a>
 			</div>
 		</div>
 
 		<!-- this sets the width available & corners -->
 		<div class="panel panel-default top-margin" id="narrative-wrapper">
 			<div class="panel-heading">Click a bubble to listen to an opinion / Appuyez sur une bulle pour écouter une opinion </div>
-		<!-- this sets the background color (must match recent-container) -->
+			<!-- this sets the background color (must match recent-container) -->
 			<div id="homepage-content-wrapper" class="clearfix panel-body">
 				<div id="bubble-container">
 					<div class="bubble-legend">
@@ -78,4 +77,5 @@
 		<div class="clear"></div>
 
 	</div>
+
 </div>

@@ -56,6 +56,14 @@ textarea {
 	}
 }
 
+#footer {
+	height: 60px;
+}
+
+.container .credit {
+	margin: 20px 0;
+}
+
 /*****************************************************************************
 
 								Helper Clases
@@ -257,6 +265,13 @@ span.lightblue { color: #7BA7E0; }
 
 .controls-container .btn{ box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05); }
 .filter-container .btn{ box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05); }
+
+.dont-contact-us {
+	text-align: center;
+}
+a#mail-to {
+	color: #A0A0A0;
+}
 
 /*****************************************************************************
 
