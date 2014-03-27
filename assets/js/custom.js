@@ -884,6 +884,7 @@ function initialize_commenting() {
 				jQuery(".reply").remove();
 			}
 			jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
+			$('.comments-wrapper').animate({ scrollTop: 0}, 1000);
 			initialize_commenting();
 		});
 	});
@@ -932,6 +933,17 @@ function initialize_commenting() {
 				alert("An error occurred while reporting the comment. Please try again.");
 			});
 	});
+
+	jQuery(".quote").hover(
+		function(){
+			var parent_id = jQuery(this).attr("parent-id");
+			jQuery(this).parent().siblings("div[my-id='"+parent_id+"']").css("background", "#FFFF80");
+		},
+		function(){
+			var parent_id = jQuery(this).attr("parent-id");
+			jQuery(this).parent().siblings("div[my-id='"+parent_id+"']").css("background", "#EDEFF4");
+		}
+	);
 
 	//show reply and flag on hover
 	jQuery(".comment").not('.comment-processed').addClass('comment-processed').hover(
