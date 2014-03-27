@@ -581,6 +581,7 @@ function narrative_bind_player(svgselect) {
 		var image_update_timer;
 		var colorbox = jQuery.colorbox({
 			href: yd_settings.site_url + narrative_url,
+			width: 890,
 			speed: 700,
 			onComplete: function() {
 
@@ -937,13 +938,20 @@ function initialize_commenting() {
 	jQuery(".quote").hover(
 		function(){
 			var parent_id = jQuery(this).attr("parent-id");
-			jQuery(this).parent().siblings("div[my-id='"+parent_id+"']").css("background", "#FFFF80");
+			jQuery(this).parent().siblings("div[my-id='"+parent_id+"']").stop().animate({"background-color": "#FFFF80"}, 100);//.css("background", "#FFFF80");
 		},
 		function(){
 			var parent_id = jQuery(this).attr("parent-id");
-			jQuery(this).parent().siblings("div[my-id='"+parent_id+"']").css("background", "#EDEFF4");
+			jQuery(this).parent().siblings("div[my-id='"+parent_id+"']").stop().animate({"background-color": "#EDEFF4"}, 1300);//.css("background", "#EDEFF4");
 		}
 	);
+
+	jQuery(".quote").click(function(){
+		var parent_id = jQuery(this).attr("parent-id");
+		var comment_element = jQuery(this).parent().siblings("div[my-id='"+parent_id+"']");
+		var comment_index = jQuery(".comment").index(comment_element);
+		$('.comments-wrapper').scrollTo(comment_element, 800);
+	});
 
 	//show reply and flag on hover
 	jQuery(".comment").not('.comment-processed').addClass('comment-processed').hover(
