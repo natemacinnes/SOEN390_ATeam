@@ -786,15 +786,18 @@ function narrative_player_load() {
 		//the audio.
 		var player_last_update = (new Date).getTime();
 		var myaudio = document.getElementById("narrative_audio");
+
 		// Update when the audio is ready to play (at load or after seeking)
+		// COMMENTED OUT to stop audio from replaying constantly
 		// NOTE: e.timeStamp() is not consistent - see http://stackoverflow.com/questions/18197401/javascript-event-timestamps-not-consistent
-		myaudio.addEventListener('canplay', function(e) {
+		/*myaudio.addEventListener('canplay', function(e) {
 			player_last_update = Date.now();
 			narrative_player_update_image(myaudio.currentTime);
 			if (jQuery(this).hasClass('autoplay')) {
 				myaudio.play();
 			}
-		}, false);
+		}, false);*/
+
 		// Update as the audio continues to play.
 		var listenedTime = 0;
 		var lastTime = 0;
@@ -966,7 +969,7 @@ function narrative_player_buttons_initialize()
 
 	client.on( "load", function(client) {
 	   //alert( "movie is loaded" );
-	   
+
 	  client.on( "complete", function(client, args) {
 	    // `this` is the element that was clicked
 	    //this.style.display = "none";
