@@ -21,14 +21,21 @@ class Pages extends YD_Controller
 	public function index()
 	{
 		$topic = $this->variable_model->get('portal_topic');
-		$data = array('topic' => $topic);
+		$contact = $this->variable_model->get('email_address');
+		$data = array('topic' => $topic ,
+			'contact' => $contact,
+		);
 		$this->view_wrapper('pages/home', $data);
 	}
 
 	public function narratives($id)
 	{
 		$topic = $this->variable_model->get('portal_topic');
-		$data = array('topic' => $topic);
+		$contact = $this->variable_model->get('email_address');
+		$data = array(
+			'topic' => $topic,
+			'contact' => $contact,
+		);
 		$data['narrative'] = $id;
 		$this->view_wrapper('pages/home', $data);
 	}

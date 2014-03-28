@@ -76,7 +76,7 @@
 		</div>
 
 		<div class="dont-contact-us">
-      <a id="mail-to" href="mailto:someone@example.com?Subject=Hey,%20psssst..." title="Please don't... &#013; Ne le faite pas, SVP..." target="_top" data-toggle="tooltip" data-placement="bottom" data-container="body"> Don't contact us. <span class="glyphicon glyphicon-envelope"></span> Contactez nous pas. </a>
+      <a id="mail-to" href="mailto:<?php echo $contact; ?>?Subject=Hey,%20psssst..." title="Please don't... &#013; Ne le faite pas, SVP..." target="_top" data-toggle="tooltip" data-placement="bottom" data-container="body"> Don't contact us. <span class="glyphicon glyphicon-envelope"></span> Contactez nous pas. </a>
     </div>
 
 		<div class="clear"></div>

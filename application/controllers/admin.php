@@ -204,7 +204,9 @@ class Admin extends YD_Controller
 	{
 		$data = array(
 			'portal_topic' => $this->variable_model->get('portal_topic'),
+			'email_address' => $this->variable_model->get('email_address'),
 		);
+
 		$this->view_wrapper('admin/settings', $data);
 	}
 
@@ -214,9 +216,11 @@ class Admin extends YD_Controller
 	public function update_settings()
 	{
 		$new_topic = $this->input->post('portal_topic');
-		if (strlen($new_topic))
+		$new_email = $this->input->post('email_address');
+		if (strlen($new_topic) && strlen($new_email))
 		{
 			$this->variable_model->set('portal_topic', $new_topic);
+			$this->variable_model->set('email_address', $new_email);
 			$this->system_message_model->set_message('Settings updated successfully.', MESSAGE_NOTICE);
 			redirect('admin/settings');
 		}
@@ -460,11 +464,11 @@ class Admin extends YD_Controller
 		$this->system_message_model->set_message($message);
 		redirect('admin/narratives');
 	}
-	
+
 	public function metrics()
 	{
 		$this->load->library('gapi', array("email"=>"sahiln25@gmail.com", "password"=>"password"));
-		
+
 		$this->view_wrapper('admin/metrics');
 	}
 }
