@@ -246,7 +246,8 @@ class Ajax_Test extends CIUnit_TestCase
 	 	$narr_new_data = $this->CI->narrative_model->get($narrative_id);
 	 	$this->assertEquals($narr_previous_data['agrees'], $narr_new_data['agrees']-1);
 		$this->assertEquals($narr_previous_data['disagrees'], $narr_new_data['disagrees']+1);
-	 }
+	 } 
+	 
 
 
 	 /**
