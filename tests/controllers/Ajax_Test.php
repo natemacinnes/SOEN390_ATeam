@@ -234,7 +234,7 @@ class Ajax_Test extends CIUnit_TestCase
 	 * UT-0061
 	 * @covers Ajax::toggle_disagree_to_agree
 	 */
-	 public function test__toggle_agree_to_disagree()
+	 public function test__toggle_disagree_to_agree()
 	 {
 	 	$narrative_id = 1;
 	 	$narr_previous_data = $this->CI->narrative_model->get($narrative_id);
