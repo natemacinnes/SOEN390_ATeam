@@ -122,4 +122,26 @@ class Comment_Model_Test extends CIUnit_TestCase
 
 		$this->assertGreaterThan(0, $last_id);
 	}
+	
+	/**
+	 * UT-0079
+	 * @covers Comment_Model::get_total_count
+	 */
+	 public function test__get_total_count()
+	 {
+		$this->assertEquals(3, $this->CI->comment_model->get_total_count());
+	 }
+	 
+	/**
+	 * UT-0080
+	 * @covers Comment_Model::delete
+	 */
+	 public function test__delete()
+	 {
+		$count_before = $this->CI->comment_model->get_total_count();
+		$this->CI->comment_model->delete(array('comment_id' => 1));
+		$count_after = $this->CI->comment_model->get_total_count();
+		$this->assertEquals($count_before-1, $count_after);
+	 }
+	 
 }

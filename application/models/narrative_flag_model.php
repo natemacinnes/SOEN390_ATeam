@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Narrative_Flag_Model extends CI_Model {
-  private $table = 'narrative_flags';
+  private $table = 'narratives';
   public function __construct()
   {
     parent::__construct();
@@ -23,7 +23,7 @@ class Narrative_Flag_Model extends CI_Model {
   /**
   * Flag the narrative
   */
-  public function insert($narrative_id, $text)
+  public function insert($narrative_id, $text = null)
   {
     //update flags on a narrative
     $this->db->where('narrative_id', $narrative_id);
