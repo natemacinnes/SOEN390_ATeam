@@ -49,7 +49,7 @@ class Narrative_Flag_Model_Test extends CIUnit_TestCase
 	
 	/**
 	 * UT-00xx
-	 * @covers narrative_flag_model:insert
+	 * @covers narrative_flag_model::insert
 	 */
 	public function test__insert()
 	{
