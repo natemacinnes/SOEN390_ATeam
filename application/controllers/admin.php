@@ -202,6 +202,7 @@ class Admin extends YD_Controller
 	 */
 	public function settings()
 	{
+
 		$data = array(
 			'portal_topic' => $this->variable_model->get('portal_topic'),
 			'email_address' => $this->variable_model->get('email_address'),
@@ -215,18 +216,21 @@ class Admin extends YD_Controller
 	 */
 	public function update_settings()
 	{
-		$new_topic = $this->input->post('portal_topic');
-		$new_email = $this->input->post('email_address');
-		if (strlen($new_topic) && strlen($new_email))
-		{
-			$this->variable_model->set('portal_topic', $new_topic);
-			$this->variable_model->set('email_address', $new_email);
-			$this->system_message_model->set_message('Settings updated successfully.', MESSAGE_NOTICE);
+		$this->form_validation->set_rules('portal_topic', 'Portal_Topic', 'required');
+		$this->form_validation->set_rules('email_address', 'Contact', 'valid_email|required|valid_email');
+
+		if ($this->form_validation->run() == FALSE) {
+			$this->system_message_model->set_message('Settings could not be updated.', MESSAGE_ERROR);
 			redirect('admin/settings');
 		}
 		else
 		{
-			$this->system_message_model->set_message('Settings could not be updated.', MESSAGE_ERROR);
+			$new_topic = $this->input->post('portal_topic');
+			$new_email = $this->input->post('email_address');
+
+			$this->variable_model->set('portal_topic', $new_topic);
+			$this->variable_model->set('email_address', $new_email);
+			$this->system_message_model->set_message('Settings updated successfully.', MESSAGE_NOTICE);
 			redirect('admin/settings');
 		}
 	}
