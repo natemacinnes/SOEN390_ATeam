@@ -986,7 +986,7 @@ function narrative_player_buttons_initialize()
 
 	client.on( "load", function(client) {
 	   //alert( "movie is loaded" );
-	   
+
 	  client.on( "complete", function(client, args) {
 	    // `this` is the element that was clicked
 	    //this.style.display = "none";
@@ -1038,7 +1038,14 @@ function narrative_player_buttons_initialize()
 	//handle sharing action
 	jQuery(".share-btn").click(function() {
 		document.getElementsByName("share")[0].value = "true"; //To notify Google analytics of the share action
-		show_share_url();
+		if (!jQuery(this).hasClass('active')) {
+      jQuery(this).addClass('active');
+      show_share_url();
+    }
+    else {
+    	jQuery(this).removeClass('active');
+    	show_share_url();
+    }
 	}).tooltip();
 
 	//local var to decide agree/disagree
