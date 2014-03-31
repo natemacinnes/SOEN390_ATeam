@@ -55,4 +55,9 @@ class Comments extends YD_Controller
 		$text = $this->input->post('comment-text');
 		$this->comment_flag_model->insert($comment_id, $text);
 	}
+
+	public function reply_form($parent_id = NULL, $body = NULL)
+	{
+		$this->load->view('embedded/reply', array( 'parent_id' => $parent_id, 'parent_body' => $body));
+	}
 }

@@ -29,8 +29,13 @@ class Variable_Model extends CI_Model
 	 */
 	public function set($key, $value)
 	{
-		$data = array('value' => $value);
-		$this->db->where('key', $key);
-		$this->db->update($this->table, $data);
+		if ($this->get($key) == false) {
+			$data = array('key' => $key, 'value' => $value);
+			$this->db->insert($this->table, $data);
+		} else {
+			$data = array('value' => $value);
+			$this->db->where('key', $key);
+			$this->db->update($this->table, $data);
+		}
 	}
 }
