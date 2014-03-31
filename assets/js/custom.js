@@ -1044,6 +1044,7 @@ function narrative_player_buttons_initialize()
     }
     else {
     	jQuery(this).removeClass('active');
+    	jQuery(this).blur();
     	show_share_url();
     }
 	}).tooltip();
