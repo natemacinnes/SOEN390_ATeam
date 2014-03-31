@@ -82,6 +82,8 @@ jQuery(document).ready(function() {
 	// Toggle buttons for navigation links
 	jQuery('.language-container.btn-group a').click(function() {
 		jQuery(this).toggleClass('active');
+		//Diverting focus to an element other than the language button to handle IE no feedback of unclicking until loss of focus
+		jQuery('.language-container').focus();
 		jQuery('.language-container.btn-group a').not(this).removeClass('active');
     if (jQuery(this).hasClass('active')) {
       yd_settings.ui.filters.language = jQuery('.language-container.btn-group a.active').attr('href').substring(1);
@@ -787,15 +789,19 @@ function narrative_player_load() {
 		//the audio.
 		var player_last_update = (new Date).getTime();
 		var myaudio = document.getElementById("narrative_audio");
+
 		// Update when the audio is ready to play (at load or after seeking)
 		// NOTE: e.timeStamp() is not consistent - see http://stackoverflow.com/questions/18197401/javascript-event-timestamps-not-consistent
+		var alreadyPlayed = false;
 		myaudio.addEventListener('canplay', function(e) {
 			player_last_update = Date.now();
 			narrative_player_update_image(myaudio.currentTime);
-			if (jQuery(this).hasClass('autoplay')) {
+			if (jQuery(this).hasClass('autoplay') && alreadyPlayed == false) {
+				alreadyPlayed = true;
 				myaudio.play();
 			}
 		}, false);
+
 		// Update as the audio continues to play.
 		var listenedTime = 0;
 		var lastTime = 0;
