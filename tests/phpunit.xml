@@ -34,6 +34,8 @@
                 <directory suffix=".php">../application/helpers</directory>
                 <directory suffix=".php">../application/third_party</directory>
                 <directory suffix=".php">../application/views</directory>
+                <directory suffix=".php">../application/libraries</directory>
+                <file>../application/analyticstracking.php</file>
                 <file>../application/controllers/admin.php</file>
                 <file>../application/controllers/admin_comment.php</file>
                 <file>../application/controllers/admin_narrative.php</file>
