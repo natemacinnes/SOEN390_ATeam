@@ -202,6 +202,7 @@ class Admin extends YD_Controller
 	 */
 	public function settings()
 	{
+		$this->require_login();
 		$data = array(
 			'portal_topic' => $this->variable_model->get('portal_topic'),
 		);
@@ -213,6 +214,7 @@ class Admin extends YD_Controller
 	 */
 	public function update_settings()
 	{
+		$this->require_login();
 		$new_topic = $this->input->post('portal_topic');
 		if (strlen($new_topic))
 		{

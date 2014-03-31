@@ -82,6 +82,8 @@ jQuery(document).ready(function() {
 	// Toggle buttons for navigation links
 	jQuery('.language-container.btn-group a').click(function() {
 		jQuery(this).toggleClass('active');
+		//Diverting focus to an element other than the language button to handle IE no feedback of unclicking until loss of focus
+		jQuery('.language-container').focus();
 		jQuery('.language-container.btn-group a').not(this).removeClass('active');
     if (jQuery(this).hasClass('active')) {
       yd_settings.ui.filters.language = jQuery('.language-container.btn-group a.active').attr('href').substring(1);
