@@ -340,7 +340,7 @@ class Narrative_Model extends CI_Model
 
 						//Get the time that the narrative end in the concatenated narrative
 						$endTimes = $endTimes + floatval($duration);
-						
+
 						//REFACTORED: xml creation now in the narrative_model_helper
 						$root->appendChild(create_narrative_xml($xml,$file, $startTimes, $duration, $endTimes, $audio_image));
 						$startTimes = $startTimes + floatval($duration) ;  //get the starting time of the narrative in the concatenated narrative
@@ -352,7 +352,7 @@ class Narrative_Model extends CI_Model
 		//change path of xml
 		$xmlpath = $dir . "/AudioTimes.xml";
 		$xml->save($xmlpath) or die("Error");
-		
+
 		fclose($file_concat);
 		if (PHP_OS == 'WINNT')
 		{
@@ -455,8 +455,8 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	*	increment views of a narrative
-	*/
+	 *	increment views of a narrative
+	 */
 	public function increment_views($narrative_id)
 	{
 		$this->db->where('narrative_id', $narrative_id);
@@ -465,8 +465,8 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	*	increment agree of a narrative
-	*/
+	 *	increment agree of a narrative
+	 */
 	public function toggle_agrees($narrative_id, $operator)
 	{
 		$this->db->where('narrative_id', $narrative_id);
@@ -475,29 +475,29 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	*	increment disagree of a narrative
-	*/
+	 *	increment disagree of a narrative
+	 */
 	public function toggle_disagrees($narrative_id, $operator)
 	{
 		$this->db->where('narrative_id', $narrative_id);
 		$this->db->set('disagrees', 'disagrees' . $operator . '1', FALSE);
 		$this->db->update('narratives');
 	}
-	
+
 	/**
-	*	Increment agree and decrement disagrees
-	*/
+	 *	Increment agree and decrement disagrees
+	 */
 	public function increment_agree_decrement_disagree($narrative_id)
 	{
 		$this->db->where('narrative_id', $narrative_id);
 		$this->db->set('agrees', 'agrees+1', FALSE);
 		$this->db->set('disagrees', 'disagrees-1', FALSE);
-		$this->db->update('narratives');				
+		$this->db->update('narratives');
 	}
-	
+
 	/**
-	*	Increment disagree and decrement agrees
-	*/
+	 *	Increment disagree and decrement agrees
+	 */
 	public function increment_disagree_decrement_agree($narrative_id)
 	{
 		$this->db->where('narrative_id', $narrative_id);
@@ -505,11 +505,32 @@ class Narrative_Model extends CI_Model
 		$this->db->set('disagrees', 'disagrees+1', FALSE);
 		$this->db->update('narratives');
 	}
+
 	/**
-	*	Set narrative position as For, Neutral, or Against
-	*/
+	 *	Set narrative position as For, Neutral, or Against
+	 */
 	public function setPosition($narrative_id, $position)
 	{
 		$this->db->query("UPDATE narratives SET position=" . $position . " WHERE narrative_id=" . $narrative_id . ";");
+	}
+
+	/**
+	 * Increment narrative flag count
+	 */
+	function flag($narrative_id)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+    $this->db->set('flags', 'flags+1', FALSE);
+    $this->db->update('narratives');
+	}
+
+	/**
+	 * Dismisses all flags set on the narrative
+	 */
+	function dismiss_flags($narrative_id)
+	{
+		$this->db->where('narrative_id', $narrative_id);
+    $this->db->set('flags', 0, FALSE);
+    $this->db->update('narratives');
 	}
 }

@@ -534,4 +534,27 @@ class Narrative_Model_Test extends CIUnit_TestCase
 		$this->assertEquals(5, $updated_narrative['audio_length']);
 		$this->assertNotEquals($narrative['modified'], $updated_narrative['modified']);
 	}
+
+	/**
+	 * UT-0081
+	 * @covers narrative_model::flag
+	 */
+	public function test__flag()
+	{
+		$narrative = $this->CI->narrative_model->get(1);
+		$this->CI->narrative_model->flag(1);
+		$narrative_after = $this->CI->narrative_model->get(1);
+		$this->assertEquals($narrative['flags']+1, $narrative_after['flags']);
+	}
+
+	/**
+	 * UT-0082
+	 * @covers narrative_model::dismiss_flags
+	 */
+	public function test__dismiss_flags()
+	{
+		$this->CI->narrative_model->dismiss_flags(2);
+		$narrative = $this->CI->narrative_model->get(2);
+		$this->assertEquals(0, $narrative['flags']);
+	}
 }

@@ -13,8 +13,6 @@ class Admin_Narrative extends YD_Controller
 		parent::__construct();
 		$this->load->model('narrative_model');
 		$this->load->model('admin_model');
-		$this->load->model('narrative_flag_model');
-		$this->load->model('comment_flag_model');
 		$this->load->model('comment_model');
 		$this->load->helper('narrative_editing');
 		// Used to pass admin ID between methods during validation
@@ -47,26 +45,8 @@ class Admin_Narrative extends YD_Controller
 			$this->system_message_model->set_message('Narrative #' . $narrative_id . ' could not be found.', MESSAGE_ERROR);
 			redirect('admin/narratives');
 		}
-		$data['flags'] = $this->narrative_flag_model->get_by_narrative_id($narrative_id);
 
-		$comments = $this->comment_model->get_all($narrative_id);
-		foreach ($comments as &$comment)
-		{
-			$flags = $this->comment_flag_model->get_by_comment_id($comment['comment_id']);
-			$comment['flags'] = count($flags);
-		}
-
-		// FIXME should be a model method or at least parameter to get_all()
-		function comment_sort_by_flags($item1,$item2)
-		{
-			if ($item1['flags'] == $item2['flags'])
-			{
-				return 0;
-			}
-			return ($item1['flags'] < $item2['flags']) ? 1 : -1;
-		}
-		usort($comments,'comment_sort_by_flags');
-		$data['comments'] = $comments;
+		$data['comments'] = $this->comment_model->get_all($narrative_id);
 
 		// Getting deleted items
 		$data['deleted'] = narrative_deleted_track_data($narrative_id);

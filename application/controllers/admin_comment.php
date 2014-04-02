@@ -11,23 +11,50 @@ class Admin_Comment extends YD_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('comment_flag_model');
 		$this->load->model('comment_model');
+	}
+
+	/**
+   * The default method called, if none is provided.
+   */
+	public function index()
+	{
+		return;
 	}
 
 	/**
 	 * Review comments includes flags and change publish status.
 	 */
-	public function review($comment_id = 0)
+	public function review($comment_id)
 	{
 		$comment = $this->comment_model->get($comment_id);
-		$flags = $this->comment_flag_model->get_by_comment_id($comment_id);
-		$this->view_wrapper('admin/comments/review', array('comment' => $comment, 'flags' => $flags));
+		if (!$comment) {
+			show_error('The specified comment does not exist.');
+		}
+		$parent_comment = array();
+		if ($comment['parent_comment']) {
+			$parent_comment = $this->comment_model->get($comment['parent_comment']);
+		}
+		$this->view_wrapper('admin/comments/review', array('comment' => $comment, 'parent_comment' => $parent_comment));
 	}
 
+	/**
+	 * Deletes a comment from the database.
+	 */
 	public function delete($comment_id)
 	{
-		$comment = $this->comment_model->delete(array('comment_id' => $comment_id));
+		$this->comment_model->delete(array('comment_id' => $comment_id));
+		$this->system_message_model->set_message("The comment was deleted successfully.");
+		redirect('admin/comments');
+	}
+
+	/**
+	 * Removes all flags on a comment.
+	 */
+	public function dismiss_flags($comment_id)
+	{
+		$this->comment_model->dismiss_flags($comment_id);
+		$this->system_message_model->set_message("All flags on this comment were dismissed.");
 		redirect('admin/comments');
 	}
 }

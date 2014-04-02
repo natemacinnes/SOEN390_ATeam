@@ -17,25 +17,21 @@
 
 			<ul class="nav navbar-nav">
 				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Narratives <b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<li><?php echo anchor('admin/narratives', 'View All'); ?></li>
-						<li><?php echo anchor('admin/upload', 'Upload'); ?></li>
-					</ul>
+					<?php echo anchor('admin/narratives', 'Manage Narratives'); ?>
 				</li>
-				<li><?php echo anchor('admin/comments', 'Comments'); ?></li>
+				<li><?php echo anchor('admin/comments', 'Manage Comments'); ?></li>
 				<li class="Topic">
 					<li><?php echo anchor('admin/settings', 'Portal settings'); ?></li>
 				</li>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
-					<li><?php echo anchor('home', 'User Homepage'); ?></li>
+					<li><?php echo anchor('home', 'Portal Homepage'); ?></li>
 					<?php if ($logged_in_user): ?>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $logged_in_user['login'] ?><b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							<li><?php echo anchor('#', 'Profile'); ?></li>
+							<!--<li><?php echo anchor('#', 'Profile'); ?></li>-->
 							<li><?php echo anchor('admin/logout', 'Log Out'); ?></li>
 						</ul>
 					</li>

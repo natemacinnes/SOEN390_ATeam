@@ -9,7 +9,6 @@ class Comments extends YD_Controller
 	{
 		parent::__construct();
 		$this->load->model('comment_model');
-		$this->load->model('comment_flag_model');
 	}
 
 	/**
@@ -53,7 +52,7 @@ class Comments extends YD_Controller
 	public function flag($comment_id)
 	{
 		$text = $this->input->post('comment-text');
-		$this->comment_flag_model->insert($comment_id, $text);
+		$this->comment_model->flag($comment_id, $text);
 	}
 
 	public function reply_form($parent_id = NULL, $body = NULL)

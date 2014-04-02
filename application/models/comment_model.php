@@ -20,6 +20,7 @@ class Comment_Model extends CI_Model {
       'narrative' => 'narrative_id',
       'created' => 'created',
       'status' => 'status',
+      'flags' => 'flags',
     );
     if (!isset($sort_cols[$sort_by]))
     {
@@ -94,10 +95,30 @@ class Comment_Model extends CI_Model {
    * Deletes an comment based on the conditions passed.
    *
    * Example:
-   *   $this->comment_model->delete(array('comment_id' => $narrative['comment_id']));
+   *   $this->comment_model->delete(array('comment_id' => $comment['comment_id']));
    */
   public function delete($conditions)
   {
     $this->db->delete($this->table, $conditions);
+  }
+
+  /**
+   * Increment comment flag count
+   */
+  function flag($comment_id)
+  {
+    $this->db->where('comment_id', $comment_id);
+    $this->db->set('flags', 'flags+1', FALSE);
+    $this->db->update('comments');
+  }
+
+  /**
+   * Dismisses all flags set on the comment
+   */
+  function dismiss_flags($comment_id)
+  {
+    $this->db->where('comment_id', $comment_id);
+    $this->db->set('flags', 0, FALSE);
+    $this->db->update('comments');
   }
 }

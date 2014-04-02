@@ -82,7 +82,6 @@
   <ul class="nav nav-tabs big-top-margin top-border top-padding">
     <li class="active"><a href="#edit" data-toggle="tab">Edit</a></li>
     <li><a href="#comments" data-toggle="tab">Comments</a></li>
-    <li><a href="#flags" data-toggle="tab">Flags</a></li>
   </ul>
 
   <!-- Tab panes -->
@@ -160,8 +159,7 @@
       <table class="table table-hover">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Narrative ID</th>
+          <th>Comment ID</th>
           <th>Parent ID</th>
           <th>Content</th>
           <th>Created</th>
@@ -171,46 +169,30 @@
         </tr>
       </thead>
       <tbody>
-        <?php foreach ($comments as $comment): ?>
-          <tr>
-            <td><?php print $comment['comment_id']; ?></td>
-            <td><?php print $comment['narrative_id']; ?></td>
-            <td><?php print $comment['parent_comment']; ?></td>
-            <td><?php print $comment['body']; ?></td>
-            <td><?php print $comment['created']; ?></td>
-            <td><?php echo anchor('admin/comments/' . $comment['comment_id'] . '/review', $comment['flags']); ?></td>
-            <td>Published</td>
-            <td>
-              <?php echo anchor("admin/comments/" . $comment['comment_id'] . "/delete", '<span class="glyphicon glyphicon-remove"></span>', 'title="Delete" class="btn btn-default btn-xs" role="button"'); ?>
-            </td>
-          </tr>
-        <?php endforeach; ?>
-      </tbody>
-    </table>
-    </div>
-    <div class="tab-pane" id="flags">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Description</th>
-            <th>Date</th>
-            <th>Remove</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php foreach ($flags as $flag): ?>
+        <?php if ($comments): ?>
+          <?php foreach ($comments as $comment): ?>
             <tr>
-              <td><?php print $flag['flag_id']; ?></td>
-              <td><?php print $flag['description']; ?></td>
-              <td><?php print $flag['date_created']; ?></td>
+              <td><?php print $comment['comment_id']; ?></td>
+              <td><?php print $comment['parent_comment']; ?></td>
+              <td><?php print $comment['body']; ?></td>
+              <td><?php print $comment['created']; ?></td>
+              <td><?php echo anchor('admin/comments/' . $comment['comment_id'] . '/review', $comment['flags']); ?></td>
+              <td>Published</td>
               <td>
-                <a href="#" title="Delete" class="btn btn-default btn-xs" role="button"><span class="glyphicon glyphicon-remove"></a>
+                <?php echo anchor("admin/comments/" . $comment['comment_id'] . "/delete?destination=" . uri_string(current_url()), '<span class="glyphicon glyphicon-remove"></span>', 'title="Delete" class="btn btn-default btn-xs" role="button"'); ?>
+                <?php if ($comment['flags']): ?>
+                  <?php echo anchor("admin/comments/" . $comment['comment_id'] . "/dismiss_flags?destination=" . uri_string(current_url()), '<span class="glyphicon glyphicon-ok-circle"></span>', 'title="Dismiss flags" class="btn btn-default btn-xs" role="button"'); ?>
+                <?php endif; ?>
               </td>
             </tr>
           <?php endforeach; ?>
-        </tbody>
-      </table>
+        <?php else: ?>
+          <tr>
+            <td colspan="7">No comments have been submitted for this narrative.</td>
+          </tr>
+        <?php endif; ?>
+      </tbody>
+    </table>
     </div>
   </div>
 </div>

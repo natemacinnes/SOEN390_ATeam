@@ -13,7 +13,6 @@ class Player extends YD_Controller
 		parent::__construct();
 		$this->load->model('narrative_model');
 		$this->load->model('comment_model');
-		$this->load->model('narrative_flag_model');
 	}
 
 	/**
@@ -39,7 +38,7 @@ class Player extends YD_Controller
 
 	public function flag($narrative_id)
 	{
-		$this->narrative_flag_model->insert($narrative_id);
+		$this->narrative_model->flag($narrative_id);
 	}
 
 	/* Might not need this anymore.

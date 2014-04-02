@@ -14,7 +14,6 @@ class Admin extends YD_Controller
 		$this->load->model('upload_model');
 		$this->load->model('narrative_model');
 		$this->load->model('comment_model');
-		$this->load->model('comment_flag_model');
 		$this->load->model('admin_model');
 		$this->load->model('variable_model');
 		$this->load->helper('narrative_editing');
@@ -151,7 +150,7 @@ class Admin extends YD_Controller
 		$data['offset'] = $offset;
 		$data['limit'] = 20;
 
-		$comments = $this->comment_model->get_all(NULL, $sort_by == 'flags' ? 'id' : $sort_by, $sort_order, $offset, $data['limit']);
+		$comments = $this->comment_model->get_all(NULL, $sort_by, $sort_order, $offset, $data['limit']);
 
 		$config['base_url'] = site_url("admin/comments/$sort_by/$sort_order");
 		$config['total_rows'] = $this->comment_model->get_total_count();
@@ -170,27 +169,6 @@ class Admin extends YD_Controller
 
 		$this->pagination->initialize($config);
 		$data["links"] = $this->pagination->create_links();
-
-		foreach ($comments as &$comment)
-		{
-			$flags = $this->comment_flag_model->get_by_comment_id($comment['comment_id']);
-			$comment['flags'] = count($flags);
-		}
-
-		function commentsFlagSort($item1,$item2)
-		{
-			if ($item1['flags'] == $item2['flags']) {
-				return 0;
-			}
-			return ($item1['flags'] < $item2['flags']) ? 1 : -1;
-		}
-		if ($sort_by == 'flags')
-		{
-			usort($comments,'commentsFlagSort');
-			if ($sort_order == 'asc') {
-				$comments = array_reverse($comments);
-			}
-		}
 
 		$data['comments'] = $comments;
 
@@ -471,7 +449,8 @@ class Admin extends YD_Controller
 
 	public function metrics()
 	{
-		$this->load->library('gapi');
+    $this->load->library('gapi');
+    die('yes');
 		$this->view_wrapper('admin/metrics');
 	}
 }

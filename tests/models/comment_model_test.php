@@ -122,7 +122,7 @@ class Comment_Model_Test extends CIUnit_TestCase
 
 		$this->assertGreaterThan(0, $last_id);
 	}
-	
+
 	/**
 	 * UT-0079
 	 * @covers Comment_Model::get_total_count
@@ -131,7 +131,7 @@ class Comment_Model_Test extends CIUnit_TestCase
 	 {
 		$this->assertEquals(3, $this->CI->comment_model->get_total_count());
 	 }
-	 
+
 	/**
 	 * UT-0080
 	 * @covers Comment_Model::delete
@@ -143,5 +143,28 @@ class Comment_Model_Test extends CIUnit_TestCase
 		$count_after = $this->CI->comment_model->get_total_count();
 		$this->assertEquals($count_before-1, $count_after);
 	 }
-	 
+
+	/**
+	 * UT-0038
+	 * @covers Comment_Model::dismiss_flags
+	 */
+	public function test__dismiss_flags()
+	{
+		$flags = $this->CI->comment_model->dismiss_flags(3);
+		$comment = $this->CI->comment_model->get(3);
+		$this->assertEquals(0, $comment['flags']);
+	}
+
+	/**
+	 * UT-0039
+	 * @covers Comment_Model::flag
+	 */
+	public function test__flag()
+	{
+		$comment = $this->CI->comment_model->get(2);
+		$comment = $this->CI->comment_model->flag(2);
+		$comment_after = $this->CI->comment_model->get(2);
+		$this->assertEquals($comment['flags']+1, $comment_after['flags']);
+	}
+
 }

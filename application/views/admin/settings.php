@@ -8,12 +8,14 @@
 		<label for="topic" class="col-sm-2 control-label">Portal topic:</label>
 		<div class="col-sm-10">
 			<input type="text" class="form-control" name="portal_topic" placeholder="Topic" value="<?php echo set_value('portal_topic', $portal_topic); ?>">
+      <p class="help-block">The topic entered here is displayed to users at the top left corner of the portal homepage.</p>
 		</div>
 	</div>
   <div class="form-group">
     <label for="contact" class="col-sm-2 control-label">Contact email:</label>
     <div class="col-sm-10">
       <input type="text" class="form-control" name="email_address" placeholder="example@example.com" value="<?php echo set_value('email_address', $email_address); ?>">
+      <p class="help-block">Users clicking the contact links will be directed to this email address.</p>
     </div>
   </div>
 	<div class="form-group">

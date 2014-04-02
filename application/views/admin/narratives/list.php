@@ -61,7 +61,7 @@
 					<td><?php print $narrative['language']; ?></td>
 					<td><?php print $narrative['created']; ?></td>
 					<td><?php print $narrative['uploaded']; ?></td>
-					<td><?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/review', $narrative['flags']); ?></td>
+					<td><?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/edit', $narrative['flags']); ?></td>
 					<td><?php echo $narrative['status'] == 1 ? 'Published' : 'Not Published'; ?></td>
 					<td>
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-pencil"></span>', 'title="Edit" class="btn btn-default btn-xs" role="button"'); ?>

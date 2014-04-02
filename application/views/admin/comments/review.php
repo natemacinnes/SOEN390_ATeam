@@ -3,8 +3,22 @@
 		<h1>Comment <?php echo $comment['comment_id']; ?> <small>Review</small></h1>
 	</div>
 
-	<div class="comment float-left big-right-margin">
-		<p><?php echo $comment['body']; ?></p>
+	<div class="float-left big-right-margin">
+		<p><?php echo $comment['flags']; ?> users have flagged this comment.</p>
+		<div class="comment">
+			<?php if ($comment['parent_comment'] && isset($parent_comment['body'])): ?>
+				<div class="quote">
+					<p><?php echo $parent_comment['body']; ?></p>
+				</div>
+			<?php endif; ?>
+			<p><?php echo $comment['body']; ?></p>
+		</div>
+		<div class="top-margin">
+			<?php echo anchor("admin/comments/" . $comment['comment_id'] . "/delete", '<span class="glyphicon glyphicon-remove"></span> Delete', 'title="Delete" class="btn btn-default" role="button"'); ?>
+      <?php if ($comment['flags']): ?>
+        <?php echo anchor("admin/comments/" . $comment['comment_id'] . "/dismiss_flags?destination=" . uri_string(current_url()), '<span class="glyphicon glyphicon-ok-circle"></span> Dismiss flags', 'title="Dismiss flags" class="btn btn-default" role="button"'); ?>
+      <?php endif; ?>
+		</div>
 	</div>
 
 	<?php
@@ -19,46 +33,5 @@
 	<?php else: ?>
 		<div style="width:400px; height:400px; border: 1px solid #333; border-radius: 4px;"><p style="color: #333; margin: 100px;">Narrative does not exist.</p></div>
 	<?php endif; ?>
-
-	<ul class="pagination float-right">
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
-	<div class="clear"></div>
-
-	<table class="table table-hover">
-		<thead>
-			<tr>
-				<th><a href="#" class="sort-btn active desc">ID</a></th>
-				<th><a href="#" class="sort-btn">Date</a></th>
-				<th><a href="#" class="sort-btn">Reason</a></th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php foreach ($flags as $flag): ?>
-				<tr>
-					<td><?php print $flag['cflag_id']; ?></td>
-					<td><?php print $flag['date_created']; ?></td>
-					<td><?php print $flag['description']; ?></td>
-				</tr>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
-
-	<ul class="pagination float-right">
-		<li><a href="#">&laquo;</a></li>
-		<li><a href="#">1</a></li>
-		<li><a href="#">2</a></li>
-		<li><a href="#">3</a></li>
-		<li><a href="#">4</a></li>
-		<li><a href="#">5</a></li>
-		<li><a href="#">&raquo;</a></li>
-	</ul>
-	<div class="clear"></div>
 
 </div>
