@@ -866,7 +866,7 @@ function initialize_commenting() {
 				jQuery('.comments-wrapper .remove-me').remove();
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
-				jQuery("#new-comment").val('');
+				jQuery(".comments-container .form-control.new-comment").val('');
 				initialize_commenting();
 			})
 			.fail(function() {
@@ -908,7 +908,6 @@ function initialize_commenting() {
 				jQuery('.reply').remove();
 				// Add the new comment, pre-rendered by the controller
 				jQuery(data).prependTo('.comments-wrapper').hide().slideDown();
-				//jQuery("#new-comment").val('');
 				initialize_commenting();
 			})
 			.fail(function() {
@@ -962,14 +961,13 @@ function initialize_commenting() {
 			jQuery(this).children(".actions").children().stop().fadeOut("fast");
 		});
 
-	/*Post comment upon clicking enter
-	 *Kinda Hacky*/
-	jQuery('.comments-container #new-comment-form .form-control').not('.comment-processed').addClass('comment-processed').keypress(function (e)
+	// Post comment upon clicking enter
+	jQuery('.comments-container .form-control.new-comment').not('.comment-processed').addClass('comment-processed').keypress(function (e)
 	{
 		var key = e.which;
-		if(key == 13)  // the enter key code
+		if (key == 13)  // the enter key code
 		{
-			jQuery(this).siblings('.action-comment-post').click();
+			jQuery(this).siblings('.btn.comment-processed').click();
 			return false;
 		}
 	});
