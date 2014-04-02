@@ -1179,7 +1179,8 @@ function show_share_url()
 function initialize_deletion_confirmation()
 {
 	 jQuery('.confirm-delete').click(function(e) {
-	 	if (!confirm("This will permanently remove items from the database. Are you sure you want to continue?"))
+	 	var result = confirm("This will permanently remove items from the database. Are you sure you want to continue?");
+	 	if (!result)
 	 	{
 	 		e.preventDefault();
 	 		return false;
