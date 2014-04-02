@@ -40,7 +40,7 @@
           <td><?php print $comment['narrative_id']; ?></td>
           <td><?php print $comment['comment_id']; ?></td>
           <td><?php if ($comment['parent_comment']) { echo anchor('admin/comments/' . $comment['parent_comment'] . '/review', $comment['parent_comment']); } ?></td>
-          <td><?php print $comment['body']; ?></td>
+          <td><?php print xss_clean($comment['body']); ?></td>
           <td><?php print $comment['created']; ?></td>
           <td><?php echo anchor('admin/comments/' . $comment['comment_id'] . '/review', $comment['flags']); ?></td>
           <td>Published</td>

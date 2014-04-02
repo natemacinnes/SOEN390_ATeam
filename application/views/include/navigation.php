@@ -16,17 +16,15 @@
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
 			<ul class="nav navbar-nav">
-				<li class="dropdown">
-					<?php echo anchor('admin/narratives', 'Manage Narratives'); ?>
-				</li>
+				<li class="dropdown"><?php echo anchor('admin/narratives', 'Manage Narratives'); ?></li>
+				<li class="dropdown"><?php echo anchor('admin/upload', 'Upload Narratives'); ?></li>
 				<li><?php echo anchor('admin/comments', 'Manage Comments'); ?></li>
-				<li class="Topic">
-					<li><?php echo anchor('admin/settings', 'Portal settings'); ?></li>
-				</li>
+				<li><?php echo anchor_popup('http://www.google.ca/analytics/', 'Metrics'); ?></li>
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
 					<li><?php echo anchor('home', 'Portal Homepage'); ?></li>
+					<li><?php echo anchor('admin/settings', 'Portal settings'); ?></li>
 					<?php if ($logged_in_user): ?>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $logged_in_user['login'] ?><b class="caret"></b></a>
