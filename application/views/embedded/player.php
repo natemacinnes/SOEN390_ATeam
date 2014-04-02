@@ -27,6 +27,7 @@ if (file_exists($path)):
 			<div class="float-right">
 				<p><span class="green glyphicon glyphicon-thumbs-up"></span> <span class="green text"><?php echo $narrative['agrees']; ?> </span><span class="red glyphicon glyphicon-thumbs-down"></span> <span class="red text"><?php echo $narrative['disagrees']; ?></span></p>
 			</div>
+			<div style="text-align: center;"><span class="glyphicon glyphicon-time"></span> <?php $datetime = explode(' ', $narrative['uploaded']); echo $datetime[0]; ?></div>
 			<div class="clear"></div>
 			<div class="progress">
 			  <div class="progress-bar progress-bar-success" style="width: <?php echo round($narrative['agrees']/$total_votes * 100); ?>%">
