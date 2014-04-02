@@ -11,7 +11,6 @@ $path = $this->config->item('site_data_dir') . '/' . $narrative_id . '/combined.
 $total_votes = (float)$narrative['agrees'] + (float)$narrative['disagrees'];
 if (file_exists($path)):
 ?>
-	<?php include_once("application/analyticstracking.php"); ?>
 	<div class="player-wrapper float-left right-margin" id="narrative-<?php echo $narrative_id; ?>">
 		<img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400' >
 		<br />
@@ -68,6 +67,6 @@ if (file_exists($path)):
 		</div>
 	</div>
 <?php else: ?>
-	<p id="DNE">Narrative does not exist.</p>
+	<p>Narrative does not exist.</p>
 <?php endif; ?>
 

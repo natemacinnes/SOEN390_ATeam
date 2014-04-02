@@ -26,7 +26,7 @@ jQuery(document).ready(function() {
 		transition_duration: 700,
 		ring_inner_radius: 0.85,
 		min_filtered_opacity: 0.00,
-    min_sort_opacity: 0.2,
+		min_sort_opacity: 0.2,
 		bubble_fill_normal_mask: 0.5,
 		bubble_fill_hover_mask: 0.8,
 		system_colors: {
@@ -85,12 +85,12 @@ jQuery(document).ready(function() {
 		//Diverting focus to an element other than the language button to handle IE no feedback of unclicking until loss of focus
 		jQuery('.language-container').focus();
 		jQuery('.language-container.btn-group a').not(this).removeClass('active');
-    if (jQuery(this).hasClass('active')) {
-      yd_settings.ui.filters.language = jQuery('.language-container.btn-group a.active').attr('href').substring(1);
-    }
-    else {
-		  yd_settings.ui.filters.language = null;
-    }
+		if (jQuery(this).hasClass('active')) {
+			yd_settings.ui.filters.language = jQuery('.language-container.btn-group a.active').attr('href').substring(1);
+		}
+		else {
+			yd_settings.ui.filters.language = null;
+		}
 		return false;
 	}).tooltip();
 
@@ -555,7 +555,7 @@ function narrative_bind_player(svgselect) {
 		// TODO: disabled for now
 		// Only allow popup if (a) narrative matches filter or (b) is in history bar
 	 if (! (narrative_matches_filter(this.__data__) || jQuery(this).attr('id').startsWith('history-'))) {
-		  return false;
+			return false;
 		}
 
 		// Call method to add narrative to history
@@ -587,7 +587,9 @@ function narrative_bind_player(svgselect) {
 			speed: 700,
 			onComplete: function() {
 
-				//Registering loading of the narrative in the colorbox - Commented out because Google analytics was tracking 1 load of /narrative/# AND 1 load of /player/# (offsetting percentages)
+				// Registering loading of the narrative in the colorbox
+				// Disabled because GA was tracking a load of /narrative/ID as well as a
+				// load of /player/# (offsetting percentages)
 				//_gaq.push(['_trackPageview', narrative_url]);
 
 				narrative_player_load();
@@ -605,47 +607,36 @@ function narrative_bind_player(svgselect) {
 					player.data('mediaelementplayer').remove();
 				}
 
-
-        //In the event that there is not media element, do not collect analytics,
-        // TO_DO: proper fix
-        if(document.getElementById("DNE") != null) {
-          return;
-        }
-        else
+				// In the event that there is not media element, do not collect analytics
+				// Otherwise, log narrative analytic data before closing
+				if (player.length)
 				{
-          //Notify Google Analytics of partial or full play
-  				if(document.getElementsByName("fullPlay")[0].value == "true")
-  				{
-  					_gaq.push(['_trackPageview', narrative_url + "/full"]);
-  				}
-  				else
-  				{
-  					_gaq.push(['_trackPageview', narrative_url + "/partial"]);
-            console.log("blahh");
-  				}
+					// Notify Google Analytics of partial or full play
+					var extra = (document.getElementsByName("fullPlay")[0].value == "true" ? "full" : "partial");
+					_gaq.push(['_trackPageview', narrative_url + '/' + extra]);
 
-  				//Notify Google Analytics of agree or disagree or nothing
-  				if(document.getElementsByName("opinion")[0].value == "agree")
-  				{
-  					_gaq.push(['_trackPageview', narrative_url + "/agree"]);
-  				}
-  				else if(document.getElementsByName("opinion")[0].value == "disagree")
-  				{
-  					_gaq.push(['_trackPageview', narrative_url + "/disagree"]);
-  				}
+					//Notify Google Analytics of agree or disagree or nothing
+					if (jQuery("input[name=opinion]").val() == "agree")
+					{
+						_gaq.push(['_trackPageview', narrative_url + "/agree"]);
+					}
+					else if(jQuery("input[name=opinion]").val() == "disagree")
+					{
+						_gaq.push(['_trackPageview', narrative_url + "/disagree"]);
+					}
 
-  				//Notify Google Analytics of bookmarking or nothing
-  				if(document.getElementsByName("bookmark")[0].value == "true")
-  				{
-  					_gaq.push(['_trackPageview', narrative_url + "/bookmark"]);
-  				}
+					// Notify Google Analytics of bookmarking or nothing
+					if (jQuery("input[name=bookmark]").val() == "true")
+					{
+						_gaq.push(['_trackPageview', narrative_url + "/bookmark"]);
+					}
 
-  				//Notify Google Analytics of sharing or nothing
-  				if(document.getElementsByName("share")[0].value == "true")
-  				{
-  					_gaq.push(['_trackPageview', narrative_url + "/share"]);
-  				}
-        }
+					// Notify Google Analytics of sharing or nothing
+					if (jQuery("input[name=share]").val() == "true")
+					{
+						_gaq.push(['_trackPageview', narrative_url + "/share"]);
+					}
+				}
 			},
 			onClosed: function() {
 				// Modify address bar without reloading page
@@ -987,17 +978,17 @@ function initialize_commenting() {
 function narrative_player_buttons_initialize()
 {
 	var client = new ZeroClipboard( document.getElementById("copy-share"), {
-	  moviePath: yd_settings.site_url + "assets/zeroclipboard/ZeroClipboard.swf"
+		moviePath: yd_settings.site_url + "assets/zeroclipboard/ZeroClipboard.swf"
 	} );
 
 	client.on( "load", function(client) {
-	   //alert( "movie is loaded" );
+		 //alert( "movie is loaded" );
 
-	  client.on( "complete", function(client, args) {
-	    // `this` is the element that was clicked
-	    //this.style.display = "none";
-	    alert("Copied text to clipboard: " + args.text );
-	  });
+		client.on( "complete", function(client, args) {
+			// `this` is the element that was clicked
+			//this.style.display = "none";
+			alert("Copied text to clipboard: " + args.text );
+		});
 	});
 	//get narrative ID
 	var player_wrappers = jQuery(".player-wrapper");
@@ -1045,14 +1036,14 @@ function narrative_player_buttons_initialize()
 	jQuery(".share-btn").click(function() {
 		document.getElementsByName("share")[0].value = "true"; //To notify Google analytics of the share action
 		if (!jQuery(this).hasClass('active')) {
-      jQuery(this).addClass('active');
-      show_share_url();
-    }
-    else {
-    	jQuery(this).removeClass('active');
-    	jQuery(this).blur();
-    	show_share_url();
-    }
+			jQuery(this).addClass('active');
+			show_share_url();
+		}
+		else {
+			jQuery(this).removeClass('active');
+			jQuery(this).blur();
+			show_share_url();
+		}
 	}).tooltip();
 
 	//local var to decide agree/disagree
