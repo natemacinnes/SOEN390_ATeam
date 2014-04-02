@@ -136,12 +136,24 @@ class Comment_Model_Test extends CIUnit_TestCase
 	 * UT-0080
 	 * @covers Comment_Model::delete
 	 */
-	 public function test__delete()
+	 public function test__delete__base_comment()
+	 {
+		$count_before = $this->CI->comment_model->get_total_count();
+		$this->CI->comment_model->delete(array('comment_id' => 3));
+		$count_after = $this->CI->comment_model->get_total_count();
+		$this->assertEquals($count_before-1, $count_after);
+	 }
+
+	 /**
+	 * UT-0040
+	 * @covers Comment_Model::delete
+	 */
+	 public function test__delete__parent_to_other_comment()
 	 {
 		$count_before = $this->CI->comment_model->get_total_count();
 		$this->CI->comment_model->delete(array('comment_id' => 1));
 		$count_after = $this->CI->comment_model->get_total_count();
-		$this->assertEquals($count_before-1, $count_after);
+		$this->assertEquals($count_before-2, $count_after);
 	 }
 
 	/**
@@ -162,9 +174,8 @@ class Comment_Model_Test extends CIUnit_TestCase
 	public function test__flag()
 	{
 		$comment = $this->CI->comment_model->get(2);
-		$comment = $this->CI->comment_model->flag(2);
+		$this->CI->comment_model->flag(2);
 		$comment_after = $this->CI->comment_model->get(2);
 		$this->assertEquals($comment['flags']+1, $comment_after['flags']);
 	}
-
 }

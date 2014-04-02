@@ -46,15 +46,13 @@ class Tutorial_Model_Test extends CIUnit_TestCase
 
 	/**
 	 * UT-0031
-	 * @covers narrative_flag_model::get_by_narrative_id
+	 * @covers tutorial_model::get_by_language
 	 */
 	public function test__get_by_language__valid_language()
 	{
-		// $Expected = $this->CI->tutorial_model->get_by_language("English");
-		//die(print_r($Expected, true));
 		$expected = array(
 			'id' => 1,
-			'language'=> "english",
+			'language' => "english",
 			'url' => "http://www.youtube.com/embed/WjeskPsP7qY?rel=0&autoplay=1"
 		);
 

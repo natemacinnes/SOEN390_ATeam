@@ -124,7 +124,7 @@ class Ajax_Test extends CIUnit_TestCase
 	 {
 		$current_agrees = $this->CI->narrative_model->get(1);
 		ob_start();
-		$this->CI->increment_agrees_disagrees(1, "Agree");
+		$this->CI->increment_agrees_disagrees(1, "agree");
 		ob_end_clean();
 		$after_agrees = $this->CI->narrative_model->get(1);
 
@@ -140,7 +140,7 @@ class Ajax_Test extends CIUnit_TestCase
 	 {
 		$current_disagrees = $this->CI->narrative_model->get(1);
 		ob_start();
-		$this->CI->increment_agrees_disagrees(1, "Disagree");
+		$this->CI->increment_agrees_disagrees(1, "disagree");
 		ob_end_clean();
 		$after_disagrees = $this->CI->narrative_model->get(1);
 
@@ -172,7 +172,7 @@ class Ajax_Test extends CIUnit_TestCase
 	 {
 		$current_agrees = $this->CI->narrative_model->get(1);
 		ob_start();
-		$this->CI->decrement_agrees_disagrees(1, "Agree");
+		$this->CI->decrement_agrees_disagrees(1, "agree");
 		ob_end_clean();
 		$after_agrees = $this->CI->narrative_model->get(1);
 
@@ -188,7 +188,7 @@ class Ajax_Test extends CIUnit_TestCase
 	 {
 		$current_disagrees = $this->CI->narrative_model->get(1);
 		ob_start();
-		$this->CI->decrement_agrees_disagrees(1, "Disagree");
+		$this->CI->decrement_agrees_disagrees(1, "disagree");
 		ob_end_clean();
 		$after_disagrees = $this->CI->narrative_model->get(1);
 
@@ -246,8 +246,8 @@ class Ajax_Test extends CIUnit_TestCase
 	 	$narr_new_data = $this->CI->narrative_model->get($narrative_id);
 	 	$this->assertEquals($narr_previous_data['agrees'], $narr_new_data['agrees']-1);
 		$this->assertEquals($narr_previous_data['disagrees'], $narr_new_data['disagrees']+1);
-	 } 
-	 
+	 }
+
 
 
 	 /**
