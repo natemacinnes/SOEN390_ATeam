@@ -70,6 +70,9 @@ jQuery(document).ready(function() {
 	// present on page load (i.e. on admin review narrative page)
 	narrative_player_load();
 
+	// confirm dialog for anything with class 'confirm-delete'
+	initialize_deletion_confirmation();
+
 	jQuery('audio,video').not('.player-processed').addClass('player-processed').each(function() {
 		jQuery(this).mediaelementplayer({
 		// the order of controls you want on the control bar (and other plugins below)
@@ -1167,7 +1170,19 @@ function add_bookmark()
 	alert('Please press Control+D to bookmark this page; your browser does not support automatic bookmark creation.');
 }
 
-function show_share_url(){
+function show_share_url()
+{
 	jQuery(".link-content").toggle();
 	jQuery(this).colorbox.resize();
+}
+
+function initialize_deletion_confirmation()
+{
+	 jQuery('.confirm-delete').click(function(e) {
+	 	if (!confirm("This will permanently remove items from the database. Are you sure you want to continue?"))
+	 	{
+	 		e.preventDefault();
+	 		return false;
+	 }
+	});
 }

@@ -116,7 +116,7 @@
         <div class="clear"></div>
         <br/>
         <?php echo form_submit('submit', 'Remove Selected', "class='btn btn-default'"); ?>
-        <?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/delete', 'Delete', "class='btn btn-default'"); ?>
+        <?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/delete', 'Delete', "class='btn btn-default confirm-delete'"); ?>
       <?php echo form_close(); ?>
       <?php if (count($deleted['tracks']) || count($deleted['pictures'])): ?>
         <?php echo form_open('admin/narratives/' . $narrative['narrative_id'] . '/restore', 'class="big-bottom-margin"'); ?>
@@ -179,7 +179,7 @@
               <td><?php echo anchor('admin/comments/' . $comment['comment_id'] . '/review', $comment['flags']); ?></td>
               <td>Published</td>
               <td>
-                <?php echo anchor("admin/comments/" . $comment['comment_id'] . "/delete?destination=" . uri_string(current_url()), '<span class="glyphicon glyphicon-remove"></span>', 'title="Delete" class="btn btn-default btn-xs" role="button"'); ?>
+                <?php echo anchor("admin/comments/" . $comment['comment_id'] . "/delete?destination=" . uri_string(current_url()), '<span class="glyphicon glyphicon-remove"></span>', 'title="Delete" class="btn btn-default btn-xs confirm-delete" role="button"'); ?>
                 <?php if ($comment['flags']): ?>
                   <?php echo anchor("admin/comments/" . $comment['comment_id'] . "/dismiss_flags?destination=" . uri_string(current_url()), '<span class="glyphicon glyphicon-ok-circle"></span>', 'title="Dismiss flags" class="btn btn-default btn-xs" role="button"'); ?>
                 <?php endif; ?>

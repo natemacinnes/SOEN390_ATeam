@@ -14,7 +14,7 @@
 			<p><?php echo $comment['body']; ?></p>
 		</div>
 		<div class="top-margin">
-			<?php echo anchor("admin/comments/" . $comment['comment_id'] . "/delete", '<span class="glyphicon glyphicon-remove"></span> Delete', 'title="Delete" class="btn btn-default" role="button"'); ?>
+			<?php echo anchor("admin/comments/" . $comment['comment_id'] . "/delete", '<span class="glyphicon glyphicon-remove"></span> Delete', 'title="Delete" class="btn btn-default confirm-delete" role="button"'); ?>
       <?php if ($comment['flags']): ?>
         <?php echo anchor("admin/comments/" . $comment['comment_id'] . "/dismiss_flags?destination=" . uri_string(current_url()), '<span class="glyphicon glyphicon-ok-circle"></span> Dismiss flags', 'title="Dismiss flags" class="btn btn-default" role="button"'); ?>
       <?php endif; ?>
