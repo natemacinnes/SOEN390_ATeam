@@ -2,7 +2,7 @@
 
 class Comment_Flag_Model extends CI_Model
 {
-  private $table = 'comment_flags';
+  private $table = 'comments';
   public function __construct()
   {
     parent::__construct();
@@ -21,13 +21,12 @@ class Comment_Flag_Model extends CI_Model
     return $query->result_array();
   }
 
-  public function insert($comment_id, $description = '')
+  public function insert($comment_id)
   {
-    $comment_flag = array(
-      'comment_id' => $comment_id,
-      'description' => $description,
-    );
-    $this->db->insert($this->table, $comment_flag);
+    $this->db->where('comment_id', $comment_id);
+    $this->db->set('flags', 'flags+1', FALSE);
+    $this->db->update('comments');
+
     return $this->db->insert_id();
   }
 }

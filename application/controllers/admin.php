@@ -151,7 +151,7 @@ class Admin extends YD_Controller
 		$data['offset'] = $offset;
 		$data['limit'] = 20;
 
-		$comments = $this->comment_model->get_all(NULL, $sort_by == 'flags' ? 'id' : $sort_by, $sort_order, $offset, $data['limit']);
+		$comments = $this->comment_model->get_all(NULL, $sort_by, $sort_order, $offset, $data['limit']);
 
 		$config['base_url'] = site_url("admin/comments/$sort_by/$sort_order");
 		$config['total_rows'] = $this->comment_model->get_total_count();
@@ -171,27 +171,6 @@ class Admin extends YD_Controller
 		$this->pagination->initialize($config);
 		$data["links"] = $this->pagination->create_links();
 
-		foreach ($comments as &$comment)
-		{
-			$flags = $this->comment_flag_model->get_by_comment_id($comment['comment_id']);
-			$comment['flags'] = count($flags);
-		}
-
-		function commentsFlagSort($item1,$item2)
-		{
-			if ($item1['flags'] == $item2['flags']) {
-				return 0;
-			}
-			return ($item1['flags'] < $item2['flags']) ? 1 : -1;
-		}
-		if ($sort_by == 'flags')
-		{
-			usort($comments,'commentsFlagSort');
-			if ($sort_order == 'asc') {
-				$comments = array_reverse($comments);
-			}
-		}
-
 		$data['comments'] = $comments;
 
 		$this->view_wrapper('admin/comments/list', $data);
@@ -202,11 +181,8 @@ class Admin extends YD_Controller
 	 */
 	public function settings()
 	{
-<<<<<<< HEAD
-
-=======
 		$this->require_login();
->>>>>>> Jad
+
 		$data = array(
 			'portal_topic' => $this->variable_model->get('portal_topic'),
 			'email_address' => $this->variable_model->get('email_address'),
@@ -220,20 +196,19 @@ class Admin extends YD_Controller
 	 */
 	public function update_settings()
 	{
-<<<<<<< HEAD
 		$this->form_validation->set_rules('portal_topic', 'Portal_Topic', 'required');
 		$this->form_validation->set_rules('email_address', 'Contact', 'valid_email|required|valid_email');
 
 		if ($this->form_validation->run() == FALSE) {
 			$this->system_message_model->set_message('Settings could not be updated.', MESSAGE_ERROR);
-=======
+		}
+
 		$this->require_login();
 		$new_topic = $this->input->post('portal_topic');
 		if (strlen($new_topic))
 		{
 			$this->variable_model->set('portal_topic', $new_topic);
 			$this->system_message_model->set_message('Settings updated successfully.', MESSAGE_NOTICE);
->>>>>>> Jad
 			redirect('admin/settings');
 		}
 		else
@@ -484,11 +459,8 @@ class Admin extends YD_Controller
 
 	public function metrics()
 	{
-<<<<<<< HEAD
 		$this->load->library('gapi', array("email"=>"sahiln25@gmail.com", "password"=>"password"));
-=======
 		$this->load->library('gapi');
->>>>>>> Jad
 
 		$this->view_wrapper('admin/metrics');
 	}

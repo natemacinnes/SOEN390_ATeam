@@ -20,6 +20,7 @@ class Comment_Model extends CI_Model {
       'narrative' => 'narrative_id',
       'created' => 'created',
       'status' => 'status',
+      'flags' => 'flags'
     );
     if (!isset($sort_cols[$sort_by]))
     {
