@@ -1028,9 +1028,11 @@ function narrative_player_buttons_initialize()
 	});
 
 	//Handle bookmarking of narrative
-	jQuery(".bookmark-btn").click(function() {
+	jQuery(".bookmark-btn").click(function(e) {
 		document.getElementsByName("bookmark")[0].value = "true"; //To notify Google analytics of the bookmark action
 		add_bookmark();
+		e.preventDefault();
+		return false;
 	}).tooltip();
 
 	//handle sharing action
