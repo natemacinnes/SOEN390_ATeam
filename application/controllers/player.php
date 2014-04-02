@@ -40,11 +40,4 @@ class Player extends YD_Controller
 	{
 		$this->narrative_model->flag($narrative_id);
 	}
-
-	/* Might not need this anymore.
-	public function flag_narrative_form()
-	{
-		$this->load->view('embedded/flag_narrative');
-	}
-	*/
 }

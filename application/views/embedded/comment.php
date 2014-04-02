@@ -1,12 +1,12 @@
 <div class="comment" my-id="<?php echo $comment['comment_id']; ?>" id="comment-<?php echo $comment['comment_id']; ?>">
 	<input type="hidden" class="comment-id" name="comment_id" value="<?php echo $comment['comment_id']; ?>" />
-	<?php if($comment['parent_comment']): ?>
-		<p class="quote" parent-id="<?php echo $comment['parent_comment']; ?>" id="parent-<?php echo $comment['parent_comment']; ?>"><?php echo $comments[$comment['parent_comment']]['body']; ?>
+  <?php if ($comment['parent_comment']): ?>
+		<p class="quote" parent-id="<?php echo $comment['parent_comment']; ?>" id="parent-<?php echo $comment['parent_comment']; ?>"><?php echo xss_clean($comments[$comment['parent_comment']]['body']); ?>
 	<?php endif; ?>
-	<p class="comment-body"><?php echo $comment['body']; ?></p>
+	<p class="comment-body"><?php echo xss_clean($comment['body']); ?></p>
   <div class="pull-left">
 	<span class="grey date">
-	<?php 
+	<?php
 		if(array_key_exists("created", $comment))
 		{
 			echo $comment['created'];

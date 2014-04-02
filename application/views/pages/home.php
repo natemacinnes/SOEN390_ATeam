@@ -11,7 +11,7 @@
     <div class="page-header">
 
       <div class="topic-header">
-        <h4><?php echo $topic; ?></h4>
+        <h4><?php echo xss_clean($topic); ?></h4>
       </div>
 
       <h1><span id="page-header-you" class="lightblue">You</span><span id="page-header-deliberate">Deliberate</span></h1>
@@ -76,7 +76,7 @@
 		</div>
 
 		<div class="dont-contact-us">
-      <a id="mail-to" href="mailto:<?php echo $contact; ?>?Subject=Hey,%20psssst..." title="Please don't... &#013; Ne le faite pas, SVP..." target="_top" data-toggle="tooltip" data-placement="bottom" data-container="body"> Contact us <span class="glyphicon glyphicon-envelope"></span> Contactez nous </a>
+      <a id="mail-to" href="mailto:<?php echo xss_clean($contact); ?>?Subject=YouDeliberate" title="Send us an e-mail &#013; Envoyez un e-mail..." target="_top" data-toggle="tooltip" data-placement="bottom" data-container="body"> Contact us <span class="glyphicon glyphicon-envelope"></span> Contactez nous </a>
     </div>
 
 		<div class="clear"></div>

@@ -4,11 +4,11 @@
 	</div>
 
 	<div class="float-left big-right-margin">
-		<p><?php echo $comment['flags']; ?> users have flagged this comment.</p>
+		<p><?php echo xss_clean($comment['flags']); ?> users have flagged this comment.</p>
 		<div class="comment">
 			<?php if ($comment['parent_comment'] && isset($parent_comment['body'])): ?>
 				<div class="quote">
-					<p><?php echo $parent_comment['body']; ?></p>
+					<p><?php echo xss_clean($parent_comment['body']); ?></p>
 				</div>
 			<?php endif; ?>
 			<p><?php echo $comment['body']; ?></p>

@@ -11,12 +11,12 @@ class Variable_Model extends CI_Model
 	/**
 	 * Get a variable value from the database by its key name.
 	 */
-	public function get($key)
+	public function get($key, $default=FALSE)
 	{
 		$query = $this->db->from($this->table)
 			->where('key', $key)
 			->get();
-		$value = FALSE;
+		$value = $default;
 		foreach ($query->result_array() as $row)
 		{
 			$value = $row['value'];

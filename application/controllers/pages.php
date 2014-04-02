@@ -20,8 +20,8 @@ class Pages extends YD_Controller
    */
 	public function index()
 	{
-		$topic = $this->variable_model->get('portal_topic');
-		$contact = $this->variable_model->get('email_address');
+		$topic = $this->variable_model->get('portal_topic', '');
+		$contact = $this->variable_model->get('email_address', '');
 		$data = array('topic' => $topic ,
 			'contact' => $contact,
 		);
@@ -30,8 +30,8 @@ class Pages extends YD_Controller
 
 	public function narratives($id)
 	{
-		$topic = $this->variable_model->get('portal_topic');
-		$contact = $this->variable_model->get('email_address');
+		$topic = $this->variable_model->get('portal_topic', '');
+		$contact = $this->variable_model->get('email_address', '');
 		$data = array(
 			'topic' => $topic,
 			'contact' => $contact,
