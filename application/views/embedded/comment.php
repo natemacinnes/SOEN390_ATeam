@@ -15,7 +15,7 @@
 	</span>
   </div>
   <div class="actions">
-	<a class="action-comment-reply" href="#" style="display: none;"><span class="glyphicon glyphicon-comment"></span> Reply</a>
+	<a class="action-comment-reply" href="#" style="display: none;"><span class="glyphicon glyphicon-comment"></span> Reply / R&eacute;pondre</a>
     <a class="action-comment-report" href="#" style="display: none;"><span class="glyphicon glyphicon-flag"></span></a>
   </div>
   <div class="clear"></div>

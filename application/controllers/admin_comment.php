@@ -29,7 +29,7 @@ class Admin_Comment extends YD_Controller
 	{
 		$comment = $this->comment_model->get($comment_id);
 		if (!$comment) {
-			show_error('The specified comment does not exist.');
+			show_error("The specified comment does not exist / Le commentaire indiqué n'existe pas.");
 		}
 		$parent_comment = array();
 		if ($comment['parent_comment']) {

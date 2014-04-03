@@ -189,6 +189,12 @@ span.lightblue { color: #7BA7E0; }
 	margin: 0px;
 	padding-bottom: 0px;
 }
+.page-header h2 {
+	font-family: myFirstFont;
+	font-size: 300%;
+	margin: 0px;
+	padding-bottom: 0px;
+}
 
 #page-header-you {
 	/*color: white; text-shadow: 1px 1px #000000, -1px -1px #000000;*/
@@ -394,7 +400,7 @@ a#mail-to {
 
 .comments-wrapper {
 	margin-top: 1em;
-	height: 432px;
+	height: 332px;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
@@ -469,6 +475,10 @@ a#mail-to {
 }
 */
 
+#colorbox .page-header {
+	margin: 1em 3.8em 1.5em 0px;
+}
+
 #cboxLoadingOverlay {
 	background: #fff;
 }
@@ -486,7 +496,7 @@ a#mail-to {
 
 #cboxLoadedContent {
 	background: #ffffff;
-	padding: 2em;
+	padding: 1em;
 }
 
 #cboxClose {
@@ -496,5 +506,10 @@ a#mail-to {
 
 .narrative-report-wrapper {
 	position: relative;
-	top: 2em;
+	top: 1.3em;
+}
+
+/* For colorbox tooltips in colorbox */
+.tooltip {
+	z-index: 9999;
 }

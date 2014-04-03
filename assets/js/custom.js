@@ -982,15 +982,15 @@ function narrative_player_buttons_initialize()
 		moviePath: yd_settings.site_url + "assets/zeroclipboard/ZeroClipboard.swf"
 	} );
 
-	client.on( "load", function(client) {
-		 //alert( "movie is loaded" );
-
-		client.on( "complete", function(client, args) {
-			// `this` is the element that was clicked
-			//this.style.display = "none";
+	client.on("load", function(client) {
+		client.on("complete", function(client, args) {
+			// this.style.display = "none";
 			alert("Copied text to clipboard: " + args.text );
 		});
 	});
+
+	jQuery('.player-buttons .btn-group a').tooltip();
+
 	//get narrative ID
 	var player_wrappers = jQuery(".player-wrapper");
 	if (!player_wrappers.length)
@@ -1024,7 +1024,6 @@ function narrative_player_buttons_initialize()
 				alert("An error occurred while reporting the narrative. Please try again.")
 			});
 		}
-
 	});
 
 	//Handle bookmarking of narrative
@@ -1033,7 +1032,7 @@ function narrative_player_buttons_initialize()
 		add_bookmark();
 		e.preventDefault();
 		return false;
-	}).tooltip();
+	});
 
 	//handle sharing action
 	jQuery(".share-btn").click(function() {
@@ -1047,7 +1046,7 @@ function narrative_player_buttons_initialize()
 			jQuery(this).blur();
 			show_share_url();
 		}
-	}).tooltip();
+	});
 
 	//local var to decide agree/disagree
 	var last_consensus = "";
@@ -1143,7 +1142,7 @@ function narrative_player_buttons_initialize()
 			.fail(function() {
 				alert("An error occurred while voting.");
 			});
-	}).tooltip();
+	});
 
 	function update_concensus_bar(agrees, disagrees)
 	{

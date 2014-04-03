@@ -1,8 +1,8 @@
 <div class="page-header">
 	<div class="narrative-report-wrapper float-right">
-		<a class="action-narrative-report" href="#">Flag Narrative <span class="glyphicon glyphicon-flag"></span></a>
+		<a class="action-narrative-report" href="#">Report / D&eacute;noncer <span class="glyphicon glyphicon-flag"></span></a>
 	</div>
-	<h1>Narrative <small><?php echo $narrative_id; ?></small></h1>
+	<h2>Narrative / Narratif <small><?php echo $narrative_id; ?></small></h2>
 </div>
 
 <?php
@@ -12,7 +12,7 @@ $total_votes = (float)$narrative['agrees'] + (float)$narrative['disagrees'];
 if (file_exists($path)):
 ?>
 	<div class="player-wrapper float-left right-margin" id="narrative-<?php echo $narrative_id; ?>">
-		<img src='' id='audio_image' alt='Audio image to accompany narrative' height='400' width='400' >
+		<img src='' id='audio_image' alt='Audio image to accompany narrative' height='300' width='400' >
 		<br />
 		<audio id='narrative_audio' src='<?php print base_url() . $path; ?>' type='audio/mp3' controls='controls' class="autoplay"></audio></br>
 		<?php echo form_hidden('fullPlay', 'false'); ?>
@@ -42,15 +42,17 @@ if (file_exists($path)):
 		<div class="player-buttons bottom-margin">
 			<div class="float-left">
 				<div class="btn-group">
-					<a href="#" class="btn btn-default bookmark-btn" role="button" title="Bookmark / ..." data-toggle="tooltip" data-placement="top" data-container="body">Bookmark <span class="yellow glyphicon glyphicon-bookmark"></span></a>
-					<a href="#" class="btn btn-default share-btn" role="button" title="Share / Partager" data-toggle="tooltip" data-placement="top" data-container="body">Share <span class="blue glyphicon glyphicon-share"></span></a>
+					<a href="#" class="btn btn-default disabled" role="button">Social / Sociaux: </a>
+					<a href="#" class="btn btn-default bookmark-btn" role="button" title="Bookmark / Marque-page" data-toggle="tooltip" data-placement="top" data-container="body"><span class="yellow glyphicon glyphicon-bookmark"></span></a>
+					<a href="#" class="btn btn-default share-btn" role="button" title="Share / Partager" data-toggle="tooltip" data-placement="top" data-container="body"><span class="blue glyphicon glyphicon-share"></span></a>
 				</div>
 			</div>
 
 			<div class="float-right">
 				<div class="btn-group">
-					<a href="#agree" class="btn btn-default" role="button" title="Agree / ..." data-toggle="tooltip" data-placement="top" data-container="body">Agree <span class="green glyphicon glyphicon-thumbs-up"></span></a>
-					<a href="#disagree" class="btn btn-default" role="button" title="Disagree / ..." data-toggle="tooltip" data-placement="top" data-container="body">Disagree <span class="red glyphicon glyphicon-thumbs-down"></span></a>
+					<a href="#" class="btn btn-default disabled" role="button">Vote / voter: </a>
+					<a href="#agree" class="btn btn-default" role="button" title="Agree / D'accord" data-toggle="tooltip" data-placement="top" data-container="body"><span class="green glyphicon glyphicon-thumbs-up"></span></a>
+					<a href="#disagree" class="btn btn-default" role="button" title="Disagree / Désaccord" data-toggle="tooltip" data-placement="top" data-container="body"><span class="red glyphicon glyphicon-thumbs-down"></span></a>
 				</div>
 			</div>
 			<div class="clear"></div>
@@ -68,6 +70,6 @@ if (file_exists($path)):
 		</div>
 	</div>
 <?php else: ?>
-	<p>Narrative does not exist.</p>
+	<p>Narrative does not exist / Le narratif indiqué n'existe pas.</p>
 <?php endif; ?>
 

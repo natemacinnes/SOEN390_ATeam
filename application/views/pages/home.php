@@ -20,7 +20,7 @@
 
 		<div class="controls-container btn-toolbar">
 			<div class="btn-group btn-group-horizontal sort-container">
-				<a href="#" title="Recent narratives / Nouvelles discussions" class="btn btn-default disabled" role="button" data-toggle="tooltip" data-placement="top" data-container="body">Filter by / filtr&eacute; par: </a>
+				<a href="#" class="btn btn-default disabled" role="button">Filter by / filtr&eacute; par: </a>
 				<a href="#age" title="Most recent / Plus r&eacute;cent" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="glyphicon glyphicon-time"></span></a>
 				<a href="#agrees" title="Most agreed / Plus d'accords" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span></a>
 				<a href="#disagrees" title="Most disagreed / Plus de d&eacute;saccords" class="btn btn-default" role="button" data-toggle="tooltip" data-placement="top" data-container="body"><span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span></a>

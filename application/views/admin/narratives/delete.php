@@ -11,7 +11,7 @@
 		<?php endif; ?>
 	</div>
 	<?php if (isset($error)): ?>
-		The narrative requested does not exist.
+		The narrative requested does not exist /  Le narratif indiqué n'existe pas.
 	<?php else: ?>
 		<?php if (count($narratives) == 1): ?>
 			<h3>Narrative archival:</h3>
