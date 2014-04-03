@@ -115,8 +115,8 @@
         </div>
         <div class="clear"></div>
         <br/>
-        <?php echo form_submit('submit', 'Remove Selected', "class='btn btn-default'"); ?>
-        <?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/delete', 'Delete', "class='btn btn-default confirm-delete'"); ?>
+        <?php echo form_submit('submit', 'Unpublish selected', "class='btn btn-default'"); ?>
+        <?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/delete', 'Delete Narrative', "class='btn btn-default confirm-delete'"); ?>
       <?php echo form_close(); ?>
       <?php if (count($deleted['tracks']) || count($deleted['pictures'])): ?>
         <?php echo form_open('admin/narratives/' . $narrative['narrative_id'] . '/restore', 'class="big-bottom-margin"'); ?>
