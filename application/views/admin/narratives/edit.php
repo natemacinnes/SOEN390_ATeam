@@ -156,7 +156,7 @@
       <?php endif; ?>
     </div>
     <div class="tab-pane" id="comments">
-      <table class="table table-hover">
+      <table class="table table-hover table-striped">
       <thead>
         <tr>
           <th>Comment ID</th>
