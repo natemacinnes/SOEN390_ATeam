@@ -14,7 +14,7 @@
         <h4><?php echo xss_clean($topic); ?></h4>
       </div>
 
-      <h1><span id="page-header-you" class="lightblue">You</span><span id="page-header-deliberate">Deliberate</span></h1>
+      <h2><span id="page-header-you" class="lightblue">You</span><span id="page-header-deliberate">Deliberate</span> / <span id="page-header-you" class="lightblue">Vous</span><span id="page-header-deliberate">DelibereZ</span></h2>
 
     </div>
 
@@ -43,7 +43,7 @@
 
 		<!-- this sets the width available & corners -->
 		<div class="panel panel-default top-margin" id="narrative-wrapper">
-			<div class="panel-heading">Click a bubble to listen to an opinion / Appuyez sur une bulle pour écouter une opinion </div>
+			<div class="panel-heading">Click a bubble to listen to an opinion / Appuyez sur une bulle pour &eacute;couter une opinion </div>
 			<!-- this sets the background color (must match recent-container) -->
 			<div id="homepage-content-wrapper" class="clearfix panel-body">
 				<div id="bubble-container">
