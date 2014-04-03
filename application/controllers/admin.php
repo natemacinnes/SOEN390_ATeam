@@ -265,13 +265,15 @@ class Admin extends YD_Controller
 
 	public function bulk()
 	{
-		 $this->require_login();
+		$this->require_login();
 
 		// Checking if any narratives have been checked
 		$narratives = $this->input->post('narratives');
 		if (!$narratives)
 		{
-			redirect('admin');
+			$this->system_message_model->set_message("Please select at least one narrative.", MESSAGE_ERROR);
+			redirect('admin/narratives');
+			return;
 		}
 
 		$action = $this->input->post('action');
