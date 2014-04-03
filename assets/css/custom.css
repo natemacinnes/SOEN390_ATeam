@@ -203,6 +203,7 @@ span.lightblue { color: #7BA7E0; }
 .topic-header {
 	float: right;
 	text-align: right;
+	margin-top: -0.7em;
 }
 
 #homepage-content-wrapper {
