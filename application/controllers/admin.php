@@ -187,7 +187,7 @@ class Admin extends YD_Controller
 		$this->form_validation->set_rules('email_address', 'Contact', 'valid_email|required');
 
 		if ($this->form_validation->run() == FALSE) {
-			$this->system_message_model->set_message('Settings could not be updated.', MESSAGE_ERROR);
+			$this->system_message_model->set_message('Settings could not be updated. Please fill out all of the required fields.', MESSAGE_ERROR);
 			redirect('admin/settings');
 		}
 		else

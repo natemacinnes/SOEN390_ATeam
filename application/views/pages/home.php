@@ -35,9 +35,7 @@
 			</div>
 
 			<div class="help-container">
-				<!--<a href=blah class="btn btn-default colorbox"><a href="www.youtube.com" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help colorbox"><span class="glyphicon glyphicon-question-sign"></span></a>
-				-->
-				<a href="tutorial/english" title="Site tutorial&#013;Tutoriel du site" class="btn btn-info btn-lg btn-help colorbox"><span class="glyphicon glyphicon-question-sign"></span></a>
+				<a href="tutorial/english" title="Site tutorial / Tutoriel du site" class="btn btn-info btn-lg btn-help colorbox" data-toggle="tooltip" data-placement="top" data-container="body"><span class="glyphicon glyphicon-question-sign"></span></a>
 			</div>
 		</div>
 

@@ -106,6 +106,9 @@ jQuery(document).ready(function() {
 		return false;
 	}).tooltip();
 
+	// Tutorial button
+	jQuery('.help-container a').tooltip();
+
 	// This design pattern uses CSS classes to ensure that items aren't processed
 	// twice by the same callback handler. It allows new DOM elements to be bound,
 	// leaving existing ones untouched.
