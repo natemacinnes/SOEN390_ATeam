@@ -307,7 +307,8 @@ class Ajax_Test extends CIUnit_TestCase
 		ob_end_clean();
 
 		$history = json_decode(trim($output));
-
+		$this->CI->clear_history();
+		
 		$this->assertGreaterThan(0, count($history));
 	 }
 
