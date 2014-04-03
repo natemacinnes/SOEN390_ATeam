@@ -54,13 +54,4 @@
       <?php endforeach; ?>
     </tbody>
   </table>
-
-  <!--THIS GENERATES PAGINATION-->
-  <?php
-    if (strlen($links)){
-      echo $links;
-    }
-  ?>
-  <div class="clear"></div>
-
 </div>

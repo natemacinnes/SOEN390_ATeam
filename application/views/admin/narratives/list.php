@@ -62,7 +62,7 @@
 					<td><?php print $narrative['language']; ?></td>
 					<td><?php print $narrative['created']; ?></td>
 					<td><?php print $narrative['uploaded']; ?></td>
-					<td><?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/edit', $narrative['flags']); ?></td>
+					<td><?php print $narrative['flags']; ?></td>
 					<td><?php echo $narrative['status'] == 1 ? 'Published' : 'Not Published'; ?></td>
 					<td>
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-pencil"></span>', 'title="Edit" class="btn btn-default btn-xs" role="button"'); ?>
@@ -73,30 +73,4 @@
 			<?php endforeach; ?>
 		</tbody>
 	</table>
-
-	<!-- FIXME should be button anchor links and use JS to trigger submit buttons above -->
-	<?php echo form_open('admin/narratives/bulk'); ?>
-		<div class="btn-group big-top-margin float-left">
-			<button type="button" class="btn btn-default" disabled="disabled">Batch Actions:</button>
-			<?php echo form_button(array('name' => 'action', 'value' => 'publish', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-eye-open"></span> Publish', 'class' => "btn btn-default")); ?>
-			<?php echo form_button(array('name' => 'action', 'value' => 'unpublish', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-eye-close"></span> Unpublish', 'class' => "btn btn-default")); ?>
-			<?php echo form_button(array('name' => 'action', 'value' => 'download', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-cloud-download"></span> Download', 'class' => "btn btn-default")); ?>
-			<?php echo form_button(array('name' => 'action', 'value' => 'delete', 'type' => 'submit', 'content' => '<span class="glyphicon glyphicon-remove"></span> Delete', 'class' => "btn btn-default")); ?>
-		</div>
-		<div class="btn-group big-top-margin float-left left-margin">
-			<button type="button" class="btn btn-default" disabled="disabled">Mark as:</button>
-			<?php echo form_button(array('name' => 'action', 'value' => 'markFor', 'type' => 'submit', 'content' => 'For', 'class' => "btn btn-default")); ?>
-			<?php echo form_button(array('name' => 'action', 'value' => 'markNeutral', 'type' => 'submit', 'content' => 'Neutral', 'class' => "btn btn-default")); ?>
-			<?php echo form_button(array('name' => 'action', 'value' => 'markAgainst', 'type' => 'submit', 'content' => 'Against', 'class' => "btn btn-default")); ?>
-		</div>
-	<!-- WHY DOES THIS ONLY WORK WITHOUT FORM CLOSE? -->
-
-	<!--THIS GENERATES PAGINATION-->
-	<?php
-		if (strlen($links)){
-			echo $links;
-		}
-	?>
-	<div class="clear"></div>
-
 </div>
