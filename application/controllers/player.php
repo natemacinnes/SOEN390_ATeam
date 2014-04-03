@@ -27,8 +27,15 @@ class Player extends YD_Controller
 
 		$rendered_comments = '';
 		$comments_copy = $comments;
-		foreach ($comments as $comment)
+
+		$comments_countdown = 25;
+		foreach ($comments as $i => $comment)
 		{
+			$comments_countdown--;
+			if ($comments_countdown < 0) {
+				break;
+			}
+
 			// Render the comments into the variable
 			$rendered_comments .= $this->load->view('embedded/comment', array('comment' => $comment, 'comments' => $comments_copy), TRUE);
 		}
