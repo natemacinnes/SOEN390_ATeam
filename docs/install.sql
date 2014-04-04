@@ -26,6 +26,17 @@ CREATE TABLE `admins` (
   PRIMARY KEY (`admin_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+LOCK TABLES `admins` WRITE;
+/*!40000 ALTER TABLE `admins` DISABLE KEYS */;
+
+INSERT INTO `admins` (`admin_id`, `login`, `password`, `created`)
+VALUES
+	(1,'root','teamAwesome','2014-01-28 01:20:51'),
+	(2,'admin@youdeliberate.com','Moderator','2014-02-13 18:06:02');
+
+/*!40000 ALTER TABLE `admins` ENABLE KEYS */;
+UNLOCK TABLES;
+
 
 
 # Dump of table comments
