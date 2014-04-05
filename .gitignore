@@ -20,5 +20,6 @@ Thumbs.db
 .htaccess
 audio_container.txt
 *.sql
+!docs/install.sql
 *.tmp
 

@@ -14,8 +14,8 @@
   <?php echo form_open_multipart("admin/processUpload", array('class' => 'form-horizontal')); ?>
     <div class="form-group">
 	  <?php if(isset($error_message)) echo $error_message; ?>
-      <?php echo form_label('Select zip to upload:', 'userfile', array('class' => 'col-sm-2 control-label')); ?>
-      <div class='col-sm-10'><?php echo form_upload(array('name' => 'userfile', 'class' => 'form-control')); ?></div>
+      <?php echo form_label('Select zip file to upload:', 'userfile', array('class' => 'control-label upload-form-title')); ?>
+      <div class=''><?php echo form_upload(array('name' => 'userfile', 'class' => 'form-control upload-form')); ?></div>
     </div>
     <?php echo form_submit('submit', 'Submit', "class='btn btn-default'"); ?>
   <?php echo form_close(); ?>
