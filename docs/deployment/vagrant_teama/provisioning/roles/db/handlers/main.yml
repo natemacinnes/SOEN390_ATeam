@@ -1,0 +1,14 @@
+---
+# Handler to handle DB tier notifications
+
+- name: restart mysql
+  service: name=mysqld state=restarted
+
+- name: restart iptables
+  service: name=iptables state=restarted
+
+- name: import live database
+  mysql_db: name="{{ dbname }}" login_user=root login_password={{ root_password }} state=import target=/var/www/html/docs/install.sql
+
+- name: import test database
+  mysql_db: name="{{ dbname }}_test" login_user=root login_password={{ root_password }} state=import target=/var/www/html/docs/install.sql

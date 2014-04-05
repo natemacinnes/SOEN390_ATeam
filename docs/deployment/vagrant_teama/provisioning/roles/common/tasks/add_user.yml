@@ -1,0 +1,10 @@
+- name: "create password salt"
+  shell: echo "{{ saltstr }}" | /usr/bin/md5sum | awk '{print $1}'
+  register: password_salt
+
+- name: "create password hash"
+  command: python -c 'import crypt; print crypt.crypt("{{ user_password }}", "$1${{ password_salt.stdout }}$")'
+  register: password_hash
+
+- name: "create user"
+  user: name={{ username }} comment="{{ comment }}" password={{ password_hash.stdout }} state=present

@@ -1,0 +1,2 @@
+#!/bin/sh
+ssh -C -tt -vvv -o ForwardAgent=yes -o ControlMaster=auto -o ControlPersist=60s -o ControlPath=/Users/$(whoami)/.ansible/cp/ansible-ssh-%h-%p-%r -o StrictHostKeyChecking=no -o Port=2222 -o IdentityFile=/Users/firewing/.vagrant.d/insecure_private_key -o KbdInteractiveAuthentication=no -o PreferredAuthentications=gssapi-with-mic,gssapi-keyex,hostbased,publickey -o PasswordAuthentication=no -o User=vagrant -o ConnectTimeout=10 127.0.0.1

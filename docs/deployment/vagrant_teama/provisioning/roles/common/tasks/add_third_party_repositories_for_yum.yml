@@ -1,0 +1,8 @@
+- name: import gpg-keys
+  rpm_key: state=present key={{ item }}
+  with_items: gpg_keys
+
+- name: install repositories
+  yum: name={{ item }} state=installed
+  with_items: repo_rpms
+  ignore_errors: True

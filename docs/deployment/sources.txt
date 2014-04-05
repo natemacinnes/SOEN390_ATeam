@@ -1,0 +1,6 @@
+This file serves to document where the files included in the deployment folder
+for offline use were obtained from.
+
+* EPEL repository release RPM: https://fedoraproject.org/wiki/EPEL
+* RPMFusion repository release RPMs: http://rpmfusion.org/
+* ffmpeg static builds: http://sourceforge.net/projects/ffmpeg-builds/

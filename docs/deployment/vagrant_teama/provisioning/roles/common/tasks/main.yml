@@ -1,0 +1,63 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- include: add_user.yml
+  vars:
+    username: soen390
+    comment: "SOEN 390"
+    saltstr: jahdhf4
+    user_password: "teamAwesome"
+
+- include: add_third_party_repositories_for_yum.yml
+  vars:
+    gpg_keys:
+      - http://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-6
+      - http://rpms.famillecollet.com/RPM-GPG-KEY-remi
+      - https://github.com/lboynton/puppet-rpmfusion/raw/master/files/RPM-GPG-KEY-rpmfusion-free-el-6
+      - https://github.com/lboynton/puppet-rpmfusion/raw/master/files/RPM-GPG-KEY-rpmfusion-nonfree-el-6
+    repo_rpms:
+      - http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+      - http://download1.rpmfusion.org/free/el/updates/6/i386/rpmfusion-free-release-6-1.noarch.rpm
+      - http://download1.rpmfusion.org/nonfree/el/updates/6/i386/rpmfusion-nonfree-release-6-1.noarch.rpm
+
+- name: install core packages
+  yum: name={{ item }} state=installed enablerepo=epel,rpmfusion-free-updates,rpmfusion-nonfree-updates
+  with_items:
+    - nano
+    - wget
+    - telnet
+    - zip
+    - unzip
+    - ffmpeg
+    - etckeeper
+    - git
+    - libsemanage-python
+    - libselinux-python
+
+- name: install ntp
+  yum: name=ntp state=present
+  tags: ntp
+
+- name: configure ntp file
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf
+  tags: ntp
+  notify: restart ntp
+
+- name: start the ntp service
+  service: name=ntpd state=started enabled=true
+  tags: ntp
+
+- name: test to see if selinux is running
+  command: getenforce
+  register: sestatus
+  changed_when: false
+
+- name: initialize etckeeper
+  command: /usr/bin/etckeeper init creates=/etc/.git/description
+
+- name: make first commit
+  command: /usr/bin/etckeeper commit -m "init" creates=/etc/.git/COMMIT_EDITMSG
+
+- name: configure IPTables
+  template: src=iptables.j2 dest=/etc/sysconfig/iptables owner=root group=root mode=0644
+  notify: restart iptables
