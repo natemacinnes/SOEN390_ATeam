@@ -1,3 +1,4 @@
+cat << EOF > "$OUTPUT_FILE"
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /*
 | -------------------------------------------------------------------
@@ -38,31 +39,32 @@
 | ['stricton'] TRUE/FALSE - forces 'Strict Mode' connections
 |             - good for ensuring strict SQL while developing
 |
-| The $active_group variable lets you choose which connection group to
+| The \$active_group variable lets you choose which connection group to
 | make active.  By default there is only one group (the 'default' group).
 |
-| The $active_record variables lets you determine whether or not to load
+| The \$active_record variables lets you determine whether or not to load
 | the active record class
 */
 
-$active_group = 'default';
-$active_record = TRUE;
+\$active_group = 'default';
+\$active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['username'] = '{{ dbuser }}';
-$db['default']['password'] = '{{ upassword }}';
-$db['default']['database'] = '{{ dbname }}';
-$db['default']['dbdriver'] = 'mysql';
-$db['default']['dbprefix'] = '';
-$db['default']['pconnect'] = TRUE;
-$db['default']['db_debug'] = TRUE;
-$db['default']['cache_on'] = FALSE;
-$db['default']['cachedir'] = '';
-$db['default']['char_set'] = 'utf8';
-$db['default']['dbcollat'] = 'utf8_general_ci';
-$db['default']['swap_pre'] = '';
-$db['default']['autoinit'] = TRUE;
-$db['default']['stricton'] = FALSE;
+\$db['default']['hostname'] = 'localhost';
+\$db['default']['username'] = '${DB_USER}';
+\$db['default']['password'] = '${DB_PASSWORD}';
+\$db['default']['database'] = '${DB_NAME}_test';
+\$db['default']['dbdriver'] = 'mysqli';
+\$db['default']['dbprefix'] = '';
+\$db['default']['pconnect'] = TRUE;
+\$db['default']['db_debug'] = TRUE;
+\$db['default']['cache_on'] = FALSE;
+\$db['default']['cachedir'] = '';
+\$db['default']['char_set'] = 'utf8';
+\$db['default']['dbcollat'] = 'utf8_general_ci';
+\$db['default']['swap_pre'] = '';
+\$db['default']['autoinit'] = TRUE;
+\$db['default']['stricton'] = FALSE;
 
 /* End of file database.php */
 /* Location: ./application/config/database.php */
+EOF

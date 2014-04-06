@@ -1,0 +1,13 @@
+# This file contains the configuration settings used when deploying a new
+# instance of the YouDeliberate portal. You should not need to modify this file.
+
+###
+# Database settings
+###
+
+# The portal will be installed to a database by this name.
+DB_NAME="yd_teamA"
+
+# The name of the MySQL user to be created to connect to the database
+DB_USER="yd_teamA"
+

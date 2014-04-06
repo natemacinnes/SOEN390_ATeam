@@ -9,6 +9,8 @@ tests/report
 
 uploads/*
 test/*
+docs/deployment/vagrant_teama/.vagrant
+
 
 # OS Thumbnails
 Thumbs.db
@@ -16,10 +18,9 @@ Thumbs.db
 *.bak
 *.orig
 
-#html
+# Specific files and/or file types
 .htaccess
 audio_container.txt
 *.sql
-!docs/install.sql
+!docs/deployment/install.sql
 *.tmp
-

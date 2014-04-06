@@ -1,3 +1,4 @@
+cat << EOF > "$OUTPUT_FILE"
 #
 # This is the main Apache server configuration file.  It contains the
 # configuration directives that give the server its instructions.
@@ -139,9 +140,9 @@ Listen 80
 # Dynamic Shared Object (DSO) Support
 #
 # To be able to use the functionality of a module which was built as a DSO you
-# have to place corresponding `LoadModule' lines at this location so the
+# have to place corresponding \`LoadModule' lines at this location so the
 # directives contained in it are actually available _before_ they are used.
-# Statically compiled modules (those listed by `httpd -l') do not need
+# Statically compiled modules (those listed by \`httpd -l') do not need
 # to be loaded here.
 #
 # Example:
@@ -274,6 +275,7 @@ ServerAdmin root@localhost
 # redirections work in a sensible way.
 #
 #ServerName www.example.com:80
+ServerName 127.0.0.1:80
 
 #
 # UseCanonicalName: Determines how Apache constructs self-referencing
@@ -1007,3 +1009,4 @@ BrowserMatch "^Dreamweaver-WebDAV-SCM1" redirect-carefully
 #    ErrorLog logs/dummy-host.example.com-error_log
 #    CustomLog logs/dummy-host.example.com-access_log common
 #</VirtualHost>
+EOF
