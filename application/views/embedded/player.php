@@ -30,11 +30,11 @@ if (file_exists($path)):
 			<div style="text-align: center;"><span class="glyphicon glyphicon-time"></span> <?php $datetime = explode(' ', $narrative['uploaded']); echo $datetime[0]; ?></div>
 			<div class="clear"></div>
 			<div class="progress">
-			  <div class="progress-bar progress-bar-success" style="width: <?php echo round($narrative['agrees']/$total_votes * 100); ?>%">
-				<span class="sr-only"><?php echo round($narrative['agrees']/$total_votes * 100); ?>% Complete (success)</span>
+			  <div class="progress-bar progress-bar-success" style="width: <?php echo round($narrative['agrees']/max($total_votes, 1) * 100); ?>%">
+				<span class="sr-only"><?php echo round($narrative['agrees']/max($total_votes, 1) * 100); ?>% Complete (success)</span>
 			  </div>
-			  <div class="progress-bar progress-bar-danger" style="width: <?php echo round($narrative['disagrees']/$total_votes * 100); ?>%">
-				<span class="sr-only"><?php echo round($narrative['disagrees']/$total_votes * 100); ?>% Complete (danger)</span>
+			  <div class="progress-bar progress-bar-danger" style="width: <?php echo round($narrative['disagrees']/max($total_votes, 1) * 100); ?>%">
+				<span class="sr-only"><?php echo round($narrative['disagrees']/max($total_votes, 1) * 100); ?>% Complete (danger)</span>
 			  </div>
 			</div>
 		</div>
