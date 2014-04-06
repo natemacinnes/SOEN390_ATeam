@@ -1,3 +1,8 @@
+"""
+This file was used to derive color schemes: it creates lighter or darker
+variants of the provided RGB color given a brightness multiplier.
+"""
+
 def multiply_rgb(color, alter):
   """Accepts a HTML RGB color and alters each color channel."""
   rgb = color[1:]

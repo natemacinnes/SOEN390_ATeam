@@ -1,5 +1,3 @@
-UPDATE narratives SET position=FLOOR(1 + RAND() * 2), views=FLOOR(1 + RAND() * 2), agrees=FLOOR(1 + RAND() * 500), disagrees=FLOOR(1 + RAND() * 500), shares=FLOOR(1 + RAND() * 500), flags=FLOOR(1 + RAND() * 10) WHERE agrees=0;
+-- This file updates the narratives table, setting random values on the position & metric columns
 
-UPDATE narratives SET position=IF (narrative_id%6 <= 0, 0, IF (narrative_id%6 <= 2, 2, IF (narrative_id%6 <= 4, 1, IF (narrative_id%6 <= 6, 0, NULL)))), views=FLOOR(1 + RAND() * 2), agrees=FLOOR(1 + RAND() * 500), disagrees=FLOOR(1 + RAND() * 500), shares=FLOOR(1 + RAND() * 500), flags=FLOOR(1 + RAND() * 10) WHERE agrees=0;
-
-UPDATE narratives SET status=1;
+UPDATE narratives SET position=FLOOR(RAND() * 3), views=FLOOR(1 + RAND() * 200), agrees=FLOOR(1 + RAND() * 500), disagrees=FLOOR(1 + RAND() * 500), shares=FLOOR(1 + RAND() * 500), flags=FLOOR(1 + RAND() * 10);
