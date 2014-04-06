@@ -141,8 +141,6 @@ class Narrative_Model extends CI_Model
 
 	/**
 	 * Processes an image to JPG format.
-	 * FIXME: Not called from anywhere? Remove line below when that is fixed.
-	 * @codeCoverageIgnore
 	 */
 	function process_image($original_image, $original_image_name, $original_image_extension, $directory, $image_destroy)
 	{

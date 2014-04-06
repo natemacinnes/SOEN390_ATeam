@@ -517,7 +517,14 @@ class Narrative_Model_Test extends CIUnit_TestCase
 	 * @covers Narrative_Model::process_image
 	 */
 	function test__process_image() {
-		$this->markTestIncomplete('This test has not been implemented yet.');
+		$narrative_id = 5;
+		$file = "5.jpg";
+		$file_name = '5';
+		$file_extension = 'jpg';
+		$path = $this->CI->config->item('site_data_dir') . '/' . $narrative_id . '/';
+
+		$this->CI->narrative_model->process_image($file, $file_name, $file_extension, $path, false);
+		$this->assertTrue(file_exists($path . $file));
 	}
 
 	/**
