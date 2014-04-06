@@ -18,7 +18,7 @@ DB_PASSWORD='secure_password'
 ###
 
 # Enter a complete email address to use when logging in to portal admin page
-ADMIN_EMAIL="admin@youdeliberate.org"
+ADMIN_EMAIL='admin@youdeliberate.org'
 
 # Enter a password for the admin account selected above
-ADMIN_PASSWORD="Moderator"
+ADMIN_PASSWORD='Moderator'
