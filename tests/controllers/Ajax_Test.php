@@ -50,8 +50,9 @@ class Ajax_Test extends CIUnit_TestCase
 	}
 
 	/**
-	 * UT-FIXME
-	 * @covers Ajax::audio_image
+	 * UT-0041
+	 * @covers Ajax::bubbles
+	 * @covers Ajax::process_narrative_bubble
 	 *
 	 */
 	public function test__bubbles__invalid_position()
@@ -67,7 +68,7 @@ class Ajax_Test extends CIUnit_TestCase
 	}
 
 	/**
-	 * UT-FIXME
+	 * UT-0042
 	 * @covers Ajax::bubbles
 	 * @covers Ajax::process_narrative_bubble
 	 */
@@ -84,7 +85,7 @@ class Ajax_Test extends CIUnit_TestCase
 	}
 
 	/**
-	 * UT-FIXME
+	 * UT-0043
 	 * @covers Ajax::bubbles
 	 * @covers Ajax::process_narrative_bubble
 	 */
@@ -308,7 +309,7 @@ class Ajax_Test extends CIUnit_TestCase
 
 		$history = json_decode(trim($output));
 		$this->CI->clear_history();
-		
+
 		$this->assertGreaterThan(0, count($history));
 	 }
 
