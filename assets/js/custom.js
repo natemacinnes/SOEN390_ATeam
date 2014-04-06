@@ -259,8 +259,6 @@ function narrative_bubbles_load(position) {
 
 	// Retrieve JSON from AJAX controller, but only once upon initial load
 	d3.json(url, function(error, data) {
-		console.log('creating bubbles for SVG ' + svgselect);
-
 		// Sets the d.value attribute to something normalized
 		narrative_bubbles_standardize(data.children, 250, 25);
 
@@ -303,8 +301,6 @@ function narrative_bubbles_load(position) {
  * styling changes.
  */
 function narrative_bubbles_update(svgselect) {
-	console.log('updating bubbles for SVG ' + svgselect);
-
 	var format = d3.format(",.0f");
 	var svg = d3.select(svgselect).select('svg');
 	var vis = svg.selectAll('g.node');
@@ -470,7 +466,6 @@ function narrative_history_load()
 			var radius = Math.min(height - padding*2, (width - 2*yd_settings.constants.NARRATIVE_HISTORY_VISIBLE*padding) / yd_settings.constants.NARRATIVE_HISTORY_VISIBLE) / 2;
 			var radius_padding = radius + padding;
 			var svgselect = '#recent-container .svg-container';
-			console.log('loading history bubbles for SVG ' + svgselect);
 
 			var svg = d3.select(svgselect).html('').append("svg")
 				.attr("width", radius_padding * 2*data.length)
@@ -983,13 +978,14 @@ function narrative_player_buttons_initialize()
 {
 	var client = new ZeroClipboard( document.getElementById("copy-share"), {
 		moviePath: yd_settings.site_url + "assets/zeroclipboard/ZeroClipboard.swf"
-	} );
+	});
 
-	client.on("load", function(client) {
-		client.on("complete", function(client, args) {
-			// this.style.display = "none";
-			alert("Copied text to clipboard: " + args.text );
-		});
+	client.on("complete", function(client, args) {
+		alert("Copied text to clipboard: " + args.text );
+	});
+
+	client.on("dataRequested", function(client, args) {
+		client.setText(jQuery('#copy-share').attr('data-clipboard-text'));
 	});
 
 	jQuery('.player-buttons .btn-group a').tooltip();
