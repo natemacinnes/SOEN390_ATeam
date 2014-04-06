@@ -1150,10 +1150,10 @@ function narrative_player_buttons_initialize()
 	function update_concensus_bar(agrees, disagrees)
 	{
 		var total_votes = Math.max(agrees + disagrees, 1);
-		var new_agrees = Math.round(agrees/total_votes) * 100;
-		var new_disagrees = Math.round(disagrees/total_votes) * 100;
-		jQuery(".progress-bar progress-bar-success").width(new_agrees);
-		jQuery(".progress-bar progress-bar-danger").width(new_disagrees);
+		var new_agrees = Math.round(agrees/total_votes * 100);
+		var new_disagrees = Math.round(disagrees/total_votes * 100);
+		jQuery(".progress-bar.progress-bar-success").width(new_agrees.toString() + '%').delay(500);
+		jQuery(".progress-bar.progress-bar-danger").width(new_disagrees.toString() + '%');
 	}
 
 	function fade_in_success_message(input)
