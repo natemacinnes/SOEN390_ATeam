@@ -159,7 +159,7 @@ connection = close
 # Default number of simulated  concurrent users
 # ex: concurrent = 25
 #
-concurrent = 200
+concurrent = 500
 
 #
 # Default duration of the siege.  The right hand argument has
@@ -214,7 +214,7 @@ file = siege_urls.txt
 # for benchmarking.
 # ex: delay = 3
 #
-delay = 10
+delay = 20
 
 #
 # Connection timeout value. Set the value in seconds for
@@ -260,7 +260,7 @@ delay = 10
 # urls.txt file in order from first to last and back again.
 # ex: internet = true
 #
-internet = false
+internet = true
 
 #
 # Default benchmarking value, If true, there is NO delay
@@ -269,7 +269,7 @@ internet = false
 # for load testing.
 # ex: benchmark = true
 #
-benchmark = true
+benchmark = false
 
 #
 # Set the siege User-Agent to identify yourself at the
@@ -450,7 +450,7 @@ unique = true
 #
 # ex: follow-location = false
 #
-# follow-location =
+follow-location = true
 
 # Zero-length data.  siege can be configured to disregard
 # results in which zero bytes are read after the headers.

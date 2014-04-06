@@ -159,7 +159,7 @@ connection = close
 # Default number of simulated  concurrent users
 # ex: concurrent = 25
 #
-concurrent = 25
+concurrent = 150
 
 #
 # Default duration of the siege.  The right hand argument has
@@ -260,7 +260,7 @@ delay = 1
 # urls.txt file in order from first to last and back again.
 # ex: internet = true
 #
-internet = false
+internet = true
 
 #
 # Default benchmarking value, If true, there is NO delay
