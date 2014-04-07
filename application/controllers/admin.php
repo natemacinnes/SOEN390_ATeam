@@ -349,11 +349,11 @@ class Admin extends YD_Controller
 			}
 			if (count($narratives) == 1)
 			{
-				$message .= 'has been marked as for successfully.';
+				$message .= 'has been marked as For.';
 			}
 			else
 			{
-				$message .= 'have all been marked as for successfully.';
+				$message .= 'have all been marked as For.';
 			}
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
@@ -367,11 +367,11 @@ class Admin extends YD_Controller
 			}
 			if (count($narratives) == 1)
 			{
-				$message .= 'has been marked as neutral successfully.';
+				$message .= 'has been marked as Ambivalent.';
 			}
 			else
 			{
-				$message .= 'have all been marked as neutral successfully.';
+				$message .= 'have all been marked as Ambivalent.';
 			}
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
@@ -385,11 +385,11 @@ class Admin extends YD_Controller
 			}
 			if (count($narratives) == 1)
 			{
-				$message .= 'has been marked as against successfully.';
+				$message .= 'has been marked as Against.';
 			}
 			else
 			{
-				$message .= 'have all been marked as against successfully.';
+				$message .= 'have all been marked as Against.';
 			}
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');

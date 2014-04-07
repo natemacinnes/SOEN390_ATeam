@@ -35,7 +35,8 @@ class Narrative_Model extends CI_Model
 			'flags' => 'flags',
 			'status' => 'status',
 			'agrees' => 'agrees',
-			'disagrees' => 'disagrees'
+			'disagrees' => 'disagrees',
+			'position' => 'position'
 		);
 		if (!isset($sort_cols[$sort_by]))
 		{
