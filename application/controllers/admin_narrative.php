@@ -247,6 +247,7 @@ class Admin_Narrative extends YD_Controller
 
 	public function publish($id)
 	{
+		$this->require_login();
 		$this->narrative_model->publish($id);
 		$this->system_message_model->set_message('Narrative #' . $id . ' has been published successfully.');
 		redirect('admin/narratives/'.$id);
@@ -254,6 +255,7 @@ class Admin_Narrative extends YD_Controller
 
 	public function unpublish($id)
 	{
+		$this->require_login();
 		$this->narrative_model->unpublish($id);
 		$this->system_message_model->set_message('Narrative #' . $id . ' has been unpublished successfully.');
 		redirect('admin/narratives/'.$id);
@@ -264,6 +266,7 @@ class Admin_Narrative extends YD_Controller
 	 */
 	public function dismiss_flags($narrative_id)
 	{
+		$this->require_login();
 		$this->narrative_model->dismiss_flags($narrative_id);
 		$this->system_message_model->set_message("All flags on this narrative were dismissed.");
 		redirect('admin/narratives');

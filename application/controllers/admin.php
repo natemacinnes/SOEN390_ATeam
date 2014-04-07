@@ -183,6 +183,7 @@ class Admin extends YD_Controller
 	 */
 	public function update_settings()
 	{
+		$this->require_login();
 		$this->form_validation->set_rules('portal_topic', 'Portal topic', 'required');
 		$this->form_validation->set_rules('email_address', 'Contact', 'valid_email|required');
 
@@ -307,7 +308,7 @@ class Admin extends YD_Controller
 		else if ($action == 'unpublish')
 		{
 			// Unpublish selected narratives
-			foreach($narratives as $id)
+			foreach ($narratives as $id)
 			{
 				$this->narrative_model->unpublish($id);
 				$message = $message.' #'.$id.', ';
@@ -339,9 +340,9 @@ class Admin extends YD_Controller
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
-		else if($action == 'markFor')
+		else if ($action == 'markFor')
 		{
-			foreach($narratives as $id)
+			foreach ($narratives as $id)
 			{
 				$this->narrative_model->setPosition($id, 1);
 				$message = $message . ' #' . $id . ', ';
@@ -357,9 +358,9 @@ class Admin extends YD_Controller
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
-		else if($action == 'markNeutral')
+		else if ($action == 'markNeutral')
 		{
-			foreach($narratives as $id)
+			foreach ($narratives as $id)
 			{
 				$this->narrative_model->setPosition($id, 0);
 				$message = $message . ' #' . $id . ', ';
@@ -375,9 +376,9 @@ class Admin extends YD_Controller
 			$this->system_message_model->set_message($message);
 			redirect('admin/narratives');
 		}
-		else if($action == 'markAgainst')
+		else if ($action == 'markAgainst')
 		{
-			foreach($narratives as $id)
+			foreach ($narratives as $id)
 			{
 				$this->narrative_model->setPosition($id, 2);
 				$message = $message . ' #' . $id . ', ';
@@ -405,7 +406,7 @@ class Admin extends YD_Controller
 
 		$this->load->library('zip');
 
-		foreach($narratives as $id)
+		foreach ($narratives as $id)
 		{
 			// Zip narrative directories
 			$path = $this->config->item('site_data_dir') . '/' . $id . '/';
@@ -426,7 +427,7 @@ class Admin extends YD_Controller
 
 		// Delete selected narratives and then remove them from the database
 		$message = 'Narratives';
-		foreach($narratives as $id)
+		foreach ($narratives as $id)
 		{
 			delete_dir($this->config->item('site_data_dir') . '/' . $id . '/');
 			$this->narrative_model->delete(array('narrative_id' => $id));

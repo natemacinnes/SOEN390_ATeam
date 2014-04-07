@@ -27,6 +27,7 @@ class Admin_Comment extends YD_Controller
 	 */
 	public function review($comment_id)
 	{
+		$this->require_login();
 		$comment = $this->comment_model->get($comment_id);
 		if (!$comment) {
 			show_error("The specified comment does not exist / Le commentaire indiqué n'existe pas.");
@@ -43,6 +44,7 @@ class Admin_Comment extends YD_Controller
 	 */
 	public function delete($comment_id)
 	{
+		$this->require_login();
 		$this->comment_model->delete(array('comment_id' => $comment_id));
 		$this->system_message_model->set_message("The comment was deleted successfully.");
 		redirect('admin/comments');
@@ -53,6 +55,7 @@ class Admin_Comment extends YD_Controller
 	 */
 	public function dismiss_flags($comment_id)
 	{
+		$this->require_login();
 		$this->comment_model->dismiss_flags($comment_id);
 		$this->system_message_model->set_message("All flags on this comment were dismissed.");
 		redirect('admin/comments');
