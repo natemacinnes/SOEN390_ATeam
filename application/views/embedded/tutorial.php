@@ -25,8 +25,8 @@ function onSwitch(lang) {
 
 <div class="filter-container">
 	<div class="btn-group btn-group-horizontal">
-		<a href="#english" onclick="onSwitch(0)" title="English&#013;Anglais" class="btn btn-default colorbox" role="button"><span class="flagicon flagicon-en"></span></a>
-		<a href="#french" onclick="onSwitch(1)" title="French&#013;Fran&ccedil;ais" class="btn btn-default colorbox" role="button"><span class="flagicon flagicon-fr"></span></a>
+		<a href="#english" onclick="onSwitch(0)" title="English&#013;Anglais" class="btn btn-default colorbox" role="button"><span class="flagicon flagicon-en"></span> EN</a>
+		<a href="#french" onclick="onSwitch(1)" title="French&#013;Fran&ccedil;ais" class="btn btn-default colorbox" role="button"><span class="flagicon flagicon-fr"></span> FR</a>
 	</div>
 </div>
 

@@ -925,7 +925,7 @@ function initialize_commenting() {
 
 				jQuery("#new-comment").val('');
 				jQuery('#comment-' + comment_id + ' .action-comment-report').css('color', 'red');
-				alert("Thank you, this comment has been reported.");
+				alert("Thank you, this comment has been reported / Merci, ce commentaire a été dénoncé.");
 			})
 			.fail(function() {
 				alert("An error occurred while reporting the comment. Please try again.");
@@ -1015,7 +1015,7 @@ function narrative_player_buttons_initialize()
 				_gaq.push(['_trackPageview', "/" + uri]);
 
 				jQuery(".action-narrative-report").css('color', 'red');
-				jQuery(".action-narrative-report").text("Narrative Reported");
+				jQuery(".action-narrative-report").text("Reported / Dénoncé");
 				jQuery(".action-narrative-report").removeClass("flag-not-clicked")
 				jQuery(".action-narrative-report").addClass('flag-clicked');
 			})

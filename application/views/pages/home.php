@@ -14,7 +14,7 @@
         <h4><?php echo xss_clean($topic); ?></h4>
       </div>
 
-      <h2><span id="page-header-you" class="lightblue">You</span><span id="page-header-deliberate">Deliberate</span> / <span id="page-header-you" class="lightblue">Vous</span><span id="page-header-deliberate">DelibereZ</span></h2>
+      <h2><span id="page-header-you" class="lightblue">You</span><span id="page-header-deliberate">Deliberate</span> / <span id="page-header-you" class="lightblue">Vous</span><span id="page-header-deliberate">Deliberez</span></h2>
 
     </div>
 
