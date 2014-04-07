@@ -436,11 +436,4 @@ class Admin extends YD_Controller
 		$this->system_message_model->set_message($message);
 		redirect('admin/narratives');
 	}
-
-	public function metrics()
-	{
-    $this->load->library('gapi');
-    die('yes');
-		$this->view_wrapper('admin/metrics');
-	}
 }
