@@ -31,6 +31,7 @@ class Admin extends YD_Controller
 
 	/**
 	 * Display login form.
+	 * @ingroup G-0006
 	 */
 	public function login()
 	{
@@ -55,6 +56,7 @@ class Admin extends YD_Controller
 
 	/**
 	 * Terminates a user session.
+	 * @ingroup G-0006
 	 */
 	public function logout()
 	{
@@ -68,6 +70,7 @@ class Admin extends YD_Controller
 	/**
 	 * Validation callback that attempts to authenticate the user, returning a
 	 * form error if not.
+	 * @ingroup G-0006
 	 *
 	 * TODO: figure out how to hide this from being accessed via URLs
 	 */
@@ -87,6 +90,7 @@ class Admin extends YD_Controller
 
 	/**
 	 * Displays a list of all narratives on the portal with management links.
+	 * @ingroup G-0008
 	 */
 	public function narratives($sort_by = "id", $sort_order = "desc", $offset = 0)
 	{
@@ -126,6 +130,7 @@ class Admin extends YD_Controller
 
 	/**
 	 * The default method called, if none is provided.
+	 * @ingroup G-0009
 	 */
 	public function comments($sort_by = "id", $sort_order = "desc", $offset = 0, $narrative_id = NULL)
 	{
@@ -166,6 +171,7 @@ class Admin extends YD_Controller
 
 	/**
 	 * Display the settings form
+	 * @ingroup G-0007
 	 */
 	public function settings()
 	{
@@ -180,6 +186,7 @@ class Admin extends YD_Controller
 
 	/**
 	 * Update the site settings
+	 * @ingroup G-0007
 	 */
 	public function update_settings()
 	{
@@ -187,7 +194,8 @@ class Admin extends YD_Controller
 		$this->form_validation->set_rules('portal_topic', 'Portal topic', 'required');
 		$this->form_validation->set_rules('email_address', 'Contact', 'valid_email|required');
 
-		if ($this->form_validation->run() == FALSE) {
+		if ($this->form_validation->run() == FALSE)
+		{
 			$this->view_wrapper('admin/settings', array('portal_topic' => '', 'email_address' => ''));
 		}
 		else
@@ -204,6 +212,7 @@ class Admin extends YD_Controller
 
 	/**
 	 * Display narrative upload form.
+	 * @ingroup G-0001
 	 */
 	public function upload()
 	{
@@ -213,6 +222,7 @@ class Admin extends YD_Controller
 
 	/**
 	 * Process the upload of a new narrative, unpacking it and processing its XML.
+	 * @ingroup G-0001
 	 */
 	public function processUpload()
 	{
@@ -263,6 +273,11 @@ class Admin extends YD_Controller
 		redirect('admin/narratives');
 	}
 
+	/**
+	 * Performs a bulk action on narratives based on the action passed through in
+	 * POST data.
+	 * @ingroup G-0005
+	 */
 	public function bulk()
 	{
 		$this->require_login();
@@ -326,6 +341,7 @@ class Admin extends YD_Controller
 		}
 		else if ($action == 'download')
 		{
+			// ZIP & download selected narratives
 			$this->bulk_download($narratives);
 
 			if (count($narratives) == 1)
@@ -342,9 +358,10 @@ class Admin extends YD_Controller
 		}
 		else if ($action == 'markFor')
 		{
+			// Mark narratives as "For" position
 			foreach ($narratives as $id)
 			{
-				$this->narrative_model->setPosition($id, 1);
+				$this->narrative_model->set_position($id, 1);
 				$message = $message . ' #' . $id . ', ';
 			}
 			if (count($narratives) == 1)
@@ -360,9 +377,10 @@ class Admin extends YD_Controller
 		}
 		else if ($action == 'markNeutral')
 		{
+			// Mark narratives as "Ambivalent" position
 			foreach ($narratives as $id)
 			{
-				$this->narrative_model->setPosition($id, 0);
+				$this->narrative_model->set_position($id, 0);
 				$message = $message . ' #' . $id . ', ';
 			}
 			if (count($narratives) == 1)
@@ -378,9 +396,10 @@ class Admin extends YD_Controller
 		}
 		else if ($action == 'markAgainst')
 		{
+			// Mark narratives as "Against" position
 			foreach ($narratives as $id)
 			{
-				$this->narrative_model->setPosition($id, 2);
+				$this->narrative_model->set_position($id, 2);
 				$message = $message . ' #' . $id . ', ';
 			}
 			if (count($narratives) == 1)
@@ -396,6 +415,10 @@ class Admin extends YD_Controller
 		}
 	}
 
+	/**
+	 * Helper function for the bulk processing to ZIP one or more narratives
+	 * @ingroup G-0005
+	 */
 	public function bulk_download($narratives = NULL)
 	{
 		$this->require_login();
@@ -417,6 +440,10 @@ class Admin extends YD_Controller
 		$this->zip->download('narratives-' . strftime('%Y%m%d-%H%M%S') . '.zip');
 	}
 
+	/**
+	 * Helper function for the bulk processing to delete one or more narratives
+	 * @ingroup G-0005
+	 */
 	public function bulk_delete()
 	{
 		$this->require_login();

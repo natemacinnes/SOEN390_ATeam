@@ -22,6 +22,7 @@ class Comments extends YD_Controller
 	/**
 	 * Stores a reply to a comment (submitted via AJAX POST) and returns the
 	 * rendered comment.
+	 * @ingroup G-0010
 	 */
 	public function reply($narrative_id, $parent_id = NULL)
 	{
@@ -40,7 +41,8 @@ class Comments extends YD_Controller
 
 			$this->load->view('embedded/comment', array('comment' => $comment, 'comments' => $comments));
 		}
-		else {
+		else
+		{
 			// Set header: 400 Bad response
 			$this->output->set_status_header('400');
 		}
@@ -48,6 +50,7 @@ class Comments extends YD_Controller
 
 	/**
 	 * Store a flag on a comment.
+	 * @ingroup G-0012
 	 */
 	public function flag($comment_id)
 	{

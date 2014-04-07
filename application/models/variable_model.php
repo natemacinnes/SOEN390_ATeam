@@ -10,6 +10,7 @@ class Variable_Model extends CI_Model
 
 	/**
 	 * Get a variable value from the database by its key name.
+	 * @ingroup G-0007
 	 */
 	public function get($key, $default=FALSE)
 	{
@@ -26,10 +27,12 @@ class Variable_Model extends CI_Model
 
 	/**
 	 * Set a variable in the database.
+	 * @ingroup G-0007
 	 */
 	public function set($key, $value)
 	{
-		if ($this->get($key) == false) {
+		if ($this->get($key) == false)
+		{
 			$data = array('key' => $key, 'value' => $value);
 			$this->db->insert($this->table, $data);
 		} else {

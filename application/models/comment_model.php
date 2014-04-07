@@ -10,10 +10,12 @@ class Comment_Model extends CI_Model {
 
   /**
    * Retrieve get all comments for for a given narrative (used for admin side)
+   * @ingroup G-0009
    */
   public function get_all($narrative_id = NULL, $sort_by = 'id', $sort_order = 'asc', $offset = 0, $limit = NULL)
   {
-    // Get the sort column
+    // Get the sort column - this may seem redundant, but it is to prevent users
+    // from sorting on authorized columns via URL manipulation.
     $sort_cols = array(
       'id' => 'comment_id',
       'parent' => 'parent_comment',
@@ -57,6 +59,7 @@ class Comment_Model extends CI_Model {
 
   /**
    * Retrieve comments for a given narrative (used client side)
+   * @ingroup G-0014
    */
   public function get_by_narrative_id($narrative_id)
   {
@@ -74,6 +77,7 @@ class Comment_Model extends CI_Model {
 
   /**
    * Returns the number of records.
+   * @ingroup G-0008
    */
   public function get_total_count()
   {
@@ -84,6 +88,7 @@ class Comment_Model extends CI_Model {
 
   /**
    * Inserts a narrative structure into the database.
+   * @ingroup G-0010
    */
   public function insert($comment)
   {
@@ -96,6 +101,7 @@ class Comment_Model extends CI_Model {
    *
    * Example:
    *   $this->comment_model->delete(array('comment_id' => $comment['comment_id']));
+   * @ingroup G-0013
    */
   public function delete($conditions)
   {
@@ -104,6 +110,7 @@ class Comment_Model extends CI_Model {
 
   /**
    * Increment comment flag count
+   * @ingroup G-0012
    */
   function flag($comment_id)
   {
@@ -114,6 +121,7 @@ class Comment_Model extends CI_Model {
 
   /**
    * Dismisses all flags set on the comment
+   * @ingroup G-0013
    */
   function dismiss_flags($comment_id)
   {

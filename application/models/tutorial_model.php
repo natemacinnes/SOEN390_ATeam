@@ -8,6 +8,10 @@ class Tutorial_Model extends CI_Model {
 		parent::__construct();
 	}
 
+	/**
+	 * Get tutorial video URL for a given language (full language name, lowercase).
+	 * @ingroup G-0016
+	 */
 	public function get_by_language($language)
 	{
 		// get the language you want!
@@ -16,6 +20,9 @@ class Tutorial_Model extends CI_Model {
 		return $tutorial;
 	}
 
+	/**
+	 * Get all tutorial entries.
+	 */
 	public function get_all()
 	{
 		// get all of them! currently in use

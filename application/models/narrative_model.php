@@ -11,6 +11,7 @@ class Narrative_Model extends CI_Model
 
 	/**
 	 * Retrieve a narrative data structure by ID, or FALSE upon failure.
+	 * @ingroup G-0014
 	 */
 	public function get($narrative_id)
 	{
@@ -21,11 +22,14 @@ class Narrative_Model extends CI_Model
 
 	/**
 	 * Retrieve a narrative data structure by ID, or FALSE upon failure.
+	 * TODO: this could use some refactoring for better parameter order
+	 * @ingroup G-0008
+	 * @ingroup G-0015
 	 */
-	// FIXME this needs refactoring for parameter order
 	public function get_all($sort_by = 'id', $position = NULL, $sort_order = 'asc', $offset = 0, $limit = NULL)
 	{
-		// Get the sort column
+		// Get the sort column - this may seem redundant, but it is to prevent users
+    // from sorting on authorized columns via URL manipulation.
 		$sort_cols = array(
 			'id' => 'narrative_id',
 			'length' => 'audio_length',
@@ -64,6 +68,7 @@ class Narrative_Model extends CI_Model
 
 	/**
 	 * Returns the number of records.
+	 * @ingroup G-0008
 	 */
 	public function get_total_count()
 	{
@@ -72,12 +77,19 @@ class Narrative_Model extends CI_Model
     return $row['count'];
 	}
 
-	//following is for xml parsing
+	/**
+	 * XML parsing helper to retrieve narrative name given a SimpleXML object
+	 * @ingroup G-0002
+	 */
 	public function get_XML_narrative_name($xml_r)
 	{
 		return $xml_r->narrativeName;
 	}
 
+	/**
+	 * XML parsing helper to retrieve narrative language given a SimpleXML object
+	 * @ingroup G-0002
+	 */
 	public function get_XML_narrative_language($xml_r)
 	{
 		$sql_entry = "";
@@ -92,17 +104,30 @@ class Narrative_Model extends CI_Model
 		return $sql_entry;
 	}
 
+	/**
+	 * XML parsing helper to retrieve narrative submission date given a SimpleXML
+	 * object
+	 * @ingroup G-0002
+	 */
 	public function get_XML_narrative_submitDate($xml_r)
 	{
 		return $xml_r->submitDate;
 	}
 
+	/**
+	 * XML parsing helper to retrieve submission time given a SimpleXML object
+	 * @ingroup G-0002
+	 */
 	public function get_XML_narrative_submitTime($xml_r)
 	{
 		return $xml_r->time;
 	}
 
-	//determine if the file is an audio file
+	/**
+	 * Determines if a filename has an audio type extension
+	 * TODO: This is a candidate for extraction into a helper
+	 * @ingroup G-0001
+	 */
 	public function is_audio($file_ext)
 	{
 		switch ($file_ext)
@@ -123,7 +148,11 @@ class Narrative_Model extends CI_Model
 		}
 	}
 
-	//determine if the file is an image file
+	/**
+	 * Determines if a filename has an image type extension
+	 * TODO: This is a candidate for extraction into a helper
+	 * @ingroup G-0001
+	 */
 	public function is_image($file_ext)
 	{
 		switch ($file_ext)
@@ -142,6 +171,7 @@ class Narrative_Model extends CI_Model
 
 	/**
 	 * Processes an image to JPG format.
+	 * @ingroup G-0001
 	 */
 	function process_image($original_image, $original_image_name, $original_image_extension, $directory, $image_destroy)
 	{
@@ -166,7 +196,7 @@ class Narrative_Model extends CI_Model
 		}
 
 		//deletes original image
-		if($image_destroy)
+		if ($image_destroy)
 		{
 			unlink($directory . '/' . $original_image);
 		}
@@ -177,7 +207,12 @@ class Narrative_Model extends CI_Model
 		return true;
 	}
 
-
+	/**
+	 * Processes a narrative in order to standardize its associated tracks
+	 * (audio & images).
+	 * @ingroup G-0001
+	 * @ingroup G-0002
+	 */
 	public function process_narrative($narrative_path, $id = null)
 	{
 		// Get the absolute path
@@ -216,9 +251,15 @@ class Narrative_Model extends CI_Model
 		foreach ($file_scan as $filecheck)
 		{
 			//Handling upload of preciously downloaded narrative
-			if($filecheck == 'audio_container.txt') unlink($narrative_path . '/audio_container.txt');
-			else if($filecheck == 'AudioTimes.xml') unlink($narrative_path . '/AudioTimes.xml');
-			else if($filecheck == 'combined.mp3') unlink($narrative_path . '/combined.mp3');
+			if ($filecheck == 'audio_container.txt') {
+				unlink($narrative_path . '/audio_container.txt');
+			}
+			else if ($filecheck == 'AudioTimes.xml') {
+				unlink($narrative_path . '/AudioTimes.xml');
+			}
+			else if ($filecheck == 'combined.mp3') {
+				unlink($narrative_path . '/combined.mp3');
+			}
 			else
 			{
 				$file_extension = pathinfo($filecheck, PATHINFO_EXTENSION);
@@ -237,7 +278,7 @@ class Narrative_Model extends CI_Model
 					}
 					*/
 				}
-				if($this->is_image($file_extension))
+				if ($this->is_image($file_extension))
 				{
 					$fname = pathinfo($filecheck, PATHINFO_FILENAME);
 					//False variable in process_image controls whether we delete the original image or not (false = do not delete image)
@@ -245,7 +286,9 @@ class Narrative_Model extends CI_Model
 
 					//New method, to be approved by TL
 					$images[$fname] = $fname . '.' . $image_format;
-					if($fname > $lastImage) $lastImage = $fname;
+					if ($fname > $lastImage) {
+						$lastImage = $fname;
+					}
 				}
 				if ($file_extension == "xml")
 				{
@@ -316,20 +359,26 @@ class Narrative_Model extends CI_Model
 						$duration = floatval($ar[0]);
 						if (!empty($ar[1]))
 						{
+							// Minutes
 							$duration += intval($ar[1]) * 60;
 						}
 						if (!empty($ar[2]))
 						{
+							// Hours
 							$duration += intval($ar[2]) * 60 * 60;
 						}
 
-						if(count($images) == 1) $audio_image = $images[$lastImage];
-						else if(isset($images[$file_name])) $audio_image = $images[$file_name];
+						if (count($images) == 1) {
+							$audio_image = $images[$lastImage];
+						}
+						else if (isset($images[$file_name])) {
+							$audio_image = $images[$file_name];
+						}
 						else
 						{
-							for($i = $file_name; $i <= $lastImage; $i++)
+							for ($i = $file_name; $i <= $lastImage; $i++)
 							{
-								if(isset($images[$i]))
+								if (isset($images[$i]))
 								{
 									$audio_image = $images[$i];
 									break;
@@ -352,6 +401,7 @@ class Narrative_Model extends CI_Model
 		$xmlpath = $dir . "/AudioTimes.xml";
 		$xml->save($xmlpath) or die("Error");
 
+		// Pathing to ffmpeg is different depending on OS type
 		fclose($file_concat);
 		if (PHP_OS == 'WINNT')
 		{
@@ -362,7 +412,6 @@ class Narrative_Model extends CI_Model
 			$command_concatenation = realpath("../storage/ffmpeg")." -f concat -i " . $dir . "/audio_container.txt -c copy " . $dir . "/combined.mp3 2>&1";
 		}
 		$temp2 = shell_exec($command_concatenation);
-		//die("returned: " . $temp2 . "</br>");
 
 		//Only create new database row if it's a new narrative being uploaded, else update audio length
 		if ($id == null)
@@ -398,6 +447,7 @@ class Narrative_Model extends CI_Model
 
 	/**
 	 * Inserts a narrative structure into the database.
+	 * @ingroup G-0001
 	 */
 	public function insert($narrative)
 	{
@@ -405,6 +455,10 @@ class Narrative_Model extends CI_Model
 		return $this->db->insert_id();
 	}
 
+	/**
+	 * Updates a narrative based on the passed narrative array.
+	 * @ingroup G-0003
+	 */
 	public function update($narrative)
 	{
 		// Don't attempt to set the ID in the update string.
@@ -429,6 +483,7 @@ class Narrative_Model extends CI_Model
 	 *
 	 * Example:
 	 *   $this->narrative_model->delete(array('narrative_id' => $narrative['narrative_id']));
+	 * @ingroup G-0004
 	 */
 	public function delete($conditions)
 	{
@@ -436,7 +491,8 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	 *	publishing the narrative
+	 * Publishing the narrative
+	 * @ingroup G-0004
 	 */
 	public function publish($id)
 	{
@@ -445,7 +501,8 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	 *	Unpublishing the narrative
+	 * Unpublishing the narrative
+	 * @ingroup G-0004
 	 */
 	public function unpublish($id)
 	{
@@ -454,7 +511,8 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	 *	increment views of a narrative
+	 * Increment views of a narrative
+	 * @ingroup G-0017
 	 */
 	public function increment_views($narrative_id)
 	{
@@ -464,7 +522,8 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	 *	increment agree of a narrative
+	 * Increment agree counter of a narrative
+	 * @ingroup G-0017
 	 */
 	public function toggle_agrees($narrative_id, $operator)
 	{
@@ -474,7 +533,8 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	 *	increment disagree of a narrative
+	 * Increment disagree counter of a narrative
+	 * @ingroup G-0017
 	 */
 	public function toggle_disagrees($narrative_id, $operator)
 	{
@@ -484,7 +544,8 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	 *	Increment agree and decrement disagrees
+	 * Increment agree and decrement disagrees
+	 * @ingroup G-0017
 	 */
 	public function increment_agree_decrement_disagree($narrative_id)
 	{
@@ -495,7 +556,8 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	 *	Increment disagree and decrement agrees
+	 * Increment disagree and decrement agrees counts
+	 * @ingroup G-0017
 	 */
 	public function increment_disagree_decrement_agree($narrative_id)
 	{
@@ -506,15 +568,18 @@ class Narrative_Model extends CI_Model
 	}
 
 	/**
-	 *	Set narrative position as For, Neutral, or Against
+	 * Set narrative position as For, Neutral, or Against
+	 * @see application/config/constants.php
+	 * @ingroup G-0004
 	 */
-	public function setPosition($narrative_id, $position)
+	public function set_position($narrative_id, $position)
 	{
-		$this->db->query("UPDATE narratives SET position=" . $position . " WHERE narrative_id=" . $narrative_id . ";");
+		$this->db->query("UPDATE narratives SET position=? WHERE narrative_id=?;", array($position, $narrative_id));
 	}
 
 	/**
 	 * Increment narrative flag count
+	 * @ingroup G-0004
 	 */
 	function flag($narrative_id)
 	{
@@ -525,6 +590,7 @@ class Narrative_Model extends CI_Model
 
 	/**
 	 * Dismisses all flags set on the narrative
+	 * @ingroup G-0003
 	 */
 	function dismiss_flags($narrative_id)
 	{

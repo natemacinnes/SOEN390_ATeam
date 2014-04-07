@@ -23,7 +23,9 @@ class Admin_Model extends CI_Model {
 	}
 
 	/**
-	 * Retrieve flags for a given admin
+	 * Retrieve admin ID for a given admin if authenticated, or FALSE if not
+	 * authenticated
+	 * @ingroup G-0006
 	 */
 	public function valid_admin($email, $password)
 	{

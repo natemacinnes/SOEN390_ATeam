@@ -30,6 +30,7 @@ class Admin_Narrative extends YD_Controller
 
 	/**
 	 * Displays the edit page for a narrative.
+	 * @ingroup G-0003
 	 */
 	public function edit($narrative_id = NULL)
 	{
@@ -57,6 +58,7 @@ class Admin_Narrative extends YD_Controller
 
 	/**
 	 * Process the submission of the edit narrative form.
+	 * @ingroup G-0003
 	 */
 	public function process($id)
 	{
@@ -134,6 +136,10 @@ class Admin_Narrative extends YD_Controller
 		redirect('admin/narratives/' . $id . '/edit');
 	}
 
+	/**
+	 * Restores tracks on a narrative based on passed POST data
+	 * @ingroup G-0003
+	 */
 	public function restore($id)
 	{
 		$this->require_login();
@@ -212,6 +218,10 @@ class Admin_Narrative extends YD_Controller
 		redirect('admin/narratives/' . $id . '/edit');
 	}
 
+	/**
+	 * ZIPs and downloads a single narrative
+	 * @ingroup G-0004
+	 */
 	public function download($id)
 	{
 		$this->require_login();
@@ -223,9 +233,13 @@ class Admin_Narrative extends YD_Controller
 		$this->zip->read_dir($path, FALSE);
 
 		// Download the zip file to the administrators desktop
-		$this->zip->download($id . '.zip');
+		$this->zip->download('narrative-' . $id . '.zip');
 	}
 
+	/**
+	 * Displays confirmation page for deleting a narrative
+	 * @ingroup G-0004
+	 */
 	public function delete($id)
 	{
 		$this->require_login();
@@ -234,6 +248,10 @@ class Admin_Narrative extends YD_Controller
 		$this->view_wrapper('admin/narratives/delete', $data);
 	}
 
+	/**
+	 * Deletes a single narrative.
+	 * @ingroup G-0004
+	 */
 	public function processDelete($id)
 	{
 		$this->require_login();
@@ -245,6 +263,10 @@ class Admin_Narrative extends YD_Controller
 		redirect('admin/narratives');
 	}
 
+	/**
+	 * Publishes a single narrative.
+	 * @ingroup G-0004
+	 */
 	public function publish($id)
 	{
 		$this->require_login();
@@ -253,6 +275,10 @@ class Admin_Narrative extends YD_Controller
 		redirect('admin/narratives/'.$id);
 	}
 
+	/**
+	 * Unpublishes a single narrative.
+	 * @ingroup G-0004
+	 */
 	public function unpublish($id)
 	{
 		$this->require_login();
@@ -263,6 +289,7 @@ class Admin_Narrative extends YD_Controller
 
 	/**
 	 * Removes all flags on a comment.
+	 * @ingroup G-0003
 	 */
 	public function dismiss_flags($narrative_id)
 	{

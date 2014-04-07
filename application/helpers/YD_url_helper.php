@@ -37,7 +37,8 @@ function base_url($uri = null)
  */
 function redirect($uri = '', $method = 'location', $http_response_code = 302)
 {
-	if (isset($_GET['destination'])) {
+	if (isset($_GET['destination']))
+	{
 		$uri = site_url($_GET['destination']);
 	}
 	else if ( ! preg_match('#^https?://#i', $uri))

@@ -18,6 +18,7 @@ class Ajax extends YD_Controller
 	 * Callback for d3 upon page load.
 	 *
 	 * Returns matching narrative information in JSON format.
+	 * @ingroup G-0015
 	 */
 	public function bubbles($position = NULL)
 	{
@@ -51,6 +52,7 @@ class Ajax extends YD_Controller
 	/**
 	 * Accepts a narrative array and processes some options in preparation for use
 	 * with D3.
+	 * @ingroup G-0015
 	 */
 	private function process_narrative_bubble(&$narrative)
 	{
@@ -71,6 +73,7 @@ class Ajax extends YD_Controller
 
 	/**
 	 * Return the image URL given a narrative & timecode.
+	 * @ingroup G-0014
 	 */
 	public function audio_image($narrative_id, $time)
 	{
@@ -93,6 +96,7 @@ class Ajax extends YD_Controller
 
 	/**
 	 * Increment the amount of views on a narrative.
+	 * @ingroup G-0017
 	 */
 	public function increment_views($narrative_id)
 	{
@@ -101,6 +105,7 @@ class Ajax extends YD_Controller
 
 	/**
 	 * Increment the agree/disagree of a narrative.
+	 * @ingroup G-0017
 	 */
 	public function increment_agrees_disagrees($narrative_id, $decision)
 	{
@@ -121,7 +126,8 @@ class Ajax extends YD_Controller
 	}
 
 	/**
-	 * decrement the agree/disagree of a narrative.
+	 * Decrement the agree/disagree of a narrative.
+	 * @ingroup G-0017
 	 */
 	public function decrement_agrees_disagrees($narrative_id, $decision)
 	{
@@ -143,6 +149,7 @@ class Ajax extends YD_Controller
 
 	/**
 	 * Increment the agree, decrement the disagree of a narrative.
+	 * @ingroup G-0017
 	 */
 	 public function toggle_agree_to_disagree($narrative_id)
 	 {
@@ -151,6 +158,7 @@ class Ajax extends YD_Controller
 
 	/**
 	 * Increment the disagree, decrement the agree of a narrative.
+	 * @ingroup G-0017
 	 */
 	 public function toggle_disagree_to_agree($narrative_id)
 	 {
@@ -159,6 +167,7 @@ class Ajax extends YD_Controller
 
 	/**
 	 * Outputs JSON for the history bar without modifying it.
+	 * @ingroup G-0018
 	 */
 	public function get_history()
 	{
@@ -181,6 +190,7 @@ class Ajax extends YD_Controller
 
 	/**
 	 * Adds a narrative to the history, then outputs get_history().
+	 * @ingroup G-0018
 	 */
 	public function add_history($narrative_id)
 	{
@@ -201,7 +211,8 @@ class Ajax extends YD_Controller
 	}
 
 	/**
-	 * Clears history
+	 * Clears history. Debugging method.
+	 * @ingroup G-0018
 	 */
 	public function clear_history()
 	{

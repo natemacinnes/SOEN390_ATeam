@@ -2,7 +2,8 @@
 
 /**
  * Create new folder in tmp directory to hold the edited narrative and moving
- * edited narrative to it
+ * edited narrative to it.
+ * @ingroup G-0003
  */
 function move_dir_to_tmp($src, $id)
 {
@@ -19,6 +20,7 @@ function move_dir_to_tmp($src, $id)
 
 /**
  * Deleting a folder recursively
+ * @ingroup G-0003
  */
 function delete_dir($path)
 {
@@ -41,6 +43,12 @@ function delete_dir($path)
   rmdir($path);
 }
 
+/**
+ * Returns an associative array with indicies 'tracks' and 'pictures', each an
+ * array of paths to the audio or image files associated to a narrative.
+ * @see narrative_deleted_track_data()
+ * @ingroup G-0003
+ */
 function narrative_track_data($narrative_id)
 {
   $CI =& get_instance();
@@ -69,7 +77,11 @@ function narrative_track_data($narrative_id)
 }
 
 /**
- *  Gathering deleted files
+ * Returns an associative array with indicies 'tracks' and 'pictures', each an
+ * array of paths to the audio or image files associated to a narrative that
+ * have been soft-deleted/unpublished.
+ * @see narrative_track_data()
+ * @ingroup G-0003
  */
 function narrative_deleted_track_data($narrative_id)
 {
@@ -104,7 +116,11 @@ function narrative_deleted_track_data($narrative_id)
 }
 
 /**
- * Archiving the tracks that are meant to be archived
+ * Archives the tracks indicated, provided a narrative's track info array and an
+ * array of audio paths to archive.
+ * @see narrative_track_data()
+ * @see narrative_deleted_track_data()
+ * @ingroup G-0003
  */
 function narrative_delete_tracks($tracks, $new_narrative_dir, $tracks_for_deletion = array())
 {
@@ -124,7 +140,11 @@ function narrative_delete_tracks($tracks, $new_narrative_dir, $tracks_for_deleti
 }
 
 /**
- * Restoring the tracks that are meant to be restored
+ * Restore deleted tracks for a narrative provided its track info array and an
+ * array of audio paths to restore.
+ * @see narrative_track_data()
+ * @see narrative_deleted_track_data()
+ * @ingroup G-0003
  */
 function narrative_restore_tracks($tracks, $new_narrative_dir, $tracks_for_restoration = array())
 {
@@ -144,7 +164,11 @@ function narrative_restore_tracks($tracks, $new_narrative_dir, $tracks_for_resto
 }
 
 /**
- * Archiving the pics that are meant to be archived
+ * Archives the images indicated, provided a narrative's track info array and an
+ * array of image paths to archive.
+ * @see narrative_track_data()
+ * @see narrative_deleted_track_data()
+ * @ingroup G-0003
  */
 function narrative_delete_pictures($pictures, $new_narrative_dir, $pictures_for_deletion = array())
 {
@@ -163,7 +187,11 @@ function narrative_delete_pictures($pictures, $new_narrative_dir, $pictures_for_
 }
 
 /**
- * Restoring the pics that are meant to be restored
+ * Restore deleted images for a narrative provided its track info array and an
+ * array of image paths to restore.
+ * @see narrative_track_data()
+ * @see narrative_deleted_track_data()
+ * @ingroup G-0003
  */
 function narrative_restore_pictures($pictures, $new_narrative_dir, $pictures_for_restoration = array())
 {
@@ -182,7 +210,8 @@ function narrative_restore_pictures($pictures, $new_narrative_dir, $pictures_for
 }
 
 /**
- * Moving XML file to new folder
+ * Move a narrative XML file to a new folder
+ * @ingroup G-0003
  */
 function narrative_move_xml($id, $new_narrative_dir)
 {
@@ -201,7 +230,8 @@ function narrative_move_xml($id, $new_narrative_dir)
 }
 
 /**
- *  Moving deleted files from old to new deleted directory
+ * Moving deleted files from old to new deleted directory
+ * @ingroup G-0003
  */
 function narrative_move_files($current_narrative_dir, $new_narrative_dir)
 {
@@ -216,7 +246,8 @@ function narrative_move_files($current_narrative_dir, $new_narrative_dir)
 }
 
 /**
- *  Handling error of disappearing jpg
+ * Handling error of disappearing jpg
+ * @ingroup G-0003
  */
 function narrative_purge_files($old_narrative_dir, $new_narrative_dir)
 {

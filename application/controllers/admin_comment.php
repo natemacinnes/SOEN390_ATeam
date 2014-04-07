@@ -24,16 +24,19 @@ class Admin_Comment extends YD_Controller
 
 	/**
 	 * Review comments includes flags and change publish status.
+	 * @ingroup G-0013
 	 */
 	public function review($comment_id)
 	{
 		$this->require_login();
 		$comment = $this->comment_model->get($comment_id);
-		if (!$comment) {
+		if (!$comment)
+		{
 			show_error("The specified comment does not exist / Le commentaire indiqué n'existe pas.");
 		}
 		$parent_comment = array();
-		if ($comment['parent_comment']) {
+		if ($comment['parent_comment'])
+		{
 			$parent_comment = $this->comment_model->get($comment['parent_comment']);
 		}
 		$this->view_wrapper('admin/comments/review', array('comment' => $comment, 'parent_comment' => $parent_comment));
@@ -41,6 +44,7 @@ class Admin_Comment extends YD_Controller
 
 	/**
 	 * Deletes a comment from the database.
+	 * @ingroup G-0013
 	 */
 	public function delete($comment_id)
 	{
@@ -52,6 +56,7 @@ class Admin_Comment extends YD_Controller
 
 	/**
 	 * Removes all flags on a comment.
+	 * @ingroup G-0013
 	 */
 	public function dismiss_flags($comment_id)
 	{

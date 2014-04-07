@@ -1,25 +1,28 @@
 <?php
-	
 
-function create_narrative_xml($xml,$file, $startTimes, $duration, $endTimes, $audio_image)
+/**
+ * Re-creates the narrative XML metadata file.
+ * @ingroup G-0002
+ */
+function create_narrative_xml($xml, $file, $startTimes, $duration, $endTimes, $audio_image)
 {
-  $name  = $xml->createElement("Mp3Name");
+  $name = $xml->createElement("Mp3Name");
   $mp3Name = $xml->createTextNode($file);
   $name->appendChild($mp3Name);
 
-  $start   = $xml->createElement("Start");
+  $start = $xml->createElement("Start");
   $startTime = $xml->createTextNode($startTimes);
   $start->appendChild($startTime);
 
-  $length   = $xml->createElement("Duration");
+  $length = $xml->createElement("Duration");
   $lengthTime = $xml->createTextNode($duration);
   $length->appendChild($lengthTime);
 
-  $end   = $xml->createElement("End");
+  $end = $xml->createElement("End");
   $endTime = $xml->createTextNode($endTimes);
   $end->appendChild($endTime);
 
-  $image  = $xml->createElement("Image");
+  $image = $xml->createElement("Image");
   $imageNarrative = $xml->createTextNode($audio_image);
   $image->appendChild($imageNarrative);
 
@@ -30,10 +33,5 @@ function create_narrative_xml($xml,$file, $startTimes, $duration, $endTimes, $au
   $narrative->appendChild($length);
   $narrative->appendChild($image);
 
-  return $narrative;	
+  return $narrative;
 }
-
-
-
-
-?>

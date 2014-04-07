@@ -76,17 +76,9 @@ jQuery(document).ready(function() {
 	// confirm dialog for anything with class 'confirm-delete'
 	initialize_deletion_confirmation();
 
-	jQuery('audio,video').not('.player-processed').addClass('player-processed').each(function() {
-		jQuery(this).mediaelementplayer({
-		// the order of controls you want on the control bar (and other plugins below)
-			features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume'],
-			// show framecount in timecode (##:00:00:00)
-			showTimecodeFrameCount: false
-		});
-	});
-
 	// Toggle buttons for navigation links
 	jQuery('.language-container.btn-group a').click(function() {
+		// @ingroup G-0021
 		jQuery(this).toggleClass('active');
 		//Diverting focus to an element other than the language button to handle IE no feedback of unclicking until loss of focus
 		jQuery('.language-container').focus();
@@ -102,6 +94,7 @@ jQuery(document).ready(function() {
 
 	// Toggle buttons for navigation links
 	jQuery('.filter-container.btn-group a').click(function() {
+		// @ingroup G-0021
 		jQuery(this).toggleClass('active');
 		jQuery('.filter-container.btn-group a').not(this).removeClass('active');
 		var filter = jQuery(this).attr('href').substring(1);
@@ -118,6 +111,7 @@ jQuery(document).ready(function() {
 	if (jQuery('#bubble-container').not('.bubbles-processed').addClass('bubbles-processed').length) {
 		// Initialize filter settings to defaults
 		jQuery('.filter-container.btn-group a').each(function() {
+			// @ingroup G-0021
 			var filter = jQuery(this).attr('href').substring(1);
 			yd_settings.ui.filters[filter] = jQuery(this).hasClass('active');
 		}).tooltip();
@@ -127,6 +121,7 @@ jQuery(document).ready(function() {
 
 	// Radio-like toggle buttons for sort
 	jQuery('.sort-container.btn-group a').click(function () {
+		// @ingroup G-0021
 		jQuery(this).toggleClass('active');
 		jQuery('.sort-container.btn-group a').not(this).removeClass('active');
 		yd_settings.ui.sort.criteria = jQuery(this).hasClass('active') ? jQuery(this).attr('href').substring(1) : null;
@@ -147,8 +142,9 @@ jQuery(document).ready(function() {
 });
 
 /**
-* Method that gets called when the user mentionned a specific narrative to be played (bookmark or other)
-*/
+ * Method that gets called when the user mentionned a specific narrative to be played (bookmark or other)
+ * @ingroup G-0014
+ */
 function initiate_player(id)
 {
 	//Creating click event
@@ -177,6 +173,7 @@ function colorbox_initialize() {
 /**
  * (Re)initialize the narrative homepage display, to include bubble areas
  * and history bar.
+ * @ingroup G-0015
  */
 function narrative_display_initialize() {
 	jQuery('.sort-container.btn-group a').unbind('click');
@@ -190,6 +187,7 @@ function narrative_display_initialize() {
 
 /**
  * Accessor compatible .map() to determine non-normalized value from data object
+ * @ingroup G-0021
  */
 function narrative_bubble_value(d, i) {
 	return parseInt(d.agrees) + parseInt(d.disagrees);
@@ -197,6 +195,7 @@ function narrative_bubble_value(d, i) {
 
 /**
  * Accessor compatible .map() to determine non-normalized value from data object
+ * @ingroup G-0021
  */
 function narrative_sort_value(d, i) {
 	if (yd_settings.ui.sort.criteria == 'age') {
@@ -210,6 +209,7 @@ function narrative_sort_value(d, i) {
 /**
  * Normalization puts all entries in a range of 0 - 1, then multiplies by a
  * factor to achieve a scaled version. A common base is added to all results.
+ * @ingroup G-0021
  */
 function narrative_bubbles_standardize(data, factor, base) {
 	var min = d3.min(data, narrative_bubble_value);
@@ -225,6 +225,7 @@ function narrative_bubbles_standardize(data, factor, base) {
 
 /**
  * Loads bubbles for the indicated language & position.
+ * @ingroup G-0015
  */
 function narrative_bubbles_load(position) {
 	var svgselect;
@@ -302,6 +303,7 @@ function narrative_bubbles_load(position) {
 /**
  * Alter any bubble attributes necessary and transition their attribute or
  * styling changes.
+ * @ingroup G-0015
  */
 function narrative_bubbles_update(svgselect) {
 	var format = d3.format(",.0f");
@@ -365,6 +367,7 @@ function narrative_data_radiusmapper(d) {
 /**
  * Draw bubbles on the provided vis (SVG). vis should already have its d3 data
  * bound to it.
+ * @ingroup G-0015
  */
 function narrative_draw_bubbles(vis) {
 	var format = d3.format(",.0f");
@@ -437,6 +440,7 @@ function narrative_draw_bubbles(vis) {
 /**
  * Make the API call to add narrative to the user's history given a narrative
  * data object.
+ * @ingroup G-0018
  */
 function narrative_history_add(d)
 {
@@ -452,6 +456,7 @@ function narrative_history_add(d)
 
 /**
  * Retrieves the user's history and loads the history bar.
+ * @ingroup G-0018
  */
 function narrative_history_load()
 {
@@ -505,6 +510,7 @@ function narrative_history_load()
 			/**
 			 * Callback for d3's .data() which populates the x, y, and r attributes.
 			 * Effectively, this is a custom d3 layout callback.
+			 * @ingroup G-0018
 			 */
 			function narrative_history_data(data, i)
 			{
@@ -563,6 +569,7 @@ function narrative_bind_player(svgselect) {
 		}
 
 		// Call method to add narrative to history
+		// @ingroup G-0018
 		narrative_history_add(this.__data__);
 
 		// Modify address bar without reloading page
@@ -590,6 +597,7 @@ function narrative_bind_player(svgselect) {
 			width: 890,
 			speed: 700,
 			onComplete: function() {
+				// @ingroup G-0014
 
 				// Registering loading of the narrative in the colorbox
 				// Disabled because GA was tracking a load of /narrative/ID as well as a
@@ -613,13 +621,15 @@ function narrative_bind_player(svgselect) {
 
 				// In the event that there is not media element, do not collect analytics
 				// Otherwise, log narrative analytic data before closing
+				// @ingroup G-0017
+				// @ingroup G-0019
 				if (player.length)
 				{
 					// Notify Google Analytics of partial or full play
 					var extra = (document.getElementsByName("fullPlay")[0].value == "true" ? "full" : "partial");
 					_gaq.push(['_trackPageview', narrative_url + '/' + extra]);
 
-					//Notify Google Analytics of agree or disagree or nothing
+					// Notify Google Analytics of agree or disagree or nothing
 					if (jQuery("input[name=opinion]").val() == "agree")
 					{
 						_gaq.push(['_trackPageview', narrative_url + "/agree"]);
@@ -717,6 +727,7 @@ bubble_fill_color = function(d) {
 /**
  * Examines the current filter settings stored in yd_settings and determines if
  * the provided narrative object matches the filter or not.
+ * @ingroup G-0021
  */
 function narrative_matches_filter(d) {
 	if (d.children) {
@@ -740,6 +751,7 @@ function narrative_matches_filter(d) {
 /**
  * Examines the current filter settings stored in yd_settings and determines if
  * the provided narrative object matches the filter or not.
+ * @ingroup G-0021
  */
 function narrative_sort_opacity(d) {
 	if (d.children) {
@@ -768,6 +780,7 @@ function narrative_sort_opacity(d) {
 
 /**
  * Loads the narrative player once the popup page with audio is ready.
+ * @ingroup G-0014
  */
 function narrative_player_load() {
 	var player_wrappers = jQuery('.player-wrapper').not('player-processed');
@@ -834,6 +847,7 @@ function narrative_player_load() {
 
 /**
  * Updates the narrative player's image given a timecode.
+ * @ingroup G-0014
  */
 function narrative_player_update_image(timecode) {
 	var player = jQuery('.player-wrapper');
@@ -854,13 +868,15 @@ function narrative_player_update_image(timecode) {
 function initialize_commenting() {
 	// Click handler: Comment (root level)
 	jQuery(".action-comment-post").not('.comment-processed').addClass('comment-processed').click(function() {
+		// @ingroup G-0010
 		var narrative_id = jQuery('#new-comment-form input[name=narrative_id]').val();
 		var uri = "comments/reply/" + narrative_id;
 		var url = yd_settings.site_url + uri;
 		var formdata = jQuery("#new-comment-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
-				//Notify Google Analytics of addition of comment root level
+				// @ingroup G-0019
+				// Notify Google Analytics of addition of comment root level
 				_gaq.push(['_trackPageview', "/" + uri]);
 
 				// Remove the 'no comment' message if it exists
@@ -902,7 +918,8 @@ function initialize_commenting() {
 		var formdata = jQuery("#new-reply-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
-				//Notifying Google Analytics of commenting on a comment
+				// @ingroup G-0019
+				// Notify Google Analytics of commenting on a comment
 				_gaq.push(['_trackPageview', "/" + uri]);
 
 				// Remove the 'reply box if it exists
@@ -917,13 +934,15 @@ function initialize_commenting() {
 	});
 	// Click handler: Flag (on comment)
 	jQuery(".action-comment-report").not('.comment-processed').addClass('comment-processed').click(function() {
+		// @ingroup G-0012
 		var comment_id = jQuery(this).parents('.comment').attr('id').substring(8);
 		var uri = "comments/flag/" + comment_id;
 		var url = yd_settings.site_url + uri;
 		var formdata = jQuery("#new-comment-form").serialize();
 		jQuery.post(url, formdata)
 			.done(function(data) {
-				//Notify Google Analytics of comment flagging
+				// @ingroup G-0019
+				// Notify Google Analytics of comment flagging
 				_gaq.push(['_trackPageview', "/" + uri]);
 
 				jQuery("#new-comment").val('');
@@ -976,6 +995,7 @@ function initialize_commenting() {
 
 /**
  * Binds callbacks to the narrative player's buttons (voting, sharing, etc).
+ * @ingroup G-0020
  */
 function narrative_player_buttons_initialize()
 {
@@ -1003,6 +1023,7 @@ function narrative_player_buttons_initialize()
 
 	//Handle flagging of narrative
 	jQuery(".action-narrative-report").not('.flag-clicked').addClass('flag-not-clicked').click(function() {
+		// @ingroup G-0011
 		var uri = "player/flag/" + nar_id;
 		var url = yd_settings.site_url + uri;
 		//jQuery(this).removeClass("action-narrative-report");
@@ -1014,7 +1035,8 @@ function narrative_player_buttons_initialize()
 		{
 			jQuery.post(url)
 			.done(function() {
-				//Notify Google Analytics of narrative flagging
+				// @ingroup G-0019
+				// Notify Google Analytics of narrative flagging
 				_gaq.push(['_trackPageview', "/" + uri]);
 
 				jQuery(".action-narrative-report").css('color', 'red');
@@ -1030,7 +1052,8 @@ function narrative_player_buttons_initialize()
 
 	//Handle bookmarking of narrative
 	jQuery(".bookmark-btn").click(function(e) {
-		document.getElementsByName("bookmark")[0].value = "true"; //To notify Google analytics of the bookmark action
+		// To trigger notification to Google Analytics of the bookmark action later
+		document.getElementsByName("bookmark")[0].value = "true";
 		add_bookmark();
 		e.preventDefault();
 		return false;
@@ -1038,7 +1061,8 @@ function narrative_player_buttons_initialize()
 
 	//handle sharing action
 	jQuery(".share-btn").click(function() {
-		document.getElementsByName("share")[0].value = "true"; //To notify Google analytics of the share action
+		document.getElementsByName("share")[0].value = "true";
+		// To trigger notification to Google Analytics of the share action later
 		if (!jQuery(this).hasClass('active')) {
 			jQuery(this).addClass('active');
 			show_share_url();
@@ -1146,6 +1170,11 @@ function narrative_player_buttons_initialize()
 			});
 	});
 
+	/**
+	 * Update the voting consensus bar, implemented as a stacked Bootstrap
+	 * progress bar.
+	 * @ingroup G-0017
+	 */
 	function update_concensus_bar(agrees, disagrees)
 	{
 		var total_votes = Math.max(agrees + disagrees, 1);
@@ -1154,29 +1183,31 @@ function narrative_player_buttons_initialize()
 		jQuery(".progress-bar.progress-bar-success").width(new_agrees.toString() + '%').delay(500);
 		jQuery(".progress-bar.progress-bar-danger").width(new_disagrees.toString() + '%');
 	}
-
-	function fade_in_success_message(input)
-	{
-		jQuery(".success-message").text(input).fadeIn();
-	}
-
-	function fade_out_success_message()
-	{
-		jQuery(".success-message").fadeOut();
-	}
 }
 
+/**
+ * No cross-browser was to do this; simply alert the user to bookmark manually.
+ * @ingroup G-0020
+ */
 function add_bookmark()
 {
 	alert('Please press Control+D to bookmark this page; your browser does not support automatic bookmark creation.');
 }
 
+/**
+ * Shows the Share URL and adjusts window dimensions accordingly.
+ * @ingroup G-0020
+ */
 function show_share_url()
 {
 	jQuery(".link-content").toggle();
 	jQuery(this).colorbox.resize();
 }
 
+/**
+ * Ensures any DOM element with a 'confirm-delete' class attached to it is only
+ * clicked upon after the user confirms through a JS confirmation window.
+ */
 function initialize_deletion_confirmation()
 {
 	 jQuery('.confirm-delete').click(function(e) {
@@ -1189,6 +1220,9 @@ function initialize_deletion_confirmation()
 	});
 }
 
+/**
+ * Ensure user can click anywhere on the row to select its checkbox.
+ */
 function table_row_multiselect_initialize()
 {
 	jQuery('#admin-narratives-list td').not('.row-select,.row-actions').click(function() {

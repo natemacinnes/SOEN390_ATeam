@@ -17,6 +17,7 @@ class Pages extends YD_Controller
 
 	/**
    * The default method called, if none is provided.
+   * @ingroup G-0015
    */
 	public function index()
 	{
@@ -28,6 +29,11 @@ class Pages extends YD_Controller
 		$this->view_wrapper('pages/home', $data);
 	}
 
+	/**
+	 * Display the homepage as usual but with a preloading hint to open a colorbox
+	 * with the narrative player when the DOM finishes loading.
+	 * @ingroup G-0014
+	 */
 	public function narratives($id)
 	{
 		$topic = $this->variable_model->get('portal_topic', '');
@@ -40,12 +46,18 @@ class Pages extends YD_Controller
 		$this->view_wrapper('pages/home', $data);
 	}
 
+	/**
+	 * Displays the tutorial video player in an embedded pop-up
+	 * @ingroup G-0016
+	 */
 	public function tutorial($language)
 	{
 		$row = $this->tutorial_model->get_all();
 
-		$data['enurl'] = $row[0]['url'];//direct mappings are bad kids
-		$data['frurl'] = $row[1]['url'];//TODO:Make a bit more generic in sprint 3
+		//direct mappings are bad kids
+		$data['enurl'] = $row[0]['url'];
+		//TODO:Make a bit more generic in sprint 3
+		$data['frurl'] = $row[1]['url'];
 
 		$this->load->view('embedded/tutorial', $data);
 	}
