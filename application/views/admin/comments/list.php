@@ -21,7 +21,7 @@
   ?>
   <div class="clear"></div>
 
-  <table class="table table-hover table-striped">
+  <table class="table table-hover table-striped" id="admin-comments-list">
     <thead>
       <tr>
         <th><a href="<?php echo site_url("admin/comments/narrative/" . ($sort_order == "desc" && $sort_by == "narrative" ? "asc" : "desc") . "/$offset"); ?>" class="sort-btn<?php echo ($sort_by == "narrative") ? " active $sort_order" : ""; ?>">Narrative ID</a></th>

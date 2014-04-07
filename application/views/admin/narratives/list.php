@@ -39,7 +39,7 @@
 	?>
 	<div class="clear"></div>
 
-	<table class="table table-hover table-striped">
+	<table class="table table-hover table-striped table-multiselect" id="admin-narratives-list">
 		<thead>
 			<tr>
 				<th></th>
@@ -56,7 +56,7 @@
 		<tbody>
 			<?php foreach ($narratives as $narrative): ?>
 				<tr>
-					<td><?php echo form_checkbox('narratives[]', $narrative['narrative_id'], FALSE); ?>
+					<td class="row-select"><?php echo form_checkbox('narratives[]', $narrative['narrative_id'], FALSE); ?>
 					<td><?php print $narrative['narrative_id']; ?></td>
 					<td><?php printf('%d', $narrative['audio_length']/60); ?>:<?php printf('%02d', $narrative['audio_length']%60); ?></td>
 					<td><?php print $narrative['language']; ?></td>
@@ -64,7 +64,7 @@
 					<td><?php print $narrative['uploaded']; ?></td>
 					<td><?php print $narrative['flags']; ?></td>
 					<td><?php echo $narrative['status'] == 1 ? 'Published' : 'Not Published'; ?></td>
-					<td>
+					<td class="row-actions">
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-pencil"></span>', 'title="Edit" class="btn btn-default btn-xs" role="button"'); ?>
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/download', '<span class="glyphicon glyphicon-cloud-download">', 'title="Download" class="btn btn-default btn-xs" role="button"'); ?>
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/delete', '<span class="glyphicon glyphicon-remove">', 'title="Delete" class="btn btn-default btn-xs confirm-delete" role="button"'); ?>

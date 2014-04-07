@@ -70,6 +70,9 @@ jQuery(document).ready(function() {
 	// present on page load (i.e. on admin review narrative page)
 	narrative_player_load();
 
+	// Support for clicking anywhere on a table row to select it
+	table_row_multiselect_initialize();
+
 	// confirm dialog for anything with class 'confirm-delete'
 	initialize_deletion_confirmation();
 
@@ -1183,5 +1186,13 @@ function initialize_deletion_confirmation()
 	 		e.preventDefault();
 	 		return false;
 	 }
+	});
+}
+
+function table_row_multiselect_initialize()
+{
+	jQuery('#admin-narratives-list td').not('.row-select,.row-actions').click(function() {
+		var checkbox = jQuery('td input', jQuery(this).parents('tr'));
+		checkbox.prop('checked', !checkbox.prop('checked'));
 	});
 }
