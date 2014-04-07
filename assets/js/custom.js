@@ -76,6 +76,18 @@ jQuery(document).ready(function() {
 	// confirm dialog for anything with class 'confirm-delete'
 	initialize_deletion_confirmation();
 
+	// Load MediaElement for audio/video elements that are not a full narrative
+	// player (those are wrapped with a .player-wrapper div and loaded by
+	// narrative_player_load() above.).
+	jQuery('audio,video').not('.player-processed').addClass('player-processed').each(function() {
+		jQuery(this).mediaelementplayer({
+			// the order of controls you want on the control bar (and other plugins below)
+			features: ['playpause', 'current', 'progress', 'duration', 'tracks', 'volume'],
+			// show framecount in timecode (##:00:00:00)
+			showTimecodeFrameCount: false
+		});
+	});
+
 	// Toggle buttons for navigation links
 	jQuery('.language-container.btn-group a').click(function() {
 		// @ingroup G-0021
@@ -1211,11 +1223,11 @@ function show_share_url()
 function initialize_deletion_confirmation()
 {
 	 jQuery('.confirm-delete').click(function(e) {
-	 	var result = confirm("This will permanently remove items from the database. Are you sure you want to continue?");
-	 	if (!result)
-	 	{
-	 		e.preventDefault();
-	 		return false;
+		var result = confirm("This will permanently remove items from the database. Are you sure you want to continue?");
+		if (!result)
+		{
+			e.preventDefault();
+			return false;
 	 }
 	});
 }
