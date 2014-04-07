@@ -258,4 +258,14 @@ class Admin_Narrative extends YD_Controller
 		$this->system_message_model->set_message('Narrative #' . $id . ' has been unpublished successfully.');
 		redirect('admin/narratives/'.$id);
 	}
+
+	/**
+	 * Removes all flags on a comment.
+	 */
+	public function dismiss_flags($narrative_id)
+	{
+		$this->narrative_model->dismiss_flags($narrative_id);
+		$this->system_message_model->set_message("All flags on this narrative were dismissed.");
+		redirect('admin/narratives');
+	}
 }

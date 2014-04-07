@@ -116,6 +116,7 @@
         <div class="clear"></div>
         <br/>
         <?php echo form_submit('submit', 'Unpublish selected', "class='btn btn-default'"); ?>
+        <?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . "/dismiss_flags?destination=" . uri_string(current_url()), 'Dismiss Flags', "class='btn btn-default'"); ?>
         <?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/delete', 'Delete Narrative', "class='btn btn-default confirm-delete'"); ?>
       <?php echo form_close(); ?>
       <?php if (count($deleted['tracks']) || count($deleted['pictures'])): ?>

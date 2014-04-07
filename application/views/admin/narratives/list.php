@@ -68,6 +68,9 @@
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'], '<span class="glyphicon glyphicon-pencil"></span>', 'title="Edit" class="btn btn-default btn-xs" role="button"'); ?>
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/download', '<span class="glyphicon glyphicon-cloud-download">', 'title="Download" class="btn btn-default btn-xs" role="button"'); ?>
 						<?php echo anchor('admin/narratives/' . $narrative['narrative_id'] . '/delete', '<span class="glyphicon glyphicon-remove">', 'title="Delete" class="btn btn-default btn-xs confirm-delete" role="button"'); ?>
+						<?php if ($narrative['flags']): ?>
+              <?php echo anchor("admin/narratives/" . $narrative['narrative_id'] . "/dismiss_flags", '<span class="glyphicon glyphicon-ok-circle"></span>', 'title="Dismiss flags" class="btn btn-default btn-xs" role="button"'); ?>
+            <?php endif; ?>
 					</td>
 				</tr>
 			<?php endforeach; ?>
