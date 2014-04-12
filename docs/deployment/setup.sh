@@ -1,8 +1,10 @@
 #!/bin/sh
-DEPLOY_DIR="$(dirname "$0")"
+DEPLOY_DIR="$(dirname "$(readlink -e "$0")")"
 if [ ! -f "$DEPLOY_DIR/variables" ];then
+  # for vagrant
   DEPLOY_DIR="/SOEN390_ATeam/docs/deployment"
 fi
+ROOT_DIR="$(readlink -f "$DEPLOY_DIR/../../")"
 
 # Include configuration variables
 . "$DEPLOY_DIR/variables"
@@ -32,16 +34,16 @@ OUTPUT_FILE=/etc/httpd/conf/httpd.conf
 
 echo "*** Deploying source code"
 rm -rf /var/www/html
-cp -a /SOEN390_ATeam /var/www/html
-chown root:root /var/www/html
+cp -a $ROOT_DIR /var/www/html
+chown -R root:root /var/www/html
 chmod 755 /var/www/html
 
 echo "*** Configuring application"
 OUTPUT_FILE=/var/www/html/application/config/database.php
 . "$DEPLOY_DIR/database.php.sample"
 
-mkdir /var/www/html/application/config/test
-OUTPUT_FILE=/var/www/html/application/config/test/database.php
+mkdir /var/www/html/application/config/testing
+OUTPUT_FILE=/var/www/html/application/config/testing/database.php
 . "$DEPLOY_DIR/database_test.php.sample"
 
 mkdir /var/www/html/uploads
@@ -54,7 +56,7 @@ ARCH="32bit"
 if [ "$(uname -m)" == "x86_64" ];then
   ARCH="64bit"
 fi
-tar xfz "/SOEN390_ATeam/docs/deployment/ffmpeg-2.2-gnulinux-${ARCH}.tar.gz"
+tar xfz "$DEPLOY_DIR/ffmpeg-2.2-gnulinux-${ARCH}.tar.gz"
 popd
 
 echo "*** Configuring database"
